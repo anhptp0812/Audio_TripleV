@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hồ Sơ Của Tôi</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.9.1/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/src/main/resources/static/css/khach_hang_acc.css"> <!-- Giữ lại CSS cho khach_hang_acc -->
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <nav class="navbar navbar-expand-lg navbar-custom">
+            <div class="container">
+                <!-- Left section -->
+                <div class="navbar-nav">
+                    <a class="nav-item nav-link" href="#">Sản Phẩm</a>
+                    <a class="nav-item nav-link" href="#">Thương Hiệu</a>
+                    <a class="nav-item nav-link" href="#">Khuyến Mãi</a>
+                    <a class="nav-item nav-link" href="#">Tin Tức</a>
+                </div>
+
+                <!-- Right section with buttons -->
+                <div class="ml-auto d-flex align-items-center">
+                    <!-- Hidden Search Input Field -->
+                    <input type="text" id="searchInput" class="form-control search-input" placeholder="Tìm kiếm...">
+
+                    <!-- Search Button -->
+                    <button class="btn btn-outline-light" type="button" onclick="handleSearch()">
+                        <i class="bi bi-search"></i>
+                    </button>
+
+                    <!-- Account Button Link -->
+                    <a class="btn btn-outline-light" href="/src/main/webapp/views/customer/khach_hang_acc.html">
+                        <i class="bi bi-person-circle"></i> 
+                    </a>
+
+                    <!-- Cart Button - Links to gio_hang.html -->
+                    <a class="btn btn-outline-light" href="/src/main/webapp/views/GioHang/gio_hang.html">
+                        <i class="bi bi-cart4"></i> 
+                    </a>
+                </div>
+            </div>
+        </nav>
+    
+
+    <div class="form-container">
+        <div class="account-section">
+            <div class="account-border">
+                <button class="btn btn-secondary w-100" type="button" data-toggle="collapse" data-target="#accountDetails" aria-expanded="true" aria-controls="accountDetails">
+                    Tài Khoản Của Tôi
+                </button>
+                <div class="collapse show" id="accountDetails">
+                    <ul class="list-group mt-2">
+                        <li class="list-group-item">
+                            <button class="btn btn-link w-100 text-left" type="button" id="showProfileBtn" title="Thông Tin Cá Nhân">Hồ Sơ Của Tôi</button>
+                        </li>
+                        <li class="list-group-item">
+                            <button class="btn btn-link w-100 text-left" type="button" id="showAddressBtn" title="Thay Đổi Địa Chỉ Nhận">Địa Chỉ</button>
+                        </li>
+                        <li class="list-group-item">
+                            <button class="btn btn-link w-100 text-left" type="button" id="showPasswordBtn" title="Đổi Mật Khẩu">Đổi Mật Khẩu</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="account-border">
+                <button class="btn btn-secondary w-100" type="button" data-toggle="collapse" data-target="#ordersForm" aria-expanded="false" aria-controls="ordersForm">
+                    Đơn Mua
+                </button>
+                <div class="collapse" id="ordersForm">
+                    <ul class="list-group mt-2">
+                        <li class="list-group-item">
+                            <button class="btn btn-link w-100 text-left" type="button" id="showOrderHistoryBtn" title="Lịch Sử Mua Hàng">Lịch Sử Mua Hàng</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="divider"></div> <!-- Đường kẻ ngăn cách giữa các phần -->
+
+        <div class="profile-section">
+            <h2 id="profileTitle">Hồ Sơ Của Tôi</h2>
+            <p class="small-text">Quản lý thông tin hồ sơ để bảo mật tài khoản</p>
+
+            <!-- Form Hồ Sơ Của Tôi -->
+            <div class="collapse show" id="profileForm">
+                <form>
+                    <div class="form-group">
+                        <label for="customerName">Tên Khách Hàng</label>
+                        <input type="text" class="form-control" id="customerName" placeholder="Nhập tên khách hàng" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Số điện thoại</label>
+                        <input type="tel" class="form-control" id="phone" placeholder="Nhập số điện thoại" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" id="email" placeholder="Nhập địa chỉ email" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Lưu Thông Tin</button>
+                </form>
+            </div>
+
+            <!-- Form Địa Chỉ Của Tôi -->
+            <div class="collapse" id="addressForm">
+                <form>
+                    <div class="form-group">
+                        <label for="address">Địa Chỉ</label>
+                        <input type="text" class="form-control" id="address" placeholder="Nhập địa chỉ" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Cập Nhật Địa Chỉ</button>
+                </form>
+            </div>
+
+            <!-- Form Đổi Mật Khẩu -->
+            <div class="collapse" id="passwordForm">
+                <form>
+                    <div class="form-group">
+                        <label for="currentPassword">Mật Khẩu Hiện Tại</label>
+                        <input type="password" class="form-control" id="currentPassword" placeholder="Nhập mật khẩu hiện tại" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newPassword">Mật Khẩu Mới</label>
+                        <input type="password" class="form-control" id="newPassword" placeholder="Nhập mật khẩu mới" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Đổi Mật Khẩu</button>
+                </form>
+            </div>
+
+            <!-- Lịch sử mua hàng -->
+            <div class="collapse" id="orderHistoryForm">
+                <h3>Lịch Sử Mua Hàng</h3>
+                <table class="table table-striped history-border">
+                    <thead>
+                        <tr>
+                            <th>Mã Đơn</th>
+                            <th>Tên Sản Phẩm</th>
+                            <th>Ngày Mua</th>
+                            <th>Trạng Thái</th>
+                            <th>Hành Động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>12345</td>
+                            <td>Sản Phẩm A</td>
+                            <td>2024-10-01</td>
+                            <td>Đã Giao</td>
+                            <td><button class="btn btn-success btn-repurchase">Mua Lại</button></td>
+                        </tr>
+                        <tr>
+                            <td>67890</td>
+                            <td>Sản Phẩm B</td>
+                            <td>2024-09-20</td>
+                            <td>Đã Giao</td>
+                            <td><button class="btn btn-success btn-repurchase">Mua Lại</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+    <!-- Bootstrap JS and jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Sự kiện cho các nút Hồ Sơ, Địa Chỉ và Đổi Mật Khẩu
+            $('#showProfileBtn').on('click', function () {
+                $('#profileForm').collapse('show');
+                $('#addressForm').collapse('hide');
+                $('#passwordForm').collapse('hide');
+                $('#orderHistoryForm').collapse('hide'); // Ẩn lịch sử mua hàng
+                $('#profileTitle').text('Hồ Sơ Của Tôi');
+            });
+
+            $('#showAddressBtn').on('click', function () {
+                $('#addressForm').collapse('show');
+                $('#profileForm').collapse('hide');
+                $('#passwordForm').collapse('hide');
+                $('#orderHistoryForm').collapse('hide'); // Ẩn lịch sử mua hàng
+                $('#profileTitle').text('Địa Chỉ Của Tôi');
+            });
+
+            $('#showPasswordBtn').on('click', function () {
+                $('#passwordForm').collapse('show');
+                $('#profileForm').collapse('hide');
+                $('#addressForm').collapse('hide');
+                $('#orderHistoryForm').collapse('hide'); // Ẩn đổi mật khẩu
+                $('#profileTitle').text('Đổi Mật Khẩu');
+            });
+
+            // Sự kiện cho nút Đơn Mua
+            $('#showOrderHistoryBtn').on('click', function () {
+                $('#orderHistoryForm').collapse('show');
+                $('#profileForm').collapse('hide');
+                $('#addressForm').collapse('hide');
+                $('#passwordForm').collapse('hide'); // Ẩn đổi mật khẩu
+                $('#profileTitle').text('Lịch Sử Mua Hàng');
+            });
+        });
+
+        function handleSearch() {
+            const searchInput = document.getElementById('searchInput');
+
+            // Check if the input is visible
+            if (searchInput.style.display === 'none' || searchInput.style.display === '') {
+                searchInput.style.display = 'block'; // Show the input field
+                searchInput.focus();  // Automatically focus the input field
+            } else {
+                // If input is visible, proceed with search
+                const searchValue = searchInput.value.trim();  // Get the trimmed value
+                if (searchValue) {
+                    // Redirect to sang_pham.html with the search term
+                    window.location.href = `sang_pham.html?search=${encodeURIComponent(searchValue)}`;
+                }
+                // Clear the input field after search
+                searchInput.value = '';
+                searchInput.style.display = 'none';  // Hide the input field again
+            }
+        }
+    </script>
+</body>
+
+</html>

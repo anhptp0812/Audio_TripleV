@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Summary</title>
+    <link rel="stylesheet" href="/src/main/resources/static/css/admin/orderSummaryTest.css">
+    <!-- <link rel="stylesheet" href="/src/main/resources/static/css/admin/product.css"> -->
+    <!-- <link rel="stylesheet" href="/src/main/resources/static/css/admin/productProvity.css"> -->
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        /* Additional styles for hold and history forms */
+        .list-data ul {
+            list-style-type: none; /* Remove default bullets */
+            padding: 0; /* Remove padding */
+        }
+        .list-data li {
+            padding: 5px 0; /* Add some spacing */
+            text-decoration: underline; /* Add underline */
+            color: gray; /* Set color to a muted gray */
+        }
+        /* Styles for hold and history form labels and inputs */
+        .form-container {
+            position: relative; /* Position for the underline */
+            padding-bottom: 5px; /* Space for underline */
+            margin-bottom: 15px; /* Space below the form */
+        }
+        .form-container label, .form-container input, .form-container button {
+            display: inline-block; /* Ensure elements are inline */
+            vertical-align: middle; /* Align vertically */
+        }
+        .form-container::after {
+            content: '';
+            display: block;
+            width: 100%;
+            height: 1px; /* Thickness of the underline */
+            background-color: black; /* Color of the underline */
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <!-- Button group for Add Khách Hàng, New Bill, and Reload -->
+        <div class="button-group">
+            <button class="add-customer-btn"><i class="bi bi-person-plus"></i> Add Khách Hàng</button>
+            <div class="right-buttons">
+                <button class="new-bill-btn"><i class="bi bi-plus-circle"></i></button>
+                <button class="reload-btn"><i class="bi bi-arrow-repeat"></i></button>
+            </div>
+        </div>
+
+        <!-- Order Summary with Border -->
+        <div class="order-summary">
+            <div class="order-summary-border">
+                <div class="bill-code">Mã Bill: #123456</div> <!-- Mã Bill ở góc trái -->
+
+                <!-- 10 Order items -->
+                <div class="order-item" onclick="toggleDetails(this)">
+                    <span>1</span>
+                    <span>Schezwan Egg Noodles</span>
+                    <span>$25.00</span>
+                </div>
+                <div class="order-details">
+                    <p>Details:</p>
+                    <div>
+                        <label for="quantity-1">Số lượng:</label>
+                        <input type="number" id="quantity-1" min="1" value="1">
+                    </div>
+                    <div>
+                        <label for="color-1">Màu sắc:</label>
+                        <select id="color-1">
+                            <option value="red">Red</option>
+                            <option value="green">Green</option>
+                            <option value="blue">Blue</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="order-item" onclick="toggleDetails(this)">
+                    <span>2</span>
+                    <span>Spicy Chicken Wings</span>
+                    <span>$15.00</span>
+                </div>
+                <div class="order-details">
+                    <p>Details:</p>
+                    <div>
+                        <label for="quantity-2">Số lượng:</label>
+                        <input type="number" id="quantity-2" min="1" value="1">
+                    </div>
+                    <div>
+                        <label for="color-2">Màu sắc:</label>
+                        <select id="color-2">
+                            <option value="red">Red</option>
+                            <option value="green">Green</option>
+                            <option value="blue">Blue</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="order-item" onclick="toggleDetails(this)">
+                    <span>1</span>
+                    <span>Schezwan Egg Noodles</span>
+                    <span>$25.00</span>
+                </div>
+                <div class="order-details">
+                    <p>Details:</p>
+                    <div>
+                        <label for="quantity-1">Số lượng:</label>
+                        <input type="number" id="quantity-1" min="1" value="1">
+                    </div>
+                    <div>
+                        <label for="color-1">Màu sắc:</label>
+                        <select id="color-1">
+                            <option value="red">Red</option>
+                            <option value="green">Green</option>
+                            <option value="blue">Blue</option>
+                        </select>
+                    </div>
+                </div>                <div class="order-item" onclick="toggleDetails(this)">
+                    <span>1</span>
+                    <span>Schezwan Egg Noodles</span>
+                    <span>$25.00</span>
+                </div>
+                <div class="order-details">
+                    <p>Details:</p>
+                    <div>
+                        <label for="quantity-1">Số lượng:</label>
+                        <input type="number" id="quantity-1" min="1" value="1">
+                    </div>
+                    <div>
+                        <label for="color-1">Màu sắc:</label>
+                        <select id="color-1">
+                            <option value="red">Red</option>
+                            <option value="green">Green</option>
+                            <option value="blue">Blue</option>
+                        </select>
+                    </div>
+                </div>                <div class="order-item" onclick="toggleDetails(this)">
+                    <span>1</span>
+                    <span>Schezwan Egg Noodles</span>
+                    <span>$25.00</span>
+                </div>
+                <div class="order-details">
+                    <p>Details:</p>
+                    <div>
+                        <label for="quantity-1">Số lượng:</label>
+                        <input type="number" id="quantity-1" min="1" value="1">
+                    </div>
+                    <div>
+                        <label for="color-1">Màu sắc:</label>
+                        <select id="color-1">
+                            <option value="red">Red</option>
+                            <option value="green">Green</option>
+                            <option value="blue">Blue</option>
+                        </select>
+                    </div>
+                </div>                <div class="order-item" onclick="toggleDetails(this)">
+                    <span>1</span>
+                    <span>Schezwan Egg Noodles</span>
+                    <span>$25.00</span>
+                </div>
+                <div class="order-details">
+                    <p>Details:</p>
+                    <div>
+                        <label for="quantity-1">Số lượng:</label>
+                        <input type="number" id="quantity-1" min="1" value="1">
+                    </div>
+                    <div>
+                        <label for="color-1">Màu sắc:</label>
+                        <select id="color-1">
+                            <option value="red">Red</option>
+                            <option value="green">Green</option>
+                            <option value="blue">Blue</option>
+                        </select>
+                    </div>
+                </div>                <div class="order-item" onclick="toggleDetails(this)">
+                    <span>1</span>
+                    <span>Schezwan Egg Noodles</span>
+                    <span>$25.00</span>
+                </div>
+                <div class="order-details">
+                    <p>Details:</p>
+                    <div>
+                        <label for="quantity-1">Số lượng:</label>
+                        <input type="number" id="quantity-1" min="1" value="1">
+                    </div>
+                    <div>
+                        <label for="color-1">Màu sắc:</label>
+                        <select id="color-1">
+                            <option value="red">Red</option>
+                            <option value="green">Green</option>
+                            <option value="blue">Blue</option>
+                        </select>
+                    </div>
+                </div>                <div class="order-item" onclick="toggleDetails(this)">
+                    <span>1</span>
+                    <span>Schezwan Egg Noodles</span>
+                    <span>$25.00</span>
+                </div>
+                <div class="order-details">
+                    <p>Details:</p>
+                    <div>
+                        <label for="quantity-1">Số lượng:</label>
+                        <input type="number" id="quantity-1" min="1" value="1">
+                    </div>
+                    <div>
+                        <label for="color-1">Màu sắc:</label>
+                        <select id="color-1">
+                            <option value="red">Red</option>
+                            <option value="green">Green</option>
+                            <option value="blue">Blue</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Add remaining order items here... -->
+
+            </div>
+        </div>
+
+        <!-- Tổng, Thuế, Số tiền phải trả -->
+        <div class="totals">
+            <div class="total-item">
+                <label>Tổng:</label>
+                <span>$200.00</span>
+            </div>
+            <div class="total-item">
+                <label>Thuế:</label>
+                <span>$10.00</span>
+            </div>
+            <div class="total-item">
+                <label>Số tiền phải trả:</label>
+                <span>$210.00</span>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <button class="hold-btn" onclick="toggleHoldForm()">Hold Bill</button>
+            <button class="history-btn" onclick="toggleHistoryForm()">Lịch Sử</button>
+            <button class="pay-btn">Thanh Toán</button>
+        </div>
+
+        <!-- History Form (hidden initially) -->
+        <div class="history-form" style="display: none;">
+            <div class="form-container">
+                <label for="history-code">Mã Lịch Sử:</label>
+                <input type="text" id="history-code" placeholder="Nhập mã lịch sử">
+                <button class="search-btn"><i class="bi bi-search"></i></button>
+            </div>
+            <div class="list-data">
+                <ul>
+                    <li>Mã Danh Sách 1</li>
+                    <li>Mã Danh Sách 2</li>
+                    <li>Mã Danh Sách 3</li>
+                    <li>Mã Danh Sách 4</li>
+                    <li>Mã Danh Sách 5</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Hold Form (hidden initially) -->
+        <div class="hold-form" style="display: none;">
+            <div class="form-container">
+                <label for="hold-code">Mã Hold Bill:</label>
+                <input type="text" id="hold-code" placeholder="Nhập mã hold bill">
+                <button class="search-btn"><i class="bi bi-search"></i></button>
+            </div>
+            <div class="list-data">
+                <ul>
+                    <li>Mã Danh Sách 1</li>
+                    <li>Mã Danh Sách 2</li>
+                    <li>Mã Danh Sách 3</li>
+                    <li>Mã Danh Sách 4</li>
+                    <li>Mã Danh Sách 5</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Toggle visibility of history form
+        function toggleHistoryForm() {
+            let historyForm = document.querySelector('.history-form');
+            let holdForm = document.querySelector('.hold-form');
+            historyForm.style.display = historyForm.style.display === 'block' ? 'none' : 'block';
+            holdForm.style.display = 'none'; // Hide hold form
+        }
+
+        // Toggle visibility of hold form
+        function toggleHoldForm() {
+            let holdForm = document.querySelector('.hold-form');
+            let historyForm = document.querySelector('.history-form');
+            holdForm.style.display = holdForm.style.display === 'block' ? 'none' : 'block';
+            historyForm.style.display = 'none'; // Hide history form
+        }
+
+        // Toggle visibility of order details when clicked
+        function toggleDetails(orderItem) {
+            let details = orderItem.nextElementSibling;
+            details.style.display = details.style.display === 'block' ? 'none' : 'block';
+        }
+    </script>
+</body>
+</html>

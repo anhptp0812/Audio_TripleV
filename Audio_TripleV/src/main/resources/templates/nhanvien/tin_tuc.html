@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tin Tức</title>
+    <!-- Link to Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .product-card {
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .footer {
+            background-color: #343a40;
+            color: white;
+            padding: 20px 0;
+        }
+
+        .footer a {
+            color: #bbb;
+        }
+
+        .footer a:hover {
+            color: white;
+        }
+
+
+
+
+        #video-section {
+            padding: 20px;
+            background-color: #f9f9f9; /* Light background to separate from other content */
+        }
+
+        .primary-box {
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #play-list {
+            max-height: 370px; /* Bằng với chiều cao của iframe video */
+            overflow-y: auto; /* Bật thanh cuộn dọc khi danh sách vượt quá chiều cao */
+            padding-right: 10px; /* Khoảng cách cho thanh cuộn */
+        }
+
+        .secondary-box {
+            display: flex;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .secondary-box:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .secondary-box .img {
+            width: 100px;
+            height: 60px;
+            overflow: hidden;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        .secondary-box .img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .secondary-box .box-content {
+            flex: 1;
+        }
+
+        .secondary-box .title {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .secondary-box .v-meta {
+            font-size: 12px;
+            color: #777;
+        }
+
+
+
+
+        .container {
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .main-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .btn-a {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .btn-a:hover {
+            background-color: #0056b3;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .box {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .img {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .box-content {
+            padding: 15px;
+        }
+
+        .title {
+            font-size: 18px;
+            margin: 0 0 10px;
+        }
+
+        .description {
+            margin: 0 0 15px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .col-lg-6 {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+        }
+
+
+
+
+        /* General Styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            padding: 20px;
+            /*text-align: center;*/
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        /* Product Section */
+        .product-section {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .product-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+
+        /* Product Card */
+        .product-card {
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            width: 250px;
+            padding: 15px;
+            margin: 10px;
+            text-align: left;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: scale(1.05);
+        }
+
+        .product-card img {
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        /* Discount Badge */
+        .discount-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: #ff3333;
+            color: #ffffff;
+            padding: 5px 10px;
+            font-size: 12px;
+            border-radius: 5px;
+        }
+
+        /* Installment Info */
+        .installment {
+            background-color: #0056b3;
+            color: #ffffff;
+            padding: 3px 5px;
+            font-size: 12px;
+            width: fit-content;
+            margin-top: 10px;
+            border-radius: 3px;
+        }
+
+        /* Product Description */
+        .product-card p {
+            font-size: 14px;
+            color: #333333;
+            margin: 10px 0;
+        }
+
+        /* Rating */
+        .rating {
+            color: #ffcc00;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        /* Price Container */
+        .price-container {
+            margin: 10px 0;
+        }
+
+        .current-price {
+            font-size: 18px;
+            font-weight: bold;
+            color: #e60000;
+        }
+
+        .original-price {
+            font-size: 14px;
+            text-decoration: line-through;
+            color: #777777;
+            margin-left: 10px;
+        }
+
+        /* Add to Cart Button */
+        .add-to-cart {
+            width: 100%;
+            padding: 10px 0;
+            background-color: #ff6600;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .add-to-cart:hover {
+            background-color: #cc5200;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .product-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .product-card {
+                width: 90%;
+                margin-bottom: 20px;
+            }
+        }
+
+
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+        <a class="navbar-brand" href="/trang-chu/hien-thi"><img src="/images/logo.png" width="50" height="50"></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/san-pham/hien-thi">Sản Phẩm</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/thuong-hieu/hien-thi">Thương Hiệu</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/khuyen-mai/hien-thi">Khuyến Mãi</a>
+                </li>
+            </ul>
+            <div class="d-flex">
+                <a href="#" class="me-3"><i class="fas fa-search"></i></a>
+                <a href="#" class="me-3"><i class="fas fa-user"></i></a>
+                <a href="#"><i class="fas fa-shopping-cart"></i></a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Banner -->
+<div id="bannerCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="/images/banner-1.jpg" class="d-block w-100" width="100%" height="500px" alt="Banner 1">
+        </div>
+        <div class="carousel-item">
+            <img src="/images/banner-2.jpg" class="d-block w-100" width="100%" height="500px" alt="Banner 2">
+        </div>
+        <div class="carousel-item">
+            <img src="/images/banner-3.jpg" class="d-block w-100" width="100%" height="500px" alt="Banner 3">
+        </div>
+    </div>
+    <!-- Carousel Controls -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#bannerCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#bannerCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+
+
+<div class="container">
+    <div class="main-title">
+        <h2>TIN TỨC SẢN PHẨM</h2>
+    </div>
+    <div id="video-section">
+        <div class="row">
+            <div class="col-lg-6 col-md-8">
+                <div class="primary-box">
+                    <div class="box-body">
+                        <iframe id="ifram-play" width="100%" height="370px"
+                                src="https://www.youtube.com/embed/Q3Nj5j8wvbk?autoplay=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media;
+                                gyroscope; picture-in-picture" allowfullscreen="allowfullscreen"></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-4">
+                <div id="play-list" class="box-sidebar">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12">
+                            <div class="secondary-box"><span class="img"><img
+                                    <src ="">
+                                    alt="Mở hộp Bowers &amp;amp; Wilkins Pi8" class="defer lazied" data-lazied="IMG"
+                                    src="https://i.ytimg.com/vi/WKzUw4Wki6w/mqdefault.jpg"></span>
+                                <div class="box-content"><span class="title">Mở hộp Bowers &amp; Wilkins Pi8</span>
+                                    <span class="v-meta">TripleV</span> <span class="v-meta">54 lượt xem</span></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-md-12">
+                            <div class="secondary-box"><span class="img"><img
+                                    data-src="https://i.ytimg.com/vi/81afMGomgo0/mqdefault.jpg"
+                                    alt="Hướng dẫn thay đệm tai Marshall Major siêu dễ" class="defer lazied"
+                                    data-lazied="IMG" src="https://i.ytimg.com/vi/81afMGomgo0/mqdefault.jpg"></span>
+                                <div class="box-content"><span class="title">Hướng dẫn thay đệm tai Marshall Major siêu dễ</span>
+                                    <span class="v-meta">TripleV</span> <span class="v-meta">64 lượt xem</span></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-md-12">
+                            <div class="secondary-box"><span class="img"><img
+                                    data-src="https://i.ytimg.com/vi/OMVRXl-OKh4/mqdefault.jpg"
+                                    alt="Hướng dẫn Sử dụng &amp;amp; Reset FiiO JW1" class="defer lazied"
+                                    data-lazied="IMG" src="https://i.ytimg.com/vi/OMVRXl-OKh4/mqdefault.jpg"></span>
+                                <div class="box-content"><span
+                                        class="title">Hướng dẫn Sử dụng &amp; Reset FiiO JW1</span> <span
+                                        class="v-meta">TripleV</span> <span class="v-meta">337 lượt xem</span></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-md-12">
+                            <div class="secondary-box"><span class="img"><img
+                                    data-src="https://i.ytimg.com/vi/Q3Nj5j8wvbk/mqdefault.jpg"
+                                    alt="Trên tay Sennheiser Momentum True Wireless 4 - Tai nghe không dây với công nghệ Auracast đầy hứa hẹn"
+                                    class="defer lazied" data-lazied="IMG"
+                                    src="https://i.ytimg.com/vi/Q3Nj5j8wvbk/mqdefault.jpg"></span>
+                                <div class="box-content"><span class="title">Trên tay Sennheiser Momentum True Wireless 4 - Tai nghe không dây với công nghệ Auracast đầy hứa hẹn</span>
+                                    <span class="v-meta">TripleV</span> <span class="v-meta">1869 lượt xem</span></div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12 col-md-12">
+                            <div class="secondary-box"><span class="img"><img
+                                    data-src="https://i.ytimg.com/vi/-B4S_Y9q9X0/mqdefault.jpg"
+                                    alt="Trên tay Jabra Elite 8 Active - Tai nghe không dây thể thao xịn nhất?"
+                                    class="defer lazied" data-lazied="IMG"
+                                    src="https://i.ytimg.com/vi/-B4S_Y9q9X0/mqdefault.jpg"></span>
+                                <div class="box-content"><span class="title">Trên tay Jabra Elite 8 Active - Tai nghe không dây thể thao xịn nhất?</span>
+                                    <span class="v-meta">TripleV</span> <span class="v-meta">339 lượt xem</span></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-md-12">
+                            <div class="secondary-box"><span class="img"><img
+                                    data-src="https://i.ytimg.com/vi/gJ1VaOesDgw/mqdefault.jpg"
+                                    alt="Trên tay Jabra Elite 10 - Tai nghe True Wireless chuyên đàm thoại, chống ồn mạnh mẽ"
+                                    class="defer lazied" data-lazied="IMG"
+                                    src="https://i.ytimg.com/vi/gJ1VaOesDgw/mqdefault.jpg"></span>
+                                <div class="box-content"><span class="title">Trên tay Jabra Elite 10 - Tai nghe True Wireless chuyên đàm thoại, chống ồn mạnh mẽ</span>
+                                    <span class="v-meta">TripleV</span> <span class="v-meta">1750 lượt xem</span></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-md-12">
+                            <div class="secondary-box"><span class="img"><img
+                                    data-src="https://i.ytimg.com/vi/Iz0DDDaB2C8/mqdefault.jpg"
+                                    alt="Trên tay Noble XM-1 | Chiếc IEM tầm trung tiên phong trang bị công nghệ xMEMs, tích hợp DAC/Amp"
+                                    class="defer lazied" data-lazied="IMG"
+                                    src="https://i.ytimg.com/vi/Iz0DDDaB2C8/mqdefault.jpg"></span>
+                                <div class="box-content"><span class="title">Trên tay Noble XM-1 | Chiếc IEM tầm trung tiên phong trang bị công nghệ xMEMs, tích hợp DAC/Amp</span>
+                                    <span class="v-meta">TripleV</span> <span class="v-meta">753 lượt xem</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<section class="product-section">
+    <h2>TAI NGHE MỚI</h2>
+    <div class="product-container">
+        <!-- Product 1 -->
+        <div class="product-card">
+            <img src="/images/headphone/headphone1.jpg" alt="Headphone 1">
+            <div class="discount-badge">Giảm giá 18%</div>
+            <div class="installment">TRẢ GÓP 0%</div>
+            <p>[ĐĂNG KÝ MYSONY, GIẢM NGAY 200K] Tai nghe Gaming không dây INZONE H9 Đen...</p>
+            <span class="rating">★★★★☆ (21)</span>
+            <div class="price-container">
+                <span class="current-price">4,790,000đ</span>
+                <span class="original-price">5,850,000đ</span>
+            </div>
+            <button class="add-to-cart">Thêm Vào Giỏ Hàng</button>
+        </div>
+        <!-- Product 2 -->
+        <div class="product-card">
+            <img src="/images/headphone/headphone2.jpg" alt="Headphone 2">
+            <div class="discount-badge">Giảm giá 18%</div>
+            <div class="installment">TRẢ GÓP 0%</div>
+            <p>[ĐĂNG KÝ MYSONY, GIẢM NGAY 200K] Tai nghe chơi game không dây chống ồn...</p>
+            <span class="rating">★★★★☆ (21)</span>
+            <div class="price-container">
+                <span class="current-price">4,790,000đ</span>
+                <span class="original-price">5,850,000đ</span>
+            </div>
+            <button class="add-to-cart">Thêm Vào Giỏ Hàng</button>
+        </div>
+        <!-- Product 3 -->
+        <div class="product-card">
+            <img src="/images/headphone/headphone3.jpg" alt="Headphone 3">
+            <div class="discount-badge">Giảm giá 16%</div>
+            <div class="installment">TRẢ GÓP 0%</div>
+            <p>[ĐĂNG KÝ MYSONY, GIẢM NGAY 200K] Tai nghe Gaming không dây INZONE Buds Đen...</p>
+            <span class="rating">★★★★☆ (15)</span>
+            <div class="price-container">
+                <span class="current-price">3,990,000đ</span>
+                <span class="original-price">4,790,000đ</span>
+            </div>
+            <button class="add-to-cart">Thêm Vào Giỏ Hàng</button>
+        </div>
+        <!-- Product 4 -->
+        <div class="product-card">
+            <img src="/images/headphone/headphone4.jpg" alt="Headphone 4">
+            <div class="discount-badge">Giảm giá 16%</div>
+            <div class="installment">TRẢ GÓP 0%</div>
+            <p>[ĐĂNG KÝ MYSONY, GIẢM NGAY 200K] Tai nghe Gaming không dây INZONE Buds Đen...</p>
+            <span class="rating">★★★★☆ (15)</span>
+            <div class="price-container">
+                <span class="current-price">3,990,000đ</span>
+                <span class="original-price">4,790,000đ</span>
+            </div>
+            <button class="add-to-cart">Thêm Vào Giỏ Hàng</button>
+        </div>
+    </div>
+</section>
+
+<!-- Sản Phẩm Được Xem Nhiều Nhất -->
+<div class="container mt-5">
+    <h2>SẢN PHẨM ĐƯỢC XEM NHIỀU NHẤT</h2>
+    <div class="product-container">
+        <!-- Product 1 -->
+        <div class="product-card">
+            <img src="/images/inear/inear1.jpg" alt="Headphone 1">
+            <div class="discount-badge">Giảm giá 18%</div>
+            <div class="installment">TRẢ GÓP 0%</div>
+            <p>[ĐĂNG KÝ MYSONY, GIẢM NGAY 200K] Tai nghe Gaming không dây INZONE H9 Đen...</p>
+            <span class="rating">★★★★☆ (21)</span>
+            <div class="price-container">
+                <span class="current-price">4,790,000đ</span>
+                <span class="original-price">5,850,000đ</span>
+            </div>
+            <button class="add-to-cart">Thêm Vào Giỏ Hàng</button>
+        </div>
+        <!-- Product 2 -->
+        <div class="product-card">
+            <img src="/images/inear/inear2.jpg" alt="Headphone 2">
+            <div class="discount-badge">Giảm giá 18%</div>
+            <div class="installment">TRẢ GÓP 0%</div>
+            <p>[ĐĂNG KÝ MYSONY, GIẢM NGAY 200K] Tai nghe chơi game không dây chống ồn...</p>
+            <span class="rating">★★★★☆ (21)</span>
+            <div class="price-container">
+                <span class="current-price">4,790,000đ</span>
+                <span class="original-price">5,850,000đ</span>
+            </div>
+            <button class="add-to-cart">Thêm Vào Giỏ Hàng</button>
+        </div>
+        <!-- Product 3 -->
+        <div class="product-card">
+            <img src="/images/inear/inear3.jpg" alt="Headphone 3">
+            <div class="discount-badge">Giảm giá 16%</div>
+            <div class="installment">TRẢ GÓP 0%</div>
+            <p>[ĐĂNG KÝ MYSONY, GIẢM NGAY 200K] Tai nghe Gaming không dây INZONE Buds Đen...</p>
+            <span class="rating">★★★★☆ (15)</span>
+            <div class="price-container">
+                <span class="current-price">3,990,000đ</span>
+                <span class="original-price">4,790,000đ</span>
+            </div>
+            <button class="add-to-cart">Thêm Vào Giỏ Hàng</button>
+        </div>
+        <!-- Product 4 -->
+        <div class="product-card">
+            <img src="/images/inear/inear4.jpg" alt="Headphone 2">
+            <div class="discount-badge">Giảm giá 18%</div>
+            <div class="installment">TRẢ GÓP 0%</div>
+            <p>[ĐĂNG KÝ MYSONY, GIẢM NGAY 200K] Tai nghe chơi game không dây chống ồn...</p>
+            <span class="rating">★★★★☆ (21)</span>
+            <div class="price-container">
+                <span class="current-price">4,790,000đ</span>
+                <span class="original-price">5,850,000đ</span>
+            </div>
+            <button class="add-to-cart">Thêm Vào Giỏ Hàng</button>
+        </div>
+    </div>
+</div>
+
+
+<div class="container">
+    <div class="main-title">
+        <h2>TIN TỨC</h2>
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="box">
+                <div class="img defer lazied"
+                     data-style="background-image: url(https://3kshop.vn/wp-content/uploads/fly-images/59162/8434472_3-d-500x309-c.jpg)"
+                     style="background-image: url(https://3kshop.vn/wp-content/uploads/fly-images/59162/8434472_3-d-500x309-c.jpg)">
+                    <a href="https://3kshop.vn/sony-ra-mat-wf-c510-true-wireless-gia-re-chi-59/">
+                    </a>
+                </div>
+                <div class="box-content">
+                    <h5 class="title">
+                        <a href="https://3kshop.vn/sony-ra-mat-wf-c510-true-wireless-gia-re-chi-59/">
+                            Sony ra mắt WF-C510, true wireless giá rẻ chỉ $59 </a>
+                    </h5>
+                    <p class="description">
+                        Đây là&nbsp;true wireless&nbsp;mới nhất của&nbsp;Sony&nbsp;với 4 màu sắc: đen, xanh, trắng,
+                        vàng. Sản phẩm sở... </p>
+                    <a class="btn-a" href="https://3kshop.vn/sony-ra-mat-wf-c510-true-wireless-gia-re-chi-59/">Xem
+                        thêm</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="box">
+                <div class="img defer lazied"
+                     data-style="background-image: url(https://3kshop.vn/wp-content/uploads/fly-images/59083/Beyerdynamic-MMX-300-Pro-500x309-c.jpg)"
+                     style="background-image: url(https://3kshop.vn/wp-content/uploads/fly-images/59083/Beyerdynamic-MMX-300-Pro-500x309-c.jpg)">
+                    <a href="https://3kshop.vn/beyerdynamic-mmx-300-pro-tai-nghe-chuyen-dung-cho-gaming-gia-300/">
+                    </a>
+                </div>
+                <div class="box-content">
+                    <h5 class="title">
+                        <a href="https://3kshop.vn/beyerdynamic-mmx-300-pro-tai-nghe-chuyen-dung-cho-gaming-gia-300/">
+                            Beyerdynamic MMX 300 Pro – tai nghe chuyên dùng cho gaming, giá $300 </a>
+                    </h5>
+                    <p class="description">
+                        Beyerdynamic cho biết MMX 300 Pro X mang chất lượng âm thanh studio đến tới... </p>
+                    <a class="btn-a"
+                       href="https://3kshop.vn/beyerdynamic-mmx-300-pro-tai-nghe-chuyen-dung-cho-gaming-gia-300/">Xem
+                        thêm</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <h5>Triple V</h5>
+                <p>Địa chỉ: 123 Đường ABC, Quận X, Thành phố Y</p>
+            </div>
+            <div class="col-md-4">
+                <h5>Liên Hệ</h5>
+                <ul class="list-unstyled">
+                    <li><a href="#">Facebook</a></li>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">Twitter</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h5>Đăng ký nhận tin</h5>
+                <form>
+                    <div class="mb-3">
+                        <input type="email" class="form-control" placeholder="Email của bạn">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Đăng Ký</button>
+                </form>
+            </div>
+        </div>
+        <div class="text-center mt-3">
+            <p>&copy; 2024 Triple V. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+<script>
+    document.querySelectorAll('#play-list .secondary-box').forEach(item => {
+        item.addEventListener('click', function () {
+            const videoId = this.querySelector('img').getAttribute('data-src').match(/vi\/(.*?)\//)[1];
+            const iframe = document.getElementById('ifram-play');
+            iframe.src = `https://www.youtube.com/embed/${videoId}`;
+        });
+    });
+
+</script>
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

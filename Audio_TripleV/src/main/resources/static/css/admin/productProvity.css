@@ -1,0 +1,236 @@
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #f7f7f7;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+/* Navbar styling */
+.navbar-custom {
+    background-color: #343a40;
+    color: #ffffff;
+}
+
+.search-input {
+    display: none;
+    margin-left: 10px;
+    max-width: 200px;
+}
+
+/* Main container is now horizontally split with flexbox */
+.main-container {
+    display: flex;
+    height: calc(100vh - 70px); /* Full height minus header */
+    width: 100%; /* Full width */
+}
+
+/* Category Navigation (5/8 of Main Container) */
+.category-container {
+    flex: 5;  /* 5/8 of the width */
+    padding: 20px;
+    border-right: 1px solid #ccc;
+    overflow-y: auto;
+}
+
+/* Category Buttons */
+.category-buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.category-button {
+    background-color: #007bff; /* Default button color */
+    color: white; /* Text color */
+    border: none;
+    padding: 10px 20px; /* Padding for the button */
+    margin: 5px; /* Space between buttons */
+    border-radius: 8px; /* Rounded corners */
+    font-size: 16px; /* Font size */
+    cursor: pointer; /* Pointer on hover */
+    transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.category-button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columns */
+    gap: 20px;
+    margin-top: 10px;
+}
+
+.menu-item {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+.item-image {
+    width: 100px;
+    height: 100px;
+    background-color: #f0f0f0;
+    margin: 0 auto;
+}
+
+/* Order Summary (3/8 of Main Container) */
+.order-summary {
+    flex: 3;  /* 3/8 of the width */
+    padding: 20px;
+    height: 100%;
+    overflow-y: auto;
+    border-left: 1px solid #ccc;
+}
+
+/* Order Summary styling */
+.order-summary-border {
+    border: 1px solid #ddd;
+    padding: 15px;
+    position: relative;
+}
+
+.bill-code {
+    position: absolute;
+    top: 10px;
+    left: 15px;
+    font-size: 0.8em;
+}
+
+/* Order Items */
+.order-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    cursor: pointer;
+    border-bottom: 1px solid #ddd;
+}
+
+.order-details {
+    display: none;
+    padding-left: 15px;
+    background-color: #f9f9f9;
+    margin-bottom: 10px;
+    border-left: 2px solid #ddd;
+    padding: 10px;
+}
+
+/* Totals Section */
+.totals {
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.total-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.hold-btn, .history-btn, .pay-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.hold-btn {
+    background-color: #f1a661;
+    color: white;
+}
+
+.history-btn {
+    background-color: #007bff;
+    color: white;
+}
+
+.pay-btn {
+    background-color: #5cb85c;
+    color: white;
+}
+
+.history-form, .hold-form {
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.history-form input, .hold-form input {
+    margin-right: 10px;
+}
+
+.search-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+/* List Data Styling */
+.list-data ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.list-data ul li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.list-data ul li:hover {
+    background-color: #f1f1f1;
+}
+
+/* Button group */
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    border: 2px solid #ddd; /* Change the border color if necessary */
+    border-radius: 5px;
+    margin-bottom: 20px;
+    background-color: #ffffff; /* Set background color */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for depth */
+}
+
+.add-customer-btn, .new-bill-btn, .reload-btn {
+    padding: 8px 12px;
+    border: none;
+    background-color: #f1f1f1; /* Background color */
+    border-radius: 5px;
+    cursor: pointer;
+    flex: 1; /* Allow buttons to grow equally */
+    margin: 0 5px; /* Add margin for spacing */
+}
+
+.right-buttons {
+    display: flex;
+    gap: 5px; /* Small gap between New Bill and Reload buttons */
+}
+
+.add-customer-btn i, .new-bill-btn i, .reload-btn i {
+    margin-right: 5px;
+}
+
+.add-customer-btn:hover, .new-bill-btn:hover, .reload-btn:hover {
+    background-color: #ffc107; /* Change background on hover */
+    color: white; /* Change text color on hover */
+}

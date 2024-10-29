@@ -1,0 +1,77 @@
+body {
+    background-color: #f8f9fa; /* Màu nền */
+}
+
+/* Custom blue background for header */
+.navbar-custom {
+    background-color: #007bff; /* Bootstrap primary blue color */
+}
+
+.navbar-custom .nav-link,
+.navbar-custom .btn {
+    color: #fff; /* Màu chữ trắng */
+}
+
+.search-input {
+    display: none;  /* Initially hidden */
+    margin-left: 10px;
+    max-width: 200px;
+}
+
+/* Các quy tắc CSS khác */
+.form-container {
+    background-color: #ffffff; /* Màu nền trắng cho form */
+    border-radius: 8px; /* Góc tròn */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */
+    padding: 30px; /* Padding bên trong form */
+    margin-top: 50px; /* Khoảng cách phía trên */
+    display: flex; /* Sử dụng flexbox để bố trí */
+}
+
+.account-section {
+    width: 25%; /* Chiều rộng cho phần tài khoản */
+    margin-right: 20px; /* Khoảng cách giữa các phần */
+}
+
+.profile-section {
+    width: 75%; /* Chiều rộng cho phần hồ sơ */
+}
+
+h2 {
+    margin-bottom: 20px; /* Khoảng cách phía dưới tiêu đề */
+}
+
+.small-text {
+    font-size: 0.85rem; /* Kích thước chữ nhỏ cho mô tả */
+    color: #6c757d; /* Màu xám nhạt */
+    margin-bottom: 20px; /* Khoảng cách phía dưới chữ */
+}
+
+.account-border {
+    border: 1px solid #dee2e6; /* Đường viền nhẹ cho phần tài khoản */
+    border-radius: 5px; /* Góc tròn */
+    padding: 10px; /* Padding bên trong đường viền */
+    margin-top: 20px; /* Khoảng cách phía trên phần tài khoản */
+}
+
+.collapse {
+    margin-top: 15px; /* Khoảng cách phía trên phần ẩn */
+}
+
+.table th,
+.table td {
+    text-align: center; /* Căn giữa chữ trong bảng */
+}
+
+.btn-repurchase {
+    margin-top: 15px; /* Khoảng cách phía trên nút mua lại */
+}
+
+.divider {
+    border-left: 2px solid #dee2e6; /* Đường kẻ ngăn cách giữa các phần */
+    margin: 0 20px; /* Khoảng cách cho đường kẻ */
+}
+
+.history-border {
+    margin-top: 15px; /* Khoảng cách cho bảng lịch sử mua hàng */
+}

@@ -1,0 +1,46 @@
+/* style.css */
+body {
+    background-color: #f8f9fa;
+}
+
+.cart-container, .shipping-info, .payment-methods, .payment-summary, .cart-summary {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+h4 {
+    font-weight: bold;
+}
+
+.cart-item {
+    margin-bottom: 10px;
+}
+
+.image-placeholder {
+    width: 50px;
+    height: 50px;
+    background-color: #e9ecef; /* Placeholder color */
+    border: 1px solid #ced4da;
+}
+
+.quantity-container {
+    width: 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btn-group .quantity-btn {
+    width: 30px;
+    height: 30px;
+    padding: 0;
+}
+
+.payment-summary {
+    position: relative; /* Allow positioning for additional elements if needed */
+}
+
+.payment-summary .form-group {
+    margin-bottom: 1rem;
+}

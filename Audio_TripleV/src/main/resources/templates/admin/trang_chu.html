@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.9.1/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/src/main/resources/static/css/admin/home.css">
+    <!-- <link rel="stylesheet" href="/src/main/resources/static/css/viewNV.css"> -->
+    <!-- <link rel="stylesheet" href="/src/main/resources/static/css/admin/orderSummary.css"> -->
+
+    <style>
+        .search-input {
+            display: none;  /* Initially hidden */
+            margin-left: 10px;
+            max-width: 200px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <nav class="navbar navbar-expand-lg navbar-custom">
+            <div class="container">
+                <!-- Left section -->
+                <div class="navbar-nav">
+                    <a class="nav-item nav-link" href="/admin/san-pham">Sản Phẩm</a>
+                    <a class="nav-item nav-link" href="/src/main/webapp/views/admin/productAdmin/productProvity.html">ThanhToan</a>
+                    <a class="nav-item nav-link" href="/src/main/webapp/views/admin/mainViewNV/viewNV.html">Quản Lý </a>
+                    <a class="nav-item nav-link" href="/src/main/webapp/views/admin/mainViewNV/viewNV.html">Khách Hàng </a>
+
+                </div>
+
+                <!-- Right section with buttons -->
+                <div class="ml-auto d-flex align-items-center">
+                    <!-- Hidden Search Input Field -->
+                    <input type="text" id="searchInput" class="form-control search-input" placeholder="Tìm kiếm...">
+
+                    <!-- Search Button -->
+                    <button class="btn btn-outline-light" type="button" onclick="handleSearch()">
+                        <i class="bi bi-search"></i>
+                    </button>
+
+                    <!-- Account Button Link -->
+                    <a class="btn btn-outline-light" href="/src/main/webapp/views/admin/accNV/nvAcc.html">
+                        <i class="bi bi-person-circle"></i> 
+                    </a>
+
+
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Bootstrap JS and jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        function handleSearch() {
+            const searchInput = document.getElementById('searchInput');
+            
+            // Check if the input is visible
+            if (searchInput.style.display === 'none' || searchInput.style.display === '') {
+                searchInput.style.display = 'block'; // Show the input field
+                searchInput.focus();  // Automatically focus the input field
+            } else {
+                // If input is visible, proceed with search
+                const searchValue = searchInput.value.trim();  // Get the trimmed value
+                if (searchValue) {
+                    // Redirect to sang_pham.html with the search term
+                    window.location.href = `sang_pham.html?search=${encodeURIComponent(searchValue)}`;
+                }
+                // Clear the input field after search
+                searchInput.value = '';
+                searchInput.style.display = 'none';  // Hide the input field again
+            }
+        }
+    </script>
+</body>
+
+</html>

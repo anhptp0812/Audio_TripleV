@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tai nghe dây Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .product {
+            background-color: #e0e0e0;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* General Styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            padding: 20px;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        /* Product Section */
+        .product-section {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .product-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+
+        /* Product Card */
+        .product-card {
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            width: 250px;
+            padding: 15px;
+            margin: 10px;
+            text-align: left;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: scale(1.05);
+        }
+
+        .product-card img {
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        /* Discount Badge */
+        .discount-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: #ff3333;
+            color: #ffffff;
+            padding: 5px 10px;
+            font-size: 12px;
+            border-radius: 5px;
+        }
+
+        /* Installment Info */
+        .installment {
+            background-color: #0056b3;
+            color: #ffffff;
+            padding: 3px 5px;
+            font-size: 12px;
+            width: fit-content;
+            margin-top: 10px;
+            border-radius: 3px;
+        }
+
+        /* Product Description */
+        .product-card p {
+            font-size: 14px;
+            color: #333333;
+            margin: 10px 0;
+        }
+
+        /* Rating */
+        .rating {
+            color: #ffcc00;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        /* Price Container */
+        .price-container {
+            margin: 10px 0;
+        }
+
+        .current-price {
+            font-size: 18px;
+            font-weight: bold;
+            color: #e60000;
+        }
+
+        .original-price {
+            font-size: 14px;
+            text-decoration: line-through;
+            color: #777777;
+            margin-left: 10px;
+        }
+
+        /* Add to Cart Button */
+        .add-to-cart {
+            width: 100%;
+            padding: 10px 0;
+            background-color: #ff6600;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .add-to-cart:hover {
+            background-color: #cc5200;
+        }
+
+        /* Pagination */
+        .pagination {
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        footer {
+            background-color: #343a40;
+            color: white;
+            padding: 20px 0;
+        }
+
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+        <a class="navbar-brand" href="/trang-chu/hien-thi"><img src="/images/logo.png" width="50" height="50"></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/san-pham/hien-thi">Sản Phẩm</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/thuong-hieu/hien-thi">Thương Hiệu</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/khuyen-mai/hien-thi">Khuyến Mãi</a>
+                </li>
+            </ul>
+            <div class="d-flex">
+                <a href="#" class="me-3"><i class="fas fa-search"></i></a>
+                <a href="#" class="me-3"><i class="fas fa-user"></i></a>
+                <a href="#"><i class="fas fa-shopping-cart"></i></a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Banner -->
+<div id="bannerCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="/images/banner-1.jpg" class="d-block w-100" width="100%" height="500px" alt="Banner 1">
+        </div>
+        <div class="carousel-item">
+            <img src="/images/banner-2.jpg" class="d-block w-100"  width="100%" height="500px" alt="Banner 2">
+        </div>
+        <div class="carousel-item">
+            <img src="/images/banner-3.jpg" class="d-block w-100"  width="100%" height="500px" alt="Banner 3">
+        </div>
+    </div>
+    <!-- Carousel Controls -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#bannerCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#bannerCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+
+<div class="container">
+    <h2>Tai nghe bluetooth</h2>
+    <div class="product-container" id="productContainer"></div>
+
+    <!-- Pagination -->
+    <div class="pagination" id="pagination"></div>
+</div>
+
+<!-- Footer -->
+<footer class="footer mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <h5>Triple V</h5>
+                <p>Địa chỉ: 123 Đường ABC, Quận X, Thành phố Y</p>
+            </div>
+            <div class="col-md-4">
+                <h5>Liên Hệ</h5>
+                <ul class="list-unstyled">
+                    <li><a href="#">Facebook</a></li>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">Twitter</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h5>Đăng ký nhận tin</h5>
+                <form>
+                    <div class="mb-3">
+                        <input type="email" class="form-control" placeholder="Email của bạn">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Đăng Ký</button>
+                </form>
+            </div>
+        </div>
+        <div class="text-center mt-3">
+            <p>&copy; 2024 Triple V. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // Dữ liệu sản phẩm
+    const products = [
+        {
+            img: '/images/inear/inear1.jpg',
+            discount: 'Giảm giá 18%',
+            installment: 'TRẢ GÓP 0%',
+            description: '[ĐĂNG KÝ MYSONY, GIẢM NGAY 200K] Tai nghe Gaming không dây INZONE H9 Đen...',
+            rating: '★★★★☆ (21)',
+            currentPrice: '4,790,000đ',
+            originalPrice: '5,850,000đ'
+        },
+        {
+            img: '/images/inear/inear2.jpg',
+            discount: 'Giảm giá 18%',
+            installment: 'TRẢ GÓP 0%',
+            description: '[ĐĂNG KÝ MYSONY, GIẢM NGAY 200K] Tai nghe chơi game không dây chống ồn...',
+            rating: '★★★★☆ (21)',
+            currentPrice: '4,790,000đ',
+            originalPrice: '5,850,000đ'
+        },
+        {
+            img: '/images/inear/inear3.jpg',
+            discount: 'Giảm giá 16%',
+            installment: 'TRẢ GÓP 0%',
+            description: '[ĐĂNG KÝ MYSONY, GIẢM NGAY 200K] Tai nghe Gaming không dây INZONE Buds Đen...',
+            rating: '★★★★☆ (15)',
+            currentPrice: '3,990,000đ',
+            originalPrice: '4,790,000đ'
+        },
+        {
+            img: '/images/inear/inear14.jpg',
+            discount: 'Giảm giá 16%',
+            installment: 'TRẢ GÓP 0%',
+            description: '[ĐĂNG KÝ MYSONY, GIẢM NGAY 200K] Tai nghe Gaming không dây INZONE Buds Đen...',
+            rating: '★★★★☆ (15)',
+            currentPrice: '3,990,000đ',
+            originalPrice: '4,790,000đ'
+        },
+        {
+            img: '/images/inear/inear6.jpg',
+            discount: 'Giảm giá 18%',
+            installment: 'TRẢ GÓP 0%',
+            description: '[ĐĂNG KÝ MYSONY, GIẢM NGAY 200K] Tai nghe Gaming không dây INZONE H9 Đen...',
+            rating: '★★★★☆ (21)',
+            currentPrice: '4,790,000đ',
+            originalPrice: '5,850,000đ'
+        },
+        {
+            img: '/images/inear/inear7.jpg',
+            discount: 'Giảm giá 18%',
+            installment: 'TRẢ GÓP 0%',
+            description: '[ĐĂNG KÝ MYSONY, GIẢM NGAY 200K] Tai nghe chơi game không dây chống ồn...',
+            rating: '★★★★☆ (21)',
+            currentPrice: '4,790,000đ',
+            originalPrice: '5,850,000đ'
+        },
+        {
+            img: '/images/inear/inear8.jpg',
+            discount: 'Giảm giá 16%',
+            installment: 'TRẢ GÓP 0%',
+            description: '[ĐĂNG KÝ MYSONY, GIẢM NGAY 200K] Tai nghe Gaming không dây INZONE Buds Đen...',
+            rating: '★★★★☆ (15)',
+            currentPrice: '3,990,000đ',
+            originalPrice: '4,790,000đ'
+        },
+        {
+            img: '/images/inear/inear9.jpg',
+            discount: 'Giảm giá 16%',
+            installment: 'TRẢ GÓP 0%',
+            description: '[ĐĂNG KÝ MYSONY, GIẢM NGAY 200K] Tai nghe Gaming không dây INZONE Buds Đen...',
+            rating: '★★★★☆ (15)',
+            currentPrice: '3,990,000đ',
+            originalPrice: '4,790,000đ'
+        },
+        {
+            img: '/images/inear/inear10.jpg',
+            discount: 'Giảm giá 18%',
+            installment: 'TRẢ GÓP 0%',
+            description: '[ĐĂNG KÝ MYSONY, GIẢM NGAY 200K] Tai nghe Gaming không dây INZONE H9 Đen...',
+            rating: '★★★★☆ (21)',
+            currentPrice: '4,790,000đ',
+            originalPrice: '5,850,000đ'
+        },
+        {
+            img: '/images/inear/inear11.jpg',
+            discount: 'Giảm giá 18%',
+            installment: 'TRẢ GÓP 0%',
+            description: '[ĐĂNG KÝ MYSONY, GIẢM NGAY 200K] Tai nghe chơi game không dây chống ồn...',
+            rating: '★★★★☆ (21)',
+            currentPrice: '4,790,000đ',
+            originalPrice: '5,850,000đ'
+        },
+        {
+            img: '/images/inear/inear12.jpg',
+            discount: 'Giảm giá 16%',
+            installment: 'TRẢ GÓP 0%',
+            description: '[ĐĂNG KÝ MYSONY, GIẢM NGAY 200K] Tai nghe Gaming không dây INZONE Buds Đen...',
+            rating: '★★★★☆ (15)',
+            currentPrice: '3,990,000đ',
+            originalPrice: '4,790,000đ'
+        },
+        {
+            img: '/images/inear/inear13.jpg',
+            discount: 'Giảm giá 16%',
+            installment: 'TRẢ GÓP 0%',
+            description: '[ĐĂNG KÝ MYSONY, GIẢM NGAY 200K] Tai nghe Gaming không dây INZONE Buds Đen...',
+            rating: '★★★★☆ (15)',
+            currentPrice: '3,990,000đ',
+            originalPrice: '4,790,000đ'
+        },
+        {
+            img: '/images/inear/inear14.jpg',
+            discount: 'Giảm giá 18%',
+            installment: 'TRẢ GÓP 0%',
+            description: '[ĐĂNG KÝ MYSONY, GIẢM NGAY 200K] Tai nghe Gaming không dây INZONE H9 Đen...',
+            rating: '★★★★☆ (21)',
+            currentPrice: '4,790,000đ',
+            originalPrice: '5,850,000đ'
+        },
+        {
+            img: '/images/inear/inear15.jpg',
+            discount: 'Giảm giá 18%',
+            installment: 'TRẢ GÓP 0%',
+            description: '[ĐĂNG KÝ MYSONY, GIẢM NGAY 200K] Tai nghe chơi game không dây chống ồn...',
+            rating: '★★★★☆ (21)',
+            currentPrice: '4,790,000đ',
+            originalPrice: '5,850,000đ'
+        },
+        {
+            img: '/images/inear/inear18.jpg',
+            discount: 'Giảm giá 16%',
+            installment: 'TRẢ GÓP 0%',
+            description: '[ĐĂNG KÝ MYSONY, GIẢM NGAY 200K] Tai nghe Gaming không dây INZONE Buds Đen...',
+            rating: '★★★★☆ (15)',
+            currentPrice: '3,990,000đ',
+            originalPrice: '4,790,000đ'
+        },
+        {
+            img: '/images/inear/inear19.jpg',
+            discount: 'Giảm giá 16%',
+            installment: 'TRẢ GÓP 0%',
+            description: '[ĐĂNG KÝ MYSONY, GIẢM NGAY 200K] Tai nghe Gaming không dây INZONE Buds Đen...',
+            rating: '★★★★☆ (15)',
+            currentPrice: '3,990,000đ',
+            originalPrice: '4,790,000đ'
+        },
+        {
+            img: '/images/inear/inear20.jpg',
+            discount: 'Giảm giá 18%',
+            installment: 'TRẢ GÓP 0%',
+            description: '[ĐĂNG KÝ MYSONY, GIẢM NGAY 200K] Tai nghe Gaming không dây INZONE H9 Đen...',
+            rating: '★★★★☆ (21)',
+            currentPrice: '4,790,000đ',
+            originalPrice: '5,850,000đ'
+        },
+        {
+            img: '/images/inear/inear21.jpg',
+            discount: 'Giảm giá 18%',
+            installment: 'TRẢ GÓP 0%',
+            description: '[ĐĂNG KÝ MYSONY, GIẢM NGAY 200K] Tai nghe chơi game không dây chống ồn...',
+            rating: '★★★★☆ (21)',
+            currentPrice: '4,790,000đ',
+            originalPrice: '5,850,000đ'
+        },
+        {
+            img: '/images/tai nghe true wireless/tai nghe true wireless1.jpg',
+            discount: 'Giảm giá 16%',
+            installment: 'TRẢ GÓP 0%',
+            description: '[ĐĂNG KÝ MYSONY, GIẢM NGAY 200K] Tai nghe Gaming không dây INZONE Buds Đen...',
+            rating: '★★★★☆ (15)',
+            currentPrice: '3,990,000đ',
+            originalPrice: '4,790,000đ'
+        },
+        {
+            img: '/images/tai nghe true wireless/tai nghe true wireless2.jpg',
+            discount: 'Giảm giá 16%',
+            installment: 'TRẢ GÓP 0%',
+            description: '[ĐĂNG KÝ MYSONY, GIẢM NGAY 200K] Tai nghe Gaming không dây INZONE Buds Đen...',
+            rating: '★★★★☆ (15)',
+            currentPrice: '3,990,000đ',
+            originalPrice: '4,790,000đ'
+        },
+        {
+            img: '/images/tai nghe true wireless/tai nghe true wireless3.jpg',
+            discount: 'Giảm giá 18%',
+            installment: 'TRẢ GÓP 0%',
+            description: '[ĐĂNG KÝ MYSONY, GIẢM NGAY 200K] Tai nghe Gaming không dây INZONE H9 Đen...',
+            rating: '★★★★☆ (21)',
+            currentPrice: '4,790,000đ',
+            originalPrice: '5,850,000đ'
+        },
+        {
+            img: '/images/tai nghe true wireless/tai nghe true wireless4.jpg',
+            discount: 'Giảm giá 18%',
+            installment: 'TRẢ GÓP 0%',
+            description: '[ĐĂNG KÝ MYSONY, GIẢM NGAY 200K] Tai nghe chơi game không dây chống ồn...',
+            rating: '★★★★☆ (21)',
+            currentPrice: '4,790,000đ',
+            originalPrice: '5,850,000đ'
+        },
+        {
+            img: '/images/tai nghe true wireless/tai nghe true wireless5.jpg',
+            discount: 'Giảm giá 16%',
+            installment: 'TRẢ GÓP 0%',
+            description: '[ĐĂNG KÝ MYSONY, GIẢM NGAY 200K] Tai nghe Gaming không dây INZONE Buds Đen...',
+            rating: '★★★★☆ (15)',
+            currentPrice: '3,990,000đ',
+            originalPrice: '4,790,000đ'
+        },
+        {
+            img: '/images/tai nghe true wireless/tai nghe true wireless6.jpg',
+            discount: 'Giảm giá 16%',
+            installment: 'TRẢ GÓP 0%',
+            description: '[ĐĂNG KÝ MYSONY, GIẢM NGAY 200K] Tai nghe Gaming không dây INZONE Buds Đen...',
+            rating: '★★★★☆ (15)',
+            currentPrice: '3,990,000đ',
+            originalPrice: '4,790,000đ'
+        },{
+            img: '/images/tai nghe true wireless/tai nghe true wireless7.jpg',
+            discount: 'Giảm giá 18%',
+            installment: 'TRẢ GÓP 0%',
+            description: '[ĐĂNG KÝ MYSONY, GIẢM NGAY 200K] Tai nghe chơi game không dây chống ồn...',
+            rating: '★★★★☆ (21)',
+            currentPrice: '4,790,000đ',
+            originalPrice: '5,850,000đ'
+        },
+        {
+            img: '/images/tai nghe true wireless/tai nghe true wireless8.jpg',
+            discount: 'Giảm giá 16%',
+            installment: 'TRẢ GÓP 0%',
+            description: '[ĐĂNG KÝ MYSONY, GIẢM NGAY 200K] Tai nghe Gaming không dây INZONE Buds Đen...',
+            rating: '★★★★☆ (15)',
+            currentPrice: '3,990,000đ',
+            originalPrice: '4,790,000đ'
+        },
+        {
+            img: '/images/tai nghe true wireless/tai nghe true wireless9.jpg',
+            discount: 'Giảm giá 16%',
+            installment: 'TRẢ GÓP 0%',
+            description: '[ĐĂNG KÝ MYSONY, GIẢM NGAY 200K] Tai nghe Gaming không dây INZONE Buds Đen...',
+            rating: '★★★★☆ (15)',
+            currentPrice: '3,990,000đ',
+            originalPrice: '4,790,000đ'
+        },
+        {
+            img: '/images/tai nghe true wireless/tai nghe true wireless10.jpg',
+            discount: 'Giảm giá 18%',
+            installment: 'TRẢ GÓP 0%',
+            description: '[ĐĂNG KÝ MYSONY, GIẢM NGAY 200K] Tai nghe Gaming không dây INZONE H9 Đen...',
+            rating: '★★★★☆ (21)',
+            currentPrice: '4,790,000đ',
+            originalPrice: '5,850,000đ'
+        },
+        {
+            img: '/images/tai nghe true wireless/tai nghe true wireless11.jpg',
+            discount: 'Giảm giá 18%',
+            installment: 'TRẢ GÓP 0%',
+            description: '[ĐĂNG KÝ MYSONY, GIẢM NGAY 200K] Tai nghe chơi game không dây chống ồn...',
+            rating: '★★★★☆ (21)',
+            currentPrice: '4,790,000đ',
+            originalPrice: '5,850,000đ'
+        },
+        {
+            img: '/images/tai nghe true wireless/tai nghe true wireless12.jpg',
+            discount: 'Giảm giá 16%',
+            installment: 'TRẢ GÓP 0%',
+            description: '[ĐĂNG KÝ MYSONY, GIẢM NGAY 200K] Tai nghe Gaming không dây INZONE Buds Đen...',
+            rating: '★★★★☆ (15)',
+            currentPrice: '3,990,000đ',
+            originalPrice: '4,790,000đ'
+        },
+        {
+            img: '/images/tai nghe true wireless/tai nghe true wireless13.jpg',
+            discount: 'Giảm giá 16%',
+            installment: 'TRẢ GÓP 0%',
+            description: '[ĐĂNG KÝ MYSONY, GIẢM NGAY 200K] Tai nghe Gaming không dây INZONE Buds Đen...',
+            rating: '★★★★☆ (15)',
+            currentPrice: '3,990,000đ',
+            originalPrice: '4,790,000đ'
+        },
+        {
+            img: '/images/tai nghe true wireless/tai nghe true wireless14.jpg',
+            discount: 'Giảm giá 16%',
+            installment: 'TRẢ GÓP 0%',
+            description: '[ĐĂNG KÝ MYSONY, GIẢM NGAY 200K] Tai nghe Gaming không dây INZONE Buds Đen...',
+            rating: '★★★★☆ (15)',
+            currentPrice: '3,990,000đ',
+            originalPrice: '4,790,000đ'
+        }
+
+    ];
+
+    const productContainer = document.getElementById('productContainer');
+    const pagination = document.getElementById('pagination');
+
+    const itemsPerPage = 12; // Số sản phẩm hiển thị mỗi trang
+    let currentPage = 1;
+
+    // Hàm hiển thị sản phẩm
+    function displayProducts() {
+        productContainer.innerHTML = '';
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const currentProducts = products.slice(startIndex, endIndex);
+
+        currentProducts.forEach(product => {
+            const productCard = document.createElement('div');
+            productCard.className = 'product-card';
+
+            productCard.innerHTML = `
+                <img src="${product.img}" alt="${product.description}">
+                <div class="discount-badge">${product.discount}</div>
+                <div class="installment">${product.installment}</div>
+                <p>${product.description}</p>
+                <span class="rating">${product.rating}</span>
+                <div class="price-container">
+                    <span class="current-price">${product.currentPrice}</span>
+                    <span class="original-price">${product.originalPrice}</span>
+                </div>
+                <button class="add-to-cart" onclick="addToCart('${product.description}')">Thêm Vào Giỏ Hàng</button>
+            `;
+
+            productContainer.appendChild(productCard);
+        });
+
+        updatePagination();
+    }
+
+    // Hàm cập nhật phân trang
+    function updatePagination() {
+        pagination.innerHTML = '';
+        const totalPages = Math.ceil(products.length / itemsPerPage);
+
+        for (let i = 1; i <= totalPages; i++) {
+            const pageButton = document.createElement('button');
+            pageButton.innerText = i;
+            pageButton.className = 'btn btn-primary';
+            pageButton.onclick = () => {
+                currentPage = i;
+                displayProducts();
+            };
+            pagination.appendChild(pageButton);
+        }
+    }
+
+    // Hàm thêm vào giỏ hàng
+    function addToCart(productName) {
+        alert(productName + ' đã được thêm vào giỏ hàng!');
+    }
+
+    // Hiển thị sản phẩm khi trang được tải
+    displayProducts();
+</script>
+
+</body>
+</html>

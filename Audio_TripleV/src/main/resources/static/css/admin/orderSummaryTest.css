@@ -1,0 +1,189 @@
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #f7f7f7;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    max-width: 600px; /* Tăng chiều rộng nếu cần */
+    margin: 0 auto;
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Button group */
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.add-customer-btn, .new-bill-btn, .reload-btn {
+    padding: 8px 12px;
+    border: none;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.right-buttons {
+    display: flex;
+    gap: 5px; /* Khoảng cách nhỏ giữa New Bill và Reload */
+}
+
+.add-customer-btn i, .new-bill-btn i, .reload-btn i {
+    margin-right: 5px;
+}
+
+.add-customer-btn:hover, .new-bill-btn:hover, .reload-btn:hover {
+    background-color: #ffc107;
+    color: white;
+}
+
+/* Order Summary */
+.order-summary {
+    margin-bottom: 20px;
+    max-height: 300px; /* Tăng chiều cao của Order Summary */
+    overflow-y: auto; /* Cho phép cuộn nếu dữ liệu quá nhiều */
+}
+
+.order-summary-border {
+    border: 1px solid #ddd;
+    padding: 15px;
+    position: relative; /* Để vị trí của mã bill */
+}
+
+.bill-code {
+    position: absolute;
+    top: 10px;
+    left: 15px;
+    font-size: 0.8em; /* Giảm kích thước chữ của mã bill */
+}
+
+.order-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    cursor: pointer;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Order Details */
+.order-details {
+    display: none;
+    padding-left: 15px;
+    background-color: #f9f9f9;
+    margin-bottom: 10px;
+    border-left: 2px solid #ddd;
+    padding: 10px;
+}
+
+.order-details div {
+    margin-bottom: 10px;
+}
+
+/* Quantity Input */
+.order-details input[type="number"] {
+    width: 50px;
+}
+
+/* Summary Section */
+.totals {
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column; /* Stack totals vertically */
+}
+
+.total-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.total-item label {
+    font-size: 1.1em;
+}
+
+.total-item span {
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+/* Action buttons */
+.action-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.hold-btn, .history-btn, .pay-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.hold-btn {
+    background-color: #f1a661;
+    color: white;
+}
+
+.hold-btn:hover {
+    background-color: #e08c50;
+}
+
+.history-btn {
+    background-color: #007bff; /* Màu khác cho nút Lịch Sử */
+    color: white;
+}
+
+.history-btn:hover {
+    background-color: #0056b3;
+}
+
+.pay-btn {
+    background-color: #5cb85c;
+    color: white;
+}
+
+.pay-btn:hover {
+    background-color: #4cae4c;
+}
+
+/* Form History and Hold Bill */
+.history-form, .hold-form {
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.history-form input, .hold-form input {
+    margin-right: 10px;
+}
+
+.search-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.search-btn:hover {
+    background-color: #0056b3;
+}
