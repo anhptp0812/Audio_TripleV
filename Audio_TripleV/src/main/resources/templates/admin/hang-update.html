@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cập Nhật Hãng</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Cập Nhật Hãng</h2>
+    <form id="updateHangForm">
+        <div class="form-group">
+            <label for="id">ID:</label>
+            <input type="text" class="form-control" id="id" name="id" th:value="${hang.id}" readonly>
+        </div>
+        <div class="form-group">
+            <label for="ten">Tên Hãng:</label>
+            <input type="text" class="form-control" id="ten" name="ten" th:value="${hang.ten}" required>
+        </div>
+        <div class="form-group">
+            <label for="ngayTao">Ngày Tạo:</label>
+            <input type="date" class="form-control" id="ngayTao" name="ngayTao" th:value="${#dates.format(hang.ngayTao, 'yyyy-MM-dd')}" readonly>
+        </div>
+        <div class="form-group">
+            <label for="ngayCapNhat">Ngày Cập Nhật:</label>
+            <input type="date" class="form-control" id="ngayCapNhat" name="ngayCapNhat" th:value="${#dates.format(hang.ngayCapNhat, 'yyyy-MM-dd')}" readonly>
+        </div>
+        <button type="button" class="btn btn-primary" onclick="updateHang()">Cập Nhật</button>
+        <a href="/spct/hien-thi" class="btn btn-secondary">Quay Lại</a>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+    function updateHang() {
+        const formData = {
+            id: document.getElementById('id').value,
+            ten: document.getElementById('ten').value,
+            ngayTao: document.getElementById('ngayTao').value,
+            ngayCapNhat: document.getElementById('ngayCapNhat').value || new Date().toISOString().split('T')[0] // Gán ngày hiện tại nếu trường để trống
+        };
+
+        // Kiểm tra các trường bắt buộc
+        if (!formData.ten) {
+            alert('Vui lòng điền tên hãng.');
+            return;
+        }
+
+        $.ajax({
+            url: '/hang/update',
+            type: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function(response) {
+                alert('Cập nhật hãng thành công!');
+                window.location.href = '/spct/hien-thi?activated=hang';
+            },
+            error: function(xhr) {
+                alert('Có lỗi xảy ra: ' + xhr.responseText);
+            }
+        });
+    }
+</script>
+</body>
+</html>
