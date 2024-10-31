@@ -1,21 +1,17 @@
 package com.example.demo.repository;
 
 import com.example.demo.entity.SanPhamChiTiet;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
-    public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, Integer> {
-//        @Query("SELECT NEW SanPhamChiTietCustom (spct.id, sp.tenSP, ms.ten, h.ten, ha.tenUrl, lsp.kieuDang, " +
-//                "spct.donGia, spct.soLuong, spct.trangThai, spct.ngayTao, spct.ngayCapNhat )" +
-//                "FROM SanPhamChiTiet spct JOIN SanPham sp " +
-//                "ON spct.id = sp.id JOIN LoaiSanPham lsp " +
-//                "ON spct.idLoaiSP = lsp.id JOIN MauSac ms " +
-//                "ON spct.idMauSac = ms.id JOIN Hang h " +
-//                "ON spct.idHang = h.id JOIN HinhAnh ha " +
-//                "ON spct.idHinhAnh = ha.id  " +
-//                "WHERE spct.idLoaiSP = 5")
-//        List<SanPhamChiTietCustom> findSanPhamChiTietByIdLoaiSP(Integer idLoaiSP);
-
-
+public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet,Integer> {
+    List<SanPhamChiTiet> findByLoaiSanPham_Id(int idLoaiSP);
+    @Query("SELECT s FROM SanPhamChiTiet s ORDER BY s.ngayTao DESC")
+    List<SanPhamChiTiet> findTop4NewestProducts(Pageable pageable);
+    List<SanPhamChiTiet> findTop4ByOrderByIdDesc();
 }

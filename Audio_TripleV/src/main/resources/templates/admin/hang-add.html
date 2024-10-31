@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thêm Hãng</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Thêm Hãng</h2>
+    <form id="addForm" action="/hang/add" method="post" onsubmit="event.preventDefault(); addHang();">
+        <div class="form-group">
+            <label for="tenHang">Tên Hãng:</label>
+            <input type="text" class="form-control" id="tenHang" name="ten" required>
+        </div>
+        <button type="submit" class="btn btn-success">Thêm</button>
+        <a href="/spct/hien-thi" class="btn btn-secondary">Quay lại</a>
+    </form>
+</div>
+
+<script>
+    function addHang() {
+        const tenHang = $('#tenHang').val();
+
+        $.ajax({
+            url: '/hang/add',
+            type: 'POST',
+            contentType: 'application/json', // Đặt type content là JSON
+            data: JSON.stringify({ ten: tenHang }), // Chuyển đổi dữ liệu thành chuỗi JSON
+            beforeSend: function() {
+                $('body').append('<div class="loading">Đang xử lý...</div>');
+            },
+            success: function(response) {
+                alert('Thêm hãng thành công!');
+                window.location.href = '/spct/hien-thi?activated=hang';
+            },
+            error: function() {
+                alert('Có lỗi xảy ra khi thêm hãng.');
+            },
+            complete: function() {
+                $('.loading').remove();
+            }
+        });
+    }
+</script>
+
+<style>
+    .loading {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1000;
+        font-size: 24px;
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+</style>
+</body>
+</html>
+
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <title>Thêm Màu Sắc</title>-->
+<!--    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">-->
+<!--</head>-->
+<!--<body>-->
+<!--<div class="container">-->
+<!--    <h2>Thêm Màu Sắc</h2>-->
+<!--    <form th:action="@{/mau-sac/add}" method="post"> &lt;!&ndash; Sử dụng th:action &ndash;&gt;-->
+<!--        <div class="form-group">-->
+<!--            <label for="tenMauSac">Tên Màu Sắc</label>-->
+<!--            <input type="text" class="form-control" id="tenMauSac" name="ten" required>-->
+<!--        </div>-->
+<!--        <button type="submit" class="btn btn-success">Thêm</button>-->
+<!--        <a href="/mau-sac" class="btn btn-secondary">Quay lại</a>-->
+<!--    </form>-->
+<!--</div>-->
+<!--</body>-->
+<!--</html>-->
+
