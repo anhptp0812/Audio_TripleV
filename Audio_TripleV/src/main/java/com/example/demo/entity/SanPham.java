@@ -26,7 +26,7 @@ public class SanPham {
     private Integer id;
 
     @Column(name = "TenSP")
-    private String tenSP;
+    private String ten;
 
     @Column(name = "NgayTao")
     private Date ngayTao;
