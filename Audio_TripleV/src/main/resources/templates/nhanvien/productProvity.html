@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
@@ -230,7 +229,39 @@
             cursor: pointer;
         }
 
+        table {
+            width: 100%; /* Chiếm toàn bộ chiều rộng */
+            border-collapse: collapse; /* Gộp các đường viền */
+        }
+
+        input[type="text"], input[type="number"] {
+            width: 100%; /* Chiếm toàn bộ chiều rộng của ô */
+            border: none; /* Ẩn đường viền của input */
+            padding: 4px; /* Khoảng cách bên trong input */
+            box-sizing: border-box; /* Đảm bảo padding không làm tăng chiều rộng */
+        }
+
+        input[type="text"][readonly] {
+            background-color: #f2f2f2; /* Màu nền cho input chỉ đọc */
+        }
+
+        th, td {
+            border: 1px solid #ddd; /* Đường viền nhẹ */
+            padding: 8px; /* Khoảng cách bên trong ô */
+            text-align: left; /* Căn trái nội dung */
+        }
+
+        th {
+            background-color: #f2f2f2; /* Màu nền cho tiêu đề */
+        }
+
+        tr:hover {
+            background-color: #f5f5f5; /* Hiệu ứng hover cho hàng */
+        }
     </style>
+    <script>
+
+    </script>
 </head>
 
 <body>
@@ -238,9 +269,10 @@
 <nav class="navbar navbar-expand-lg navbar-custom">
     <div class="container">
         <div class="navbar-nav">
-            <a class="nav-item nav-link" href="/src/main/webapp/views/admin/bill/thanhToan.html">Thanh Toán</a>
-            <a class="nav-item nav-link" href="/src/main/webapp/views/admin/mainViewNV/viewNV.html">Quản Lý</a>
+            <a class="nav-item nav-link" href="/user/ban-hang">Bán Hàng</a>
+            <a class="nav-item nav-link" href="">Quản Lý</a>
             <a class="nav-item nav-link">Khách Hàng</a>
+            <a class="nav-item nav-link" href="/user/don-hang">Đơn hàng</a>
         </div>
 
         <div class="ml-auto d-flex align-items-center">
@@ -261,7 +293,8 @@
     <div class="category-container">
         <div class="category-buttons">
             <button onclick="showMenu('taiNgheTrueWireless')" class="category-button">Tai nghe true
-                wireless</button>
+                wireless
+            </button>
             <button onclick="showMenu('taiNgheDay')" class="category-button">Tai nghe dây</button>
             <button onclick="showMenu('onear')" class="category-button">Onear</button>
             <button onclick="showMenu('inear')" class="category-button">Inear</button>
@@ -330,17 +363,24 @@
                             </thead>
                             <tbody>
                             <tr th:each="spct : ${spct}">
+                                <!--                                [[${spct.sanPham.id}]]-->
+                                <!--                                , [[${spct.donGia}]], [[${spct.soLuong}]]-->
                                 <td th:text="${spct.sanPham.tenSP}"></td>
                                 <td th:text="${spct.mauSac.ten}"></td>
                                 <td th:text="${spct.hang.ten}"></td>
                                 <td>
-                                    <img th:src="@{/images/headphone/{tenUrl}(tenUrl=${spct.hinhAnh.tenUrl})}" style="width: 100px; height: auto;" />
+                                    <img th:src="@{/images/tainghes/{tenUrl}(tenUrl=${spct.hinhAnh.tenUrl})}"
+                                         style="width: 100px; height: auto;"/>
                                 </td>
                                 <td th:text="${spct.loaiSanPham.kieuDang}"></td>
                                 <td th:text="${spct.donGia}"></td>
                                 <td th:text="${spct.soLuong}"></td>
                                 <td th:text="${spct.trangThai}"></td>
-                                <td><button>thêm sản phẩm</button></td>
+                                <td>
+                                    <button onclick="addProductToForm([[${spct.sanPham.id}]], [[${spct.donGia}]], [[${spct.soLuong}]])">
+                                        Add Product
+                                    </button>
+                                </td>
 
                             </tr>
 
@@ -358,7 +398,8 @@
         <!-- Button group for Add Khách Hàng, New Bill, and Reload -->
         <div class="button-group">
             <button class="add-customer-btn" onclick="openCustomerForm()"><i class="bi bi-person-plus"></i> Add Khách
-                Hàng</button>
+                Hàng
+            </button>
             <div class="right-buttons">
                 <button class="new-bill-btn" onclick="showForms()"><i class="bi bi-plus-circle"></i></button>
                 <button class="reload-btn"><i class="bi bi-arrow-repeat"></i></button>
@@ -366,370 +407,409 @@
         </div>
 
         <div class="form-san-pham" style="display: none;">
-            <h3>Tạo đơn hàng</h3>
-            <form id="orderFormDetails" method="post" th:object="${donHang}" th:action ="@{/user/ban-hang/save}">
-<!--                method="POST"-->
-<!--                th:object="${donHang}"-->
-<!--                th:action="@{/don-hang/save}"-->
-                <label>ID Khách Hàng:</label>
-                <input type="text" placeholder="Nhập ID Khách Hàng" th:field="*{khachHang.id}"/>
+            <div>
+                <h3>Tạo đơn hàng</h3>
+                <form id="orderFormDetails" th:object="${donHang}" method="post" th:action="@{/user/ban-hang/save}">
+                    <!--                method="POST"-->
+                    <!--                th:object="${donHang}"-->
+                    <!--                th:action="@{/don-hang/save}"-->
+                    <label>Đơn Hàng</label>
+                    <input type="text" th:field="*{id}" disabled>
+                    <!--                <label>Khách Hàng: </label>-->
+                    <!--                <select th:field="*{khachHang.id}">-->
+                    <!--                    <option th:each="khachHang : ${listKh}"-->
+                    <!--                            th:value="${khachHang.id}"-->
+                    <!--                            th:text="${khachHang.ten}"></option>-->
+                    <!--                </select>-->
+                    <label>Khách Hàng: </label>
+                    <input type="text" id="khachHangInput" placeholder="Khách hàng" readonly
+                           th:field="*{khachHang.ten}"/>
+                    <input type="hidden" id="khachHangId" name="idKhachHang" th:field="*{khachHang.id}"/>
+                    <br>
+                    <label>Tổng Giá:</label>
+                    <input type="text" th:field="*{tongGia}" disabled>
+                    <br>
+                    <label>Trạng Thái:</label>
+                    <input type="text" placeholder="Nhập trạng thái" th:field="*{trangThai}"/>
+                    <br>
 
-                <label>Tổng Giá:</label>
+                    <label>Ngày Giao:</label>
+                    <input type="date" th:field="*{ngayGiao}"/>
 
-                <label>Trạng Thái:</label>
-                <input type="text"  placeholder="Nhập trạng thái"/>
-
-                <label>Ngày Giao:</label>
-                <input type="date" />
-
-                <button type="submit">Lưu đơn hàng</button>
-            </form>
+                    <button type="submit">Lưu đơn hàng</button>
+                </form>
+                <button onclick="viewOrderDetails()">Xem chi tiết</button>
+            </div>
 
             <!-- Nút để xem chi tiết đơn hàng theo ID đơn hàng -->
-            <button onclick="viewOrderDetails()">Xem chi tiết</button>
-        </div>
 
 
+            <!-- Forms to be displayed after "+" button click -->
+            <div id="orderDetailsForm" class="form-don-hang" style="display: none;">
+                <h3>Chi tiết đơn hàng</h3>
+                <form th:object="${donHangChiTiet}" th:action="@{/user/ban-hang/{id}(id=${donHang.id})}"
+                      method="post">
+                    <!--                                        onsubmit="saveOrderDetails()"-->
+                    <!--                    <input type="hidden" th:field="*{donHang}">-->
+                    <!--                    <label>ID Sản Phẩm:</label>-->
+                    <!--                    <input type="text" th:field="*{sanPhamChiTiet.id}"/>-->
 
-        <!-- Forms to be displayed after "+" button click -->
-        <div class="" style="display: none;">
-            <h3>Chi tiết đơn hàng</h3>
+                    <!--                    <label>Số Lượng:</label>-->
+                    <!--                    <input type="number" th:field="*{soLuong}"/>-->
 
-            <!-- Table to show added products -->
-            <table id="selectedProductsTable" class="table table-striped">
-                <thead>
-                <tr>
-                    <th>Tên sản phẩm</th>
-                    <th>Số lượng</th>
-                    <th>Đơn giá</th>
-                    <th>Thành tiền</th>
-                    <th>Thao tác</th>
-                </tr>
-                </thead>
-                <tbody id="selectedProductsBody">
-                <!-- Products will be added here dynamically -->
-                </tbody>
-            </table>
+                    <!--                    <label>Đơn Giá:</label>-->
+                    <!--                    <input type="number" th:field="*{donGia}"/>-->
 
-            <button onclick="submitAllProducts()">Xác nhận tất cả sản phẩm</button>
-        </div>
 
-        <!-- Totals Section remains unchanged -->
-        <div class="totals">
-            <div class="total-item">
-                <label>Tổng:</label>
-                <span id="totalAmount">0</span>
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Tên sản phẩm</th>
+                            <th>Số lượng</th>
+                            <th>Đơn giá</th>
+
+                        </tr>
+                        </thead>
+                        <tbody id="addedProductsTableBody">
+                        <!--                        selectedProductsBody-->
+                        <!-- Các sản phẩm sẽ được thêm vào đây -->
+                        <tr>
+                            <!--                            <td><input type="text" th:field="*{sanPhamChiTiet.id}"/></td>-->
+                            <!--                            <td><input type="number" th:field="*{soLuong}"/></td>-->
+                            <!--                            <td><input type="number" th:field="*{donGia}"/></td>-->
+
+                        </tr>
+                        </tbody>
+                    </table>
+                    <button type="submit">Xác nhận tất cả sản phẩm</button>
+                </form>
             </div>
-            <div class="total-item">
-                <label>Nhập số tiền khách đưa:</label>
-                <input type="text" id="customerPayment" oninput="calculateChange()" placeholder="Nhập số tiền" />
+            <div class="totals">
+                <div class="total-item">
+                    <label>Tổng:</label>
+                    <span id="totalAmount">0</span>
+                </div>
+                <div class="total-item">
+                    <label>Nhập số tiền khách đưa:</label>
+                    <input type="text" id="customerPayment" oninput="calculateChange()" placeholder="Nhập số tiền"/>
+                </div>
+                <div class="total-item">
+                    <label>Số tiền trả lại:</label>
+                    <span id="changeAmount">0</span>
+                </div>
             </div>
-            <div class="total-item">
-                <label>Số tiền trả lại:</label>
-                <span id="changeAmount">0</span>
+            <!-- Customer Form -->
+            <div class="customer-form" id="customerForm" style="display: none;">
+                <div class="form-container">
+                    <button class="close-btn" onclick="closeCustomerForm()">✖</button> <!-- Close button -->
+                    <label>Nhập tên:</label>
+                    <input type="text" placeholder="Nhập tên" class="form-control" id="customerName">
+                    <label>Nhập SĐT:</label>
+                    <input type="text" placeholder="Nhập SĐT" class="form-control" id="customerPhone">
+                    <button class="btn btn-primary" onclick="searchCustomer()">
+                        <i class="bi bi-search"></i> Tìm kiếm
+                    </button>
+                    <table class="table mt-3">
+                        <thead>
+                        <tr>
+                            <th>Tên KH</th>
+                            <th>SĐT</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody id="customer-list">
+                        <tr th:each="kh : ${listKh}"
+                            onclick="selectCustomer([[${kh.id}]], '[[${kh.ten}]]', '[[${kh.sdt}]]')">
+                            <td th:text="${kh.ten}"></td>
+                            <td th:text="${kh.sdt}"></td>
+                            <td>Chọn</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
-        <!-- Customer Form -->
-        <div class="customer-form" id="customerForm" style="display: none;">
-            <div class="form-container">
-                <button class="close-btn" onclick="closeCustomerForm()">✖</button> <!-- Close button -->
-                <label>Nhập tên:</label>
-                <input type="text" placeholder="Nhập tên" class="form-control" id="customerName">
-                <label>Nhập SĐT:</label>
-                <input type="text" placeholder="Nhập SĐT" class="form-control" id="customerPhone">
-                <button class="btn btn-primary" onclick="searchCustomer()">
-                    <i class="bi bi-search"></i> Tìm kiếm
-                </button>
-                <table class="table mt-3">
-                    <thead>
-                    <tr>
-                        <th>Tên KH</th>
-                        <th>SĐT</th>
-                    </tr>
-                    </thead>
-                    <tbody id="customer-list">
-                    <tr th:each="kh : ${listKh}">
-                        <td th:text="${kh.ten}"></td>
-                        <td th:text="${kh.sdt}"></td>
-                    </tr>
-                    </tbody>
-                </table>
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="history-btn" onclick="toggleHistoryForm()">Lịch Sử</button>
+                <button class="pay-btn" onclick="processPayment()">Thanh Toán</button> <!-- Thêm onclick ở đây -->
             </div>
-        </div>
-        <!-- Action Buttons -->
-        <div class="action-buttons">
-            <button class="history-btn" onclick="toggleHistoryForm()">Lịch Sử</button>
-            <button class="pay-btn" onclick="processPayment()">Thanh Toán</button> <!-- Thêm onclick ở đây -->
-        </div>
 
-        <!-- History Form remains unchanged -->
-        <div class="history-form" style="display: none;">
-            <div class="form-container">
-                <label for="history-code">Mã Lịch Sử:</label>
-                <input type="text" id="history-code" placeholder="Nhập mã lịch sử">
-                <button class="search-btn"><i class="bi bi-search"></i></button>
-            </div>
-            <div class="list-data">
-                <ul>
-                    <li>Mã Danh Sách 1</li>
-                    <li>Mã Danh Sách 2</li>
-                    <li>Mã Danh Sách 3</li>
-                    <li>Mã Danh Sách 4</li>
-                    <li>Mã Danh Sách 5</li>
-                </ul>
+            <!-- History Form remains unchanged -->
+            <div class="history-form" style="display: none;">
+                <div class="form-container">
+                    <label for="history-code">Mã Lịch Sử:</label>
+                    <input type="text" id="history-code" placeholder="Nhập mã lịch sử">
+                    <button class="search-btn"><i class="bi bi-search"></i></button>
+                </div>
+                <div class="list-data">
+                    <ul>
+                        <li>Mã Danh Sách 1</li>
+                        <li>Mã Danh Sách 2</li>
+                        <li>Mã Danh Sách 3</li>
+                        <li>Mã Danh Sách 4</li>
+                        <li>Mã Danh Sách 5</li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<script>
-    let formDisplayed = false;
-    let selectedProducts = []; // Mảng lưu trữ sản phẩm đã chọn
+    <script>
+        let formDisplayed = false;
 
-    document.addEventListener('DOMContentLoaded', function() {
-        const addProductButtons = document.querySelectorAll('td button');
-        addProductButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const row = this.closest('tr');
-                const productName = row.querySelector('td:nth-child(1)').textContent;
-                const quantity = parseFloat(row.querySelector('td:nth-child(7)').textContent) || 0; // Chuyển đổi số lượng sang số
-                const price = parseFloat(row.querySelector('td:nth-child(6)').textContent) || 0; // Chuyển đổi giá sang số
+        let selectedProducts = []; // Mảng lưu trữ sản phẩm đã chọn
 
-                addProductToForm(productName, quantity, price); // Thêm sản phẩm vào giỏ hàng
-            });
-        });
-    });
+        function addProductToForm(id, quantity, price) {
+            // Kiểm tra xem phần tử tbody có tồn tại không
 
-    function handleSearch() {
-        const searchInput = document.getElementById('searchInput');
-        if (searchInput.style.display === 'none' || searchInput.style.display === '') {
-            searchInput.style.display = 'block';
-            searchInput.focus();
-        } else {
-            const searchValue = searchInput.value.trim();
-            if (searchValue) {
-                window.location.href = `sang_pham.html?search=${encodeURIComponent(searchValue)}`;
+            const addedProductsTableBody = document.getElementById('addedProductsTableBody');
+            console.log(`Thêm sản phẩm với ID: ${id}, Đơn giá: ${price}, Số lượng: ${quantity}`);
+            if (!addedProductsTableBody) {
+                console.error('Phần tử tbody không tồn tại!');
+                return; // Dừng hàm nếu phần tử không tồn tại
             }
-            searchInput.value = '';
-            searchInput.style.display = 'none';
-        }
-    }
 
-    function addProductToForm(productName, availableStock, price) {
-        let quantity = 1; // Default quantity is 1
+            if (!id || price < 0 || quantity < 0) {
+                console.error('Giá trị không hợp lệ!');
+                return;
+            }
 
-        // Create a product object
-        const product = {
-            name: productName,
-            quantity: quantity,
-            availableStock: availableStock, // Store available stock
-            price: price,
-            total: price // Initially, total = price * quantity (which is 1)
+            // Tiến hành thêm sản phẩm vào form
+            // console.log(`Thêm sản phẩm với ID: ${id}, Đơn giá: ${price}, Số lượng: ${quantity}`);
+
+            // Tạo một hàng mới cho bảng danh sách sản phẩm đã thêm
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+            <td><input type="hidden" name="sanPhamChiTiet.id" value="${id}"/>${id}</td>
+            <td><input type="number" name="soLuong" value="${quantity}" /></td>
+            <td><input type="number" name="donGia" value="${price}" /></td>
+        `;
+
+            // Thêm hàng mới vào bảng danh sách sản phẩm
+            addedProductsTableBody.appendChild(newRow);
         };
 
-        // Add the product to the list
-        selectedProducts.push(product);
+        function saveOrderDetails() {
+            // Tạo đối tượng orderRequest
+            event.preventDefault();
+            const orderRequest = {
+                products: selectedProducts,
+                // Bạn có thể thêm các thông tin khác như ID đơn hàng, thông tin người dùng, v.v.
+            };
 
-        // Update the product table and total amount
-        updateProductTable();
-        updateTotalAmount();
-    }
-
-    function updateTotalAmount() {
-        const total = selectedProducts.reduce((sum, product) => sum + product.total, 0);
-        document.getElementById('totalAmount').textContent = total;
-        calculateChange(); // Cập nhật tiền trả lại
-    }
-
-    // Hàm tính toán số tiền trả lại
-    function calculateChange() {
-        const payment = parseFloat(document.getElementById('customerPayment').value) || 0; // Lấy giá trị tiền khách đưa
-        const total = parseFloat(document.getElementById('totalAmount').textContent); // Lấy tổng tiền
-        const change = payment - total; // Tính số tiền trả lại
-
-        // Cập nhật số tiền trả lại
-        document.getElementById('changeAmount').textContent = change >= 0 ? change : 0;
-    }
-
-    // Hàm xử lý thanh toán
-    function processPayment() {
-        const total = parseFloat(document.getElementById('totalAmount').textContent);
-        const payment = parseFloat(document.getElementById('customerPayment').value);
-
-        if (payment >= total) {
-            // Simulate backend API call
-            fetch('/user/process-payment', {
+            // Gửi orderRequest đến backend
+            fetch('/user/ban-hang/save-details', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Accept': 'application/json' // Thêm header này
                 },
-                body: JSON.stringify({
-                    products: selectedProducts,
-                    totalAmount: total,
-                    payment: payment
-                }),
+                body: JSON.stringify(orderRequest)
+
             })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Order saved successfully:', data);
+                })
+                .catch(error => {
+                    console.error('There was a problem with the fetch operation:', error);
+                });
+        }
+
+        function removeProduct(button) {
+            // Xóa hàng sản phẩm khỏi bảng
+            const row = button.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+        }
+
+        function selectCustomer(id, ten, sdt) {
+            // Cập nhật thông tin khách hàng vào form đơn hàng
+            document.getElementById('khachHangId').value = id; // Lưu id khách hàng
+            document.getElementById('khachHangInput').value = ten; // Hiển thị tên khách hàng
+            closeCustomerForm(); // Đóng form khách hàng
+        }
+
+        function selectProduct(id) {
+
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+            const addProductButtons = document.querySelectorAll('td button');
+            addProductButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const row = this.closest('tr');
+                    const productName = row.querySelector('td:nth-child(1)').textContent;
+                    const quantity = parseFloat(row.querySelector('td:nth-child(7)').textContent) || 0; // Chuyển đổi số lượng sang số
+                    const price = parseFloat(row.querySelector('td:nth-child(6)').textContent) || 0; // Chuyển đổi giá sang số
+
+                    addProductToForm(productName, quantity, price); // Thêm sản phẩm vào giỏ hàng
+                });
+            });
+        });
+
+        function handleSearch() {
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput.style.display === 'none' || searchInput.style.display === '') {
+                searchInput.style.display = 'block';
+                searchInput.focus();
+            } else {
+                const searchValue = searchInput.value.trim();
+                if (searchValue) {
+                    window.location.href = `sang_pham.html?search=${encodeURIComponent(searchValue)}`;
+                }
+                searchInput.value = '';
+                searchInput.style.display = 'none';
+            }
+        }
+
+
+        // Hàm xử lý thanh toán
+        // function processPayment() {
+        //     const total = parseFloat(document.getElementById('totalAmount').textContent);
+        //     const payment = parseFloat(document.getElementById('customerPayment').value);
+        //
+        //     if (payment >= total) {
+        //         // Simulate backend API call
+        //         fetch('/user/ban-hang', {
+        //             method: 'POST',
+        //
+        //             headers: {
+        //
+        //                 'Content-Type': 'application/json',
+        //             },
+        //             body: JSON.stringify({
+        //                 products: selectedProducts,
+        //                 totalAmount: total,
+        //                 payment: payment
+        //             }),
+        //         })
+        //             .then(response => response.json())
+        //             .then(data => {
+        //                 alert('Thanh toán thành công!');
+        //
+        //                 // Reset the cart and UI
+        //                 selectedProducts = [];
+        //                 document.getElementById('customerPayment').value = '';
+        //                 document.getElementById('changeAmount').textContent = '0';
+        //                 updateTotalAmount();
+        //
+        //                 console.log('Success:', data);
+        //             })
+        //             .catch((error) => {
+        //                 console.error('Error:', error);
+        //             });
+        //
+        //     } else {
+        //         alert('Số tiền khách đưa không đủ!');
+        //     }
+        // }
+
+        function showMenu(category) {
+            const sections = document.querySelectorAll('.menu-section');
+            sections.forEach(section => section.style.display = 'none');
+            document.getElementById(category).style.display = 'block';
+        }
+
+        function toggleHistoryForm() {
+            const historyForm = document.querySelector('.history-form');
+            historyForm.style.display = historyForm.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function toggleCustomerForm() {
+            document.querySelector('.customer-form').style.display = 'block';
+        }
+
+        function closeCustomerForm() {
+            document.querySelector('.customer-form').style.display = 'none';
+        }
+
+        function showForms() {
+            const sanPhamForm = document.querySelector('.form-san-pham');
+            if (!formDisplayed) {
+                sanPhamForm.style.display = 'block';
+                formDisplayed = true;
+            } else {
+                alert('Không thể tạo 2 Bill cùng 1 Thanh Toán');
+            }
+        }
+
+        function viewOrderDetails() {
+            var detailForm = document.getElementById("orderDetailsForm");
+            if (detailForm.style.display === "none") {
+                detailForm.style.display = "block"; // Hiển thị form
+            } else {
+                detailForm.style.display = "none"; // Ẩn form nếu đang hiển thị
+            }
+        }
+
+
+        // Hiển thị form khách hàng
+        function openCustomerForm() {
+            document.getElementById("customerForm").style.display = "block";
+        }
+
+        // Ẩn form khách hàng
+        function closeCustomerForm() {
+            document.getElementById("customerForm").style.display = "none";
+        }
+
+        // Giả sử có một chức năng tìm kiếm khách hàng (tạm thời là demo)
+        function searchCustomer() {
+            const name = document.getElementById('customerName').value.trim();
+            const phone = document.getElementById('customerPhone').value.trim();
+
+            // Kiểm tra xem ít nhất một trong hai ô nhập có giá trị
+            if (!name && !phone) {
+                alert("Vui lòng nhập tên hoặc số điện thoại để tìm kiếm.");
+                return; // Không thực hiện tìm kiếm nếu cả hai ô đều trống
+            }
+
+            // Gửi yêu cầu AJAX đến server để tìm kiếm khách hàng
+            fetch(`/api/khach-hang/search?name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}`)
                 .then(response => response.json())
                 .then(data => {
-                    alert('Thanh toán thành công!');
+                    const customerList = document.getElementById('customer-list');
+                    customerList.innerHTML = ''; // Xóa danh sách cũ
 
-                    // Reset the cart and UI
-                    selectedProducts = [];
-                    document.getElementById('customerPayment').value = '';
-                    document.getElementById('changeAmount').textContent = '0';
-                    updateTotalAmount();
+                    // Kiểm tra nếu không có khách hàng nào được tìm thấy
+                    if (data.length === 0) {
+                        customerList.innerHTML = '<tr><td colspan="3">Không tìm thấy khách hàng nào.</td></tr>';
+                        return;
+                    }
 
-                    console.log('Success:', data);
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                });
-
-        } else {
-            alert('Số tiền khách đưa không đủ!');
-        }
-    }
-
-    function showMenu(category) {
-        const sections = document.querySelectorAll('.menu-section');
-        sections.forEach(section => section.style.display = 'none');
-        document.getElementById(category).style.display = 'block';
-    }
-
-    function toggleHistoryForm() {
-        const historyForm = document.querySelector('.history-form');
-        historyForm.style.display = historyForm.style.display === 'block' ? 'none' : 'block';
-    }
-
-    function toggleCustomerForm() {
-        document.querySelector('.customer-form').style.display = 'block';
-    }
-
-    function closeCustomerForm() {
-        document.querySelector('.customer-form').style.display = 'none';
-    }
-
-    function showForms() {
-        const sanPhamForm = document.querySelector('.form-san-pham');
-        if (!formDisplayed) {
-            sanPhamForm.style.display = 'block';
-            formDisplayed = true;
-        } else {
-            alert('Không thể tạo 2 Bill cùng 1 Thanh Toán');
-        }
-    }
-
-    function updateProductTable() {
-        // Lấy thân bảng
-        const tableBody = document.getElementById('selectedProductsBody');
-
-        // Xóa các hàng hiện có
-        tableBody.innerHTML = '';
-
-        // Lặp qua các sản phẩm đã chọn và thêm chúng vào bảng
-        selectedProducts.forEach((product, index) => {
-            const row = document.createElement('tr');
-
-            row.innerHTML = `
-                <td>${product.name}</td>
-                <td><input type="number" value="${product.quantity}" onchange="updateQuantity(${index}, this.value)" /></td>
-                <td>${product.price}</td>
-                <td>${product.total}</td>
-                <td><button onclick="removeProduct(${index})">Xóa</button></td>
-            `;
-
-            tableBody.appendChild(row);
-        });
-    }
-
-    function updateQuantity(index, newQuantity) {
-        newQuantity = parseInt(newQuantity);
-
-        // Ensure quantity is within valid bounds
-        if (newQuantity > selectedProducts[index].availableStock) {
-            alert("Số lượng vượt quá số lượng trong kho!");
-            newQuantity = selectedProducts[index].availableStock;
-        } else if (newQuantity < 1) {
-            alert("Số lượng phải lớn hơn 0");
-            newQuantity = 1;
-        }
-
-        // Update product quantity and total price
-        selectedProducts[index].quantity = newQuantity;
-        selectedProducts[index].total = newQuantity * selectedProducts[index].price;
-
-        // Update the product table and total amount
-        updateProductTable();
-        updateTotalAmount();
-    }
-
-    function removeProduct(index) {
-        // Xóa sản phẩm khỏi danh sách
-        selectedProducts.splice(index, 1);
-
-        // Cập nhật bảng để phản ánh sự thay đổi
-        updateProductTable();
-        updateTotalAmount(); // Cập nhật tổng tiền
-    }
-
-    function submitAllProducts() {
-        selectedProducts.forEach(product => {
-            // Decrease the stock for each product
-            product.availableStock -= product.quantity;
-
-            if (product.availableStock < 0) {
-                alert(`Không đủ số lượng cho sản phẩm: ${product.name}`);
-                return;
-            }
-        });
-
-        console.log("Confirmed products:", selectedProducts);
-        alert('Sản phẩm đã được xác nhận');
-
-        // You can make an API call to update the backend database here
-        // For example, send selectedProducts to your backend for processing
-    }
-
-
-    // Hiển thị form khách hàng
-    function openCustomerForm() {
-        document.getElementById("customerForm").style.display = "block";
-    }
-
-    // Ẩn form khách hàng
-    function closeCustomerForm() {
-        document.getElementById("customerForm").style.display = "none";
-    }
-
-    // Giả sử có một chức năng tìm kiếm khách hàng (tạm thời là demo)
-    function searchCustomer() {
-        const name = document.getElementById("customerName").value;
-        const phone = document.getElementById("customerPhone").value;
-
-        // Gửi yêu cầu AJAX tới API
-        fetch(`/user/ban-hang/tim-kiem-kh?ten=${name}&sdt=${phone}`)
-            .then(response => response.json())
-            .then(data => {
-                // Xử lý dữ liệu trả về và cập nhật bảng
-                const tableBody = document.getElementById("customer-list");
-                tableBody.innerHTML = '';  // Xóa dữ liệu cũ
-
-                data.forEach(khachHang => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                    <td>${khachHang.ten}</td>
-                    <td>${khachHang.sdt}</td>
+                    // Thêm từng khách hàng vào bảng
+                    data.forEach(kh => {
+                        const row = document.createElement('tr');
+                        row.setAttribute('onclick', `selectCustomer('${kh.id}', '${kh.ten}', '${kh.sdt}')`);
+                        row.innerHTML = `
+                    <td>${kh.ten}</td>
+                    <td>${kh.sdt}</td>
+                    <td>Chọn</td>
                 `;
-                    tableBody.appendChild(row);  // Thêm dòng vào bảng
+                        customerList.appendChild(row);
+                    });
+                })
+                .catch(error => {
+                    console.error('Có lỗi xảy ra khi tìm kiếm khách hàng:', error);
                 });
-            })
-            .catch(error => {
-                console.error('Lỗi khi tìm kiếm khách hàng:', error);
-            });
-    }
+        }
+
+        window.onload = function () {
+            // Lấy id từ URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const orderId = urlParams.get('id'); // Lấy id từ query string
+
+            // Gán id vào các input
+            if (orderId) {
+                document.querySelector('input[name="donHang.id"]').value = orderId;
+            }
+        }; // Gán vào input tương ứng
 
 
-
-</script>
+    </script>
 
 </body>
 
