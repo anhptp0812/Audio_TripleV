@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đơn Hàng Của Bạn</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.9.1/font/bootstrap-icons.min.css">
+<!--    <link rel="stylesheet" href="/src/main/resources/static/css/admin/donHang.css">-->
+    <style>
+        /* Global Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Body Background and Text Color */
+        body {
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        /* Account Content Styling (donHang) */
+        .account-content {
+            margin: 20px auto;
+            width: 80%;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .account-content h2 {
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table th, table td {
+            border: 1px solid #e0e0e0;
+            padding: 12px;
+            text-align: left;
+        }
+
+        table th {
+            background-color: #f9a825;  /* Yellow header background */
+            color: #fff;
+            font-weight: bold;
+        }
+
+        table td a {
+            color: #1e88e5;  /* Link color */
+            text-decoration: none;
+        }
+
+        table td a:hover {
+            text-decoration: underline;  /* Hover effect for links */
+        }
+
+        /* Placeholder for Images */
+        .image-placeholder {
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+        }
+
+        /* Button Styles */
+        .apply-btn {
+            margin-left: 10px;
+            flex-shrink: 0;
+        }
+
+        /* Navbar Customization (home.html) */
+        .navbar-custom {
+            background-color: #007bff;  /* Bootstrap Primary Blue */
+        }
+
+        .navbar-custom .nav-link,
+        .navbar-custom .btn {
+            color: #fff;  /* White text on navbar */
+        }
+
+        /* Smooth Scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Search Input Customization */
+        .search-input {
+            display: none;  /* Initially hidden search input */
+            margin-left: 10px;
+            max-width: 200px;
+        }
+
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- Header Section (from home.html) -->
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-custom">
+            <div class="container">
+                <!-- Left section -->
+                <div class="navbar-nav">
+                    <a class="nav-item nav-link" href="/src/main/webapp/views/admin/bill/thanhToan.html">ThanhToan</a>
+                    <a class="nav-item nav-link" href="/src/main/webapp/views/admin/mainViewNV/viewNV.html">Quản Lý</a>
+                </div>
+
+                <!-- Right section with buttons -->
+                <div class="ml-auto d-flex align-items-center">
+                    <input type="text" id="searchInput" class="form-control search-input" placeholder="Tìm kiếm...">
+                    <button class="btn btn-outline-light" type="button" onclick="handleSearch()">
+                        <i class="bi bi-search"></i>
+                    </button>
+                    <a class="btn btn-outline-light" href="/src/main/webapp/views/admin/accNV/nvAcc.html">
+                        <i class="bi bi-person-circle"></i>
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <!-- Account Content (from original donHang.html) -->
+    <div class="account-content">
+        <h2>ĐƠN HÀNG CỦA BẠN</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Tên khách Hàng</th>
+                    <th>Tổng giá</th>
+                    <th>TT thanh toán</th>
+                    <th>Ngày Giao</th>
+                    <th colspan="2">Action</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="dh : ${listDH}">
+                    <td th:text="${dh.khachHang.ten}"></td>
+                    <td th:text="${dh.tongGia}"></td>
+                    <td th:text="${dh.trangThai}"></td>
+                    <td th:text="${dh.ngayGiao}"></td>
+                    <td>
+                        <a th:href="@{/user/ban-hang/{id}(id=${dh.id})}" class="btn btn-primary">
+                            Detail
+                        </a>
+                    </td>
+
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+
+    <!-- Bootstrap JS and jQuery (from home.html) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        function handleSearch() {
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput.style.display === 'none' || searchInput.style.display === '') {
+                searchInput.style.display = 'block';
+                searchInput.focus();
+            } else {
+                const searchValue = searchInput.value.trim();
+                if (searchValue) {
+                    window.location.href = `sang_pham.html?search=${encodeURIComponent(searchValue)}`;
+                }
+                searchInput.value = '';
+                searchInput.style.display = 'none';
+            }
+        }
+
+            function viewOrderDetails(orderId) {
+            // Lưu id vào localStorage
+            localStorage.setItem('orderId', orderId);
+
+            // Chuyển hướng đến trang productProvity
+            window.location.href = '/ban-hang/' + orderId; // Chuyển hướng đến URL có id
+        }
+
+    </script>
+
+</body>
+
+</html>

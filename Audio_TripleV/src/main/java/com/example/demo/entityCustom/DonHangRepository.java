@@ -1,4 +1,4 @@
-package com.example.demo.repository;
+package com.example.demo.entityCustom;
 
 import com.example.demo.entity.DonHang;
 import org.springframework.data.jpa.repository.JpaRepository;
