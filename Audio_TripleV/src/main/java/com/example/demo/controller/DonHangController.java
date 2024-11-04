@@ -52,6 +52,7 @@ public class DonHangController {
         List<DonHang> list = donHangRepository.findAll();
         model.addAttribute("listDH", list);
         return "nhanvien/donhang";
+
     }
 
     @GetMapping("ban-hang/{id}")
