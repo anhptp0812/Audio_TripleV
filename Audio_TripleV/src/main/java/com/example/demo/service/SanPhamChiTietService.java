@@ -25,7 +25,7 @@ public class SanPhamChiTietService {
     }
 
     public SanPhamChiTiet findById(Integer id) {
-      return sanPhamChiTietRepository.findById(id).orElse(null);
+        return sanPhamChiTietRepository.findById(id).orElse(null);
 
 
     }
