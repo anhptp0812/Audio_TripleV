@@ -52,5 +52,6 @@ public class DonHang {
     @Column(name = "NgayCapNhat")
     private Date ngayCapNhat;
 
-
+    @OneToMany(mappedBy = "donHang", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<DonHangChiTiet> donHangChiTiets = new ArrayList<>();
 }
