@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Date;
 import java.util.List;
@@ -106,7 +107,7 @@ public class DonHangController {
 
     @PostMapping("/ban-hang/{id}")
     public String saveOrderDetails(@PathVariable Integer id,
-                                   @ModelAttribute("donHangChiTiet") DonHangChiTiet donHangChiTiet,
+                                   @RequestParam("spctIds") List<Integer> spctIds,
                                    Model model) {
         // Tìm đơn hàng theo ID
         DonHang donHang = donHangService.findByid(id);
@@ -115,21 +116,26 @@ public class DonHangController {
             return "error"; // Trả về trang lỗi nếu không tìm thấy đơn hàng
         }
 
-        // Thiết lập thông tin cho donHangChiTiet
-        donHangChiTiet.setDonHang(donHang);
-        donHangChiTiet.setNgayTao(new Date()); // Ngày tạo
-        donHangChiTiet.setNgayCapNhat(new Date()); // Ngày cập nhật
+        // Lặp qua từng ID trong danh sách spctIds và lưu chi tiết
+        for (Integer spctId : spctIds) {
+            SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietService.findById(spctId);
+            if (sanPhamChiTiet == null) continue; // Bỏ qua nếu không tìm thấy sản phẩm chi tiết
 
-        // Lưu chi tiết đơn hàng vào cơ sở dữ liệu
-        donHangChiTietRepository.save(donHangChiTiet);
+            DonHangChiTiet donHangChiTiet = new DonHangChiTiet();
+            donHangChiTiet.setDonHang(donHang);
+            donHangChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
+            donHangChiTiet.setDonGia(sanPhamChiTiet.getDonGia());
+            donHangChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong());
+            donHangChiTiet.setNgayTao(new Date());
+            donHangChiTiet.setNgayCapNhat(new Date());
 
-        // Lấy danh sách sản phẩm chi tiết để hiển thị
-        List<SanPhamChiTiet> list = sanPhamChiTietRepository.findAll();
-        model.addAttribute("spct", list);
+            donHangChiTietRepository.save(donHangChiTiet); // Lưu chi tiết đơn hàng
+        }
 
         // Chuyển hướng về trang danh sách đơn hàng
         return "redirect:/user/ban-hang";
     }
+
 
 //    @PostMapping("/process-payment")
 //    public String processPayment(@RequestBody OrderRequest orderRequest) {
