@@ -45,8 +45,6 @@ public class NhanVienService  {
     public List<NhanVien> layTatCaNhanVien() {
         return nhanVienRepo.findAll(); // Lấy tất cả nhân viên từ cơ sở dữ liệu
     }
-
-
 //
 
 }

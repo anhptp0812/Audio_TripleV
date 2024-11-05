@@ -32,5 +32,15 @@ public class KhachHangService {
     public void deleteById(Integer id) {
         khachHangRepository.deleteById(id);
     }
+
+    public List<KhachHang> searchByNameAndPhone(String name, String phone) {
+        if (name != null && phone != null) {
+            return khachHangRepo.findByTenContainingAndSdtContaining(name, phone);
+        } else if (name != null) {
+            return khachHangRepo.findByTenContaining(name);
+        } else {
+            return khachHangRepo.findBySdtContaining(phone);
+        }
+    }
 }
 

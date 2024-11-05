@@ -1,12 +1,25 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -30,6 +43,7 @@ public class DonHang {
     private String trangThai;
 
     @Column(name = "NgayGiao")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date ngayGiao;
 
     @Column(name = "NgayTao")
@@ -37,4 +51,7 @@ public class DonHang {
 
     @Column(name = "NgayCapNhat")
     private Date ngayCapNhat;
+
+    @OneToMany(mappedBy = "donHang", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<DonHangChiTiet> donHangChiTiets = new ArrayList<>();
 }
