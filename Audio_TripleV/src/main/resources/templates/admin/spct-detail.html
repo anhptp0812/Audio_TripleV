@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Chi tiết sản phẩm</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Chi tiết sản phẩm</h2>
+    <div class="card">
+        <div class="card-header">
+            <h4 th:text="${spct.sanPham.ten}">Tên sản phẩm</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <img th:src="@{/images/tainghe/{imageName}(imageName=${spct.hinhAnh.ten})}" alt="Hình Ảnh" class="img-fluid" width="300px" height="300px"/>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Màu Sắc:</strong> <span th:text="${spct.mauSac.ten}"></span></p>
+                    <p><strong>Hãng:</strong> <span th:text="${spct.hang.ten}"></span></p>
+                    <p><strong>Loại Sản Phẩm:</strong> <span th:text="${spct.loaiSanPham.kieuDang}"></span></p>
+                    <p><strong>Trạng Thái:</strong> <span th:text="${spct.trangThai}"></span></p>
+                    <p><strong>Ngày Tạo:</strong> <span th:text="${#dates.format(spct.ngayTao, 'yyyy-MM-dd')}"></span></p>
+                    <p><strong>Ngày Cập Nhật:</strong> <span th:text="${#dates.format(spct.ngayCapNhat, 'yyyy-MM-dd')}"></span></p>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <a th:href="@{/spct/hien-thi}" class="btn btn-secondary">Quay lại</a>
+            <a th:href="@{/spct/delete(id=${spct.id})}" class="btn btn-danger"
+               onclick="return confirm('Bạn có muốn xóa không?');">Xóa sản phẩm</a>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

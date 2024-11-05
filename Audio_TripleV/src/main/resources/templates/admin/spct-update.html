@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cập Nhật Sản Phẩm Chi Tiết</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Cập Nhật Sản Phẩm Chi Tiết</h2>
+    <form id="updateForm">
+        <div class="form-group">
+            <label for="sanPham">Sản Phẩm:</label>
+            <input type="text" class="form-control" id="sanPham" name="sanPham" th:value="${sanPhamChiTiet.sanPham.id}" required>
+        </div>
+        <div class="form-group">
+            <label for="mauSac">Màu Sắc:</label>
+            <input type="text" class="form-control" id="mauSac" name="mauSac" th:value="${sanPhamChiTiet.mauSac.id}" required>
+        </div>
+        <div class="form-group">
+            <label for="hang">Hãng:</label>
+            <input type="text" class="form-control" id="hang" name="hang" th:value="${sanPhamChiTiet.hang.id}" required>
+        </div>
+        <div class="form-group">
+            <label for="hinhAnh">Hình Ảnh:</label>
+            <input type="text" class="form-control" id="hinhAnh" name="hinhAnh" th:value="${sanPhamChiTiet.hinhAnh.id}">
+        </div>
+        <div class="form-group">
+            <label for="loaiSanPham">Loại Sản Phẩm:</label>
+            <input type="text" class="form-control" id="loaiSanPham" name="loaiSanPham" th:value="${sanPhamChiTiet.loaiSanPham.id}" required>
+        </div>
+        <div class="form-group">
+            <label for="trangThai">Trạng Thái:</label>
+            <select class="form-control" id="trangThai" name="trangThai" required>
+                <option value="Còn Hàng" th:selected="${sanPhamChiTiet.trangThai == 'Còn Hàng'}">Còn Hàng</option>
+                <option value="Hết Hàng" th:selected="${sanPhamChiTiet.trangThai == 'Hết Hàng'}">Hết Hàng</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="ngayTao">Ngày Tạo:</label>
+            <input type="date" class="form-control" id="ngayTao" name="ngayTao" th:value="${#dates.format(sanPhamChiTiet.ngayTao, 'yyyy-MM-dd')}" readonly>
+        </div>
+        <div class="form-group">
+            <label for="ngayCapNhat">Ngày Cập Nhật:</label>
+            <input type="date" class="form-control" id="ngayCapNhat" name="ngayCapNhat" th:value="${#dates.format(sanPhamChiTiet.ngayCapNhat, 'yyyy-MM-dd')}" required>
+        </div>
+        <input type="hidden" id="id" name="id" th:value="${sanPhamChiTiet.id}"> <!-- Thêm trường hidden để lưu ID -->
+        <button type="button" class="btn btn-primary" onclick="updateSanPhamChiTiet()">Cập Nhật</button>
+        <a href="/spct/hien-thi" class="btn btn-secondary">Quay Lại</a>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+    function updateSanPhamChiTiet() {
+        const formData = {
+            id: document.getElementById('id').value, // Lấy ID từ trường hidden
+            sanPham: document.getElementById('sanPham').value, // Tên sản phẩm
+            mauSac: document.getElementById('mauSac').value,
+            hang: document.getElementById('hang').value,
+            hinhAnh: document.getElementById('hinhAnh').value,
+            loaiSanPham: document.getElementById('loaiSanPham').value,
+            trangThai: document.getElementById('trangThai').value,
+            ngayTao: document.getElementById('ngayTao').value,
+            ngayCapNhat: document.getElementById('ngayCapNhat').value || new Date().toISOString().split('T')[0] // Gán ngày hiện tại nếu trường để trống
+        };
+
+        // Kiểm tra các trường bắt buộc
+        if (!formData.sanPham || !formData.mauSac) {
+            alert('Vui lòng điền tất cả các trường bắt buộc.');
+            return; // Dừng hàm nếu có trường trống
+        }
+
+        // // Đảm bảo ngày cập nhật là ngày hôm nay nếu không được nhập
+        // if (!formData.ngayCapNhat) {
+        //     formData.ngayCapNhat = new Date().toISOString().split('T')[0]; // Gán ngày hôm nay
+        // }
+
+        $.ajax({
+            url: '/spct/update', // Thay đổi thành endpoint thực tế của bạn
+            type: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function(response) {
+                alert('Cập nhật sản phẩm chi tiết thành công!');
+                window.location.href = '/spct/hien-thi?activated=spct'; // Chuyển hướng về trang quản lý sản phẩm
+            },
+            error: function(xhr) {
+                alert('Có lỗi xảy ra: ' + xhr.responseText);
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

@@ -1,13 +1,22 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.Date;
 
+@ToString
 @Getter
 @Setter
 @NoArgsConstructor
@@ -40,23 +49,8 @@ public class SanPhamChiTiet {
     @JoinColumn(name = "ID_LoaiSanPham")
     private LoaiSanPham loaiSanPham;
 
-//    @Column(name = "ID_San_Pham")
-//    private Integer idSp;
-////
-//    @Column(name = "ID_MauSac")
-//    private Integer idMauSac;
-//
-//    @Column(name = "ID_Hang")
-//    private Integer idHang;
-//
-//    @Column(name = "ID_HinhAnh")
-//    private Integer idHinhAnh;
-//
-//    @Column(name = "ID_LoaiSanPham")
-//    private Integer idLoaiSP;
-
     @Column(name = "DonGia")
-    private float donGia;
+    private double donGia;
 
     @Column(name = "soLuong")
     private int soLuong;
@@ -69,4 +63,6 @@ public class SanPhamChiTiet {
 
     @Column(name = "NgayCapNhat")
     private Date ngayCapNhat;
+
+
 }

@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý sản phẩm</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.9.1/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        .search-input {
+            display: none; /* Initially hidden */
+            margin-left: 10px;
+            max-width: 200px;
+        }
+
+        .bordered-container {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin-top: 20px;
+            background-color: #f9f9f9;
+        }
+
+        .product-container {
+            margin-top: 20px;
+        }
+
+        .product-sidebar {
+            border-right: 1px solid #ccc;
+            padding-right: 10px;
+        }
+
+        .product-list {
+            margin-top: 20px;
+        }
+
+        .product-list .product-item {
+            margin-bottom: 10px;
+        }
+
+        .product-item a {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .pagination {
+            justify-content: center;
+        }
+
+        .table th,
+        .table td {
+            vertical-align: middle;
+            font-size: 12px; /* Thu nhỏ văn bản */
+            padding: 5px; /* Giảm khoảng cách giữa các ô */
+        }
+
+        .image-placeholder {
+            width: 100px;
+            height: 100px;
+            border: 1px solid #ddd;
+            display: block;
+        }
+
+        .btn-product {
+            margin-bottom: 20px;
+            height: 50px; /* Set a fixed height for all buttons */
+            width: 100%; /* Make buttons take the full width */
+            display: flex; /* Center content vertically */
+            align-items: center; /* Center content vertically */
+            justify-content: center; /* Center content horizontally */
+        }
+
+        #productTable,
+        #colorTable,
+        #brandTable,
+        #categoryTable {
+            display: none; /* Hidden by default */
+        }
+
+        /* Style for the modal */
+        .modal-header {
+            background-color: #007bff;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <!-- Header Section -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container">
+            <!-- Left section -->
+            <div class="navbar-nav">
+                <a class="nav-item nav-link" href="#">Sản Phẩm</a>
+                <a class="nav-item nav-link" href="#">Thương Hiệu</a>
+                <a class="nav-item nav-link" href="#">Khuyến Mãi</a>
+                <a class="nav-item nav-link" href="#">Tin Tức</a>
+            </div>
+
+            <!-- Right section with buttons -->
+            <div class="ml-auto d-flex align-items-center">
+                <!-- Hidden Search Input Field -->
+                <input type="text" id="searchInput" class="form-control search-input" placeholder="Tìm kiếm...">
+
+                <!-- Search Button -->
+                <button class="btn btn-outline-light" type="button" onclick="handleSearch()">
+                    <i class="bi bi-search"></i>
+                </button>
+
+                <!-- Account Button Link -->
+                <a class="btn btn-outline-light" href="/src/main/webapp/views/customer/khach_hang_acc.html">
+                    <i class="bi bi-person-circle"></i>
+                </a>
+
+                <!-- Cart Button - Links to gio_hang.html -->
+                <a class="btn btn-outline-light" href="/src/main/webapp/views/GioHang/gio_hang.html">
+                    <i class="bi bi-cart4"></i>
+                </a>
+            </div>
+        </div>
+    </nav>
+</div>
+
+<div class="container bordered-container">
+    <div class="row product-container">
+        <!-- Sidebar nhóm sản phẩm -->
+        <div class="col-md-3 product-sidebar">
+            <!-- Nút Toàn Bộ Sản Phẩm -->
+            <button id="btnToanBo" class="btn btn-primary btn-product">Toàn Bộ Sản Phẩm</button>
+
+            <!-- Nút Màu Sắc Sản Phẩm -->
+            <button id="btnMauSac" class="btn btn-secondary btn-product">Màu Sắc Sản Phẩm</button>
+
+            <!-- Nút Loại Sản Phẩm -->
+            <button id="btnLoai" class="btn btn-success btn-product">Loại Sản Phẩm</button>
+
+            <!-- Di chuyển nút Hãng xuống dưới -->
+            <button id="btnHang" class="btn btn-info btn-product">Hãng</button>
+        </div>
+
+        <!-- Danh sách sản phẩm -->
+        <div class="col-md-9">
+            <h5 id="tableTitle">Danh sách sản phẩm</h5>
+            <a id="nutThem" href="/spct/form-add" class="btn btn-success mb-3" style="display: none;">Thêm Sản Phẩm</a> <!-- Nút Thêm Sản Phẩm -->
+            <table id="productTable" class="table table-bordered table-hover">
+                <thead class="thead-light">
+                <tr>
+                    <th>Tên sản phẩm</th>
+                    <th>Màu Sắc</th>
+                    <th>Hãng</th>
+                    <th>Hình Ảnh</th>
+                    <th>Loại Sản Phẩm</th>
+                    <th>Trạng Thái</th>
+                    <th>Ngày Tạo</th>
+                    <th>Ngày Cập Nhật</th>
+                    <th>Hành Động</th> <!-- Thêm cột Hành Động -->
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="spct : ${spct}">
+                    <td th:text="${spct.sanPham.ten}"></td>
+                    <td th:text="${spct.mauSac.ten}"></td>
+                    <td th:text="${spct.hang.ten}"></td>
+                    <td><img th:src="@{/images/tainghe/{imageName}(imageName=${spct.hinhAnh.ten})}" alt="Hình Ảnh" width="50px" height="50px"/></td>
+                    <td th:text="${spct.loaiSanPham.kieuDang}"></td>
+                    <td th:text="${spct.trangThai}"></td>
+                    <td th:text="${#dates.format(spct.ngayTao, 'yyyy-MM-dd')}"></td>
+                    <td th:text="${#dates.format(spct.ngayCapNhat, 'yyyy-MM-dd')}"></td>
+                    <td>
+                        <a th:href="@{/spct/detail/{id}(id=${spct.id})}" class="btn btn-primary">Chi tiết</a>
+                        <a th:href="@{/spct/form-update/{id}(id=${spct.id})}" class="btn btn-warning">Sửa</a> <!-- Nút Sửa -->
+                        <a th:href="@{/spct/delete/{id}(id=${spct.id})}" class="btn btn-danger"
+                           onclick="return confirm('Bạn có muốn xóa không?');">Xóa</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <!-- Danh sách màu sắc -->
+
+            <a id="nutThemMauSac" href="/mau-sac/form-add" class="btn btn-success mb-3" style="display: none;">Thêm Màu Sắc</a> <!-- Nút Thêm Màu Sắc -->
+            <table id="colorTable" class="table table-bordered table-hover">
+                <thead class="thead-light">
+                <tr>
+                    <th>ID Màu Sắc</th>
+                    <th>Tên Màu Sắc</th>
+                    <th>Ngày Tạo</th>
+                    <th>Ngày Sửa</th>
+                    <th>Hành Động</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="mauSac : ${mausac}">
+                    <td th:text="${mauSac.id}"></td>
+                    <td th:text="${mauSac.ten}"></td>
+                    <td th:text="${#dates.format(mauSac.ngayTao, 'yyyy-MM-dd')}"></td>
+                    <td th:text="${#dates.format(mauSac.ngayCapNhat, 'yyyy-MM-dd')}"></td>
+                    <td>
+                        <a th:href="@{/mau-sac/form-update/{id}(id=${mauSac.id})}" class="btn btn-primary">Sửa</a>
+                        <a th:href="@{/mau-sac/delete/{id}(id=${mauSac.id})}" class="btn btn-danger"
+                           onclick="return confirm('Bạn có muốn xóa không?');">Xóa</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <!-- Danh sách loại sản phẩm -->
+
+            <a id="nutThemLoai" href="/loai-san-pham/form-add" class="btn btn-success mb-3" style="display: none;">Thêm Loại Sản Phẩm</a> <!-- Nút Thêm Loại Sản Phẩm -->
+            <table id="categoryTable" class="table table-bordered table-hover">
+                <thead class="thead-light">
+                <tr>
+                    <th>ID Loại Sản Phẩm</th>
+                    <th>Kiểu Dáng</th>
+                    <th>Ngày Tạo</th>
+                    <th>Ngày Sửa</th>
+                    <th>Hành Động</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="loaiSanPham : ${loaisp}">
+                    <td th:text="${loaiSanPham.id}"></td>
+                    <td th:text="${loaiSanPham.kieuDang}"></td>
+                    <td th:text="${#dates.format(loaiSanPham.ngayTao, 'yyyy-MM-dd')}"></td>
+                    <td th:text="${#dates.format(loaiSanPham.ngayCapNhat, 'yyyy-MM-dd')}"></td>
+                    <td>
+                        <a th:href="@{/loai-san-pham/form-update/{id}(id=${loaiSanPham.id})}" class="btn btn-primary">Sửa</a>
+                        <a th:href="@{/loai-san-pham/delete/{id}(id=${loaiSanPham.id})}" class="btn btn-danger"
+                           onclick="return confirm('Bạn có muốn xóa không?');">Xóa</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <!-- Danh sách hãng -->
+
+            <a id="nutThemHang" href="/hang/form-add" class="btn btn-success mb-3" style="display: none;">Thêm Hãng</a> <!-- Nút Thêm Hãng -->
+            <table id="brandTable" class="table table-bordered table-hover">
+                <thead class="thead-light">
+                <tr>
+                    <th>ID Hãng</th>
+                    <th>Tên Hãng</th>
+                    <th>Ngày Tạo</th>
+                    <th>Ngày Sửa</th>
+                    <th>Hành Động</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="hang : ${hang}">
+                    <td th:text="${hang.id}"></td>
+                    <td th:text="${hang.ten}"></td>
+                    <td th:text="${#dates.format(hang.ngayTao, 'yyyy-MM-dd')}"></td>
+                    <td th:text="${#dates.format(hang.ngayCapNhat, 'yyyy-MM-dd')}"></td>
+                    <td>
+                        <a th:href="@{/hang/form-update/{id}(id=${hang.id})}" class="btn btn-primary">Sửa</a>
+                        <a th:href="@{/hang/delete/{id}(id=${hang.id})}" class="btn btn-danger"
+                           onclick="return confirm('Bạn có muốn xóa không?');">Xóa</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Edit Color -->
+<div class="modal fade" id="editColorModal" tabindex="-1" role="dialog" aria-labelledby="editColorModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editColorModalLabel">Chỉnh Sửa Màu Sắc</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editColorForm">
+                    <div class="form-group">
+                        <label for="colorName">Tên Màu Sắc</label>
+                        <input type="text" class="form-control" id="colorName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="colorCreatedDate">Ngày Tạo</label>
+                        <input type="date" class="form-control" id="colorCreatedDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="colorUpdatedDate">Ngày Sửa</label>
+                        <input type="date" class="form-control" id="colorUpdatedDate" required>
+                    </div>
+                    <button type="button" class="btn btn-success" onclick="saveColor()">
+                        <i class="bi bi-floppy2-fill"></i> Lưu
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Edit Category -->
+<div class="modal fade" id="editCategoryModal" tabindex="-1" role="dialog" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editCategoryModalLabel">Chỉnh Sửa Loại Sản Phẩm</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editCategoryForm">
+                    <div class="form-group">
+                        <label for="categoryName">Tên Loại Sản Phẩm</label>
+                        <input type="text" class="form-control" id="categoryName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="categoryCreatedDate">Ngày Tạo</label>
+                        <input type="date" class="form-control" id="categoryCreatedDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="categoryUpdatedDate">Ngày Sửa</label>
+                        <input type="date" class="form-control" id="categoryUpdatedDate" required>
+                    </div>
+                    <button type="button" class="btn btn-success" onclick="saveCategory()">
+                        <i class="bi bi-floppy2-fill"></i> Lưu
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Edit Brand -->
+<div class="modal fade" id="editBrandModal" tabindex="-1" role="dialog" aria-labelledby="editBrandModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editBrandModalLabel">Chỉnh Sửa Hãng</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editBrandForm">
+                    <div class="form-group">
+                        <label for="brandName">Tên Hãng</label>
+                        <input type="text" class="form-control" id="brandName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="brandCreatedDate">Ngày Tạo</label>
+                        <input type="date" class="form-control" id="brandCreatedDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="brandUpdatedDate">Ngày Sửa</label>
+                        <input type="date" class="form-control" id="brandUpdatedDate" required>
+                    </div>
+                    <button type="button" class="btn btn-success" onclick="saveBrand()">
+                        <i class="bi bi-floppy2-fill"></i> Lưu
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Edit Product -->
+<div class="modal fade" id="editProductModal" tabindex="-1" role="dialog" aria-labelledby="editProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProductModalLabel">Chỉnh Sửa Sản Phẩm</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editProductForm">
+                    <div class="form-group">
+                        <label for="productName">Tên Sản Phẩm</label>
+                        <input type="text" class="form-control" id="productName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productColor">Màu Sắc</label>
+                        <input type="text" class="form-control" id="productColor" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productBrand">Hãng</label>
+                        <input type="text" class="form-control" id="productBrand" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productCategory">Loại Sản Phẩm</label>
+                        <input type="text" class="form-control" id="productCategory" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productStatus">Trạng Thái</label>
+                        <input type="text" class="form-control" id="productStatus" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productCreatedDate">Ngày Tạo</label>
+                        <input type="date" class="form-control" id="productCreatedDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productUpdatedDate">Ngày Sửa</label>
+                        <input type="date" class="form-control" id="productUpdatedDate" required>
+                    </div>
+                    <button type="button" class="btn btn-success" onclick="saveProduct()">
+                        <i class="bi bi-floppy2-fill"></i> Lưu
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    // Hàm để hiển thị bảng đã chọn và cập nhật trạng thái nút tương ứng
+    function showTable(tableId, buttonId, title) {
+        hideAllTables();
+        document.getElementById(tableId).style.display = 'table';
+        document.getElementById(buttonId).style.display = 'block'; // Hiện nút "Thêm" tương ứng
+        updateTableTitle(title);
+    }
+
+    // Hàm ẩn tất cả bảng và nút "Thêm"
+    function hideAllTables() {
+        const tables = ['productTable', 'colorTable', 'categoryTable', 'brandTable'];
+        tables.forEach(table => {
+            document.getElementById(table).style.display = 'none';
+        });
+
+        const buttons = ['nutThem', 'nutThemMauSac', 'nutThemLoai', 'nutThemHang'];
+        buttons.forEach(button => {
+            document.getElementById(button).style.display = 'none';
+        });
+    }
+
+    // Cập nhật tiêu đề bảng
+    function updateTableTitle(title) {
+        document.getElementById("tableTitle").innerText = title;
+    }
+
+    // Gán sự kiện click cho các nút sidebar
+    document.getElementById("btnToanBo").addEventListener("click", function() {
+        showTable('productTable', 'nutThem', "Toàn Bộ Sản Phẩm");
+    });
+
+    document.getElementById("btnMauSac").addEventListener("click", function() {
+        showTable('colorTable', 'nutThemMauSac', "Màu Sắc Sản Phẩm");
+    });
+
+    document.getElementById("btnLoai").addEventListener("click", function() {
+        showTable('categoryTable', 'nutThemLoai', "Loại Sản Phẩm");
+    });
+
+    document.getElementById("btnHang").addEventListener("click", function() {
+        showTable('brandTable', 'nutThemHang', "Hãng");
+    });
+
+    // Hàm mở modal chỉnh sửa
+    function openEditModal(modalId, data) {
+        for (const [key, value] of Object.entries(data)) {
+            document.getElementById(key).value = value;
+        }
+        $(`#${modalId}`).modal('show');
+    }
+
+    function openEditColorModal(colorData) {
+        openEditModal('editColorModal', colorData);
+    }
+
+    function openEditCategoryModal(categoryData) {
+        openEditModal('editCategoryModal', categoryData);
+    }
+
+    function openEditBrandModal(brandData) {
+        openEditModal('editBrandModal', brandData);
+    }
+
+    function openEditProductModal(productData) {
+        openEditModal('editProductModal', productData);
+    }
+
+    // Hàm lưu cho các thực thể khác nhau
+    function saveEntity(url, data, successMessage, modalId) {
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: data,
+            success: function() {
+                alert(successMessage);
+                $(`#${modalId}`).modal('hide');
+                // Cập nhật bảng tương ứng tại đây (nếu cần)
+            },
+            error: function() {
+                alert('Có lỗi xảy ra khi lưu.');
+            }
+        });
+    }
+
+    function saveColor() {
+        const colorData = {
+            name: document.getElementById('colorName').value,
+            createdDate: document.getElementById('colorCreatedDate').value,
+            updatedDate: document.getElementById('colorUpdatedDate').value
+        };
+        saveEntity('/api/color/save', colorData, 'Lưu màu sắc thành công!', 'editColorModal');
+    }
+
+    function saveCategory() {
+        const categoryData = {
+            // Thu thập dữ liệu loại sản phẩm tại đây
+        };
+        saveEntity('/api/category/save', categoryData, 'Lưu loại sản phẩm thành công!', 'editCategoryModal');
+    }
+
+    function saveBrand() {
+        const brandData = {
+            // Thu thập dữ liệu hãng tại đây
+        };
+        saveEntity('/api/brand/save', brandData, 'Lưu hãng thành công!', 'editBrandModal');
+    }
+
+    function saveProduct() {
+        const productData = {
+            // Thu thập dữ liệu sản phẩm tại đây
+        };
+        saveEntity('/api/product/save', productData, 'Lưu sản phẩm thành công!', 'editProductModal');
+    }
+
+    function handleSearch() {
+        const searchValue = document.getElementById('searchInput').value;
+        alert('Đang tìm kiếm: ' + searchValue);
+    }
+</script>
+<script>
+    window.onload = function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const activated = urlParams.get('activated');
+        if (activated === 'spct') {
+            document.getElementById("btnToanBo").click();
+        }
+        if (activated === 'colors') {
+            document.getElementById("btnMauSac").click(); // Kích hoạt nút "Màu sắc sản phẩm"
+        }
+        if (activated === 'loaisp') {
+            document.getElementById("btnLoai").click();
+        }
+        if (activated === 'hang') {
+            document.getElementById("btnHang").click();
+        }
+    };
+</script>
+</body>
+
+</html>
