@@ -292,109 +292,58 @@
     <!-- Category Navigation -->
     <div class="category-container">
         <div class="category-buttons">
-            <button onclick="showMenu('taiNgheTrueWireless')" class="category-button">Tai nghe true
-                wireless
-            </button>
-            <button onclick="showMenu('taiNgheDay')" class="category-button">Tai nghe dây</button>
-            <button onclick="showMenu('onear')" class="category-button">Onear</button>
-            <button onclick="showMenu('inear')" class="category-button">Inear</button>
-            <button onclick="showMenu('headphone')" class="category-button">Headphone</button>
+            <a href="/user/ban-hang/hien-thi" class="btn btn-outline-dark">Tất Cả</a>
+            <a href="/user/ban-hang/hien-thi/1" class="btn btn-outline-dark">Tai nghe true wireless</a>
+            <a href="/user/ban-hang/hien-thi/2" class="btn btn-outline-dark">Tai nghe dây</a>
+            <a href="/user/ban-hang/hien-thi/3" class="btn btn-outline-dark">Onear</a>
+            <a href="/user/ban-hang/hien-thi/4" class="btn btn-outline-dark">Inear</a>
+            <a href="/user/ban-hang/hien-thi/5" class="btn btn-outline-dark">Headphone</a>
         </div>
 
         <div class="menu-items">
-            <!-- Add dynamic content -->
-            <div id="taiNgheTrueWireless" class="menu-section" style="display:none;">
-                <h2>Tai nghe true wireless</h2>
-                <div class="menu-grid">
-                    <div class="menu-item">
-                        <div class="item-image"></div>
-                        <p>Item 1</p>
-                    </div>
-                </div>
-            </div>
-
-            <div id="taiNgheDay" class="menu-section" style="display:none;">
-                <h2>Tai nghe dây</h2>
-                <div class="menu-grid">
-                    <div class="menu-item">
-                        <div class="item-image"></div>
-                        <p>Item 1</p>
-                    </div>
-                </div>
-            </div>
-
-            <div id="onear" class="menu-section" style="display:none;">
-                <h2>Onear</h2>
-                <div class="menu-grid">
-                    <div class="menu-item">
-                        <div class="item-image"></div>
-                        <p>Item 1</p>
-                    </div>
-                </div>
-            </div>
-
-            <div id="inear" class="menu-section" style="display:none;">
-                <h2>Inear</h2>
-                <div class="menu-grid">
-                    <div class="menu-item">
-                        <div class="item-image"></div>
-                        <p>Item 1</p>
-                    </div>
-                </div>
-            </div>
-
-            <div id="headphone" class="menu-section" style="display:none;">
-                <h2>Headphone</h2>
-                <div class="menu-grid">
-                    <div class="menu-item">
-                        <table id="dataTable" class="table">
-                            <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Sản phẩm</th>
-                                <th>Màu sắc</th>
-                                <th>Hãng</th>
-                                <th>Hình ảnh</th>
-                                <th>Loại sản phẩm</th>
-                                <th>Đơn giá</th>
-                                <th>số lượng</th>
-                                <th>trạng thái</th>
-                                <th>Action</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr th:each="spct : ${spct}">
-                                <!--                                [[${spct.sanPham.id}]]-->
-                                <!--                                , [[${spct.donGia}]], [[${spct.soLuong}]]-->
-                                <td th:text="${spct.id}"></td>
-                                <td th:text="${spct.sanPham.ten}"></td>
-                                <td th:text="${spct.mauSac.ten}"></td>
-                                <td th:text="${spct.hang.ten}"></td>
-                                <td>
-                                    <img th:src="@{/images/tainghe/{ten}(ten=${spct.hinhAnh.ten})}"
-                                         style="width: 100px; height: auto;"/>
-                                </td>
-                                <td th:text="${spct.loaiSanPham.kieuDang}"></td>
-                                <td th:text="${spct.donGia}"></td>
-                                <td th:text="${spct.soLuong}"></td>
-                                <td th:text="${spct.trangThai}"></td>
-                                <td>
-                                    <button onclick="addProductToForm([[${spct.id}]], [[${spct.donGia}]], [[${spct.soLuong}]], '[[${spct.sanPham.ten}]]')">
-                                        Add Product
-                                    </button>
-
-                                </td>
-
-                            </tr>
-
-
-                            </tbody>
-                        </table>
-                    </div>
+            <div class="menu-grid">
+                <div class="menu-item">
+                    <table id="dataTable" class="table">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Sản phẩm</th>
+                            <th>Màu sắc</th>
+                            <th>Hãng</th>
+                            <th>Hình ảnh</th>
+                            <th>Loại sản phẩm</th>
+                            <th>Đơn giá</th>
+                            <th>Số lượng</th>
+                            <th>Trạng thái</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="spct : ${spct}">
+                            <td th:text="${spct.id}"></td>
+                            <td th:text="${spct.sanPham.ten}"></td>
+                            <td th:text="${spct.mauSac.ten}"></td>
+                            <td th:text="${spct.hang.ten}"></td>
+                            <td>
+                                <img th:src="@{/images/tainghe/{ten}(ten=${spct.hinhAnh.ten})}" style="width: 100px; height: auto;"/>
+                            </td>
+                            <td th:text="${spct.loaiSanPham.kieuDang}"></td>
+                            <td th:text="${spct.donGia}"></td>
+                            <td th:text="${spct.soLuong}"></td>
+                            <td th:text="${spct.trangThai}"></td>
+                            <td>
+                                <button onclick="addProductToForm([[${spct.id}]], [[${spct.donGia}]], [[${spct.soLuong}]], '[[${spct.sanPham.ten}]]')">
+                                    Add Product
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
+
 
     <!-- Order Summary -->
     <div class="order-summary">

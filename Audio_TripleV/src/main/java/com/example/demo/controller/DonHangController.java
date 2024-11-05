@@ -67,6 +67,18 @@ public class DonHangController {
         model.addAttribute("spct", list);
         return "nhanvien/productProvity";
     }
+    @GetMapping("/ban-hang/hien-thi/{idLoaiSP}")
+    public String getAll(@PathVariable(required = false) Integer idLoaiSP, Model model) {
+        List<SanPhamChiTiet> list;
+        if (idLoaiSP == null) {
+            list = sanPhamChiTietRepository.findAll();
+        } else {
+            list = sanPhamChiTietRepository.findByLoaiSanPham_Id(idLoaiSP);
+        }
+        model.addAttribute("spct", list);
+        return "nhanvien/productProvity";
+    }
+
 
     //    @GetMapping("ban-hang/chi-tiet/{id}")
 //    public String donHangChiTiet(@PathVariable Integer id, Model model) {
