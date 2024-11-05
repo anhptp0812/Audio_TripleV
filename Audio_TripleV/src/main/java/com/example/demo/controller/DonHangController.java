@@ -74,8 +74,17 @@ public class DonHangController {
 //    }
     @PostMapping("ban-hang/save")
     public String saveDonHang(@ModelAttribute("donHang") DonHang donHang) {
-        donHangRepository.save(donHang);
 
+        if (donHang.getTrangThai() == null || donHang.getTrangThai().isEmpty()) {
+            donHang.setTrangThai("Chưa thanh toán"); // Thiết lập mặc định nếu trạng thái chưa có
+        }
+        if (donHang.getTongGia() == null) {
+            donHang.setTongGia(0.0); // Thiết lập tổng giá mặc định
+        }
+        donHang.setNgayTao(new Date());
+        donHang.setNgayCapNhat(new Date());
+
+        donHangRepository.save(donHang);
         return "redirect:/user/don-hang";
     }
 
