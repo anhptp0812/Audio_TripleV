@@ -430,7 +430,7 @@
                     <input type="hidden" id="khachHangId" name="idKhachHang" th:field="*{khachHang.id}"/>
                     <br>
                     <label>Tổng Giá:</label>
-                    <input type="text" th:field="*{tongGia}" disabled>
+                    <input type="text" th:field="*{tongGia}" value="${donHang.tongGia ?: 0}" disabled>
                     <br>
                     <label>Trạng Thái:</label>
                     <input type="text" placeholder="Nhập trạng thái" th:field="*{trangThai}"/>
