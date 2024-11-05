@@ -5,13 +5,13 @@ import com.example.demo.repository.SanPhamChiTietRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-Thanh
+//Thanh
 
 
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
- main
+ //main
 
 @Service
 public class SanPhamChiTietService {
@@ -35,11 +35,9 @@ public class SanPhamChiTietService {
 
     // Tìm sản phẩm theo ID
     public SanPhamChiTiet findById(Integer id) {
- Thanh
+// Thanh
         return sanPhamChiTietRepository.findById(id).orElse(null);
 
-        Optional<SanPhamChiTiet> optionalSpct = sanPhamChiTietRepository.findById(id);
-        return optionalSpct.orElse(null); // Trả về sản phẩm nếu tìm thấy, ngược lại trả về null
     }
 
     // Xóa sản phẩm theo ID
@@ -65,7 +63,7 @@ public class SanPhamChiTietService {
         // Thực hiện cập nhật sản phẩm chi tiết vào cơ sở dữ liệu
         return sanPhamChiTietRepository.save(sanPhamChiTiet);
     }
- main
+// main
 
 
     // Phương thức thêm sản phẩm chi tiết

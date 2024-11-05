@@ -5,6 +5,7 @@ import com.example.demo.repository.KhachHangRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -35,11 +36,11 @@ public class KhachHangService {
 
     public List<KhachHang> searchByNameAndPhone(String name, String phone) {
         if (name != null && phone != null) {
-            return khachHangRepo.findByTenContainingAndSdtContaining(name, phone);
+            return khachHangRepository.findByTenContainingAndSdtContaining(name, phone);
         } else if (name != null) {
-            return khachHangRepo.findByTenContaining(name);
+            return khachHangRepository.findByTenContaining(name);
         } else {
-            return khachHangRepo.findBySdtContaining(phone);
+            return khachHangRepository.findBySdtContaining(phone);
         }
     }
 }
