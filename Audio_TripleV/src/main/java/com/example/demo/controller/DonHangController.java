@@ -78,12 +78,6 @@ public class DonHangController {
         model.addAttribute("spct", list);
         return "nhanvien/productProvity";
     }
-
-
-    //    @GetMapping("ban-hang/chi-tiet/{id}")
-//    public String donHangChiTiet(@PathVariable Integer id, Model model) {
-//        return "nhanvien/donhang";
-//    }
     @PostMapping("ban-hang/save")
     public String saveDonHang(@ModelAttribute("donHang") DonHang donHang) {
 
@@ -99,6 +93,12 @@ public class DonHangController {
         donHangRepository.save(donHang);
         return "redirect:/user/don-hang";
     }
+
+    //    @GetMapping("ban-hang/chi-tiet/{id}")
+//    public String donHangChiTiet(@PathVariable Integer id, Model model) {
+//        return "nhanvien/donhang";
+//    }
+
 
 //    @PostMapping( value ="/ban-hang/save-details", consumes = MediaType.APPLICATION_JSON_VALUE)
 //    @ResponseBody
