@@ -365,11 +365,11 @@
                             <tr th:each="spct : ${spct}">
                                 <!--                                [[${spct.sanPham.id}]]-->
                                 <!--                                , [[${spct.donGia}]], [[${spct.soLuong}]]-->
-                                <td th:text="${spct.sanPham.tenSP}"></td>
+                                <td th:text="${spct.sanPham.ten}"></td>
                                 <td th:text="${spct.mauSac.ten}"></td>
                                 <td th:text="${spct.hang.ten}"></td>
                                 <td>
-                                    <img th:src="@{/images/tainghes/{tenUrl}(tenUrl=${spct.hinhAnh.tenUrl})}"
+                                    <img th:src="@{/images/tainghe/{ten}(ten=${spct.hinhAnh.ten})}"
                                          style="width: 100px; height: auto;"/>
                                 </td>
                                 <td th:text="${spct.loaiSanPham.kieuDang}"></td>

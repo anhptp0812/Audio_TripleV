@@ -4,7 +4,7 @@ import com.example.demo.entity.DonHang;
 import com.example.demo.entity.DonHangChiTiet;
 import com.example.demo.entity.KhachHang;
 import com.example.demo.entity.SanPhamChiTiet;
-import com.example.demo.repository.KhachHangRepo;
+import com.example.demo.repository.KhachHangRepository;
 import com.example.demo.repository.LoaiSanPhamRepository;
 import com.example.demo.repository.SanPhamChiTietRepository;
 import com.example.demo.service.KhachHangService;
@@ -25,7 +25,7 @@ public class NhanVienController {
     private  KhachHangService khachHangService;
 
     @Autowired
-    private KhachHangRepo khachHangRepo;
+    private KhachHangRepository khachHangRepository;
 
     @Autowired
     private LoaiSanPhamRepository loaiSanPhamRepository;
@@ -44,7 +44,7 @@ public class NhanVienController {
         List<SanPhamChiTiet> list = sanPhamChiTietRepository.findAll();
         model.addAttribute("spct", list);
 
-        List<KhachHang> list1 = khachHangRepo.findAll();
+        List<KhachHang> list1 = khachHangRepository.findAll();
         model.addAttribute("listKh", list1);
 
         model.addAttribute("donHang", new DonHang());

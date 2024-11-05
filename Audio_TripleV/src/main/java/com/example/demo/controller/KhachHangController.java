@@ -1,12 +1,11 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.KhachHang;
- Thanh
-import com.example.demo.repository.KhachHangRepo;
+ //Thanh
 import com.example.demo.service.KhachHangService;
 
 import com.example.demo.repository.KhachHangRepository;
- main
+ //main
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,19 +20,13 @@ public class KhachHangController {
     @Autowired
     KhachHangRepository khachHangRepository;
 
-    @GetMapping("hien-thi")
-    public List<KhachHang> hienThiKhachHang() {
-
-        return khachHangRepository.findAll();
-    }
-
     @Autowired
     private KhachHangService khachHangService;
 
     @GetMapping("hien-thi")
     public List<KhachHang> hienThiKhachHang() {
 
-        return khachHangRepo.findAll();
+        return khachHangRepository.findAll();
     }
 
     @GetMapping("/api/khach-hang/search")
