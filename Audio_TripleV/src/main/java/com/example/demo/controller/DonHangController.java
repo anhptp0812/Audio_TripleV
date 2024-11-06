@@ -2,10 +2,19 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.DonHang;
 import com.example.demo.entity.DonHangChiTiet;
+import com.example.demo.entity.Hang;
+import com.example.demo.entity.KhachHang;
+import com.example.demo.entity.LoaiSanPham;
+import com.example.demo.entity.MauSac;
+import com.example.demo.entity.SanPham;
 import com.example.demo.entity.SanPhamChiTiet;
 import com.example.demo.repository.DonHangChiTietRepository;
 import com.example.demo.entityCustom.DonHangRepository;
+import com.example.demo.repository.HangRepository;
+import com.example.demo.repository.LoaiSanPhamRepository;
+import com.example.demo.repository.MauSacRepository;
 import com.example.demo.repository.SanPhamChiTietRepository;
+import com.example.demo.repository.SanPhamRepository;
 import com.example.demo.service.DonHangService;
 import com.example.demo.service.SanPhamChiTietService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +51,18 @@ public class DonHangController {
     @Autowired
     private SanPhamChiTietService sanPhamChiTietService;
 
+    @Autowired
+    private LoaiSanPhamRepository loaiSanPhamRepository;
+
+    @Autowired
+    private SanPhamRepository sanPhamRepository;
+
+    @Autowired
+    private MauSacRepository mauSacRepository;
+
+    @Autowired
+    private HangRepository hangRepository;
+
 //    @GetMapping("ban-hang/don-hang/create")
 //    public String createDonHangForm(Model model) {
 //        model.addAttribute("donHang", new DonHang());
@@ -57,33 +78,64 @@ public class DonHangController {
     }
 
     @GetMapping("ban-hang/{id}")
-    public String donHang(@PathVariable Integer id, Model model) {
+    public String donHang(@RequestParam(required = false) Integer idLoaiSP,
+                          @RequestParam(required = false) Integer idSanPham,
+                          @RequestParam(required = false) Integer mauSac,
+                          @RequestParam(required = false) Integer hang,
+                          @RequestParam(required = false) Double minPrice,
+                          @RequestParam(required = false) Double maxPrice,
+                          @RequestParam(required = false) String donGia, // Thêm tham số donGia
+                          @PathVariable Integer id, Model model) {
         DonHang dh = donHangService.findByid(id);
         model.addAttribute("donHang", dh);
 //        DonHangChiTiet dhct = donHangChiTietRepository.findByDonHang_Id(id).orElse(null);
         model.addAttribute("donHangChiTiet", new DonHangChiTiet());
 
-        List<SanPhamChiTiet> list = sanPhamChiTietRepository.findAll();
-        model.addAttribute("spct", list);
-        return "nhanvien/productProvity";
-    }
-    @GetMapping("/ban-hang/hien-thi/{idLoaiSP}")
-    public String getAll(@PathVariable(required = false) Integer idLoaiSP, Model model) {
         List<SanPhamChiTiet> list;
-        if (idLoaiSP == null) {
+
+        // Xử lý khoảng giá nếu có
+        if (donGia != null && !donGia.isEmpty()) {
+            String[] priceRange = donGia.split("-");
+            if (priceRange.length == 2) {
+                minPrice = Double.parseDouble(priceRange[0]);
+                maxPrice = Double.parseDouble(priceRange[1]);
+            } else if (priceRange.length == 1 && priceRange[0].endsWith("+")) {
+                minPrice = Double.parseDouble(priceRange[0].replace("+", ""));
+                maxPrice = Double.MAX_VALUE;
+            }
+        }
+
+        // Kiểm tra các bộ lọc và lấy sản phẩm tương ứng
+        if ((idLoaiSP == null || idLoaiSP == 0) &&
+                (idSanPham == null || idSanPham == 0) &&
+                (mauSac == null || mauSac == 0) &&
+                (hang == null || hang == 0) &&
+                (minPrice == null || maxPrice == null)) {
+            // Nếu không chọn bộ lọc nào thì lấy tất cả sản phẩm
             list = sanPhamChiTietRepository.findAll();
         } else {
-            list = sanPhamChiTietRepository.findByLoaiSanPham_Id(idLoaiSP);
+            // Lấy danh sách sản phẩm theo các bộ lọc
+            list = sanPhamChiTietRepository.findByFilters(
+                    idLoaiSP, idSanPham, mauSac, hang, minPrice, maxPrice);
         }
+
+        // Thêm danh sách sản phẩm vào model
         model.addAttribute("spct", list);
-        return "nhanvien/productProvity";
+
+        // Lấy tất cả loại sản phẩm, màu sắc, hãng để hiển thị trong form
+        List<SanPham> sanPhams = sanPhamRepository.findAll();
+        model.addAttribute("sanPhams", sanPhams);
+        List<MauSac> mauSacs = mauSacRepository.findAll();
+        model.addAttribute("mauSacs", mauSacs);
+        List<Hang> hangs = hangRepository.findAll();
+        model.addAttribute("hangs", hangs);
+        List<LoaiSanPham> loaiSanPhams = loaiSanPhamRepository.findAll();
+        model.addAttribute("loaiSanPhams", loaiSanPhams);
+
+        return "nhanvien/productProvity"; // Trả về trang sản phẩm
     }
 
 
-    //    @GetMapping("ban-hang/chi-tiet/{id}")
-//    public String donHangChiTiet(@PathVariable Integer id, Model model) {
-//        return "nhanvien/donhang";
-//    }
     @PostMapping("ban-hang/save")
     public String saveDonHang(@ModelAttribute("donHang") DonHang donHang) {
 
@@ -99,6 +151,12 @@ public class DonHangController {
         donHangRepository.save(donHang);
         return "redirect:/user/don-hang";
     }
+
+    //    @GetMapping("ban-hang/chi-tiet/{id}")
+//    public String donHangChiTiet(@PathVariable Integer id, Model model) {
+//        return "nhanvien/donhang";
+//    }
+
 
 //    @PostMapping( value ="/ban-hang/save-details", consumes = MediaType.APPLICATION_JSON_VALUE)
 //    @ResponseBody
