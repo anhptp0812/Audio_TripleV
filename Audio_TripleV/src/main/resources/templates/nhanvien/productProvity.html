@@ -832,7 +832,6 @@
                     <td>${kh.sdt}</td>
                     <td>Chọn</td>
                 `;
-Luu
                     customerList.appendChild(row);
                 });
             })
@@ -846,34 +845,22 @@ Luu
         const urlParams = new URLSearchParams(window.location.search);
         const orderId = urlParams.get('id'); // Lấy id từ query string
 
-                            customerList.appendChild(row);
-                        });
-                    })
-                    .catch(error => {
-                        console.error('Có lỗi xảy ra khi tìm kiếm khách hàng:', error);
-                    });
-            }
+        // Gán id vào các input
+        if (orderId) {
+            document.querySelector('input[name="donHang.id"]').value = orderId;
+        }
+    }; // Gán vào input tương ứng
 
-            window.onload = function () {
-                // Lấy id từ URL
-                const urlParams = new URLSearchParams(window.location.search);
-                const orderId = urlParams.get('id'); // Lấy id từ query string
+    function addProductToForm(spctId, productName, quantity, price) {
+        const addedProductsTableBody = document.getElementById('addedProductsTableBody');
 
-                // Gán id vào các input
-                if (orderId) {
-                    document.querySelector('input[name="donHang.id"]').value = orderId;
-                }
-            }; // Gán vào input tương ứng
-        function addProductToForm(spctId, productName, quantity, price) {
-            const addedProductsTableBody = document.getElementById('addedProductsTableBody');
+        if (!addedProductsTableBody) {
+            console.error('Phần tử tbody không tồn tại!');
+            return;
+        }
 
-            if (!addedProductsTableBody) {
-                console.error('Phần tử tbody không tồn tại!');
-                return;
-            }
-
-            const newRow = document.createElement('tr');
-            newRow.innerHTML = `
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
         <td>
             <span>${productName || 'Chưa có tên sản phẩm'}</span>
             <input type="hidden" name="spctIds" value="${spctId}"/>
@@ -882,52 +869,44 @@ Luu
         <td><input type="number" name="donGia" value="${price}" readonly /></td>
     `;
 
-            addedProductsTableBody.appendChild(newRow);
+        addedProductsTableBody.appendChild(newRow);
 
-            // Thêm sản phẩm vào mảng selectedProducts
-            selectedProducts.push({ spctId, productName, quantity, price });
+        // Thêm sản phẩm vào mảng selectedProducts
+        selectedProducts.push({ spctId, productName, quantity, price });
 
-            updateTotalAmount(); // Cập nhật tổng tiền
+        updateTotalAmount(); // Cập nhật tổng tiền
+    }
+
+    function updateTotalAmount() {
+        const total = selectedProducts.reduce((sum, product) => sum + (product.quantity * product.price), 0);
+        document.getElementById('totalAmount').textContent = total.toFixed(2); // Hiển thị tổng với 2 chữ số thập phân
+        calculateChange(); // Cập nhật tiền trả lại
+    }
+
+    function updateProductQuantity(inputElement) {
+        const row = inputElement.closest('tr');
+        const quantity = parseInt(inputElement.value, 10) || 0;
+        const price = parseFloat(row.querySelector('input[name="donGia"]').value) || 0;
+        const spctId = row.querySelector('input[name="spctIds"]').value;
+
+        // Cập nhật số lượng trong mảng selectedProducts
+        const productIndex = selectedProducts.findIndex(product => product.spctId === spctId);
+        if (productIndex !== -1) {
+            selectedProducts[productIndex].quantity = quantity;
         }
 
-        function updateTotalAmount() {
-            const total = selectedProducts.reduce((sum, product) => sum + (product.quantity * product.price), 0);
-            document.getElementById('totalAmount').textContent = total.toFixed(2); // Hiển thị tổng với 2 chữ số thập phân
-            calculateChange(); // Cập nhật tiền trả lại
-        }
+        updateTotalAmount(); // Cập nhật tổng tiền
+    }
 
-        function updateProductQuantity(inputElement) {
-            const row = inputElement.closest('tr');
-            const quantity = parseInt(inputElement.value, 10) || 0;
-            const price = parseFloat(row.querySelector('input[name="donGia"]').value) || 0;
-            const spctId = row.querySelector('input[name="spctIds"]').value;
+    // Hàm tính toán số tiền trả lại
+    function calculateChange() {
+        const payment = parseFloat(document.getElementById('customerPayment').value) || 0; // Lấy giá trị tiền khách đưa
+        const total = parseFloat(document.getElementById('totalAmount').textContent); // Lấy tổng tiền
+        const change = payment - total; // Tính số tiền trả lại
 
-            // Cập nhật số lượng trong mảng selectedProducts
-            const productIndex = selectedProducts.findIndex(product => product.spctId === spctId);
-            if (productIndex !== -1) {
-                selectedProducts[productIndex].quantity = quantity;
-            }
-
-            updateTotalAmount(); // Cập nhật tổng tiền
-        }
-
-        // Hàm tính toán số tiền trả lại
-        function calculateChange() {
-            const payment = parseFloat(document.getElementById('customerPayment').value) || 0; // Lấy giá trị tiền khách đưa
-            const total = parseFloat(document.getElementById('totalAmount').textContent); // Lấy tổng tiền
-            const change = payment - total; // Tính số tiền trả lại
-
-            // Cập nhật số tiền trả lại
-            document.getElementById('changeAmount').textContent = change >= 0 ? change.toFixed(2) : '0';
-        }
- main
-
-        // Gán id vào các input
-        if (orderId) {
-            document.querySelector('input[name="donHang.id"]').value = orderId;
-        }
-    }; // Gán vào input tương ứng
-
+        // Cập nhật số tiền trả lại
+        document.getElementById('changeAmount').textContent = change >= 0 ? change.toFixed(2) : '0';
+    }
 </script>
 </body>
 
