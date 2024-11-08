@@ -428,52 +428,35 @@
 
                     <button type="submit">Lưu đơn hàng</button>
                 </form>
+<!--                <button onclick="viewOrderDetails(${donHang.id})">Xem chi tiết</button>-->
                 <button onclick="viewOrderDetails()">Xem chi tiết</button>
+
             </div>
 
             <!-- Nút để xem chi tiết đơn hàng theo ID đơn hàng -->
 
 
-            <!-- Forms to be displayed after "+" button click -->
+            <!-- Forms to be displayed after "Xem chi tiết" button click -->
             <div id="orderDetailsForm" class="form-don-hang" style="display: none;">
                 <h3>Chi tiết đơn hàng</h3>
-                <form th:object="${donHangChiTiet}" th:action="@{/user/ban-hang/{id}(id=${donHang.id})}"
-                      method="post">
-                    <!--                                        onsubmit="saveOrderDetails()"-->
-                    <!--                    <input type="hidden" th:field="*{donHang}">-->
-                    <!--                    <label>ID Sản Phẩm:</label>-->
-                    <!--                    <input type="text" th:field="*{sanPhamChiTiet.id}"/>-->
-
-                    <!--                    <label>Số Lượng:</label>-->
-                    <!--                    <input type="number" th:field="*{soLuong}"/>-->
-
-                    <!--                    <label>Đơn Giá:</label>-->
-                    <!--                    <input type="number" th:field="*{donGia}"/>-->
-
-
+                <form th:object="${donHangChiTiet}" th:action="@{/user/ban-hang/{id}(id=${donHang.id})}" method="post">
                     <table class="table table-striped">
                         <thead>
                         <tr>
                             <th>Tên sản phẩm</th>
                             <th>Số lượng</th>
                             <th>Đơn giá</th>
-
+                            <th>Action</th>
                         </tr>
                         </thead>
                         <tbody id="addedProductsTableBody">
-                        <!--                        selectedProductsBody-->
                         <!-- Các sản phẩm sẽ được thêm vào đây -->
-                        <tr>
-                            <!--                            <td><input type="text" th:field="*{sanPhamChiTiet.id}"/></td>-->
-                            <!--                            <td><input type="number" th:field="*{soLuong}"/></td>-->
-                            <!--                            <td><input type="number" th:field="*{donGia}"/></td>-->
-
-                        </tr>
                         </tbody>
                     </table>
                     <button type="submit">Xác nhận tất cả sản phẩm</button>
                 </form>
             </div>
+
             <div class="totals">
                 <div class="total-item">
                     <label>Tổng:</label>
@@ -616,7 +599,7 @@
             updateProductQuantityInTable(existingProduct);
         } else {
             // Nếu chưa có trong giỏ, thêm mới
-            const newProduct = { spctId, productName, quantity, price };
+            const newProduct = {spctId, productName, quantity, price};
             selectedProducts.push(newProduct);
 
             const newRow = document.createElement('tr');
@@ -780,13 +763,41 @@
     }
 
     function viewOrderDetails() {
+        //id
         var detailForm = document.getElementById("orderDetailsForm");
+
+        // Toggle form display
         if (detailForm.style.display === "none") {
-            detailForm.style.display = "block"; // Hiển thị form
+            detailForm.style.display = "block";
         } else {
-            detailForm.style.display = "none"; // Ẩn form nếu đang hiển thị
+            detailForm.style.display = "none";
+            return;
         }
+    //     fetch(`/user/ban-hang/${id}/details`) // Đường dẫn API mới để lấy dữ liệu chi tiết
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             const addedProductsTableBody = document.getElementById('addedProductsTableBody');
+    //             addedProductsTableBody.innerHTML = ''; // Xóa các hàng cũ nếu có
+    //
+    //             // Hiển thị từng chi tiết đơn hàng trong bảng
+    //             data.forEach(item => {
+    //                 const newRow = document.createElement('tr');
+    //                 newRow.innerHTML = `
+    //                 <td>${item.productName || 'Chưa có tên sản phẩm'}</td>
+    //                 <td><input type="number" name="soLuong" value="${item.quantity}" min="1" onchange="updateProductQuantity(this)" /></td>
+    //                 <td><input type="number" name="donGia" value="${item.price}" readonly /></td>
+    //             `;
+    //                 addedProductsTableBody.appendChild(newRow);
+    //             });
+    //
+    //             // Hiển thị form chi tiết đơn hàng
+    //             document.getElementById('orderDetailsForm').style.display = 'block';
+    //         })
+    //         .catch(error => console.error('Error fetching order details:', error));
     }
+
+
+
 
 
     // Hiển thị form khách hàng
@@ -872,7 +883,7 @@
         addedProductsTableBody.appendChild(newRow);
 
         // Thêm sản phẩm vào mảng selectedProducts
-        selectedProducts.push({ spctId, productName, quantity, price });
+        selectedProducts.push({spctId, productName, quantity, price});
 
         updateTotalAmount(); // Cập nhật tổng tiền
     }
