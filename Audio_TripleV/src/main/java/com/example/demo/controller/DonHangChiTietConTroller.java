@@ -25,6 +25,13 @@ public class DonHangChiTietConTroller {
     @Autowired
     private DonHangService donHangService;
 
+ Phuc
+
+    @GetMapping("ban-hang/detail/{id}")
+    private List<DonHangChiTiet> index(Integer id) {
+        return donHangService.findByDHid(id);
+    }
+main
 
     @GetMapping("ban-hang/{id}/details")
     @ResponseBody
