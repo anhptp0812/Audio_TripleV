@@ -18,5 +18,5 @@ public interface DonHangChiTietRepository extends JpaRepository<DonHangChiTiet, 
 //            "ON dhct.idSPCT = spctc.id")
 //    public List<DonHangChiTietCustom> findAllByDonHang();
 
-    public Optional<DonHangChiTiet> findByDonHang_Id(Integer id);
+    public List<DonHangChiTiet> findByDonHang_Id(Integer id);
 }
