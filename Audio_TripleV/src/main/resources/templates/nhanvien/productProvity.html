@@ -28,7 +28,18 @@
             background-color: #343a40;
             color: #ffffff;
         }
-
+        .a{
+            color: white;
+        }
+        .a:hover{
+            text-decoration: underline; /* Gạch chân khi hover */
+            color: white;
+        }
+        form select {
+            padding: 8px; /* Thêm một chút đệm để các lựa chọn trong select dễ nhìn */
+            margin: 5px 0; /* Thêm khoảng cách giữa các select */
+            box-sizing: border-box; /* Đảm bảo rằng padding không làm thay đổi kích thước tổng thể */
+        }
         .search-input {
             display: none;
             margin-left: 10px;
@@ -269,10 +280,10 @@
 <nav class="navbar navbar-expand-lg navbar-custom">
     <div class="container">
         <div class="navbar-nav">
-            <a class="nav-item nav-link" href="/user/ban-hang">Bán Hàng</a>
-            <a class="nav-item nav-link" href="">Quản Lý</a>
-            <a class="nav-item nav-link">Khách Hàng</a>
-            <a class="nav-item nav-link" href="/user/don-hang">Đơn hàng</a>
+            <a class="nav-item nav-link a" href="/user/ban-hang">Bán Hàng</a>
+            <a class="nav-item nav-link a" href="/spct/hien-thi">Quản Lý</a>
+            <a class="nav-item nav-link a" href="#">Khách Hàng</a>
+            <a class="nav-item nav-link a" href="/user/don-hang">Đơn hàng</a>
         </div>
 
         <div class="ml-auto d-flex align-items-center">
@@ -292,40 +303,26 @@
     <!-- Category Navigation -->
     <div class="category-container">
         <div class="category-buttons">
-            <form id="searchForm"
-                  th:action="@{${donHang.id} != null ? '/user/ban-hang/' + ${donHang.id} : '/user/ban-hang'}"
-                  method="get">
-
+            <form id="searchForm" th:action="@{${donHang.id} != null ? '/user/ban-hang/' + ${donHang.id} : '/user/ban-hang'}" method="get">
                 <!-- Chọn sản phẩm -->
-                <select name="idSanPham" id="idSanPham">
-                    <option value="">Chọn sản phẩm</option>
-                    <option th:each="sanPham : ${sanPhams}"
-                            th:value="${sanPham.id}"
-                            th:text="${sanPham.ten}"></option>
-                </select>
+                <input type="text" name="sanPhamTen" id="sanPhamTen" placeholder="Nhập tên sản phẩm" />
 
                 <!-- Chọn màu sắc -->
                 <select name="mauSac" id="mauSac">
                     <option value="">Chọn màu sắc</option>
-                    <option th:each="mau : ${mauSacs}"
-                            th:value="${mau.id}"
-                            th:text="${mau.ten}"></option>
+                    <option th:each="mauSac : ${mauSacs}" th:value="${mauSac.id}" th:text="${mauSac.ten}"></option>
                 </select>
 
                 <!-- Chọn hãng -->
                 <select name="hang" id="hang">
                     <option value="">Chọn hãng</option>
-                    <option th:each="hang : ${hangs}"
-                            th:value="${hang.id}"
-                            th:text="${hang.ten}"></option>
+                    <option th:each="hang : ${hangs}" th:value="${hang.id}" th:text="${hang.ten}"></option>
                 </select>
 
                 <!-- Chọn loại sản phẩm -->
                 <select name="idLoaiSP" id="idLoaiSP">
                     <option value="">Chọn loại sản phẩm</option>
-                    <option th:each="loaiSP : ${loaiSanPhams}"
-                            th:value="${loaiSP.id}"
-                            th:text="${loaiSP.kieuDang}"></option>
+                    <option th:each="loaiSP : ${loaiSanPhams}" th:value="${loaiSP.id}" th:text="${loaiSP.kieuDang}"></option>
                 </select>
 
                 <!-- Chọn khoảng đơn giá -->
@@ -428,7 +425,7 @@
 
                     <button type="submit">Lưu đơn hàng</button>
                 </form>
-<!--                <button onclick="viewOrderDetails(${donHang.id})">Xem chi tiết</button>-->
+                <!--                <button onclick="viewOrderDetails(${donHang.id})">Xem chi tiết</button>-->
                 <button onclick="viewOrderDetails()">Xem chi tiết</button>
 
             </div>
@@ -773,32 +770,28 @@
             detailForm.style.display = "none";
             return;
         }
-    //     fetch(`/user/ban-hang/${id}/details`) // Đường dẫn API mới để lấy dữ liệu chi tiết
-    //         .then(response => response.json())
-    //         .then(data => {
-    //             const addedProductsTableBody = document.getElementById('addedProductsTableBody');
-    //             addedProductsTableBody.innerHTML = ''; // Xóa các hàng cũ nếu có
-    //
-    //             // Hiển thị từng chi tiết đơn hàng trong bảng
-    //             data.forEach(item => {
-    //                 const newRow = document.createElement('tr');
-    //                 newRow.innerHTML = `
-    //                 <td>${item.productName || 'Chưa có tên sản phẩm'}</td>
-    //                 <td><input type="number" name="soLuong" value="${item.quantity}" min="1" onchange="updateProductQuantity(this)" /></td>
-    //                 <td><input type="number" name="donGia" value="${item.price}" readonly /></td>
-    //             `;
-    //                 addedProductsTableBody.appendChild(newRow);
-    //             });
-    //
-    //             // Hiển thị form chi tiết đơn hàng
-    //             document.getElementById('orderDetailsForm').style.display = 'block';
-    //         })
-    //         .catch(error => console.error('Error fetching order details:', error));
+        //     fetch(`/user/ban-hang/${id}/details`) // Đường dẫn API mới để lấy dữ liệu chi tiết
+        //         .then(response => response.json())
+        //         .then(data => {
+        //             const addedProductsTableBody = document.getElementById('addedProductsTableBody');
+        //             addedProductsTableBody.innerHTML = ''; // Xóa các hàng cũ nếu có
+        //
+        //             // Hiển thị từng chi tiết đơn hàng trong bảng
+        //             data.forEach(item => {
+        //                 const newRow = document.createElement('tr');
+        //                 newRow.innerHTML = `
+        //                 <td>${item.productName || 'Chưa có tên sản phẩm'}</td>
+        //                 <td><input type="number" name="soLuong" value="${item.quantity}" min="1" onchange="updateProductQuantity(this)" /></td>
+        //                 <td><input type="number" name="donGia" value="${item.price}" readonly /></td>
+        //             `;
+        //                 addedProductsTableBody.appendChild(newRow);
+        //             });
+        //
+        //             // Hiển thị form chi tiết đơn hàng
+        //             document.getElementById('orderDetailsForm').style.display = 'block';
+        //         })
+        //         .catch(error => console.error('Error fetching order details:', error));
     }
-
-
-
-
 
     // Hiển thị form khách hàng
     function openCustomerForm() {

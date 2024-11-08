@@ -85,7 +85,7 @@ public class DonHangController {
 
     @GetMapping("ban-hang/{id}")
     public String donHang(@RequestParam(required = false) Integer idLoaiSP,
-                          @RequestParam(required = false) Integer idSanPham,
+                          @RequestParam(required = false) String sanPhamTen,
                           @RequestParam(required = false) Integer mauSac,
                           @RequestParam(required = false) Integer hang,
                           @RequestParam(required = false) Double minPrice,
@@ -94,7 +94,6 @@ public class DonHangController {
                           @PathVariable Integer id, Model model) {
         DonHang dh = donHangService.findByid(id);
         model.addAttribute("donHang", dh);
-//        DonHangChiTiet dhct = donHangChiTietRepository.findByDonHang_Id(id).orElse(null);
         model.addAttribute("donHangChiTiet", new DonHangChiTiet());
 
         List<SanPhamChiTiet> list;
@@ -113,7 +112,7 @@ public class DonHangController {
 
         // Kiểm tra các bộ lọc và lấy sản phẩm tương ứng
         if ((idLoaiSP == null || idLoaiSP == 0) &&
-                (idSanPham == null || idSanPham == 0) &&
+                (sanPhamTen == null || sanPhamTen.isEmpty()) && // Sửa từ idSanPham thành sanPhamTen
                 (mauSac == null || mauSac == 0) &&
                 (hang == null || hang == 0) &&
                 (minPrice == null || maxPrice == null)) {
@@ -122,7 +121,7 @@ public class DonHangController {
         } else {
             // Lấy danh sách sản phẩm theo các bộ lọc
             list = sanPhamChiTietRepository.findByFilters(
-                    idLoaiSP, idSanPham, mauSac, hang, minPrice, maxPrice);
+                    idLoaiSP, sanPhamTen, mauSac, hang, minPrice, maxPrice); // Truyền sanPhamTen vào findByFilters
         }
 
         // Thêm danh sách sản phẩm vào model

@@ -1,6 +1,11 @@
 package com.example.demo.controller;
 
+import com.example.demo.entity.Hang;
+import com.example.demo.entity.LoaiSanPham;
 import com.example.demo.entity.MauSac;
+import com.example.demo.repository.HangRepository;
+import com.example.demo.repository.LoaiSanPhamRepository;
+import com.example.demo.repository.MauSacRepository;
 import com.example.demo.service.MauSacService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,9 +17,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Date;
+import java.util.List;
 
 @Controller
 @RequestMapping("/mau-sac")
@@ -68,11 +75,12 @@ public class MauSacController {
         }
     }
 
-
     // Xóa màu sắc
     @GetMapping("/delete/{id}")
     public String deleteColor(@PathVariable Integer id) {
         mauSacService.deleteById(id);
         return "redirect:/spct/hien-thi?activated=colors"; // Thêm tham số activated
     }
+
+
 }
