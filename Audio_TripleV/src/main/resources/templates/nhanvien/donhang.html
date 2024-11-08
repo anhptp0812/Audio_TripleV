@@ -7,7 +7,7 @@
     <title>Đơn Hàng Của Bạn</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.9.1/font/bootstrap-icons.min.css">
-<!--    <link rel="stylesheet" href="/src/main/resources/static/css/admin/donHang.css">-->
+    <!--    <link rel="stylesheet" href="/src/main/resources/static/css/admin/donHang.css">-->
     <style>
         /* Global Reset */
         * {
@@ -109,97 +109,215 @@
 
 <body>
 
-    <!-- Header Section (from home.html) -->
-    <div class="container">
-        <nav class="navbar navbar-expand-lg navbar-custom">
-            <div class="container">
-                <!-- Left section -->
-                <div class="navbar-nav">
-                    <a class="nav-item nav-link" href="/src/main/webapp/views/admin/bill/thanhToan.html">ThanhToan</a>
-                    <a class="nav-item nav-link" href="/src/main/webapp/views/admin/mainViewNV/viewNV.html">Quản Lý</a>
-                </div>
-
-                <!-- Right section with buttons -->
-                <div class="ml-auto d-flex align-items-center">
-                    <input type="text" id="searchInput" class="form-control search-input" placeholder="Tìm kiếm...">
-                    <button class="btn btn-outline-light" type="button" onclick="handleSearch()">
-                        <i class="bi bi-search"></i>
-                    </button>
-                    <a class="btn btn-outline-light" href="/src/main/webapp/views/admin/accNV/nvAcc.html">
-                        <i class="bi bi-person-circle"></i>
-                    </a>
-                </div>
+<!-- Header Section (from home.html) -->
+<div class="container">
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container">
+            <!-- Left section -->
+            <div class="navbar-nav">
+                <a class="nav-item nav-link" href="/src/main/webapp/views/admin/bill/thanhToan.html">ThanhToan</a>
+                <a class="nav-item nav-link" href="/src/main/webapp/views/admin/mainViewNV/viewNV.html">Quản Lý</a>
             </div>
-        </nav>
-    </div>
-    <!-- Account Content (from original donHang.html) -->
-    <div class="account-content">
-        <h2>ĐƠN HÀNG CỦA BẠN</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Tên khách Hàng</th>
-                    <th>Tổng giá</th>
-                    <th>TT thanh toán</th>
-                    <th>Ngày Giao</th>
-                    <th colspan="2">Action</th>
 
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="dh : ${listDH}">
-                    <td th:text="${dh.khachHang.ten}"></td>
-                    <td th:text="${dh.tongGia}"></td>
-                    <td th:text="${dh.trangThai}"></td>
-                    <td th:text="${dh.ngayGiao}"></td>
-                    <td>
-                        <a th:href="@{/user/ban-hang/{id}(id=${dh.id})}" class="btn btn-primary">
-                            Detail
-                        </a>
-                    </td>
+            <!-- Right section with buttons -->
+            <div class="ml-auto d-flex align-items-center">
+                <input type="text" id="searchInput" class="form-control search-input" placeholder="Tìm kiếm...">
+                <button class="btn btn-outline-light" type="button" onclick="handleSearch()">
+                    <i class="bi bi-search"></i>
+                </button>
+                <a class="btn btn-outline-light" href="/src/main/webapp/views/admin/accNV/nvAcc.html">
+                    <i class="bi bi-person-circle"></i>
+                </a>
+            </div>
+        </div>
+    </nav>
+</div>
+<!-- Account Content (from original donHang.html) -->
+<div class="account-content">
+    <h2>ĐƠN HÀNG CỦA BẠN</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Tên khách Hàng</th>
+            <th>Tổng giá</th>
+            <th>TT thanh toán</th>
+            <th>Ngày Giao</th>
+            <th colspan="2">Action</th>
 
-                    <td>
-                        <a  class="btn btn-primary">
-                            Detail 1
-                        </a>
-                    </td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="dh : ${listDH}">
+            <td th:text="${dh.khachHang.ten}"></td>
+            <td th:text="${dh.tongGia}"></td>
+            <td th:text="${dh.trangThai}"></td>
+            <td th:text="${dh.ngayGiao}"></td>
+            <td>
+                <a th:href="@{/user/ban-hang/{id}(id=${dh.id})}" class="btn btn-primary">
+                    Detail
+                </a>
+            </td>
 
-                </tr>
-            </tbody>
-        </table>
-    </div>
+            <td>
+                <a class="btn btn-primary" href="javascript:void(0);" onclick="toggleProductList()">
+                    See more
+                </a>
+            </td>
+
+            <!-- Phần trổ xuống khi click -->
+        <tr id="productList" style="display:none;">
+            <td colspan="6">
+                <!-- Danh sách sản phẩm -->
+                <div class="product-list" style="display: flex; flex-wrap: wrap; gap: 15px;">
+                    <div class="product-item" style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; flex: 1 1 18%; text-align: center;">
+                        <h5>Tên SP: Tai nghe Sennheiser</h5>
+                        <p>Giá: 1,500,000 VND</p>
+                    </div>
+                    <div class="product-item" style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; flex: 1 1 18%; text-align: center;">
+                        <h5>Tên SP: Tai nghe Sony</h5>
+                        <p>Giá: 1,200,000 VND</p>
+                    </div>
+                    <div class="product-item" style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; flex: 1 1 18%; text-align: center;">
+                        <h5>Tên SP: Tai nghe Bose</h5>
+                        <p>Giá: 3,000,000 VND</p>
+                    </div>
+                    <div class="product-item" style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; flex: 1 1 18%; text-align: center;">
+                        <h5>Tên SP: Tai nghe JBL</h5>
+                        <p>Giá: 1,800,000 VND</p>
+                    </div>
+                    <div class="product-item" style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; flex: 1 1 18%; text-align: center;">
+                        <h5>Tên SP: Tai nghe AKG</h5>
+                        <p>Giá: 2,200,000 VND</p>
+                    </div>
+                </div>
+
+                <!-- Phần phân trang -->
+                <div class="pagination" style="text-align: center; margin-top: 20px; display: flex; justify-content: center;">
+                    <button class="btn btn-outline-primary">
+                        <i class="bi bi-arrow-bar-left"></i> <!-- Về đầu trang -->
+                    </button>
+                    <button class="btn btn-outline-primary">
+                        <i class="bi bi-arrow-left-circle"></i> <!-- Back -->
+                    </button>
+
+                    <!-- Số trang -->
+                    <button class="btn btn-outline-primary">1</button>
+                    <button class="btn btn-outline-primary">2</button>
+                    <button class="btn btn-outline-primary">3</button>
+                    <span class="btn btn-outline-primary">...</span> <!-- Nút "..." cho các trang tiếp theo -->
+
+                    <button class="btn btn-outline-primary">10</button> <!-- Trang cuối cùng -->
+
+                    <button class="btn btn-outline-primary">
+                        <i class="bi bi-arrow-right-circle"></i> <!-- Next -->
+                    </button>
+                    <button class="btn btn-outline-primary">
+                        <i class="bi bi-arrow-bar-right"></i> <!-- Về cuối trang -->
+                    </button>
+                </div>
+            </td>
+        </tr>
 
 
 
-    <!-- Bootstrap JS and jQuery (from home.html) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        </tbody>
+    </table>
+</div>
 
-    <script>
-        function handleSearch() {
-            const searchInput = document.getElementById('searchInput');
-            if (searchInput.style.display === 'none' || searchInput.style.display === '') {
-                searchInput.style.display = 'block';
-                searchInput.focus();
-            } else {
-                const searchValue = searchInput.value.trim();
-                if (searchValue) {
-                    window.location.href = `sang_pham.html?search=${encodeURIComponent(searchValue)}`;
-                }
-                searchInput.value = '';
-                searchInput.style.display = 'none';
+
+
+<!-- Bootstrap JS and jQuery (from home.html) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    function toggleProductList() {
+        // Lấy phần tử danh sách sản phẩm (productList)
+        const productList = document.getElementById('productList');
+
+        // Kiểm tra trạng thái hiển thị của phần tử và thay đổi
+        if (productList.style.display === 'none' || productList.style.display === '') {
+            productList.style.display = 'table-row';  // Hiển thị danh sách
+        } else {
+            productList.style.display = 'none';  // Ẩn danh sách
+        }
+    }
+
+    // Hàm tạo số trang động
+    function generatePagination(totalPages) {
+        const paginationContainer = document.querySelector('.pagination');
+        paginationContainer.innerHTML = ''; // Xóa nội dung phân trang hiện tại
+
+        // Thêm nút "Về đầu"
+        paginationContainer.innerHTML += `<button class="btn btn-outline-primary">
+                                        <i class="bi bi-arrow-bar-left"></i>
+                                      </button>`;
+
+        // Thêm nút "Back"
+        paginationContainer.innerHTML += `<button class="btn btn-outline-primary">
+                                        <i class="bi bi-arrow-left-circle"></i>
+                                      </button>`;
+
+        // Thêm các số trang
+        for (let i = 1; i <= Math.min(3, totalPages); i++) {
+            paginationContainer.innerHTML += `<button class="btn btn-outline-primary">${i}</button>`;
+        }
+
+        // Thêm nút "..."
+        if (totalPages > 3) {
+            paginationContainer.innerHTML += `<span class="btn btn-outline-primary">...</span>`;
+        }
+
+        // Thêm trang cuối cùng nếu cần
+        if (totalPages > 3) {
+            paginationContainer.innerHTML += `<button class="btn btn-outline-primary">${totalPages}</button>`;
+        }
+
+        // Thêm nút "Next"
+        paginationContainer.innerHTML += `<button class="btn btn-outline-primary">
+                                        <i class="bi bi-arrow-right-circle"></i>
+                                      </button>`;
+
+        // Thêm nút "Về cuối"
+        paginationContainer.innerHTML += `<button class="btn btn-outline-primary">
+                                        <i class="bi bi-arrow-bar-right"></i>
+                                      </button>`;
+    }
+
+    // Ví dụ gọi hàm với tổng số trang là 10
+    generatePagination(10);
+
+
+
+
+
+
+
+
+    function handleSearch() {
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput.style.display === 'none' || searchInput.style.display === '') {
+            searchInput.style.display = 'block';
+            searchInput.focus();
+        } else {
+            const searchValue = searchInput.value.trim();
+            if (searchValue) {
+                window.location.href = `sang_pham.html?search=${encodeURIComponent(searchValue)}`;
             }
+            searchInput.value = '';
+            searchInput.style.display = 'none';
         }
+    }
 
-            function viewOrderDetails(orderId) {
-            // Lưu id vào localStorage
-            localStorage.setItem('orderId', orderId);
+    function viewOrderDetails(orderId) {
+        // Lưu id vào localStorage
+        localStorage.setItem('orderId', orderId);
 
-            // Chuyển hướng đến trang productProvity
-            window.location.href = '/ban-hang/' + orderId; // Chuyển hướng đến URL có id
-        }
+        // Chuyển hướng đến trang productProvity
+        window.location.href = '/ban-hang/' + orderId; // Chuyển hướng đến URL có id
+    }
 
-    </script>
+</script>
 
 </body>
 
