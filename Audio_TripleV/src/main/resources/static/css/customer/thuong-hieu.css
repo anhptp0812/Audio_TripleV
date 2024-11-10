@@ -1,0 +1,26 @@
+
+.brand-item {
+    background-color: #f0f0f0;
+    height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    color: black;
+}
+.brand-item:hover {
+    background-color: #e0e0e0;
+}
+.footer {
+    background-color: #343a40;
+    color: white;
+    padding: 20px 0;
+}
+.footer a {
+    color: #bbb;
+}
+.footer a:hover {
+    color: white;
+}

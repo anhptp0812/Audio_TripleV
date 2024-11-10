@@ -1,0 +1,29 @@
+
+
+.brand-item {
+    background-color: #f0f0f0;
+    height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.footer {
+    background-color: #343a40;
+    color: white;
+    padding: 20px 0;
+}
+
+.footer a {
+    color: #bbb;
+}
+
+.footer a:hover {
+    color: white;
+}
+
+.product-list {
+    display: none;
+}

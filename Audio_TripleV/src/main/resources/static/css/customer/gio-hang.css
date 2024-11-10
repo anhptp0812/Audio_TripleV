@@ -1,0 +1,40 @@
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    padding: 20px;
+}
+
+h2 {
+    margin-bottom: 20px;
+}
+
+.cart-table {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.cart-table th, .cart-table td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.btn-remove {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-remove:hover {
+    background-color: #c82333;
+}
+
+.total-price {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+footer {
+    background-color: #343a40;
+    color: white;
+    padding: 20px 0;
+}

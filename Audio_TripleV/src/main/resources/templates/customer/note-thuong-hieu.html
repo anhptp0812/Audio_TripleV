@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,36 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-
-        .brand-item {
-            background-color: #f0f0f0;
-            height: 150px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.2rem;
-            cursor: pointer;
-        }
-
-        .footer {
-            background-color: #343a40;
-            color: white;
-            padding: 20px 0;
-        }
-
-        .footer a {
-            color: #bbb;
-        }
-
-        .footer a:hover {
-            color: white;
-        }
-
-        .product-list {
-            display: none;
-        }
-    </style>
+    <link th:href="@{/css/customer/note-thuong-hieu.css}" rel="stylesheet">
 </head>
 <body>
 
@@ -215,6 +186,7 @@
         </div>
     </div>
 </footer>
+<script th:src="@{/js/customer/note-thuong-hieu.js}"></script>
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

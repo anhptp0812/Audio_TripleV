@@ -1,0 +1,122 @@
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+}
+.container {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+.left-section, .right-section {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+}
+.left-section {
+    width: 65%;
+}
+.right-section {
+    width: 30%;
+}
+.product-item {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 10px 0;
+}
+.product-item img {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    margin-right: 20px;
+}
+.product-details {
+    flex-grow: 1;
+}
+.product-details p {
+    margin: 0;
+}
+.product-details .color {
+    color: #666;
+}
+.product-price {
+    text-align: right;
+}
+.product-price .current-price {
+    color: red;
+    font-weight: bold;
+}
+.product-price .original-price {
+    text-decoration: line-through;
+    color: #999;
+}
+.quantity-control {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+.quantity-control button {
+    background-color: #f5f5f5;
+    border: 1px solid #e0e0e0;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+.quantity-control input {
+    width: 40px;
+    text-align: center;
+    border: 1px solid #e0e0e0;
+    margin: 0 5px;
+}
+.right-section .order-summary {
+    border-top: 1px solid #e0e0e0;
+    padding-top: 10px;
+}
+.order-summary p {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+}
+.order-summary .total-price {
+    color: #ff0000;
+    font-weight: bold;
+}
+.order-summary .confirm-button {
+    background-color: red;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.header .select-all {
+    display: flex;
+    align-items: center;
+}
+.header .select-all input {
+    margin-right: 10px;
+}
+.form {
+    margin-bottom: 225px;
+}
+.header .gift-section {
+    display: flex;
+    align-items: center;
+}
+.header .gift-section i {
+    margin-right: 5px;
+}
+
+footer {
+    background-color: #343a40;
+    color: white;
+    padding: 20px 0;
+}
