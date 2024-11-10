@@ -9,6 +9,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.9.1/font/bootstrap-icons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/src/main/resources/static/css/admin/home.css">
     <link rel="stylesheet" href="/src/main/resources/static/css/admin/product.css">
+    <link th:href="@{/css/admin/pro_duct.css}" rel="stylesheet">
 </head>
 
 <body>
@@ -400,69 +401,7 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script>
-        // Hiển thị danh sách sản phẩm mặc định khi vào trang
-        document.addEventListener("DOMContentLoaded", function() {
-            showProductList();
-        });
-
-        function showProductList() {
-            document.getElementById('tableTitle').textContent = "Danh sách sản phẩm";
-            document.getElementById('productTable').style.display = 'table';
-            document.getElementById('colorTable').style.display = 'none';
-            document.getElementById('categoryTable').style.display = 'none';
-            document.getElementById('brandTable').style.display = 'none';
-        }
-
-        function showColorTable() {
-            document.getElementById('tableTitle').textContent = "Màu Sắc Sản Phẩm";
-            document.getElementById('productTable').style.display = 'none';
-            document.getElementById('colorTable').style.display = 'table';
-            document.getElementById('categoryTable').style.display = 'none';
-            document.getElementById('brandTable').style.display = 'none';
-        }
-
-        function showCategoryTable() {
-            document.getElementById('tableTitle').textContent = "Loại Sản Phẩm";
-            document.getElementById('productTable').style.display = 'none';
-            document.getElementById('colorTable').style.display = 'none';
-            document.getElementById('categoryTable').style.display = 'table';
-            document.getElementById('brandTable').style.display = 'none';
-        }
-
-        function showBrandTable() {
-            document.getElementById('tableTitle').textContent = "Hãng";
-            document.getElementById('productTable').style.display = 'none';
-            document.getElementById('colorTable').style.display = 'none';
-            document.getElementById('categoryTable').style.display = 'none';
-            document.getElementById('brandTable').style.display = 'table';
-        }
-
-        function openEditProductModal() {
-            $('#editProductModal').modal('show');
-        }
-
-        function openEditColorModal() {
-            $('#editColorModal').modal('show');
-        }
-
-        function openEditCategoryModal() {
-            $('#editCategoryModal').modal('show');
-        }
-
-        function openEditBrandModal() {
-            $('#editBrandModal').modal('show');
-        }
-
-        function openAddProductModal() {
-            $('#addProductModal').modal('show');
-        }
-
-        function handleSearch() {
-            const searchValue = document.getElementById('searchInput').value;
-            alert('Searching for: ' + searchValue);
-        }
-    </script>
+    <script th:src="@{/js/admin/pro_duct.js}"></script>
 </body>
 
 </html>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -9,83 +9,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.9.1/font/bootstrap-icons.min.css" rel="stylesheet">
 <!--    <link rel="stylesheet" href="/src/main/resources/static/css/home.css">-->
 <!--    <link rel="stylesheet" href="/src/main/resources/static/css/product.css"> &lt;!&ndash; Giữ lại CSS cho khach_hang_acc &ndash;&gt;-->
-    <style>
-        .search-input {
-            display: none; /* Initially hidden */
-            margin-left: 10px;
-            max-width: 200px;
-        }
-
-        .bordered-container {
-            border: 1px solid #ccc;
-            padding: 20px;
-            margin-top: 20px;
-            background-color: #f9f9f9;
-        }
-
-        .product-container {
-            margin-top: 20px;
-        }
-
-        .product-sidebar {
-            border-right: 1px solid #ccc;
-            padding-right: 10px;
-        }
-
-        .product-list {
-            margin-top: 20px;
-        }
-
-        .product-list .product-item {
-            margin-bottom: 10px;
-        }
-
-        .product-item a {
-            font-weight: bold;
-            color: #007bff;
-        }
-
-        .pagination {
-            justify-content: center;
-        }
-
-        .table th,
-        .table td {
-            vertical-align: middle;
-            font-size: 12px; /* Thu nhỏ văn bản */
-            padding: 5px; /* Giảm khoảng cách giữa các ô */
-        }
-
-        .image-placeholder {
-            width: 100px;
-            height: 100px;
-            border: 1px solid #ddd;
-            display: block;
-        }
-
-        .btn-product {
-            margin-bottom: 20px;
-            height: 50px; /* Set a fixed height for all buttons */
-            width: 100%; /* Make buttons take the full width */
-            display: flex; /* Center content vertically */
-            align-items: center; /* Center content vertically */
-            justify-content: center; /* Center content horizontally */
-        }
-
-        #productTable,
-        #colorTable,
-        #brandTable,
-        #categoryTable {
-            display: none; /* Hidden by default */
-        }
-
-        /* Style for the modal */
-        .modal-header {
-            background-color: #007bff;
-            color: white;
-        }
-
-    </style>
+    <link th:href="@{/css/admin/product.css}" rel="stylesheet">
 </head>
 
 <body>
@@ -483,91 +407,8 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script>
-        function showProductList() {
-            hideAllTables();
-            document.getElementById('productTable').style.display = 'table';
-        }
+    <script th:src="@{/js/admin/product.js}"></script>
 
-        function showColorTable() {
-            hideAllTables();
-            document.getElementById('colorTable').style.display = 'table';
-        }
-
-        function showCategoryTable() {
-            hideAllTables();
-            document.getElementById('categoryTable').style.display = 'table';
-        }
-
-        function showBrandTable() {
-            hideAllTables();
-            document.getElementById('brandTable').style.display = 'table';
-        }
-
-        function hideAllTables() {
-            document.getElementById('productTable').style.display = 'none';
-            document.getElementById('colorTable').style.display = 'none';
-            document.getElementById('categoryTable').style.display = 'none';
-            document.getElementById('brandTable').style.display = 'none';
-        }
-
-        function openEditColorModal(colorName, createdDate, updatedDate) {
-            document.getElementById('colorName').value = colorName;
-            document.getElementById('colorCreatedDate').value = createdDate;
-            document.getElementById('colorUpdatedDate').value = updatedDate;
-            $('#editColorModal').modal('show');
-        }
-
-        function openEditCategoryModal(categoryName, createdDate, updatedDate) {
-            document.getElementById('categoryName').value = categoryName;
-            document.getElementById('categoryCreatedDate').value = createdDate;
-            document.getElementById('categoryUpdatedDate').value = updatedDate;
-            $('#editCategoryModal').modal('show');
-        }
-
-        function openEditBrandModal(brandName, createdDate, updatedDate) {
-            document.getElementById('brandName').value = brandName;
-            document.getElementById('brandCreatedDate').value = createdDate;
-            document.getElementById('brandUpdatedDate').value = updatedDate;
-            $('#editBrandModal').modal('show');
-        }
-
-        function openEditProductModal(productName, productColor, productBrand, productCategory) {
-            document.getElementById('productName').value = productName;
-            document.getElementById('productColor').value = productColor;
-            document.getElementById('productBrand').value = productBrand;
-            document.getElementById('productCategory').value = productCategory;
-            document.getElementById('productStatus').value = productStatus;
-            document.getElementById('productCreatedDate').value = productCreatedDate;
-            document.getElementById('productUpdatedDate').value = productUpdatedDate;
-            $('#editProductModal').modal('show');
-        }
-
-        function saveColor() {
-            // Code to save color
-            $('#editColorModal').modal('hide');
-        }
-
-        function saveCategory() {
-            // Code to save category
-            $('#editCategoryModal').modal('hide');
-        }
-
-        function saveBrand() {
-            // Code to save brand
-            $('#editBrandModal').modal('hide');
-        }
-
-        function saveProduct() {
-            // Code to save product
-            $('#editProductModal').modal('hide');
-        }
-
-        function handleSearch() {
-            const searchValue = document.getElementById('searchInput').value;
-            alert('Searching for: ' + searchValue);
-        }
-    </script>
 </body>
 
 </html>

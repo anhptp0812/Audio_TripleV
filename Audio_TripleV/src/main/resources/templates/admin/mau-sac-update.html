@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cập Nhật Màu Sắc</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link th:href="@{/css/admin/mau-sac-update.css}" rel="stylesheet">
 </head>
 <body>
 <div class="container mt-5">
@@ -32,35 +33,6 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script>
-    function updateMauSac() {
-        const formData = {
-            id: document.getElementById('id').value,
-            ten: document.getElementById('ten').value,
-            ngayTao: document.getElementById('ngayTao').value,
-            ngayCapNhat: document.getElementById('ngayCapNhat').value || new Date().toISOString().split('T')[0] // Gán ngày hiện tại nếu trường để trống
-        };
-
-        // Kiểm tra các trường bắt buộc
-        if (!formData.ten) {
-            alert('Vui lòng điền tên màu sắc.');
-            return;
-        }
-
-        $.ajax({
-            url: '/mau-sac/update',
-            type: 'PUT',
-            contentType: 'application/json',
-            data: JSON.stringify(formData),
-            success: function(response) {
-                alert('Cập nhật màu sắc thành công!');
-                window.location.href = '/spct/hien-thi?activated=colors';
-            },
-            error: function(xhr) {
-                alert('Có lỗi xảy ra: ' + xhr.responseText);
-            }
-        });
-    }
-</script>
+<script th:src="@{/js/admin/mau-sac-update.js}"></script>
 </body>
 </html>

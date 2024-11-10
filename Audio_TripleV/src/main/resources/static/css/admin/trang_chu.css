@@ -1,0 +1,5 @@
+.search-input {
+    display: none;  /* Initially hidden */
+    margin-left: 10px;
+    max-width: 200px;
+}

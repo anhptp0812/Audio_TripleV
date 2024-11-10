@@ -1,0 +1,380 @@
+let formDisplayed = false;
+let selectedProducts = []; // Mảng lưu trữ sản phẩm đã chọn
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Thêm sự kiện cho các nút "Add Product"
+    addProductButtonEventListeners();
+});
+
+// Hàm thêm sự kiện cho nút "Add Product"
+function addProductButtonEventListeners() {
+    const addProductButtons = document.querySelectorAll('td button');
+    addProductButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            const row = this.closest('tr');
+            const spctId = row.querySelector('td:nth-child(1)').textContent.trim();
+            const productName = row.querySelector('td:nth-child(2)').textContent.trim();
+            const quantity = 1;
+            // const quantity = parseInt(row.querySelector('td:nth-child(8)').textContent.trim(), 10) || 0;
+            const price = parseFloat(row.querySelector('td:nth-child(7)').textContent.trim()) || 0;
+
+            addProductToForm(spctId, productName, quantity, price);
+        });
+    });
+}
+
+// Hàm xử lý việc tìm kiếm
+$(document).ready(function () {
+    $('#searchForm').submit(function (event) {
+        event.preventDefault(); // Ngừng reload trang
+
+        var formAction = $(this).attr('action'); // Lấy URL từ form action
+        var formData = $(this).serialize(); // Lấy dữ liệu form
+
+        $.ajax({
+            url: formAction,
+            method: 'GET',
+            data: formData,
+            success: function (response) {
+                // Cập nhật bảng với dữ liệu mới
+                $('#tableBody').html($(response).find('#tableBody').html());
+
+                // Gắn lại sự kiện cho các nút "Add Product"
+                addProductButtonEventListeners();
+            },
+            error: function () {
+                alert('Có lỗi xảy ra trong quá trình tìm kiếm!');
+            }
+        });
+    });
+});
+
+function addProductToForm(spctId, productName, quantity, price) {
+    const addedProductsTableBody = document.getElementById('addedProductsTableBody');
+
+    if (!addedProductsTableBody) {
+        console.error('Phần tử tbody không tồn tại!');
+        return;
+    }
+
+    // Kiểm tra xem sản phẩm đã tồn tại trong giỏ chưa
+    let existingProduct = selectedProducts.find(product => product.spctId === spctId);
+
+    if (existingProduct) {
+        // Nếu sản phẩm đã có trong giỏ, tăng số lượng lên
+        existingProduct.quantity += quantity;
+
+        // Cập nhật lại số lượng trong bảng giỏ hàng
+        updateProductQuantityInTable(existingProduct);
+    } else {
+        // Nếu chưa có trong giỏ, thêm mới
+        const newProduct = {spctId, productName, quantity, price};
+        selectedProducts.push(newProduct);
+
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+            <td>
+                <span>${productName || 'Chưa có tên sản phẩm'}</span>
+                <input type="hidden" name="spctIds" value="${spctId}"/>
+            </td>
+            <td><input type="number" name="soLuong" value="${quantity}" min="1" /></td>
+            <td><input type="number" name="donGia" value="${price}" readonly /></td>
+        `;
+
+        addedProductsTableBody.appendChild(newRow);
+    }
+}
+
+function updateProductQuantityInTable(product) {
+    const rows = document.querySelectorAll('#addedProductsTableBody tr');
+    rows.forEach(row => {
+        const spctId = row.querySelector('input[name="spctIds"]').value;
+        if (spctId === product.spctId) {
+            const quantityInput = row.querySelector('input[name="soLuong"]');
+            quantityInput.value = product.quantity; // Cập nhật số lượng
+        }
+    });
+}
+
+function saveOrderDetails() {
+    // Tạo đối tượng orderRequest
+    event.preventDefault();
+    const orderRequest = {
+        products: selectedProducts,
+        // Bạn có thể thêm các thông tin khác như ID đơn hàng, thông tin người dùng, v.v.
+    };
+
+    // Gửi orderRequest đến backend
+    fetch('/user/ban-hang/save-details', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json' // Thêm header này
+        },
+        body: JSON.stringify(orderRequest)
+
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Order saved successfully:', data);
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+}
+
+function removeProduct(button) {
+    // Xóa hàng sản phẩm khỏi bảng
+    const row = button.parentNode.parentNode;
+    row.parentNode.removeChild(row);
+}
+
+function selectCustomer(id, ten, sdt) {
+    // Cập nhật thông tin khách hàng vào form đơn hàng
+    document.getElementById('khachHangId').value = id; // Lưu id khách hàng
+    document.getElementById('khachHangInput').value = ten; // Hiển thị tên khách hàng
+    closeCustomerForm(); // Đóng form khách hàng
+}
+
+function selectProduct(id) {
+
+}
+
+function handleSearch() {
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput.style.display === 'none' || searchInput.style.display === '') {
+        searchInput.style.display = 'block';
+        searchInput.focus();
+    } else {
+        const searchValue = searchInput.value.trim();
+        if (searchValue) {
+            window.location.href = `sang_pham.html?search=${encodeURIComponent(searchValue)}`;
+        }
+        searchInput.value = '';
+        searchInput.style.display = 'none';
+    }
+}
+
+
+// Hàm xử lý thanh toán
+// function processPayment() {
+//     const total = parseFloat(document.getElementById('totalAmount').textContent);
+//     const payment = parseFloat(document.getElementById('customerPayment').value);
+//
+//     if (payment >= total) {
+//         // Simulate backend API call
+//         fetch('/user/ban-hang', {
+//             method: 'POST',
+//
+//             headers: {
+//
+//                 'Content-Type': 'application/json',
+//             },
+//             body: JSON.stringify({
+//                 products: selectedProducts,
+//                 totalAmount: total,
+//                 payment: payment
+//             }),
+//         })
+//             .then(response => response.json())
+//             .then(data => {
+//                 alert('Thanh toán thành công!');
+//
+//                 // Reset the cart and UI
+//                 selectedProducts = [];
+//                 document.getElementById('customerPayment').value = '';
+//                 document.getElementById('changeAmount').textContent = '0';
+//                 updateTotalAmount();
+//
+//                 console.log('Success:', data);
+//             })
+//             .catch((error) => {
+//                 console.error('Error:', error);
+//             });
+//
+//     } else {
+//         alert('Số tiền khách đưa không đủ!');
+//     }
+// }
+
+function showMenu(category) {
+    const sections = document.querySelectorAll('.menu-section');
+    sections.forEach(section => section.style.display = 'none');
+    document.getElementById(category).style.display = 'block';
+}
+
+function toggleHistoryForm() {
+    const historyForm = document.querySelector('.history-form');
+    historyForm.style.display = historyForm.style.display === 'block' ? 'none' : 'block';
+}
+
+function toggleCustomerForm() {
+    document.querySelector('.customer-form').style.display = 'block';
+}
+
+function closeCustomerForm() {
+    document.querySelector('.customer-form').style.display = 'none';
+}
+
+function showForms() {
+    const sanPhamForm = document.querySelector('.form-san-pham');
+    if (!formDisplayed) {
+        sanPhamForm.style.display = 'block';
+        formDisplayed = true;
+    } else {
+        alert('Không thể tạo 2 Bill cùng 1 Thanh Toán');
+    }
+}
+
+function viewOrderDetails(id) {
+    // Update with actual order ID
+    var id = 1;
+    fetch(`/user/ban-hang/${id}/details`)
+        .then(response => response.json())
+        .then(data => {
+            const addedProductsTableBody = document.getElementById('addedProductsTableBody');
+            addedProductsTableBody.innerHTML = '';
+
+            data.forEach(item => {
+                const newRow = document.createElement('tr');
+                newRow.innerHTML = `
+                    <td>${item.productName || 'Chưa có tên sản phẩm'}</td>
+                    <td><input type="number" name="soLuong" value="${item.quantity}" min="1" onchange="updateProductQuantity(this)" /></td>
+                    <td><input type="number" name="donGia" value="${item.price}" readonly /></td>
+
+                `;
+                addedProductsTableBody.appendChild(newRow);
+            });
+
+            document.getElementById('orderDetailsForm').style.display = 'block';
+        })
+        .catch(error => console.error('Error fetching order details:', error));
+}
+
+
+
+
+
+// Hiển thị form khách hàng
+function openCustomerForm() {
+    document.getElementById("customerForm").style.display = "block";
+}
+
+// Ẩn form khách hàng
+function closeCustomerForm() {
+    document.getElementById("customerForm").style.display = "none";
+}
+
+// Giả sử có một chức năng tìm kiếm khách hàng (tạm thời là demo)
+function searchCustomer() {
+    const name = document.getElementById('customerName').value.trim();
+    const phone = document.getElementById('customerPhone').value.trim();
+
+    // Kiểm tra xem ít nhất một trong hai ô nhập có giá trị
+    if (!name && !phone) {
+        alert("Vui lòng nhập tên hoặc số điện thoại để tìm kiếm.");
+        return; // Không thực hiện tìm kiếm nếu cả hai ô đều trống
+    }
+
+    // Gửi yêu cầu AJAX đến server để tìm kiếm khách hàng
+    fetch(`/api/khach-hang/search?name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}`)
+        .then(response => response.json())
+        .then(data => {
+            const customerList = document.getElementById('customer-list');
+            customerList.innerHTML = ''; // Xóa danh sách cũ
+
+            // Kiểm tra nếu không có khách hàng nào được tìm thấy
+            if (data.length === 0) {
+                customerList.innerHTML = '<tr><td colspan="3">Không tìm thấy khách hàng nào.</td></tr>';
+                return;
+            }
+
+            // Thêm từng khách hàng vào bảng
+            data.forEach(kh => {
+                const row = document.createElement('tr');
+                row.setAttribute('onclick', `selectCustomer('${kh.id}', '${kh.ten}', '${kh.sdt}')`);
+                row.innerHTML = `
+                    <td>${kh.ten}</td>
+                    <td>${kh.sdt}</td>
+                    <td>Chọn</td>
+                `;
+                customerList.appendChild(row);
+            });
+        })
+        .catch(error => {
+            console.error('Có lỗi xảy ra khi tìm kiếm khách hàng:', error);
+        });
+}
+
+window.onload = function () {
+    // Lấy id từ URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const orderId = urlParams.get('id'); // Lấy id từ query string
+
+    // Gán id vào các input
+    if (orderId) {
+        document.querySelector('input[name="donHang.id"]').value = orderId;
+    }
+}; // Gán vào input tương ứng
+
+function addProductToForm(spctId, productName, quantity, price) {
+    const addedProductsTableBody = document.getElementById('addedProductsTableBody');
+
+    if (!addedProductsTableBody) {
+        console.error('Phần tử tbody không tồn tại!');
+        return;
+    }
+
+    const newRow = document.createElement('tr');
+    newRow.innerHTML = `
+        <td>
+            <span>${productName || 'Chưa có tên sản phẩm'}</span>
+            <input type="hidden" name="spctIds" value="${spctId}"/>
+        </td>
+        <td><input type="number" name="soLuong" value="${quantity}" min="1" onchange="updateProductQuantity(this)" /></td>
+        <td><input type="number" name="donGia" value="${price}" readonly /></td>
+    `;
+
+    addedProductsTableBody.appendChild(newRow);
+
+    // Thêm sản phẩm vào mảng selectedProducts
+    selectedProducts.push({spctId, productName, quantity, price});
+
+    updateTotalAmount(); // Cập nhật tổng tiền
+}
+
+function updateTotalAmount() {
+    const total = selectedProducts.reduce((sum, product) => sum + (product.quantity * product.price), 0);
+    document.getElementById('totalAmount').textContent = total.toFixed(2); // Hiển thị tổng với 2 chữ số thập phân
+    calculateChange(); // Cập nhật tiền trả lại
+}
+
+function updateProductQuantity(inputElement) {
+    const row = inputElement.closest('tr');
+    const quantity = parseInt(inputElement.value, 10) || 0;
+    const price = parseFloat(row.querySelector('input[name="donGia"]').value) || 0;
+    const spctId = row.querySelector('input[name="spctIds"]').value;
+
+    // Cập nhật số lượng trong mảng selectedProducts
+    const productIndex = selectedProducts.findIndex(product => product.spctId === spctId);
+    if (productIndex !== -1) {
+        selectedProducts[productIndex].quantity = quantity;
+    }
+
+    updateTotalAmount(); // Cập nhật tổng tiền
+}
+
+// Hàm tính toán số tiền trả lại
+function calculateChange() {
+    const payment = parseFloat(document.getElementById('customerPayment').value) || 0; // Lấy giá trị tiền khách đưa
+    const total = parseFloat(document.getElementById('totalAmount').textContent); // Lấy tổng tiền
+    const change = payment - total; // Tính số tiền trả lại
+
+    // Cập nhật số tiền trả lại
+    document.getElementById('changeAmount').textContent = change >= 0 ? change.toFixed(2) : '0';
+}
