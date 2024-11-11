@@ -11,9 +11,6 @@
     <!-- Link CSS remains unchanged as requested -->
     <link th:href="@{/css/nhanvien/productProvity.css}" rel="stylesheet">
 
-    <script>
-
-    </script>
 </head>
 
 <body>
@@ -176,17 +173,11 @@
                     <br>
 
                     <label>Ngày Giao:</label>
-                    <input type="date" th:field="*{ngayGiao}"/>
+                    <input type="date" th:field="*{ngayGiao}" id="ngayGiaoId" min="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" />
 
                     <button type="submit">Lưu đơn hàng</button>
                 </form>
-
-                <!--                <button onclick="viewOrderDetails(${donHang.id})">Xem chi tiết</button>-->
-
-<!--                <button onclick="viewOrderDetails(${donHang.id})">Xem chi tiết</button>-->
-
-                <button onclick="viewOrderDetails()">Xem chi tiết</button>
-
+                <button th:onclick="'viewOrderDetails(' + ${donHang.id} + ')'">Xem chi tiết</button>
             </div>
 
             <!-- Nút để xem chi tiết đơn hàng theo ID đơn hàng -->
@@ -220,7 +211,7 @@
                 </div>
                 <div class="total-item">
                     <label>Nhập số tiền khách đưa:</label>
-                    <input type="text" id="customerPayment" oninput="calculateChange()" placeholder="Nhập số tiền"/>
+                    <input type="text" id="customerPayment" oninput="calculateChange()" style="text-align: right" placeholder="Nhập số tiền"/>
                 </div>
                 <div class="total-item">
                     <label>Số tiền trả lại:</label>
@@ -284,8 +275,9 @@
     </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script th:src="@{/js/nhanvien/productProvity.js}"></script>
-
+<!--<script th:inline="javascript">-->
+<!--</script>-->
+<script th:inline="javascript" th:src="@{/js/nhanvien/productProvity.js}"></script>
 </body>
 
 </html>
