@@ -4,6 +4,16 @@ let selectedProducts = []; // Mảng lưu trữ sản phẩm đã chọn
 document.addEventListener('DOMContentLoaded', function () {
     // Thêm sự kiện cho các nút "Add Product"
     addProductButtonEventListeners();
+
+    const today = new Date();
+    const dd = String(today.getDate()).padStart(2, '0');
+    const mm = String(today.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0
+    const yyyy = today.getFullYear();
+
+    const formattedDate = yyyy + '-' + mm + '-' + dd;
+
+    const ngayGiaoInput = document.getElementById('ngayGiaoId');
+    ngayGiaoInput.value = formattedDate; // Thiết lập giá trị mặc định là ngày hôm nay
 });
 
 // Hàm thêm sự kiện cho nút "Add Product"
@@ -49,49 +59,18 @@ $(document).ready(function () {
     });
 });
 
-function addProductToForm(spctId, productName, quantity, price) {
-    const addedProductsTableBody = document.getElementById('addedProductsTableBody');
-
-    if (!addedProductsTableBody) {
-        console.error('Phần tử tbody không tồn tại!');
-        return;
-    }
-
-    // Kiểm tra xem sản phẩm đã tồn tại trong giỏ chưa
-    let existingProduct = selectedProducts.find(product => product.spctId === spctId);
-
-    if (existingProduct) {
-        // Nếu sản phẩm đã có trong giỏ, tăng số lượng lên
-        existingProduct.quantity += quantity;
-
-        // Cập nhật lại số lượng trong bảng giỏ hàng
-        updateProductQuantityInTable(existingProduct);
-    } else {
-        // Nếu chưa có trong giỏ, thêm mới
-        const newProduct = {spctId, productName, quantity, price};
-        selectedProducts.push(newProduct);
-
-        const newRow = document.createElement('tr');
-        newRow.innerHTML = `
-            <td>
-                <span>${productName || 'Chưa có tên sản phẩm'}</span>
-                <input type="hidden" name="spctIds" value="${spctId}"/>
-            </td>
-            <td><input type="number" name="soLuong" value="${quantity}" min="1" /></td>
-            <td><input type="number" name="donGia" value="${price}" readonly /></td>
-        `;
-
-        addedProductsTableBody.appendChild(newRow);
-    }
-}
-
 function updateProductQuantityInTable(product) {
     const rows = document.querySelectorAll('#addedProductsTableBody tr');
     rows.forEach(row => {
         const spctId = row.querySelector('input[name="spctIds"]').value;
         if (spctId === product.spctId) {
             const quantityInput = row.querySelector('input[name="soLuong"]');
-            quantityInput.value = product.quantity; // Cập nhật số lượng
+
+            // Cập nhật số lượng trong ô input
+            quantityInput.value = product.quantity;
+
+            // Cập nhật lại tổng tiền
+            updateTotalAmount();  // Cập nhật tổng tiền sau khi thay đổi số lượng
         }
     });
 }
@@ -160,6 +139,69 @@ function handleSearch() {
     }
 }
 
+let isOrderCreated = false; // Biến kiểm tra xem hóa đơn đã được tạo hay chưa
+let viewDetail = false;
+
+function addProductToForm(spctId, productName, quantity, price) {
+    if (isOrderCreated === false) {
+        showForms();
+    }
+    if (viewDetail === false){
+        alert("Chưa mở Xem chi tiết");
+        return;
+    }
+    const addedProductsTableBody = document.getElementById('addedProductsTableBody');
+
+    if (!addedProductsTableBody) {
+        console.error('Phần tử tbody không tồn tại!');
+        return;
+    }
+
+    // Kiểm tra xem sản phẩm đã tồn tại trong giỏ chưa
+    let existingProduct = selectedProducts.find(product => product.spctId === spctId);
+
+    if (existingProduct) {
+        // Nếu sản phẩm đã có trong giỏ, tăng số lượng lên
+        existingProduct.quantity += quantity;
+
+        // Cập nhật lại số lượng trong bảng giỏ hàng
+        updateProductQuantityInTable(existingProduct);
+    } else {
+        // Nếu chưa có trong giỏ, thêm mới
+        const newProduct = { spctId, productName, quantity, price };
+        selectedProducts.push(newProduct);
+
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+            <td>
+                <span>${productName || 'Chưa có tên sản phẩm'}</span>
+                <input type="hidden" name="spctIds" value="${spctId}"/>
+            </td>
+            <td><input type="number" name="soLuong" value="${quantity}" min="1" onchange="updateProductQuantity(this)" /></td>
+            <td><input type="number" name="donGia" value="${price}" readonly /></td>
+        `;
+        addedProductsTableBody.appendChild(newRow);
+    }
+
+    // Cập nhật tổng tiền sau khi thêm sản phẩm
+    updateTotalAmount(); // Cập nhật tổng tiền
+}
+
+// Hàm cập nhật số lượng trong bảng khi có sự thay đổi
+function updateProductQuantityInTable(product) {
+    const rows = document.querySelectorAll('#addedProductsTableBody tr');
+
+    rows.forEach(row => {
+        const spctId = row.querySelector('input[name="spctIds"]').value;
+
+        if (spctId == product.spctId) {
+            const quantityInput = row.querySelector('input[name="soLuong"]');
+            quantityInput.value = product.quantity;
+        }
+    });
+
+    updateTotalAmount(); // Cập nhật lại tổng tiền sau khi thay đổi số lượng
+}
 
 // Hàm xử lý thanh toán
 // function processPayment() {
@@ -222,6 +264,7 @@ function closeCustomerForm() {
 }
 
 function showForms() {
+    isOrderCreated = true;
     const sanPhamForm = document.querySelector('.form-san-pham');
     if (!formDisplayed) {
         sanPhamForm.style.display = 'block';
@@ -232,33 +275,60 @@ function showForms() {
 }
 
 function viewOrderDetails(id) {
-    // Update with actual order ID
-    var id = 1;
+    viewDetail = true;
+
+    if (!id || isNaN(id)) {
+        alert('ID đơn hàng không hợp lệ');
+        return;
+    }
+
     fetch(`/user/ban-hang/${id}/details`)
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Không thể tải chi tiết đơn hàng');
+            }
+            return response.json();
+        })
         .then(data => {
             const addedProductsTableBody = document.getElementById('addedProductsTableBody');
-            addedProductsTableBody.innerHTML = '';
+            addedProductsTableBody.innerHTML = ''; // Xóa nội dung cũ
 
+            // Tạo mảng sản phẩm cho selectedProducts
+            selectedProducts = [];
+
+            // Hiển thị các sản phẩm và tính tổng tiền
             data.forEach(item => {
                 const newRow = document.createElement('tr');
                 newRow.innerHTML = `
                     <td>${item.productName || 'Chưa có tên sản phẩm'}</td>
                     <td><input type="number" name="soLuong" value="${item.quantity}" min="1" onchange="updateProductQuantity(this)" /></td>
                     <td><input type="number" name="donGia" value="${item.price}" readonly /></td>
-
                 `;
                 addedProductsTableBody.appendChild(newRow);
+
+                // Thêm sản phẩm vào mảng selectedProducts
+                selectedProducts.push({
+                    spctId: item.spctId,
+                    productName: item.productName,
+                    quantity: item.quantity,
+                    price: item.price
+                });
             });
 
+            // Gọi hàm cập nhật tổng tiền
+            updateTotalAmount();
+
+            // Hiển thị form chi tiết đơn hàng
             document.getElementById('orderDetailsForm').style.display = 'block';
+
+            // Gọi hàm cập nhật tiền trả lại
+            calculateChange();
         })
-        .catch(error => console.error('Error fetching order details:', error));
+        .catch(error => {
+            console.error('Error fetching order details:', error);
+            alert('Có lỗi xảy ra khi tải chi tiết đơn hàng. Vui lòng thử lại sau.');
+        });
 }
-
-
-
-
 
 // Hiển thị form khách hàng
 function openCustomerForm() {
@@ -322,51 +392,30 @@ window.onload = function () {
     }
 }; // Gán vào input tương ứng
 
-function addProductToForm(spctId, productName, quantity, price) {
-    const addedProductsTableBody = document.getElementById('addedProductsTableBody');
+function updateProductQuantity(inputElement) {
+    const row = inputElement.closest('tr');
+    const price = parseFloat(row.querySelector('input[name="donGia"]').value) || 0;
+    const spctId = row.querySelector('input[name="spctIds"]').value;  // Lấy spctId của sản phẩm
+    const newQuantity = parseInt(inputElement.value, 10);  // Lấy số lượng mới từ input
 
-    if (!addedProductsTableBody) {
-        console.error('Phần tử tbody không tồn tại!');
+    // Kiểm tra số lượng hợp lệ (lớn hơn 0)
+    if (newQuantity <= 0) {
+        alert("Số lượng phải lớn hơn 0");
+        inputElement.value = 1;  // Đặt lại số lượng về 1 nếu không hợp lệ
         return;
     }
 
-    const newRow = document.createElement('tr');
-    newRow.innerHTML = `
-        <td>
-            <span>${productName || 'Chưa có tên sản phẩm'}</span>
-            <input type="hidden" name="spctIds" value="${spctId}"/>
-        </td>
-        <td><input type="number" name="soLuong" value="${quantity}" min="1" onchange="updateProductQuantity(this)" /></td>
-        <td><input type="number" name="donGia" value="${price}" readonly /></td>
-    `;
-
-    addedProductsTableBody.appendChild(newRow);
-
-    // Thêm sản phẩm vào mảng selectedProducts
-    selectedProducts.push({spctId, productName, quantity, price});
-
-    updateTotalAmount(); // Cập nhật tổng tiền
-}
-
-function updateTotalAmount() {
-    const total = selectedProducts.reduce((sum, product) => sum + (product.quantity * product.price), 0);
-    document.getElementById('totalAmount').textContent = total.toFixed(2); // Hiển thị tổng với 2 chữ số thập phân
-    calculateChange(); // Cập nhật tiền trả lại
-}
-
-function updateProductQuantity(inputElement) {
-    const row = inputElement.closest('tr');
-    const quantity = parseInt(inputElement.value, 10) || 0;
-    const price = parseFloat(row.querySelector('input[name="donGia"]').value) || 0;
-    const spctId = row.querySelector('input[name="spctIds"]').value;
-
-    // Cập nhật số lượng trong mảng selectedProducts
-    const productIndex = selectedProducts.findIndex(product => product.spctId === spctId);
-    if (productIndex !== -1) {
-        selectedProducts[productIndex].quantity = quantity;
+    // Tìm sản phẩm trong mảng selectedProducts
+    const product = selectedProducts.find(item => item.spctId === spctId);
+    if (product) {
+        product.quantity = newQuantity;  // Cập nhật số lượng trong mảng
     }
 
-    updateTotalAmount(); // Cập nhật tổng tiền
+    // Cập nhật tổng tiền sau khi thay đổi số lượng
+    updateTotalAmount();
+
+    // Cập nhật lại số lượng trong bảng (nếu cần thiết)
+    row.querySelector('input[name="soLuong"]').value = newQuantity;  // Cập nhật lại bảng
 }
 
 // Hàm tính toán số tiền trả lại
@@ -377,4 +426,11 @@ function calculateChange() {
 
     // Cập nhật số tiền trả lại
     document.getElementById('changeAmount').textContent = change >= 0 ? change.toFixed(2) : '0';
+}
+
+// Hàm cập nhật tổng tiền
+function updateTotalAmount() {
+    const total = selectedProducts.reduce((sum, product) => sum + (product.quantity * product.price), 0);
+    document.getElementById('totalAmount').textContent = total.toFixed(2); // Hiển thị tổng với 2 chữ số thập phân
+    calculateChange(); // Cập nhật tiền trả lại mỗi khi tổng tiền thay đổi
 }
