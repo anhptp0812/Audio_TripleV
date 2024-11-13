@@ -21,8 +21,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+Phuc
+import java.util.*;
+import java.util.stream.Collectors;
+
 import java.util.Date;
 import java.util.List;
+ main
 
 @CrossOrigin(origins = "http://localhost:3000") // Thay đổi URL này theo miền của frontend
 @Controller
@@ -238,7 +243,25 @@ public class DonHangController {
     }
 
 
+    @PostMapping("/ban-hang/delete/{dhctId}")
+    public String deleteOrderDetail(@PathVariable Integer dhctId) {
+        Optional<DonHangChiTiet> optionalDonHangChiTiet = donHangChiTietRepository.findById(dhctId);
 
+        if (optionalDonHangChiTiet.isPresent()) {
+            DonHangChiTiet donHangChiTiet = optionalDonHangChiTiet.get();
+            SanPhamChiTiet sanPhamChiTiet = donHangChiTiet.getSanPhamChiTiet();
+
+            // Tăng số lượng lại trong SanPhamChiTiet
+            sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() + donHangChiTiet.getSoLuong());
+            sanPhamChiTietRepository.save(sanPhamChiTiet);
+
+            // Xóa chi tiết đơn hàng
+            donHangChiTietRepository.delete(donHangChiTiet);
+        }
+
+        // Điều hướng lại đến trang chi tiết đơn hàng sau khi xóa
+        return "redirect:/user/ban-hang"; // Hoặc trang bạn muốn quay lại sau khi xóa
+    }
 //    @PostMapping("/process-payment")
 //    public String processPayment(@RequestBody OrderRequest orderRequest) {
 //        // Step 1: Create and save DonHang
