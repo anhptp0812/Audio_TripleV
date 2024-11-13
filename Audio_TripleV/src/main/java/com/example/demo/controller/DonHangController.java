@@ -3,13 +3,12 @@ package com.example.demo.controller;
 import com.example.demo.entity.DonHang;
 import com.example.demo.entity.DonHangChiTiet;
 import com.example.demo.entity.Hang;
-import com.example.demo.entity.KhachHang;
 import com.example.demo.entity.LoaiSanPham;
 import com.example.demo.entity.MauSac;
 import com.example.demo.entity.SanPham;
 import com.example.demo.entity.SanPhamChiTiet;
 import com.example.demo.repository.DonHangChiTietRepository;
-import com.example.demo.entityCustom.DonHangRepository;
+import com.example.demo.repository.DonHangRepository;
 import com.example.demo.repository.HangRepository;
 import com.example.demo.repository.LoaiSanPhamRepository;
 import com.example.demo.repository.MauSacRepository;
@@ -18,8 +17,6 @@ import com.example.demo.repository.SanPhamRepository;
 import com.example.demo.service.DonHangService;
 import com.example.demo.service.SanPhamChiTietService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -30,12 +27,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "http://localhost:3000") // Thay đổi URL này theo miền của frontend
 @Controller
@@ -275,5 +268,3 @@ public class DonHangController {
 //
 //        return "Process Success";
 }
-
-

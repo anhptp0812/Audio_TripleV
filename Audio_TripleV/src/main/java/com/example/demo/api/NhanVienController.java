@@ -115,6 +115,15 @@ public class NhanVienController {
         model.addAttribute("donHang", new DonHang());
         model.addAttribute("donHangChiTiet", new DonHangChiTiet());
 
+        List<Hang> availableHangs = hangRepository.findAvailableHangs(sanPhamTen, idLoaiSP, mauSac, minPrice, maxPrice);
+        List<MauSac> availableMauSacs = mauSacRepository.findAvailableMauSacs(sanPhamTen, idLoaiSP, hang, minPrice, maxPrice);
+        List<LoaiSanPham> availableLoaiSanPhams = loaiSanPhamRepository.findAvailableLoaiSanPhams(sanPhamTen, mauSac, hang, minPrice, maxPrice);
+
+        model.addAttribute("availableHangs", availableHangs);
+        model.addAttribute("availableMauSacs", availableMauSacs);
+        model.addAttribute("availableLoaiSanPhams", availableLoaiSanPhams);
+
+
         return "nhanvien/productProvity"; // Trả về trang sản phẩm
     }
 

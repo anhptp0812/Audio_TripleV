@@ -307,22 +307,19 @@
                 <!-- Chọn sản phẩm -->
                 <input type="text" name="sanPhamTen" id="sanPhamTen" placeholder="Nhập tên sản phẩm" />
 
-                <!-- Chọn màu sắc -->
                 <select name="mauSac" id="mauSac">
                     <option value="">Chọn màu sắc</option>
-                    <option th:each="mauSac : ${mauSacs}" th:value="${mauSac.id}" th:text="${mauSac.ten}"></option>
+                    <option th:each="mauSac : ${availableMauSacs}" th:value="${mauSac.id}" th:text="${mauSac.ten}"></option>
                 </select>
 
-                <!-- Chọn hãng -->
                 <select name="hang" id="hang">
                     <option value="">Chọn hãng</option>
-                    <option th:each="hang : ${hangs}" th:value="${hang.id}" th:text="${hang.ten}"></option>
+                    <option th:each="hang : ${availableHangs}" th:value="${hang.id}" th:text="${hang.ten}"></option>
                 </select>
 
-                <!-- Chọn loại sản phẩm -->
                 <select name="idLoaiSP" id="idLoaiSP">
                     <option value="">Chọn loại sản phẩm</option>
-                    <option th:each="loaiSP : ${loaiSanPhams}" th:value="${loaiSP.id}" th:text="${loaiSP.kieuDang}"></option>
+                    <option th:each="loaiSP : ${availableLoaiSanPhams}" th:value="${loaiSP.id}" th:text="${loaiSP.kieuDang}"></option>
                 </select>
 
                 <!-- Chọn khoảng đơn giá -->
