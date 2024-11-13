@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi"  xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thêm Sản Phẩm Chi Tiết</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <link th:href="@{/css/admin/spct-add.css}" rel="stylesheet">
 </head>
 <body>
 <div class="container mt-5">
@@ -44,48 +45,7 @@
     </form>
 </div>
 
-<script>
-    // Hàm để thêm sản phẩm chi tiết
-    function addSanPhamChiTiet() {
-        const formData = new FormData(document.getElementById('addForm')); // Sử dụng FormData để xử lý file upload
+<script th:src="@{/js/admin/spct-add.js}"></script>
 
-        $.ajax({
-            url: '/spct/add', // Thay đổi thành endpoint thực tế của bạn
-            type: 'POST',
-            processData: false, // Để jQuery không xử lý dữ liệu
-            contentType: false, // Để jQuery không thiết lập contentType
-            data: formData,
-            beforeSend: function () {
-                // Hiển thị loader trước khi gửi
-                $('body').append('<div class="loading">Đang xử lý...</div>');
-            },
-            success: function (response) {
-                alert('Thêm sản phẩm chi tiết thành công!');
-                window.location.href = '/spct/hien-thi?activated=spct'; // Chuyển hướng về trang quản lý sản phẩm
-            },
-            error: function () {
-                alert('Có lỗi xảy ra khi thêm sản phẩm chi tiết.');
-            },
-            complete: function () {
-                // Ẩn loader sau khi hoàn thành
-                $('.loading').remove();
-            }
-        });
-    }
-</script>
-<style>
-    .loading {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 1000;
-        font-size: 24px;
-        background-color: rgba(255, 255, 255, 0.8);
-        padding: 20px;
-        border-radius: 5px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    }
-</style>
 </body>
 </html>

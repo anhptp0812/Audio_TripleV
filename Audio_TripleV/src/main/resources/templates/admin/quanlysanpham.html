@@ -6,6 +6,7 @@
     <title>Quản lý sản phẩm</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.9.1/font/bootstrap-icons.min.css" rel="stylesheet">
+
     <style>
         .search-input {
             display: none; /* Initially hidden */
@@ -94,6 +95,9 @@
             color: white;
         }
     </style>
+
+    <link th:href="@{/css/admin/quanlysanpham.css}" rel="stylesheet">
+
 </head>
 
 <body>
@@ -447,6 +451,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
+
 <script>
     // Hàm để hiển thị bảng đã chọn và cập nhật trạng thái nút tương ứng
     function showTable(tableId, buttonId, title) {
@@ -596,6 +601,9 @@
         }
     };
 </script>
+
+<script th:src="@{/js/admin/quanlysanpham.js}"></script>
+
 </body>
 
 </html>

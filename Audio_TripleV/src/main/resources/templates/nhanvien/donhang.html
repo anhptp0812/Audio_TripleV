@@ -8,102 +8,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.9.1/font/bootstrap-icons.min.css">
     <!--    <link rel="stylesheet" href="/src/main/resources/static/css/admin/donHang.css">-->
-    <style>
-        /* Global Reset */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-
-        /* Body Background and Text Color */
-        body {
-            background-color: #f4f4f4;
-            color: #333;
-        }
-
-        /* Account Content Styling (donHang) */
-        .account-content {
-            margin: 20px auto;
-            width: 80%;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .account-content h2 {
-            font-size: 22px;
-            margin-bottom: 20px;
-        }
-
-        /* Table Styling */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        table th, table td {
-            border: 1px solid #e0e0e0;
-            padding: 12px;
-            text-align: left;
-        }
-
-        table th {
-            background-color: #f9a825;  /* Yellow header background */
-            color: #fff;
-            font-weight: bold;
-        }
-
-        table td a {
-            color: #1e88e5;  /* Link color */
-            text-decoration: none;
-        }
-
-        table td a:hover {
-            text-decoration: underline;  /* Hover effect for links */
-        }
-
-        /* Placeholder for Images */
-        .image-placeholder {
-            background-color: #f0f0f0;
-            border: 1px solid #ccc;
-            display: inline-block;
-            width: 50px;
-            height: 50px;
-        }
-
-        /* Button Styles */
-        .apply-btn {
-            margin-left: 10px;
-            flex-shrink: 0;
-        }
-
-        /* Navbar Customization (home.html) */
-        .navbar-custom {
-            background-color: #007bff;  /* Bootstrap Primary Blue */
-        }
-
-        .navbar-custom .nav-link,
-        .navbar-custom .btn {
-            color: #fff;  /* White text on navbar */
-        }
-
-        /* Smooth Scroll */
-        html {
-            scroll-behavior: smooth;
-        }
-
-        /* Search Input Customization */
-        .search-input {
-            display: none;  /* Initially hidden search input */
-            margin-left: 10px;
-            max-width: 200px;
-        }
-
-
-    </style>
+    <link th:href="@{/css/nhanvien/donhang.css}" rel="stylesheet">
 
 </head>
 
@@ -225,10 +130,11 @@
 </div>
 
 
-
+<script th:src="@{/js/nhanvien/donhang.js}"></script>
 <!-- Bootstrap JS and jQuery (from home.html) -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 
 <script>
     function toggleProductList() {
@@ -309,7 +215,8 @@
         window.location.href = '/ban-hang/' + orderId; // Chuyển hướng đến URL có id
     }
 
-</script>
+
+
 
 </body>
 
