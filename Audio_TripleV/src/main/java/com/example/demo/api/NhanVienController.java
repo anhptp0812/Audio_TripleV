@@ -20,6 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
@@ -57,7 +58,7 @@ public class NhanVienController {
 
     @GetMapping("/user/ban-hang")
     public String banHang(@RequestParam(required = false) Integer idLoaiSP,
-                          @RequestParam(required = false) Integer idSanPham,
+                          @RequestParam(required = false) String sanPhamTen,
                           @RequestParam(required = false) Integer mauSac,
                           @RequestParam(required = false) Integer hang,
                           @RequestParam(required = false) Double minPrice,
@@ -81,7 +82,7 @@ public class NhanVienController {
 
         // Kiểm tra các bộ lọc và lấy sản phẩm tương ứng
         if ((idLoaiSP == null || idLoaiSP == 0) &&
-                (idSanPham == null || idSanPham == 0) &&
+                (sanPhamTen == null || sanPhamTen.isEmpty()) && // Sửa từ idSanPham thành sanPhamTen
                 (mauSac == null || mauSac == 0) &&
                 (hang == null || hang == 0) &&
                 (minPrice == null || maxPrice == null)) {
@@ -90,7 +91,7 @@ public class NhanVienController {
         } else {
             // Lấy danh sách sản phẩm theo các bộ lọc
             list = sanPhamChiTietRepository.findByFilters(
-                    idLoaiSP, idSanPham, mauSac, hang, minPrice, maxPrice);
+                    idLoaiSP, sanPhamTen, mauSac, hang, minPrice, maxPrice);
         }
 
         // Thêm danh sách sản phẩm vào model
@@ -113,6 +114,15 @@ public class NhanVienController {
         // Truyền đối tượng DonHang vào model để có thể sử dụng trong form
         model.addAttribute("donHang", new DonHang());
         model.addAttribute("donHangChiTiet", new DonHangChiTiet());
+
+        List<Hang> availableHangs = hangRepository.findAvailableHangs(sanPhamTen, idLoaiSP, mauSac, minPrice, maxPrice);
+        List<MauSac> availableMauSacs = mauSacRepository.findAvailableMauSacs(sanPhamTen, idLoaiSP, hang, minPrice, maxPrice);
+        List<LoaiSanPham> availableLoaiSanPhams = loaiSanPhamRepository.findAvailableLoaiSanPhams(sanPhamTen, mauSac, hang, minPrice, maxPrice);
+
+        model.addAttribute("availableHangs", availableHangs);
+        model.addAttribute("availableMauSacs", availableMauSacs);
+        model.addAttribute("availableLoaiSanPhams", availableLoaiSanPhams);
+
 
         return "nhanvien/productProvity"; // Trả về trang sản phẩm
     }
