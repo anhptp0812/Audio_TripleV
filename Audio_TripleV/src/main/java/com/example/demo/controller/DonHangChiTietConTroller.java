@@ -2,21 +2,17 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.DonHang;
 import com.example.demo.entity.DonHangChiTiet;
+import com.example.demo.entity.SanPhamChiTiet;
+import com.example.demo.repository.DonHangChiTietRepository;
+import com.example.demo.repository.SanPhamChiTietRepository;
 import com.example.demo.service.DonHangService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -25,7 +21,11 @@ public class DonHangChiTietConTroller {
     @Autowired
     private DonHangService donHangService;
 
+    @Autowired
+    private DonHangChiTietRepository donHangChiTietRepository;
 
+    @Autowired
+    private SanPhamChiTietRepository sanPhamChiTietRepository;
 
     @GetMapping("ban-hang/detail/{id}")
     private List<DonHangChiTiet> index(Integer id) {
@@ -46,6 +46,43 @@ public class DonHangChiTietConTroller {
             return map;
         }).collect(Collectors.toList());
     }
+
+//    @DeleteMapping("/ban-hang/delete/{dhctId}")
+//    @ResponseBody
+//    public ResponseEntity<Map<String, Object>> deleteOrderDetail(@PathVariable Integer dhctId) {
+//        Map<String, Object> response = new HashMap<>();
+//
+//        // Kiểm tra giá trị dhctId có hợp lệ không
+//        if (dhctId == null) {
+//            response.put("success", false);
+//            response.put("message", "ID chi tiết đơn hàng không hợp lệ.");
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+//        }
+//
+//        // Tìm chi tiết đơn hàng theo dhctId
+//        Optional<DonHangChiTiet> optionalDonHangChiTiet = donHangChiTietRepository.findById(dhctId);
+//        if (optionalDonHangChiTiet.isEmpty()) {
+//            response.put("success", false);
+//            response.put("message", "Chi tiết đơn hàng không tồn tại.");
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+//        }
+//
+//        DonHangChiTiet donHangChiTiet = optionalDonHangChiTiet.get();
+//        SanPhamChiTiet sanPhamChiTiet = donHangChiTiet.getSanPhamChiTiet();
+//
+//        // Tăng số lượng lại trong SanPhamChiTiet
+//        sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() + donHangChiTiet.getSoLuong());
+//        sanPhamChiTietRepository.save(sanPhamChiTiet);
+//
+//        // Xóa chi tiết đơn hàng
+//        donHangChiTietRepository.delete(donHangChiTiet);
+//
+//        response.put("success", true);
+//        response.put("message", "Chi tiết đơn hàng đã được xóa.");
+//        return ResponseEntity.ok(response);
+//    }
+
+
 
 
 }

@@ -19,4 +19,6 @@ public interface DonHangChiTietRepository extends JpaRepository<DonHangChiTiet, 
 //    public List<DonHangChiTietCustom> findAllByDonHang();
 
     public List<DonHangChiTiet> findByDonHang_Id(Integer id);
+
+
 }
