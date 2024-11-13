@@ -2,7 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.entity.DonHang;
 import com.example.demo.entity.DonHangChiTiet;
-import com.example.demo.repository.DonHangRepository;
+import com.example.demo.entityCustom.DonHangRepository;
 import com.example.demo.repository.DonHangChiTietRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
