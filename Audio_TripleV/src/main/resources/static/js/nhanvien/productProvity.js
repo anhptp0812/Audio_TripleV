@@ -108,9 +108,17 @@ function saveOrderDetails() {
 }
 
 function removeProduct(button) {
-    // Xóa hàng sản phẩm khỏi bảng
-    const row = button.parentNode.parentNode;
-    row.parentNode.removeChild(row);
+    const row = button.closest('tr');
+    const spctId = row.querySelector('input[name="spctIds"]').value;
+
+    // Xóa sản phẩm khỏi mảng selectedProducts
+    selectedProducts = selectedProducts.filter(product => product.spctId !== spctId);
+
+    // Xóa dòng sản phẩm khỏi bảng
+    row.remove();
+
+    // Cập nhật tổng tiền sau khi xóa
+    updateTotalAmount();
 }
 
 function selectCustomer(id, ten, sdt) {
@@ -179,12 +187,13 @@ function addProductToForm(spctId, productName, quantity, price) {
             </td>
             <td><input type="number" name="soLuong" value="${quantity}" min="1" onchange="updateProductQuantity(this)" /></td>
             <td><input type="number" name="donGia" value="${price}" readonly /></td>
+             <td><button onclick="removeProduct(this)">Xóa</button></td>
              
 
          
             
 
-            <td><button>Xoa</button></td>
+           
 
         `;
         addedProductsTableBody.appendChild(newRow);
@@ -313,9 +322,7 @@ function viewOrderDetails(spctId) {
                     <td>${item.productName || 'Chưa có tên sản phẩm'}</td>
                     <td><input type="number" name="soLuong" value="${item.quantity}" min="1" onchange="updateProductQuantity(this)" /></td>
                     <td><input type="number" name="donGia" value="${item.price}" readonly /></td>
-                    <td>
-
-                    </td>
+             
                 `;
                 addedProductsTableBody.appendChild(newRow);
 
