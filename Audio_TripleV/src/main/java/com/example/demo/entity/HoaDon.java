@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -38,6 +39,7 @@ public class HoaDon {
     private String trangThai;
 
     @Column(name = "NgayGiao")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date ngayGiao;
 
     @Column(name = "NgayTao")

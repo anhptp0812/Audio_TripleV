@@ -143,9 +143,9 @@ let isOrderCreated = false; // Biến kiểm tra xem hóa đơn đã được t�
 let viewDetail = false;
 
 function addProductToForm(spctId, productName, quantity, price) {
-    if (isOrderCreated === false) {
-        showForms();
-    }
+    // if (isOrderCreated === false) {
+    //     showForms();
+    // }
     if (viewDetail === false) {
         alert("Chưa mở Xem chi tiết");
         return;
@@ -180,8 +180,7 @@ function addProductToForm(spctId, productName, quantity, price) {
             <td><input type="number" name="soLuong" value="${quantity}" min="1" onchange="updateProductQuantity(this)" /></td>
             <td><input type="number" name="donGia" value="${price}" readonly /></td>
              
-            <td><button onclick="deleteProductRow(${item.dhctId}, this)">Xóa</button></td>
-            
+            <td><button>Xoa</button></td>
         `;
         addedProductsTableBody.appendChild(newRow);
     }
@@ -268,16 +267,16 @@ function closeCustomerForm() {
     document.querySelector('.customer-form').style.display = 'none';
 }
 
-function showForms() {
-    isOrderCreated = true;
-    const sanPhamForm = document.querySelector('.form-san-pham');
-    if (!formDisplayed) {
-        sanPhamForm.style.display = 'block';
-        formDisplayed = true;
-    } else {
-        alert('Không thể tạo 2 Bill cùng 1 Thanh Toán');
-    }
-}
+// function showForms() {
+//     isOrderCreated = true;
+//     const sanPhamForm = document.querySelector('.form-san-pham');
+//     if (!formDisplayed) {
+//         sanPhamForm.style.display = 'block';
+//         formDisplayed = true;
+//     } else {
+//         alert('Không thể tạo 2 Bill cùng 1 Thanh Toán');
+//     }
+// }
 
 function viewOrderDetails(spctId) {
     viewDetail = true;
@@ -310,9 +309,7 @@ function viewOrderDetails(spctId) {
                     <td><input type="number" name="soLuong" value="${item.quantity}" min="1" onchange="updateProductQuantity(this)" /></td>
                     <td><input type="number" name="donGia" value="${item.price}" readonly /></td>
                     <td>
-                        <form th:action="@{/user/ban-hang/delete/{dhctId}(dhctId=${item.dhctId})}" method="post" onsubmit="return confirm('Bạn có chắc chắn muốn xóa?');">
-                            <button type="submit">Xóa</button>
-                        </form>
+
                     </td>
                 `;
                 addedProductsTableBody.appendChild(newRow);
