@@ -180,7 +180,12 @@ function addProductToForm(spctId, productName, quantity, price) {
             <td><input type="number" name="soLuong" value="${quantity}" min="1" onchange="updateProductQuantity(this)" /></td>
             <td><input type="number" name="donGia" value="${price}" readonly /></td>
              
+
+         
+            
+
             <td><button>Xoa</button></td>
+
         `;
         addedProductsTableBody.appendChild(newRow);
     }
