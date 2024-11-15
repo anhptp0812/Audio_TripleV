@@ -154,10 +154,10 @@ function addProductToForm(spctId, productName, quantity, price) {
     // if (isOrderCreated === false) {
     //     showForms();
     // }
-    if (viewDetail === false) {
-        alert("Chưa mở Xem chi tiết");
-        return;
-    }
+    // if (viewDetail === false) {
+    //     alert("Chưa mở Xem chi tiết");
+    //     return;
+    // }
     const addedProductsTableBody = document.getElementById('addedProductsTableBody');
 
     if (!addedProductsTableBody) {
@@ -188,13 +188,6 @@ function addProductToForm(spctId, productName, quantity, price) {
             <td><input type="number" name="soLuong" value="${quantity}" min="1" onchange="updateProductQuantity(this)" /></td>
             <td><input type="number" name="donGia" value="${price}" readonly /></td>
              <td><button onclick="removeProduct(this)">Xóa</button></td>
-             
-
-         
-            
-
-           
-
         `;
         addedProductsTableBody.appendChild(newRow);
     }
