@@ -5,7 +5,6 @@ import com.example.demo.entity.DonHangChiTiet;
 import com.example.demo.entity.Hang;
 import com.example.demo.entity.HoaDon;
 import com.example.demo.entity.HoaDonChiTiet;
-import com.example.demo.entity.KhachHang;
 import com.example.demo.entity.LoaiSanPham;
 import com.example.demo.entity.MauSac;
 import com.example.demo.entity.SanPham;
@@ -22,12 +21,10 @@ import com.example.demo.repository.SanPhamRepository;
 import com.example.demo.service.DonHangService;
 import com.example.demo.service.HoaDonService;
 import com.example.demo.service.SanPhamChiTietService;
-import com.example.demo.service.VNPayService;
-import com.example.demo.vnPay.VNPayConfig;
+//import com.example.demo.service.VnPayService;
+//import com.example.demo.vnPay.VNPayConfig;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -35,23 +32,17 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import java.util.Date;
 import java.util.List;
-
-
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 
 @CrossOrigin(origins = "http://localhost:3000") // Thay đổi URL này theo miền của frontend
 @Controller
 @RequestMapping("/user")
 public class DonHangController {
-    @Autowired
-    private VNPayConfig vnpayConfig;
+//    @Autowired
+//    private VNPayConfig vnpayConfig;
 
     @Autowired
     private DonHangService donHangService;
@@ -89,8 +80,8 @@ public class DonHangController {
     @Autowired
     private HoaDonService hoaDonService;
 
-    @Autowired
-    private VNPayService vnPayService;
+//    @Autowired
+//    private VnPayService vnPayService;
     @GetMapping("/don-hang")
     public String index(Model model) {
         List<DonHang> list = donHangRepository.findAll();
@@ -155,8 +146,8 @@ public class DonHangController {
         // Chuyển hướng đến trang VNPay để thanh toán
         if ("vnpay".equals(paymentMethod)) {
             // Chuyển hướng đến trang VNPay để thanh toán
-            String vnpayUrl = vnPayService.createVNPayUrl(request, totalAmount, "bankCode", hoaDon.getId());
-            return "redirect:" + vnpayUrl;
+//            String vnpayUrl = vnPayService.createVNPayUrl(request, totalAmount, "bankCode", hoaDon.getId());
+//            return "redirect:" + vnpayUrl;
         } else if ("cash".equals(paymentMethod)) {
             // Xử lý thanh toán bằng tiền mặt
             model.addAttribute("message", "Đơn hàng đã được ghi nhận. Vui lòng thanh toán tại cửa hàng!");
