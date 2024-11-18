@@ -19,7 +19,7 @@
                     <form th:action="@{/submitOrder}" method="post">
                         <div class="form-group">
                             <label for="totalAmount" >Số tiền:</label>
-                            <input type="number" class="form-control" id="totalAmount" name="amount" th:value="${totalAmount}" required />
+                            <input type="number" class="form-control" min="1000" id="totalAmount" name="amount" th:value="${totalAmount}" required />
 
                         </div>
                         <div class="form-group">

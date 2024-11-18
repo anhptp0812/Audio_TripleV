@@ -136,22 +136,28 @@ public class DonHangController {
             totalAmount += lineTotal;
 
             // Lưu chi tiết đơn hàng
-            hoaDonChiTietRepository.save(hoaDonChiTiet);
+
+            // Thiết lập tổng giá cho hóa đơn
+            hoaDon.setTongGia(totalAmount);
+            // Lưu thông tin tổng giá của hóa đơn
+
+            // Chuyển hướng đến trang VNPay để thanh toán
+            if ("vnpay".equals(paymentMethod)) {
+                hoaDonRepository.save(hoaDon);
+                hoaDonChiTietRepository.save(hoaDonChiTiet);
+                return "redirect:/vnpay-hien-thi/" + hoaDon.getId();
+            } else if ("cash".equals(paymentMethod)) {
+                hoaDonRepository.save(hoaDon);
+                // Xử lý thanh toán bằng tiền mặt
+                hoaDon.setTrangThai("Đã thanh toán");
+                hoaDonChiTietRepository.save(hoaDonChiTiet);
+                model.addAttribute("message", "Đơn hàng đã được ghi nhận. Vui lòng thanh toán tại cửa hàng!");
+                return "redirect:/user/ban-hang"; // Chuyển hướng đến trang thông báo đơn hàng thành công
+
+            }
         }
-
-        // Thiết lập tổng giá cho hóa đơn
-        hoaDon.setTongGia(totalAmount);
-        hoaDon.setTrangThai("Đã thanh toán");
-        hoaDonRepository.save(hoaDon); // Lưu thông tin tổng giá của hóa đơn
-
-        // Chuyển hướng đến trang VNPay để thanh toán
-//        else if ("cash".equals(paymentMethod)) {
-//            // Xử lý thanh toán bằng tiền mặt
-            model.addAttribute("message", "Đơn hàng đã được ghi nhận. Vui lòng thanh toán tại cửa hàng!");
-            return "redirect:/user/ban-hang"; // Chuyển hướng đến trang thông báo đơn hàng thành công
-
+        return "error";
     }
-
     @GetMapping("ban-hang/details/{id}")
     @ResponseBody
     public List<DonHangChiTiet> getDonHangDetails(@PathVariable Integer id) {
