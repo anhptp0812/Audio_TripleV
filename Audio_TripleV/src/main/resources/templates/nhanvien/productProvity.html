@@ -141,7 +141,9 @@
             </button>
             <div class="right-buttons">
                 <button class="new-bill-btn" onclick="showForms()"><i class="bi bi-plus-circle"></i></button>
-                <a href="/user/ban-hang"><button class="reload-btn"><i class="bi bi-arrow-repeat"></i></button></a>
+                <a href="/user/ban-hang">
+                    <button class="reload-btn"><i class="bi bi-arrow-repeat"></i></button>
+                </a>
             </div>
         </div>
 
@@ -173,15 +175,16 @@
                     <br>
 
                     <label>Ngày Giao:</label>
-                    <input type="date" th:field="*{ngayGiao}" id="ngayGiaoId" min="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" />
+                    <input type="date" th:field="*{ngayGiao}" id="ngayGiaoId"
+                           min="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"/>
 
                     <button type="submit">Lưu đơn hàng</button>
                 </form>
-<!--                <button th:onclick="'viewOrderDetails(' + ${donHang.id} + ')'">Xem chi tiết</button>-->
+                <!--                <button th:onclick="'viewOrderDetails(' + ${donHang.id} + ')'">Xem chi tiết</button>-->
                 <input type="hidden" th:field="*{donHang.id}">
             </div>
             <script>
-                document.getElementById("orderFormDetails").onsubmit = function(event) {
+                document.getElementById("orderFormDetails").onsubmit = function (event) {
                     event.preventDefault(); // Ngăn form tự động submit
 
                     const formData = new FormData(this);
@@ -231,7 +234,8 @@
                         </div>
                         <div class="total-item">
                             <label>Nhập số tiền khách đưa:</label>
-                            <input type="text" id="customerPayment" oninput="calculateChange()" style="text-align: right" placeholder="Nhập số tiền"/>
+                            <input type="text" id="customerPayment" oninput="calculateChange()"
+                                   style="text-align: right" placeholder="Nhập số tiền"/>
                         </div>
                         <div class="total-item">
                             <label>Số tiền trả lại:</label>
@@ -242,8 +246,10 @@
                     <div class="action-buttons">
                         <button class="history-btn" onclick="toggleHistoryForm()">Lịch Sử</button>
                         <button class="pay-btn" type="submit" name="paymentMethod" value="cash">Thanh Toán</button>
-                        <!--                        <button class="pay-btn" type="submit" name="paymentMethod" value="vnpay">Thanh Toán Chuyển khoản</button>-->
-                        <a th:href="@{/vnpay-hien-thi/{id}(id=${donHang.id})}" class="btn btn-primary">Thanh toán VNPay</a>
+                        <button class="pay-btn" type="submit" name="paymentMethod" value="vnpay">Thanh Toán Chuyển
+                            khoản
+                        </button>
+                        <!--                        <a th:href="@{/vnpay-hien-thi/{id}(id=${donHang.id})}" class="btn btn-primary">Thanh toán VNPay</a>-->
                     </div>
 
                 </form>
