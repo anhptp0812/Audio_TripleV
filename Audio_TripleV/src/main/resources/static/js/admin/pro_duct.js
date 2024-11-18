@@ -1,10 +1,10 @@
 
-    // Hiển thị danh sách sản phẩm mặc định khi vào trang
-    document.addEventListener("DOMContentLoaded", function() {
+// Hiển thị danh sách sản phẩm mặc định khi vào trang
+document.addEventListener("DOMContentLoaded", function() {
     showProductList();
 });
 
-    function showProductList() {
+function showProductList() {
     document.getElementById('tableTitle').textContent = "Danh sách sản phẩm";
     document.getElementById('productTable').style.display = 'table';
     document.getElementById('colorTable').style.display = 'none';
@@ -12,7 +12,7 @@
     document.getElementById('brandTable').style.display = 'none';
 }
 
-    function showColorTable() {
+function showColorTable() {
     document.getElementById('tableTitle').textContent = "Màu Sắc Sản Phẩm";
     document.getElementById('productTable').style.display = 'none';
     document.getElementById('colorTable').style.display = 'table';
@@ -20,7 +20,7 @@
     document.getElementById('brandTable').style.display = 'none';
 }
 
-    function showCategoryTable() {
+function showCategoryTable() {
     document.getElementById('tableTitle').textContent = "Loại Sản Phẩm";
     document.getElementById('productTable').style.display = 'none';
     document.getElementById('colorTable').style.display = 'none';
@@ -28,7 +28,7 @@
     document.getElementById('brandTable').style.display = 'none';
 }
 
-    function showBrandTable() {
+function showBrandTable() {
     document.getElementById('tableTitle').textContent = "Hãng";
     document.getElementById('productTable').style.display = 'none';
     document.getElementById('colorTable').style.display = 'none';
@@ -36,27 +36,27 @@
     document.getElementById('brandTable').style.display = 'table';
 }
 
-    function openEditProductModal() {
+function openEditProductModal() {
     $('#editProductModal').modal('show');
 }
 
-    function openEditColorModal() {
+function openEditColorModal() {
     $('#editColorModal').modal('show');
 }
 
-    function openEditCategoryModal() {
+function openEditCategoryModal() {
     $('#editCategoryModal').modal('show');
 }
 
-    function openEditBrandModal() {
+function openEditBrandModal() {
     $('#editBrandModal').modal('show');
 }
 
-    function openAddProductModal() {
+function openAddProductModal() {
     $('#addProductModal').modal('show');
 }
 
-    function handleSearch() {
+function handleSearch() {
     const searchValue = document.getElementById('searchInput').value;
     alert('Searching for: ' + searchValue);
 }

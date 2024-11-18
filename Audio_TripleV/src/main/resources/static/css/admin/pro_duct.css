@@ -1,0 +1,112 @@
+/* css4 đã được chỉnh sửa */
+
+/* Reset và thiết lập cơ bản */
+body {
+    scrollbar-width: none;
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+}
+
+/* Cấu trúc container */
+.container {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+/* Navbar Styles giống với css1 */
+.navbar-dark .navbar-nav .nav-link {
+    color: #ffffff;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover,
+.navbar-dark .navbar-nav .nav-link:focus {
+    color: #d0d0d0; /* Màu xám nhạt khi hover */
+}
+
+/* Đổi màu các biểu tượng trong navbar */
+.navbar-dark .d-flex a i {
+    color: #f8f9fa; /* Màu xám nhạt */
+    transition: color 0.3s ease;
+}
+
+.navbar-dark .d-flex a:hover i,
+.navbar-dark .d-flex a:focus i {
+    color: #ced4da; /* Màu xám đậm hơn khi hover */
+}
+.search-input {
+    display: none; /* Initially hidden */
+    margin-left: 10px;
+    max-width: 200px;
+}
+
+.bordered-container {
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin-top: 20px;
+    background-color: #f9f9f9;
+}
+
+.product-container {
+    margin-top: 20px;
+}
+
+.product-sidebar {
+    border-right: 1px solid #ccc;
+    padding-right: 10px;
+}
+
+.product-list {
+    margin-top: 20px;
+}
+
+.product-list .product-item {
+    margin-bottom: 10px;
+}
+
+.product-item a {
+    font-weight: bold;
+    color: #007bff;
+}
+
+.pagination {
+    justify-content: center;
+}
+
+.table th,
+.table td {
+    vertical-align: middle;
+    font-size: 12px; /* Thu nhỏ văn bản */
+    padding: 5px; /* Giảm khoảng cách giữa các ô */
+}
+
+.image-placeholder {
+    width: 100px;
+    height: 100px;
+    border: 1px solid #ddd;
+    display: block;
+}
+
+.btn-product {
+    margin-bottom: 20px;
+    height: 50px; /* Set a fixed height for all buttons */
+    width: 100%; /* Make buttons take the full width */
+    display: flex; /* Center content vertically */
+    align-items: center; /* Center content vertically */
+    justify-content: center; /* Center content horizontally */
+}
+
+#productTable,
+#colorTable,
+#brandTable,
+#categoryTable {
+    display: none; /* Hidden by default */
+}
+
+/* Style for the modal */
+.modal-header {
+    background-color: #007bff;
+    color: white;
+}

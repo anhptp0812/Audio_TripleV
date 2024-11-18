@@ -10,3 +10,128 @@
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h2 {
+    font-size: 28px;
+    font-weight: bold;
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+input.form-control, select.form-control {
+    border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    height: auto;
+}
+
+input.form-control:focus, select.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.25);
+}
+
+button.btn {
+    font-size: 16px;
+    font-weight: bold;
+    padding: 12px 25px;
+    border-radius: 30px;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+}
+
+button.btn:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+a.btn {
+    font-size: 16px;
+    font-weight: bold;
+    padding: 12px 25px;
+    border-radius: 30px;
+    text-transform: uppercase;
+    text-align: center;
+    margin-left: 10px;
+    transition: all 0.3s ease;
+}
+
+a.btn:hover {
+    text-decoration: none;
+    background-color: #6c757d;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+form {
+    background-color: #f8f9fa;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+form .form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+input[type="text"], select {
+    font-size: 16px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+input[type="text"]:focus, select:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
+button.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+a.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+button, a {
+    cursor: pointer;
+}
+
+button[type="submit"] {
+    margin-right: 10px;
+}
+
+.container {
+    max-width: 600px;
+    animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

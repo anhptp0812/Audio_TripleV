@@ -6,45 +6,43 @@
     <title>Quản lý sản phẩm</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.9.1/font/bootstrap-icons.min.css" rel="stylesheet">
-    <link th:href="@{/css/admin/quanlysanpham.css}" rel="stylesheet">
+    <link href="../../static/css/admin/quanlysanpham.css" rel="stylesheet">
 </head>
 
 <body>
-<div class="container">
-    <!-- Header Section -->
-    <nav class="navbar navbar-expand-lg navbar-custom">
-        <div class="container">
-            <!-- Left section -->
-            <div class="navbar-nav">
-                <a class="nav-item nav-link" href="#">Sản Phẩm</a>
-                <a class="nav-item nav-link" href="#">Thương Hiệu</a>
-                <a class="nav-item nav-link" href="#">Khuyến Mãi</a>
-                <a class="nav-item nav-link" href="#">Tin Tức</a>
-            </div>
-
-            <!-- Right section with buttons -->
-            <div class="ml-auto d-flex align-items-center">
-                <!-- Hidden Search Input Field -->
-                <input type="text" id="searchInput" class="form-control search-input" placeholder="Tìm kiếm...">
-
-                <!-- Search Button -->
-                <button class="btn btn-outline-light" type="button" onclick="handleSearch()">
-                    <i class="bi bi-search"></i>
-                </button>
-
-                <!-- Account Button Link -->
-                <a class="btn btn-outline-light" href="/src/main/webapp/views/customer/khach_hang_acc.html">
-                    <i class="bi bi-person-circle"></i>
-                </a>
-
-                <!-- Cart Button - Links to gio_hang.html -->
-                <a class="btn btn-outline-light" href="/src/main/webapp/views/GioHang/gio_hang.html">
-                    <i class="bi bi-cart4"></i>
-                </a>
-            </div>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <!-- Left section -->
+        <div class="navbar-nav">
+            <a class="nav-item nav-link" href="#">Sản Phẩm</a>
+            <a class="nav-item nav-link" href="#">Thương Hiệu</a>
+            <a class="nav-item nav-link" href="#">Khuyến Mãi</a>
+            <a class="nav-item nav-link" href="#">Tin Tức</a>
         </div>
-    </nav>
-</div>
+
+        <!-- Right section with buttons -->
+        <div class="ml-auto d-flex align-items-center">
+            <!-- Hidden Search Input Field -->
+            <input type="text" id="searchInput" class="form-control search-input" placeholder="Tìm kiếm...">
+
+            <!-- Search Button -->
+            <button class="btn btn-outline-light" type="button" onclick="handleSearch()">
+                <i class="bi bi-search"></i>
+            </button>
+
+            <!-- Account Button Link -->
+            <a class="btn btn-outline-light" href="/src/main/webapp/views/customer/khach_hang_acc.html">
+                <i class="bi bi-person-circle"></i>
+            </a>
+
+            <!-- Cart Button - Links to gio_hang.html -->
+            <a class="btn btn-outline-light" href="/src/main/webapp/views/GioHang/gio_hang.html">
+                <i class="bi bi-cart4"></i>
+            </a>
+        </div>
+    </div>
+</nav>
+
 
 <div class="container bordered-container">
     <div class="row product-container">
@@ -93,7 +91,7 @@
                     <td th:text="${#dates.format(spct.ngayCapNhat, 'yyyy-MM-dd')}"></td>
                     <td>
                         <a th:href="@{/spct/detail/{id}(id=${spct.id})}" class="btn btn-primary">Chi tiết</a>
-                        <a th:href="@{/spct/form-update/{id}(id=${spct.id})}" class="btn btn-warning">Sửa</a> <!-- Nút Sửa -->
+                        <a id="nutSuaSanPham" class="btn btn-warning">Sửa</a> <!-- Nút Sửa th:href="@{/spct/form-update/{id}(id=${spct.id})}"-->
                         <a th:href="@{/spct/delete/{id}(id=${spct.id})}" class="btn btn-danger"
                            onclick="return confirm('Bạn có muốn xóa không?');">Xóa</a>
                     </td>
@@ -103,7 +101,7 @@
 
             <!-- Danh sách màu sắc -->
 
-            <a id="nutThemMauSac" href="/mau-sac/form-add" class="btn btn-success mb-3" style="display: none;">Thêm Màu Sắc</a> <!-- Nút Thêm Màu Sắc -->
+            <a id="nutThemMauSac" class="btn btn-success mb-3" style="display: none;">Thêm Màu Sắc</a> <!-- Nút Thêm Màu Sắc href="/mau-sac/form-add" -->
             <table id="colorTable" class="table table-bordered table-hover">
                 <thead class="thead-light">
                 <tr>
@@ -121,7 +119,7 @@
                     <td th:text="${#dates.format(mauSac.ngayTao, 'yyyy-MM-dd')}"></td>
                     <td th:text="${#dates.format(mauSac.ngayCapNhat, 'yyyy-MM-dd')}"></td>
                     <td>
-                        <a th:href="@{/mau-sac/form-update/{id}(id=${mauSac.id})}" class="btn btn-primary">Sửa</a>
+                        <a id="nutSuaMauSac" class="btn btn-primary">Sửa</a> <!-- th:href="@{/mau-sac/form-update/{id}(id=${mauSac.id})}" -->
                         <a th:href="@{/mau-sac/delete/{id}(id=${mauSac.id})}" class="btn btn-danger"
                            onclick="return confirm('Bạn có muốn xóa không?');">Xóa</a>
                     </td>
@@ -149,7 +147,7 @@
                     <td th:text="${#dates.format(loaiSanPham.ngayTao, 'yyyy-MM-dd')}"></td>
                     <td th:text="${#dates.format(loaiSanPham.ngayCapNhat, 'yyyy-MM-dd')}"></td>
                     <td>
-                        <a th:href="@{/loai-san-pham/form-update/{id}(id=${loaiSanPham.id})}" class="btn btn-primary">Sửa</a>
+                        <a id="nutSuaLoai" class="btn btn-primary">Sửa</a> <!-- th:href="@{/loai-san-pham/form-update/{id}(id=${loaiSanPham.id})}" -->
                         <a th:href="@{/loai-san-pham/delete/{id}(id=${loaiSanPham.id})}" class="btn btn-danger"
                            onclick="return confirm('Bạn có muốn xóa không?');">Xóa</a>
                     </td>
@@ -177,7 +175,7 @@
                     <td th:text="${#dates.format(hang.ngayTao, 'yyyy-MM-dd')}"></td>
                     <td th:text="${#dates.format(hang.ngayCapNhat, 'yyyy-MM-dd')}"></td>
                     <td>
-                        <a th:href="@{/hang/form-update/{id}(id=${hang.id})}" class="btn btn-primary">Sửa</a>
+                        <a id="nutSuaHang" class="btn btn-primary">Sửa</a> <!-- th:href="@{/hang/form-update/{id}(id=${hang.id})}" -->
                         <a th:href="@{/hang/delete/{id}(id=${hang.id})}" class="btn btn-danger"
                            onclick="return confirm('Bạn có muốn xóa không?');">Xóa</a>
                     </td>
@@ -187,6 +185,33 @@
         </div>
     </div>
 </div>
+
+
+<!-- Model create color -->
+<div class="modal fade" id="createColorModal" tabindex="-1" aria-labelledby="createColorModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createColorModalLabel">Thêm Màu Sắc</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="createTenMauSac" class="form-label">Tên Màu Sắc:</label>
+                    <input type="text" class="form-control" id="createTenMauSac" name="ten" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="addMauSac()">
+                    Thêm
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <!-- Modal Edit Color -->
 <div class="modal fade" id="editColorModal" tabindex="-1" role="dialog" aria-labelledby="editColorModalLabel" aria-hidden="true">
@@ -221,6 +246,31 @@
     </div>
 </div>
 
+<!-- Model create category -->
+<div class="modal fade" id="createCategoryModal" tabindex="-1" aria-labelledby="createCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createCategoryModalLabel">Thêm Loại Sản Phẩm</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="createKieuDang" class="form-label">Kiểu Dáng:</label>
+                    <input type="text" class="form-control" id="createKieuDang" name="kieuDang" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="addLoaiSP()">
+                    <i class="bi bi-plus-circle me-2"></i> Thêm
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Modal Edit Category -->
 <div class="modal fade" id="editCategoryModal" tabindex="-1" role="dialog" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -246,9 +296,34 @@
                         <input type="date" class="form-control" id="categoryUpdatedDate" required>
                     </div>
                     <button type="button" class="btn btn-success" onclick="saveCategory()">
-                        <i class="bi bi-floppy2-fill"></i> Lưu
+                        Lưu
                     </button>
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Model edit brand -->
+<div class="modal fade" id="createBrandModal" tabindex="-1" aria-labelledby="createBrandModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createBrandModalLabel">Thêm Hãng</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="createTenHang" class="form-label">Tên Hãng:</label>
+                    <input type="text" class="form-control" id="createTenHang" name="ten" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="addHang()">
+                    <i class="bi bi-plus-circle me-2"></i> Thêm
+                </button>
             </div>
         </div>
     </div>
@@ -279,7 +354,7 @@
                         <input type="date" class="form-control" id="brandUpdatedDate" required>
                     </div>
                     <button type="button" class="btn btn-success" onclick="saveBrand()">
-                        <i class="bi bi-floppy2-fill"></i> Lưu
+                        Lưu
                     </button>
                 </form>
             </div>
@@ -340,7 +415,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-<script th:src="@{/js/admin/quanlysanpham.js}"></script>
+<script src="../../static/js/admin/quanlysanpham.js"></script>
 </body>
 
 </html>
