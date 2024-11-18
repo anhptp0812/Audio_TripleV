@@ -1,46 +1,184 @@
-/* style.css */
+
 body {
-    background-color: #f8f9fa;
+    background: linear-gradient(120deg, #f0f8ff, #e6f7ff);
+    font-family: Arial, sans-serif;
+}
+html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
 }
 
-.cart-container, .shipping-info, .payment-methods, .payment-summary, .cart-summary {
-    background-color: white;
+.container {
+    flex: 1;
+}
+
+.navbar {
+    background-color: #ffffff;
+    border-bottom: 1px solid #dee2e6;
+    transition: box-shadow 0.3s ease;
+}
+
+.navbar-brand img {
+    transition: transform 0.3s ease;
+}
+
+.navbar-brand img:hover {
+    transform: rotate(15deg);
+}
+
+.navbar-nav .nav-link {
+    font-size: 1rem;
+    color: #343a40;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #007bff;
+}
+.container {
+    animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+    color: #007bff;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.cart-table {
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+}
+
+.cart-table th {
+    background-color: #007bff;
+    color: white;
+    font-size: 1rem;
+    padding: 15px;
+}
+
+.cart-table td {
+    padding: 15px;
+    vertical-align: middle;
+    font-size: 0.95rem;
+}
+
+.cart-table img {
     border-radius: 8px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
 }
 
-h4 {
+.cart-table img:hover {
+    transform: scale(1.1);
+}
+
+.btn-remove {
+    background: linear-gradient(45deg, #f64e60, #f74242);
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    color: white;
+}
+
+.btn-remove:hover {
+    background: linear-gradient(45deg, #f74242, #f64e60);
+    transform: scale(1.1);
+}
+
+input[type="number"] {
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 0.9rem;
+    width: 70px;
+    transition: box-shadow 0.3s ease;
+}
+
+input[type="number"]:focus {
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+    outline: none;
+}
+
+.total-price {
+    font-size: 1.5rem;
+    text-align: right;
+    margin-top: 20px;
+    color: #007bff;
     font-weight: bold;
 }
 
-.cart-item {
-    margin-bottom: 10px;
+
+.btn-primary {
+    background: linear-gradient(45deg, #007bff, #0056b3);
+    border: none;
+    border-radius: 30px;
+    padding: 10px 25px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    margin-top: 20px;
 }
 
-.image-placeholder {
-    width: 50px;
-    height: 50px;
-    background-color: #e9ecef; /* Placeholder color */
-    border: 1px solid #ced4da;
+.btn-primary:hover {
+    background: linear-gradient(45deg, #0056b3, #007bff);
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
 }
 
-.quantity-container {
-    width: 100px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.container {
+    animation: fadeIn 1s ease-in-out;
 }
 
-.btn-group .quantity-btn {
-    width: 30px;
-    height: 30px;
-    padding: 0;
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-.payment-summary {
-    position: relative; /* Allow positioning for additional elements if needed */
+.footer {
+    background-color: #343a40;
+    color: white;
+    padding: 20px 0;
 }
 
-.payment-summary .form-group {
-    margin-bottom: 1rem;
+.footer a {
+    color: #bbb;
+    text-decoration: none;
+}
+
+.footer a:hover {
+    color: white;
+}
+.footer h5 {
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+.footer p {
+    font-size: 14px;
 }

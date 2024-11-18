@@ -7,407 +7,407 @@
     <title>Quản lý sản phẩm</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.9.1/font/bootstrap-icons.min.css" rel="stylesheet">
-<!--    <link rel="stylesheet" href="/src/main/resources/static/css/home.css">-->
-<!--    <link rel="stylesheet" href="/src/main/resources/static/css/product.css"> &lt;!&ndash; Giữ lại CSS cho khach_hang_acc &ndash;&gt;-->
+    <!--    <link rel="stylesheet" href="/src/main/resources/static/css/home.css">-->
+    <!--    <link rel="stylesheet" href="/src/main/resources/static/css/product.css"> &lt;!&ndash; Giữ lại CSS cho khach_hang_acc &ndash;&gt;-->
     <link th:href="@{/css/admin/product.css}" rel="stylesheet">
 </head>
 
 <body>
-    <div class="container">
-        <!-- Header Section -->
-        <nav class="navbar navbar-expand-lg navbar-custom">
-            <div class="container">
-                <!-- Left section -->
-                <div class="navbar-nav">
-                    <a class="nav-item nav-link" href="#">Sản Phẩm</a>
-                    <a class="nav-item nav-link" href="#">Thương Hiệu</a>
-                    <a class="nav-item nav-link" href="#">Khuyến Mãi</a>
-                    <a class="nav-item nav-link" href="#">Tin Tức</a>
-                </div>
-
-                <!-- Right section with buttons -->
-                <div class="ml-auto d-flex align-items-center">
-                    <!-- Hidden Search Input Field -->
-                    <input type="text" id="searchInput" class="form-control search-input" placeholder="Tìm kiếm...">
-
-                    <!-- Search Button -->
-                    <button class="btn btn-outline-light" type="button" onclick="handleSearch()">
-                        <i class="bi bi-search"></i>
-                    </button>
-
-                    <!-- Account Button Link -->
-                    <a class="btn btn-outline-light" href="/src/main/webapp/views/customer/khach_hang_acc.html">
-                        <i class="bi bi-person-circle"></i>
-                    </a>
-
-                    <!-- Cart Button - Links to gio_hang.html -->
-                    <a class="btn btn-outline-light" href="/src/main/webapp/views/GioHang/gio_hang.html">
-                        <i class="bi bi-cart4"></i>
-                    </a>
-                </div>
-            </div>
-        </nav>
-    </div>
-
-    <div class="container bordered-container">
-        <div class="row product-container">
-            <!-- Sidebar nhóm sản phẩm -->
-            <div class="col-md-3 product-sidebar">
-                <!-- Nút Toàn Bộ Sản Phẩm -->
-                <button class="btn btn-primary btn-product" onclick="showProductList()">Toàn Bộ Sản Phẩm</button>
-
-                <!-- Nút Màu Sắc Sản Phẩm -->
-                <button class="btn btn-secondary btn-product" onclick="showColorTable()">Màu Sắc Sản Phẩm</button>
-
-                <!-- Nút Loại Sản Phẩm -->
-                <button class="btn btn-success btn-product" onclick="showCategoryTable()">Loại Sản Phẩm</button>
-
-                <!-- Di chuyển nút Hãng xuống dưới -->
-                <button class="btn btn-info btn-product" onclick="showBrandTable()">Hãng</button>
+<div class="container">
+    <!-- Header Section -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container">
+            <!-- Left section -->
+            <div class="navbar-nav">
+                <a class="nav-item nav-link" href="#">Sản Phẩm</a>
+                <a class="nav-item nav-link" href="#">Thương Hiệu</a>
+                <a class="nav-item nav-link" href="#">Khuyến Mãi</a>
+                <a class="nav-item nav-link" href="#">Tin Tức</a>
             </div>
 
-            <!-- Danh sách sản phẩm -->
-            <div class="col-md-9">
-                <h5 id="tableTitle">Danh sách sản phẩm</h5>
-                <table id="productTable" class="table table-bordered table-hover">
-                    <thead class="thead-light">
-                        <tr>
-                            <th>Tên sản phẩm</th>
-                            <th>Màu Sắc</th>
-                            <th>Hãng</th>
-                            <th>Hình Ảnh</th>
-                            <th>Loại Sản Phẩm</th>
-                            <th>Trạng Thái</th>
-                            <th>Ngày Tạo</th>
-                            <th>Ngày Cập Nhật</th>
-                            <th>Hành Động</th> <!-- Thêm cột Hành Động -->
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><a href="#">[Mã: 11_DC_09_0002]</a> Straight Die</td>
-                            <td>Xanh dương</td>
-                            <td>ABC Corp</td>
-                            <td><img class="image-placeholder" src="#" alt="Ảnh sản phẩm"></td>
-                            <td>Khuôn</td>
-                            <td>Hoạt động</td>
-                            <td>01/01/2024</td>
-                            <td>05/10/2024</td>
-                            <td>
-                                <button class="btn btn-warning btn-sm" onclick="openEditProductModal('Straight Die', 'Xanh dương', 'ABC Corp', 'Khuôn')">
-                                    <i class="bi bi-pencil-square"></i>
-                                </button>
-                                <button class="btn btn-danger btn-sm">
-                                    <i class="bi bi-trash3"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><a href="#">[Mã: 1231.2412.412]</a> Delie Pie</td>
-                            <td>Đỏ</td>
-                            <td>XYZ Corp</td>
-                            <td><img class="image-placeholder" src="#" alt="Ảnh sản phẩm"></td>
-                            <td>CYLINDER 40L - Aluminum - CHINA</td>
-                            <td>Bảo trì</td>
-                            <td>02/03/2023</td>
-                            <td>08/08/2023</td>
-                            <td>
-                                <button class="btn btn-warning btn-sm" onclick="openEditProductModal('Delie Pie', 'Đỏ', 'XYZ Corp', 'CYLINDER 40L - Aluminum - CHINA')">
-                                    <i class="bi bi-pencil-square"></i>
-                                </button>
-                                <button class="btn btn-danger btn-sm">
-                                    <i class="bi bi-trash3"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        <!-- Thêm nhiều hàng khác -->
-                    </tbody>
-                </table>
+            <!-- Right section with buttons -->
+            <div class="ml-auto d-flex align-items-center">
+                <!-- Hidden Search Input Field -->
+                <input type="text" id="searchInput" class="form-control search-input" placeholder="Tìm kiếm...">
 
-                <!-- Danh sách màu sắc -->
-                <table id="colorTable" class="table table-bordered table-hover">
-                    <thead class="thead-light">
-                        <tr>
-                            <th>ID Màu Sắc</th>
-                            <th>Tên Màu Sắc</th>
-                            <th>Ngày Tạo</th>
-                            <th>Ngày Sửa</th>
-                            <th>Hành Động</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Xanh dương</td>
-                            <td>01/01/2024</td>
-                            <td>05/10/2024</td>
-                            <td>
-                                <button class="btn btn-warning btn-sm" onclick="openEditColorModal('Xanh dương', '01/01/2024', '05/10/2024')">
-                                    <i class="bi bi-pencil-square"></i>
-                                </button>
-                                <button class="btn btn-danger btn-sm">
-                                    <i class="bi bi-trash3"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Đỏ</td>
-                            <td>02/03/2023</td>
-                            <td>08/08/2023</td>
-                            <td>
-                                <button class="btn btn-warning btn-sm" onclick="openEditColorModal('Đỏ', '02/03/2023', '08/08/2023')">
-                                    <i class="bi bi-pencil-square"></i>
-                                </button>
-                                <button class="btn btn-danger btn-sm">
-                                    <i class="bi bi-trash3"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <!-- Search Button -->
+                <button class="btn btn-outline-light" type="button" onclick="handleSearch()">
+                    <i class="bi bi-search"></i>
+                </button>
 
-                <!-- Danh sách loại sản phẩm -->
-                <table id="categoryTable" class="table table-bordered table-hover">
-                    <thead class="thead-light">
-                        <tr>
-                            <th>ID Loại Sản Phẩm</th>
-                            <th>Kiểu Dáng</th>
-                            <th>Ngày Tạo</th>
-                            <th>Ngày Sửa</th>
-                            <th>Hành Động</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Khuôn</td>
-                            <td>01/01/2024</td>
-                            <td>05/10/2024</td>
-                            <td>
-                                <button class="btn btn-warning btn-sm" onclick="openEditCategoryModal('Khuôn', '01/01/2024', '05/10/2024')">
-                                    <i class="bi bi-pencil-square"></i>
-                                </button>
-                                <button class="btn btn-danger btn-sm">
-                                    <i class="bi bi-trash3"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Xi lanh</td>
-                            <td>02/03/2023</td>
-                            <td>08/08/2023</td>
-                            <td>
-                                <button class="btn btn-warning btn-sm" onclick="openEditCategoryModal('Xi lanh', '02/03/2023', '08/08/2023')">
-                                    <i class="bi bi-pencil-square"></i>
-                                </button>
-                                <button class="btn btn-danger btn-sm">
-                                    <i class="bi bi-trash3"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <!-- Account Button Link -->
+                <a class="btn btn-outline-light" href="/src/main/webapp/views/customer/khach_hang_acc.html">
+                    <i class="bi bi-person-circle"></i>
+                </a>
 
-                <!-- Danh sách hãng -->
-                <table id="brandTable" class="table table-bordered table-hover">
-                    <thead class="thead-light">
-                        <tr>
-                            <th>ID Hãng</th>
-                            <th>Tên Hãng</th>
-                            <th>Ngày Tạo</th>
-                            <th>Ngày Sửa</th>
-                            <th>Hành Động</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>ABC Corp</td>
-                            <td>01/01/2024</td>
-                            <td>05/10/2024</td>
-                            <td>
-                                <button class="btn btn-warning btn-sm" onclick="openEditBrandModal('ABC Corp', '01/01/2024', '05/10/2024')">
-                                    <i class="bi bi-pencil-square"></i>
-                                </button>
-                                <button class="btn btn-danger btn-sm">
-                                    <i class="bi bi-trash3"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>XYZ Corp</td>
-                            <td>02/03/2023</td>
-                            <td>08/08/2023</td>
-                            <td>
-                                <button class="btn btn-warning btn-sm" onclick="openEditBrandModal('XYZ Corp', '02/03/2023', '08/08/2023')">
-                                    <i class="bi bi-pencil-square"></i>
-                                </button>
-                                <button class="btn btn-danger btn-sm">
-                                    <i class="bi bi-trash3"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <!-- Cart Button - Links to gio_hang.html -->
+                <a class="btn btn-outline-light" href="/src/main/webapp/views/GioHang/gio_hang.html">
+                    <i class="bi bi-cart4"></i>
+                </a>
             </div>
         </div>
-    </div>
+    </nav>
+</div>
 
-    <!-- Modal Edit Color -->
-    <div class="modal fade" id="editColorModal" tabindex="-1" role="dialog" aria-labelledby="editColorModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editColorModalLabel">Chỉnh Sửa Màu Sắc</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="editColorForm">
-                        <div class="form-group">
-                            <label for="colorName">Tên Màu Sắc</label>
-                            <input type="text" class="form-control" id="colorName" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="colorCreatedDate">Ngày Tạo</label>
-                            <input type="date" class="form-control" id="colorCreatedDate" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="colorUpdatedDate">Ngày Sửa</label>
-                            <input type="date" class="form-control" id="colorUpdatedDate" required>
-                        </div>
-                        <button type="button" class="btn btn-success" onclick="saveColor()">
-                            <i class="bi bi-floppy2-fill"></i> Lưu
+<div class="container bordered-container">
+    <div class="row product-container">
+        <!-- Sidebar nhóm sản phẩm -->
+        <div class="col-md-3 product-sidebar">
+            <!-- Nút Toàn Bộ Sản Phẩm -->
+            <button class="btn btn-primary btn-product" onclick="showProductList()">Toàn Bộ Sản Phẩm</button>
+
+            <!-- Nút Màu Sắc Sản Phẩm -->
+            <button class="btn btn-secondary btn-product" onclick="showColorTable()">Màu Sắc Sản Phẩm</button>
+
+            <!-- Nút Loại Sản Phẩm -->
+            <button class="btn btn-success btn-product" onclick="showCategoryTable()">Loại Sản Phẩm</button>
+
+            <!-- Di chuyển nút Hãng xuống dưới -->
+            <button class="btn btn-info btn-product" onclick="showBrandTable()">Hãng</button>
+        </div>
+
+        <!-- Danh sách sản phẩm -->
+        <div class="col-md-9">
+            <h5 id="tableTitle">Danh sách sản phẩm</h5>
+            <table id="productTable" class="table table-bordered table-hover">
+                <thead class="thead-light">
+                <tr>
+                    <th>Tên sản phẩm</th>
+                    <th>Màu Sắc</th>
+                    <th>Hãng</th>
+                    <th>Hình Ảnh</th>
+                    <th>Loại Sản Phẩm</th>
+                    <th>Trạng Thái</th>
+                    <th>Ngày Tạo</th>
+                    <th>Ngày Cập Nhật</th>
+                    <th>Hành Động</th> <!-- Thêm cột Hành Động -->
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><a href="#">[Mã: 11_DC_09_0002]</a> Straight Die</td>
+                    <td>Xanh dương</td>
+                    <td>ABC Corp</td>
+                    <td><img class="image-placeholder" src="#" alt="Ảnh sản phẩm"></td>
+                    <td>Khuôn</td>
+                    <td>Hoạt động</td>
+                    <td>01/01/2024</td>
+                    <td>05/10/2024</td>
+                    <td>
+                        <button class="btn btn-warning btn-sm" onclick="openEditProductModal('Straight Die', 'Xanh dương', 'ABC Corp', 'Khuôn')">
+                            <i class="bi bi-pencil-square"></i>
                         </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Edit Category -->
-    <div class="modal fade" id="editCategoryModal" tabindex="-1" role="dialog" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editCategoryModalLabel">Chỉnh Sửa Loại Sản Phẩm</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="editCategoryForm">
-                        <div class="form-group">
-                            <label for="categoryName">Tên Loại Sản Phẩm</label>
-                            <input type="text" class="form-control" id="categoryName" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="categoryCreatedDate">Ngày Tạo</label>
-                            <input type="date" class="form-control" id="categoryCreatedDate" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="categoryUpdatedDate">Ngày Sửa</label>
-                            <input type="date" class="form-control" id="categoryUpdatedDate" required>
-                        </div>
-                        <button type="button" class="btn btn-success" onclick="saveCategory()">
-                            <i class="bi bi-floppy2-fill"></i> Lưu
+                        <button class="btn btn-danger btn-sm">
+                            <i class="bi bi-trash3"></i>
                         </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Edit Brand -->
-    <div class="modal fade" id="editBrandModal" tabindex="-1" role="dialog" aria-labelledby="editBrandModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editBrandModalLabel">Chỉnh Sửa Hãng</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="editBrandForm">
-                        <div class="form-group">
-                            <label for="brandName">Tên Hãng</label>
-                            <input type="text" class="form-control" id="brandName" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="brandCreatedDate">Ngày Tạo</label>
-                            <input type="date" class="form-control" id="brandCreatedDate" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="brandUpdatedDate">Ngày Sửa</label>
-                            <input type="date" class="form-control" id="brandUpdatedDate" required>
-                        </div>
-                        <button type="button" class="btn btn-success" onclick="saveBrand()">
-                            <i class="bi bi-floppy2-fill"></i> Lưu
+                    </td>
+                </tr>
+                <tr>
+                    <td><a href="#">[Mã: 1231.2412.412]</a> Delie Pie</td>
+                    <td>Đỏ</td>
+                    <td>XYZ Corp</td>
+                    <td><img class="image-placeholder" src="#" alt="Ảnh sản phẩm"></td>
+                    <td>CYLINDER 40L - Aluminum - CHINA</td>
+                    <td>Bảo trì</td>
+                    <td>02/03/2023</td>
+                    <td>08/08/2023</td>
+                    <td>
+                        <button class="btn btn-warning btn-sm" onclick="openEditProductModal('Delie Pie', 'Đỏ', 'XYZ Corp', 'CYLINDER 40L - Aluminum - CHINA')">
+                            <i class="bi bi-pencil-square"></i>
                         </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Edit Product -->
-    <div class="modal fade" id="editProductModal" tabindex="-1" role="dialog" aria-labelledby="editProductModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editProductModalLabel">Chỉnh Sửa Sản Phẩm</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="editProductForm">
-                        <div class="form-group">
-                            <label for="productName">Tên Sản Phẩm</label>
-                            <input type="text" class="form-control" id="productName" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="productColor">Màu Sắc</label>
-                            <input type="text" class="form-control" id="productColor" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="productBrand">Hãng</label>
-                            <input type="text" class="form-control" id="productBrand" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="productCategory">Loại Sản Phẩm</label>
-                            <input type="text" class="form-control" id="productCategory" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="productStatus">Trạng Thái</label>
-                            <input type="text" class="form-control" id="productStatus" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="productCreatedDate">Ngày Tạo</label>
-                            <input type="date" class="form-control" id="productCreatedDate" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="productUpdatedDate">Ngày Sửa</label>
-                            <input type="date" class="form-control" id="productUpdatedDate" required>
-                        </div>
-                        <button type="button" class="btn btn-success" onclick="saveProduct()">
-                            <i class="bi bi-floppy2-fill"></i> Lưu
+                        <button class="btn btn-danger btn-sm">
+                            <i class="bi bi-trash3"></i>
                         </button>
-                    </form>
-                </div>
+                    </td>
+                </tr>
+                <!-- Thêm nhiều hàng khác -->
+                </tbody>
+            </table>
+
+            <!-- Danh sách màu sắc -->
+            <table id="colorTable" class="table table-bordered table-hover">
+                <thead class="thead-light">
+                <tr>
+                    <th>ID Màu Sắc</th>
+                    <th>Tên Màu Sắc</th>
+                    <th>Ngày Tạo</th>
+                    <th>Ngày Sửa</th>
+                    <th>Hành Động</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Xanh dương</td>
+                    <td>01/01/2024</td>
+                    <td>05/10/2024</td>
+                    <td>
+                        <button class="btn btn-warning btn-sm" onclick="openEditColorModal('Xanh dương', '01/01/2024', '05/10/2024')">
+                            <i class="bi bi-pencil-square"></i>
+                        </button>
+                        <button class="btn btn-danger btn-sm">
+                            <i class="bi bi-trash3"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Đỏ</td>
+                    <td>02/03/2023</td>
+                    <td>08/08/2023</td>
+                    <td>
+                        <button class="btn btn-warning btn-sm" onclick="openEditColorModal('Đỏ', '02/03/2023', '08/08/2023')">
+                            <i class="bi bi-pencil-square"></i>
+                        </button>
+                        <button class="btn btn-danger btn-sm">
+                            <i class="bi bi-trash3"></i>
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <!-- Danh sách loại sản phẩm -->
+            <table id="categoryTable" class="table table-bordered table-hover">
+                <thead class="thead-light">
+                <tr>
+                    <th>ID Loại Sản Phẩm</th>
+                    <th>Kiểu Dáng</th>
+                    <th>Ngày Tạo</th>
+                    <th>Ngày Sửa</th>
+                    <th>Hành Động</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Khuôn</td>
+                    <td>01/01/2024</td>
+                    <td>05/10/2024</td>
+                    <td>
+                        <button class="btn btn-warning btn-sm" onclick="openEditCategoryModal('Khuôn', '01/01/2024', '05/10/2024')">
+                            <i class="bi bi-pencil-square"></i>
+                        </button>
+                        <button class="btn btn-danger btn-sm">
+                            <i class="bi bi-trash3"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Xi lanh</td>
+                    <td>02/03/2023</td>
+                    <td>08/08/2023</td>
+                    <td>
+                        <button class="btn btn-warning btn-sm" onclick="openEditCategoryModal('Xi lanh', '02/03/2023', '08/08/2023')">
+                            <i class="bi bi-pencil-square"></i>
+                        </button>
+                        <button class="btn btn-danger btn-sm">
+                            <i class="bi bi-trash3"></i>
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <!-- Danh sách hãng -->
+            <table id="brandTable" class="table table-bordered table-hover">
+                <thead class="thead-light">
+                <tr>
+                    <th>ID Hãng</th>
+                    <th>Tên Hãng</th>
+                    <th>Ngày Tạo</th>
+                    <th>Ngày Sửa</th>
+                    <th>Hành Động</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>ABC Corp</td>
+                    <td>01/01/2024</td>
+                    <td>05/10/2024</td>
+                    <td>
+                        <button class="btn btn-warning btn-sm" onclick="openEditBrandModal('ABC Corp', '01/01/2024', '05/10/2024')">
+                            <i class="bi bi-pencil-square"></i>
+                        </button>
+                        <button class="btn btn-danger btn-sm">
+                            <i class="bi bi-trash3"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>XYZ Corp</td>
+                    <td>02/03/2023</td>
+                    <td>08/08/2023</td>
+                    <td>
+                        <button class="btn btn-warning btn-sm" onclick="openEditBrandModal('XYZ Corp', '02/03/2023', '08/08/2023')">
+                            <i class="bi bi-pencil-square"></i>
+                        </button>
+                        <button class="btn btn-danger btn-sm">
+                            <i class="bi bi-trash3"></i>
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Edit Color -->
+<div class="modal fade" id="editColorModal" tabindex="-1" role="dialog" aria-labelledby="editColorModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editColorModalLabel">Chỉnh Sửa Màu Sắc</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editColorForm">
+                    <div class="form-group">
+                        <label for="colorName">Tên Màu Sắc</label>
+                        <input type="text" class="form-control" id="colorName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="colorCreatedDate">Ngày Tạo</label>
+                        <input type="date" class="form-control" id="colorCreatedDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="colorUpdatedDate">Ngày Sửa</label>
+                        <input type="date" class="form-control" id="colorUpdatedDate" required>
+                    </div>
+                    <button type="button" class="btn btn-success" onclick="saveColor()">
+                        <i class="bi bi-floppy2-fill"></i> Lưu
+                    </button>
+                </form>
             </div>
         </div>
     </div>
+</div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script th:src="@{/js/admin/product.js}"></script>
+<!-- Modal Edit Category -->
+<div class="modal fade" id="editCategoryModal" tabindex="-1" role="dialog" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editCategoryModalLabel">Chỉnh Sửa Loại Sản Phẩm</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editCategoryForm">
+                    <div class="form-group">
+                        <label for="categoryName">Tên Loại Sản Phẩm</label>
+                        <input type="text" class="form-control" id="categoryName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="categoryCreatedDate">Ngày Tạo</label>
+                        <input type="date" class="form-control" id="categoryCreatedDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="categoryUpdatedDate">Ngày Sửa</label>
+                        <input type="date" class="form-control" id="categoryUpdatedDate" required>
+                    </div>
+                    <button type="button" class="btn btn-success" onclick="saveCategory()">
+                        <i class="bi bi-floppy2-fill"></i> Lưu
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Edit Brand -->
+<div class="modal fade" id="editBrandModal" tabindex="-1" role="dialog" aria-labelledby="editBrandModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editBrandModalLabel">Chỉnh Sửa Hãng</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editBrandForm">
+                    <div class="form-group">
+                        <label for="brandName">Tên Hãng</label>
+                        <input type="text" class="form-control" id="brandName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="brandCreatedDate">Ngày Tạo</label>
+                        <input type="date" class="form-control" id="brandCreatedDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="brandUpdatedDate">Ngày Sửa</label>
+                        <input type="date" class="form-control" id="brandUpdatedDate" required>
+                    </div>
+                    <button type="button" class="btn btn-success" onclick="saveBrand()">
+                        <i class="bi bi-floppy2-fill"></i> Lưu
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Edit Product -->
+<div class="modal fade" id="editProductModal" tabindex="-1" role="dialog" aria-labelledby="editProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProductModalLabel">Chỉnh Sửa Sản Phẩm</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editProductForm">
+                    <div class="form-group">
+                        <label for="productName">Tên Sản Phẩm</label>
+                        <input type="text" class="form-control" id="productName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productColor">Màu Sắc</label>
+                        <input type="text" class="form-control" id="productColor" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productBrand">Hãng</label>
+                        <input type="text" class="form-control" id="productBrand" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productCategory">Loại Sản Phẩm</label>
+                        <input type="text" class="form-control" id="productCategory" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productStatus">Trạng Thái</label>
+                        <input type="text" class="form-control" id="productStatus" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productCreatedDate">Ngày Tạo</label>
+                        <input type="date" class="form-control" id="productCreatedDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productUpdatedDate">Ngày Sửa</label>
+                        <input type="date" class="form-control" id="productUpdatedDate" required>
+                    </div>
+                    <button type="button" class="btn btn-success" onclick="saveProduct()">
+                        <i class="bi bi-floppy2-fill"></i> Lưu
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script th:src="@{/js/admin/product.js}"></script>
 
 </body>
 

@@ -1,3 +1,67 @@
+document.addEventListener('DOMContentLoaded', function() {
+    // Mã để mở modal tạo mới màu sắc
+    const nutThemMauSac = document.getElementById('nutThemMauSac');
+    nutThemMauSac.style.display = 'inline-block';
+    nutThemMauSac.addEventListener('click', function(event) {
+        event.preventDefault();
+        const createColorModal = new bootstrap.Modal(document.getElementById('createColorModal'));
+        createColorModal.show();
+    });
+
+    // Mã để mở modal chỉnh sửa màu sắc
+    const editButtonsColor = document.getElementById('nutSuaMauSac');
+    editButtonsColor.addEventListener('click', function(event) {
+        event.preventDefault();
+        const editColorModal = new bootstrap.Modal(document.getElementById('editColorModal'));
+        editColorModal.show();
+    });
+
+    // Mở model loai sản phẩm
+    const nutThemLoaiSP = document.getElementById('nutThemLoai');
+    nutThemLoaiSP.style.display = 'inline-block';
+    nutThemLoaiSP.addEventListener('click', function(event) {
+        event.preventDefault();
+        const createColorModal = new bootstrap.Modal(document.getElementById('createCategoryModal'));
+        createColorModal.show();
+    });
+
+    //Mowr model sua loai sp
+    const editButtonsCategory = document.getElementById('nutSuaLoai');
+    editButtonsCategory.addEventListener('click', function(event) {
+        event.preventDefault();
+        const editColorModal = new bootstrap.Modal(document.getElementById('editColorModal'));
+        editColorModal.show();
+    });
+
+    // Mở model loai sản phẩm
+    const nutThemHang = document.getElementById('nutThemHang');
+    nutThemHang.style.display = 'inline-block';
+    nutThemHang.addEventListener('click', function(event) {
+        event.preventDefault();
+        const createColorModal = new bootstrap.Modal(document.getElementById('createBrandModal'));
+        createColorModal.show();
+    });
+
+    //Mowr model sua loai sp
+    const editButtonsBarnd = document.getElementById('nutSuaHang');
+    editButtonsBarnd.addEventListener('click', function(event) {
+        event.preventDefault();
+        const editColorModal = new bootstrap.Modal(document.getElementById('editBrandModal'));
+        editColorModal.show();
+    });
+
+    //Mowr model sua loai sp
+    const editButtonsProduct = document.getElementById('nutSuaSanPham');
+    editButtonsProduct.addEventListener('click', function(event) {
+        event.preventDefault();
+        const editColorModal = new bootstrap.Modal(document.getElementById('editProductModal'));
+        editColorModal.show();
+    });
+
+});
+
+
+
 // Hàm để hiển thị bảng đã chọn và cập nhật trạng thái nút tương ứng
 function showTable(tableId, buttonId, title) {
     hideAllTables();
