@@ -1,0 +1,84 @@
+body {
+    background: linear-gradient(120deg, #f0f8ff, #e6f7ff);
+    font-family: Arial, sans-serif;
+}
+.container {
+    animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #004085;
+    font-weight: bold;
+}
+
+.table {
+    background: #ffffff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.table thead {
+    background: #004085;
+    color: white;
+}
+
+.table thead th {
+    text-align: center;
+    font-size: 16px;
+    letter-spacing: 1px;
+}
+
+.table tbody tr:hover {
+    background-color: #d6eaff;
+    transition: background-color 0.3s;
+}
+
+.btn {
+    border-radius: 20px;
+}
+
+.btn-warning {
+    background: #ffc107;
+    color: #fff;
+    border: none;
+}
+
+.btn-warning:hover {
+    background: #e0a800;
+}
+
+.btn-danger {
+    background: #dc3545;
+    color: #fff;
+    border: none;
+}
+
+.btn-danger:hover {
+    background: #b02a37;
+}
+
+.btn-primary {
+    display: block;
+    margin: 0 auto;
+    font-size: 16px;
+    padding: 10px 20px;
+    background: #007bff;
+    border: none;
+}
+
+.btn-primary:hover {
+    background: #0056b3;
+}

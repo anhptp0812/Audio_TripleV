@@ -1,23 +1,23 @@
 
-    function addRow() {
+function addRow() {
     // Add row functionality
     alert('Thêm chức năng chưa được triển khai.');
     logHistory('Thêm', 'Thêm nhân viên  mới');
 }
 
-    function deleteRow() {
+function deleteRow() {
     // Delete row functionality
     alert('Xóa chức năng chưa được triển khai.');
     logHistory('Xóa', 'Xóa nhân viên');
 }
 
-    function editRow() {
+function editRow() {
     // Edit row functionality
     alert('Sửa chức năng chưa được triển khai.');
     logHistory('Sửa', 'Sửa thông tin nhân viên');
 }
 
-    function logHistory(action, details) {
+function logHistory(action, details) {
     const historyTable = document.getElementById('historyTable').getElementsByTagName('tbody')[0];
     const newRow = historyTable.insertRow();
     const idCell = newRow.insertCell(0);
