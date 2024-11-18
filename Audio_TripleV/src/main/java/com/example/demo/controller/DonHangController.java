@@ -84,7 +84,7 @@ public class DonHangController {
 //    private VnPayService vnPayService;
     @GetMapping("/don-hang")
     public String index(Model model) {
-        List<DonHang> list = donHangRepository.findAll();
+        List<HoaDon> list = hoaDonRepository.findAll();
         model.addAttribute("listDH", list);
         return "nhanvien/donhang";
 
@@ -141,19 +141,15 @@ public class DonHangController {
 
         // Thiết lập tổng giá cho hóa đơn
         hoaDon.setTongGia(totalAmount);
+        hoaDon.setTrangThai("Đã thanh toán");
         hoaDonRepository.save(hoaDon); // Lưu thông tin tổng giá của hóa đơn
 
         // Chuyển hướng đến trang VNPay để thanh toán
-        if ("vnpay".equals(paymentMethod)) {
-            // Chuyển hướng đến trang VNPay để thanh toán
-//            String vnpayUrl = vnPayService.createVNPayUrl(request, totalAmount, "bankCode", hoaDon.getId());
-//            return "redirect:" + vnpayUrl;
-        } else if ("cash".equals(paymentMethod)) {
-            // Xử lý thanh toán bằng tiền mặt
+//        else if ("cash".equals(paymentMethod)) {
+//            // Xử lý thanh toán bằng tiền mặt
             model.addAttribute("message", "Đơn hàng đã được ghi nhận. Vui lòng thanh toán tại cửa hàng!");
             return "redirect:/user/ban-hang"; // Chuyển hướng đến trang thông báo đơn hàng thành công
-        }
-        return "error";
+
     }
 
     @GetMapping("ban-hang/details/{id}")

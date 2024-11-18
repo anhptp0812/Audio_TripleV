@@ -225,28 +225,32 @@
                     </table>
 
 
-                    <div class="totals">
-                        <div class="total-item">
-                            <label>Tổng:</label>
-                            <span id="totalAmount">0</span>
-                        </div>
-                        <div class="total-item">
-                            <label>Nhập số tiền khách đưa:</label>
-                            <input type="text" id="customerPayment" oninput="calculateChange()" style="text-align: right" placeholder="Nhập số tiền"/>
-                        </div>
-                        <div class="total-item">
-                            <label>Số tiền trả lại:</label>
-                            <span id="changeAmount">0</span>
-                        </div>
-                    </div>
 
-                    <div class="action-buttons">
-                        <button class="history-btn" onclick="toggleHistoryForm()">Lịch Sử</button>
-                        <button class="pay-btn" type="submit" name="paymentMethod" value="cash">Thanh Toán</button>
-                        <button class="pay-btn" type="submit" name="paymentMethod" value="vnpay">Thanh Toán Chuyển khoản</button>
-                    </div>
                 </form>
+
+                <div class="totals">
+                    <div class="total-item">
+                        <label>Tổng:</label>
+                        <span id="totalAmount">0</span>
+                    </div>
+                    <div class="total-item">
+                        <label>Nhập số tiền khách đưa:</label>
+                        <input type="text" id="customerPayment" oninput="calculateChange()" style="text-align: right" placeholder="Nhập số tiền"/>
+                    </div>
+                    <div class="total-item">
+                        <label>Số tiền trả lại:</label>
+                        <span id="changeAmount">0</span>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="history-btn" onclick="toggleHistoryForm()">Lịch Sử</button>
+                    <button class="pay-btn" type="submit" name="paymentMethod" value="cash">Thanh Toán</button>
+                    <!--                        <button class="pay-btn" type="submit" name="paymentMethod" value="vnpay">Thanh Toán Chuyển khoản</button>-->
+                    <a th:href="@{/vnpay-hien-thi/{id}(id=${donHang.id})}" class="btn btn-primary">Thanh toán VNPay</a>
+                </div>
             </div>
+
 
             <!-- Customer Form -->
             <div class="customer-form" id="customerForm" style="display: none;">

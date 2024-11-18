@@ -13,13 +13,14 @@
     <div class="row justify-content-center mt-5">
         <div class="col-md-6">
             <div class="card">
-                <div class="card-body">
+                <div id="orderDetailsForm" class="form-don-hang">
                     <img th:src="@{/vnpay-logo.png}" style="width: 200px">
                     <h2 class="card-title">Thanh Toán Đơn Hàng</h2>
                     <form th:action="@{/submitOrder}" method="post">
                         <div class="form-group">
-                            <label for="amount">Số tiền:</label>
-                            <input type="number" class="form-control" id="amount" name="amount" required value="299999">
+                            <label for="totalAmount" >Số tiền:</label>
+                            <input type="number" class="form-control" id="totalAmount" name="amount" th:value="${totalAmount}" required />
+
                         </div>
                         <div class="form-group">
                             <label for="orderInfo">Thông tin đơn hàng:</label>
@@ -36,6 +37,7 @@
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script th:inline="javascript" th:src="@{/js/nhanvien/productProvity.js}"></script>
 </body>
 
 </html>
