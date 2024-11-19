@@ -147,9 +147,9 @@ public class DonHangController {
                 hoaDonChiTietRepository.save(hoaDonChiTiet);
                 return "redirect:/vnpay-hien-thi/" + hoaDon.getId();
             } else if ("cash".equals(paymentMethod)) {
-                hoaDonRepository.save(hoaDon);
                 // Xử lý thanh toán bằng tiền mặt
                 hoaDon.setTrangThai("Đã thanh toán");
+                hoaDonRepository.save(hoaDon);
                 hoaDonChiTietRepository.save(hoaDonChiTiet);
                 model.addAttribute("message", "Đơn hàng đã được ghi nhận. Vui lòng thanh toán tại cửa hàng!");
                 return "redirect:/user/ban-hang"; // Chuyển hướng đến trang thông báo đơn hàng thành công
