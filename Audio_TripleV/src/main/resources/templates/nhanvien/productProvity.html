@@ -180,7 +180,7 @@
 
                     <button type="submit">Lưu đơn hàng</button>
                 </form>
-                <!--                <button th:onclick="'viewOrderDetails(' + ${donHang.id} + ')'">Xem chi tiết</button>-->
+                <button th:onclick="'viewOrderDetails(' + ${donHang.id} + ')'">Xem chi tiết</button>
                 <input type="hidden" th:field="*{donHang.id}">
             </div>
             <script>
