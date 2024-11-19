@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 /* Tổng quan */
 body {
     font-family: 'Arial', sans-serif;
@@ -17,7 +17,7 @@ body {
     font-weight: 500;
     margin-right: 10px;
     transition: color 0.3s ease;
-=======
+}
 body {
     background: linear-gradient(120deg, #f0f8ff, #e6f7ff);
     font-family: Arial, sans-serif;
@@ -61,7 +61,7 @@ body {
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
->>>>>>> main
+
 }
 
 .nav-link:hover {
@@ -132,11 +132,11 @@ body {
 
 .product-card:hover {
     transform: translateY(-5px);
-<<<<<<< HEAD
+
     box-shadow: 0 8px 10px rgba(0, 0, 0, 0.15);
-=======
+
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
->>>>>>> main
+
 }
 
 .product-card img {
@@ -146,7 +146,7 @@ body {
     border-radius: 10px;
     margin-bottom: 10px;
 }
-<<<<<<< HEAD
+
 
 .product-card p {
     font-size: 16px;
@@ -158,11 +158,11 @@ body {
     margin: 10px 0;
 }
 
-=======
+
 .product-card img:hover {
     transform: scale(1.1);
 }
->>>>>>> main
+
 .current-price {
     font-size: 18px;
     font-weight: bold;
@@ -194,22 +194,22 @@ body {
 }
 
 .add-to-cart:hover {
-<<<<<<< HEAD
+
     background-color: orangered;
-=======
+
     background-color: #cc5200;
     transform: translateY(-2px);
->>>>>>> main
+
 }
 
 .btn-now:hover {
     background-color: #218838;
     transform: translateY(-2px);
 }
-<<<<<<< HEAD
+
 
 /* Thông báo */
-=======
+
 @media (max-width: 768px) {
     .product-container {
         flex-direction: column;
@@ -262,12 +262,12 @@ body {
     font-size: 14px;
 }
 /* Thông báo tạm thời */
->>>>>>> main
+
 .notification {
     position: fixed;
     bottom: 20px;
     right: 20px;
-<<<<<<< HEAD
+
     background-color: #28a745;
     color: #fff;
     padding: 15px 20px;
@@ -275,7 +275,7 @@ body {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     display: none;
     z-index: 999;
-=======
+
     z-index: 1000;
     display: none;
     padding: 10px 20px;
@@ -312,7 +312,7 @@ body {
         opacity: 1;
         transform: translateY(0);
     }
->>>>>>> main
+
 }
 
 .modal {
@@ -383,8 +383,7 @@ footer {
     z-index: 1000; /* Đảm bảo giỏ hàng nằm trên các phần tử khác */
     overflow-y: auto; /* Kích hoạt thanh cuộn dọc */
 }
-<<<<<<< HEAD
-=======
+
 .cart-icon {
     color: #007bff; /* Màu xanh nước biển cho biểu tượng */
     text-decoration: none; /* Bỏ gạch chân cho liên kết */
@@ -410,4 +409,3 @@ footer {
     font-weight: bold;
     z-index: 10;
 }
->>>>>>> main
