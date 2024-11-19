@@ -1,11 +1,7 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.DonHang;
-import com.example.demo.entity.DonHangChiTiet;
 import com.example.demo.entity.HoaDon;
 import com.example.demo.entity.HoaDonChiTiet;
-import com.example.demo.entityCustom.DonHangRepository;
-import com.example.demo.repository.DonHangChiTietRepository;
 import com.example.demo.repository.HoaDonChiTietRepository;
 import com.example.demo.repository.HoaDonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
