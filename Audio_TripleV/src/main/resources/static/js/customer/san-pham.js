@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-=======
 
->>>>>>> main
 document.addEventListener('DOMContentLoaded', function () {
     let cart = [];
 
@@ -83,19 +80,15 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('cart-icon').addEventListener('click', function () {
         document.getElementById('cart-container').style.display = 'block'; // Hiển thị giỏ hàng
         document.querySelector('.product-container').classList.add('collapsed'); // Thu gọn sản phẩm
-<<<<<<< HEAD
+
         document.querySelector('.product-container1').classList.add('collapsed'); // Thu gọn sản phẩm
-=======
->>>>>>> main
     });
 
     document.getElementById('close-cart').addEventListener('click', function () {
         document.getElementById('cart-container').style.display = 'none'; // Ẩn giỏ hàng
         document.querySelector('.product-container').classList.remove('collapsed'); // Khôi phục kích thước sản phẩm
-<<<<<<< HEAD
+
         document.querySelector('.product-container1').classList.remove('collapsed'); // Thu gọn sản phẩm
-=======
->>>>>>> main
     });
 });
 

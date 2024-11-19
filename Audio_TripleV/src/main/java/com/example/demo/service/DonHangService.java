@@ -2,11 +2,10 @@ package com.example.demo.service;
 
 import com.example.demo.entity.DonHang;
 import com.example.demo.entity.DonHangChiTiet;
-<<<<<<< HEAD
+
 import com.example.demo.entity.KhachHang;
 import com.example.demo.entity.SanPhamChiTiet;
-=======
->>>>>>> main
+
 import com.example.demo.repository.DonHangRepository;
 import com.example.demo.repository.DonHangChiTietRepository;
 import org.springframework.beans.factory.annotation.Autowired;

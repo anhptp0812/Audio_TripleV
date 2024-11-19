@@ -25,23 +25,16 @@ import com.example.demo.service.SanPhamChiTietService;
 //import com.example.demo.vnPay.VNPayConfig;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-<<<<<<< HEAD
-=======
-import org.springframework.stereotype.Controller;
->>>>>>> main
+
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 
 
 import java.util.*;
-<<<<<<< HEAD
-=======
 
 import java.util.Date;
 import java.util.List;
-
->>>>>>> main
 
 @CrossOrigin(origins = "http://localhost:3000") // Thay đổi URL này theo miền của frontend
 @RestController
@@ -86,7 +79,7 @@ public class DonHangController {
     @Autowired
     private HoaDonService hoaDonService;
 
-<<<<<<< HEAD
+
     @Autowired
     private KhachHangService khachHangService;
 
@@ -96,10 +89,7 @@ public class DonHangController {
 //        return "nhanvien/productProvity";  // Trả về form đơn hàng
 //    }
 
-=======
-//    @Autowired
-//    private VnPayService vnPayService;
->>>>>>> main
+
     @GetMapping("/don-hang")
     public String index(Model model) {
         List<HoaDon> list = hoaDonRepository.findAll();
