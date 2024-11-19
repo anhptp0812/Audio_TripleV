@@ -140,7 +140,7 @@
                 Hàng
             </button>
             <div class="right-buttons">
-
+                <button class="new-bill-btn" onclick="showForms()"><i class="bi bi-plus-circle"></i></button>
                 <a href="/user/ban-hang">
                     <button class="reload-btn"><i class="bi bi-arrow-repeat"></i></button>
                 </a>
@@ -179,10 +179,9 @@
                            min="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"/>
 
                     <button type="submit">Lưu đơn hàng</button>
-
                 </form>
-                <button th:onclick="'viewOrderDetails(' + ${donHang.id} + ')'">Xem chi tiết</button>
-<!--                <input type="hidden" th:field="*{donHang.id}">-->
+                <!--                <button th:onclick="'viewOrderDetails(' + ${donHang.id} + ')'">Xem chi tiết</button>-->
+                <input type="hidden" th:field="*{donHang.id}">
             </div>
             <script>
                 document.getElementById("orderFormDetails").onsubmit = function (event) {

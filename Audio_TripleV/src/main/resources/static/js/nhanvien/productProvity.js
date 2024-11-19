@@ -108,9 +108,17 @@ function saveOrderDetails() {
 }
 
 function removeProduct(button) {
-    // Xóa hàng sản phẩm khỏi bảng
-    const row = button.parentNode.parentNode;
-    row.parentNode.removeChild(row);
+    const row = button.closest('tr');
+    const spctId = row.querySelector('input[name="spctIds"]').value;
+
+    // Xóa sản phẩm khỏi mảng selectedProducts
+    selectedProducts = selectedProducts.filter(product => product.spctId !== spctId);
+
+    // Xóa dòng sản phẩm khỏi bảng
+    row.remove();
+
+    // Cập nhật tổng tiền sau khi xóa
+    updateTotalAmount();
 }
 
 function selectCustomer(id, ten, sdt) {
@@ -143,13 +151,13 @@ let isOrderCreated = false; // Biến kiểm tra xem hóa đơn đã được t�
 let viewDetail = false;
 
 function addProductToForm(spctId, productName, quantity, price) {
-    if (isOrderCreated === false) {
-        showForms();
-    }
-    if (viewDetail === false){
-        alert("Chưa mở Xem chi tiết");
-        return;
-    }
+    // if (isOrderCreated === false) {
+    //     showForms();
+    // }
+    // if (viewDetail === false) {
+    //     alert("Chưa mở Xem chi tiết");
+    //     return;
+    // }
     const addedProductsTableBody = document.getElementById('addedProductsTableBody');
 
     if (!addedProductsTableBody) {
@@ -168,7 +176,7 @@ function addProductToForm(spctId, productName, quantity, price) {
         updateProductQuantityInTable(existingProduct);
     } else {
         // Nếu chưa có trong giỏ, thêm mới
-        const newProduct = { spctId, productName, quantity, price };
+        const newProduct = {spctId, productName, quantity, price};
         selectedProducts.push(newProduct);
 
         const newRow = document.createElement('tr');
@@ -179,13 +187,16 @@ function addProductToForm(spctId, productName, quantity, price) {
             </td>
             <td><input type="number" name="soLuong" value="${quantity}" min="1" onchange="updateProductQuantity(this)" /></td>
             <td><input type="number" name="donGia" value="${price}" readonly /></td>
+             <td><button onclick="removeProduct(this)">Xóa</button></td>
         `;
         addedProductsTableBody.appendChild(newRow);
     }
 
+
     // Cập nhật tổng tiền sau khi thêm sản phẩm
     updateTotalAmount(); // Cập nhật tổng tiền
 }
+
 
 // Hàm cập nhật số lượng trong bảng khi có sự thay đổi
 function updateProductQuantityInTable(product) {
@@ -263,26 +274,26 @@ function closeCustomerForm() {
     document.querySelector('.customer-form').style.display = 'none';
 }
 
-function showForms() {
-    isOrderCreated = true;
-    const sanPhamForm = document.querySelector('.form-san-pham');
-    if (!formDisplayed) {
-        sanPhamForm.style.display = 'block';
-        formDisplayed = true;
-    } else {
-        alert('Không thể tạo 2 Bill cùng 1 Thanh Toán');
-    }
-}
+// function showForms() {
+//     isOrderCreated = true;
+//     const sanPhamForm = document.querySelector('.form-san-pham');
+//     if (!formDisplayed) {
+//         sanPhamForm.style.display = 'block';
+//         formDisplayed = true;
+//     } else {
+//         alert('Không thể tạo 2 Bill cùng 1 Thanh Toán');
+//     }
+// }
 
-function viewOrderDetails(id) {
+function viewOrderDetails(spctId) {
     viewDetail = true;
 
-    if (!id || isNaN(id)) {
+    if (!spctId || isNaN(spctId)) {
         alert('ID đơn hàng không hợp lệ');
         return;
     }
 
-    fetch(`/user/ban-hang/${id}/details`)
+    fetch(`/user/ban-hang/${spctId}/details`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Không thể tải chi tiết đơn hàng');
@@ -300,9 +311,11 @@ function viewOrderDetails(id) {
             data.forEach(item => {
                 const newRow = document.createElement('tr');
                 newRow.innerHTML = `
+
                     <td>${item.productName || 'Chưa có tên sản phẩm'}</td>
                     <td><input type="number" name="soLuong" value="${item.quantity}" min="1" onchange="updateProductQuantity(this)" /></td>
                     <td><input type="number" name="donGia" value="${item.price}" readonly /></td>
+             
                 `;
                 addedProductsTableBody.appendChild(newRow);
 
@@ -329,6 +342,38 @@ function viewOrderDetails(id) {
             alert('Có lỗi xảy ra khi tải chi tiết đơn hàng. Vui lòng thử lại sau.');
         });
 }
+
+function deleteProductRow(dhctId, button) {
+    if (!dhctId || isNaN(dhctId)) {
+        alert('ID chi tiết đơn hàng không hợp lệ');
+        return;
+    }
+
+    fetch(`/user/ban-hang/${dhctId}`, {
+        method: 'DELETE',
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Xóa dòng sản phẩm khỏi bảng
+                const row = button.closest('tr');
+                row.remove();
+
+                // Cập nhật lại mảng selectedProducts sau khi xóa
+                selectedProducts = selectedProducts.filter(product => product.dhctId !== dhctId);
+
+                // Cập nhật tổng tiền sau khi xóa
+                updateTotalAmount();
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Xóa sản phẩm thất bại.');
+        });
+}
+
 
 // Hiển thị form khách hàng
 function openCustomerForm() {
