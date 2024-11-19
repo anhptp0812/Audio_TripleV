@@ -10,6 +10,5 @@ import java.util.Optional;
 
 @Repository
 public interface NhanVienRepo extends JpaRepository<NhanVien, Integer> {
-    @Query("SELECT n FROM NhanVien n WHERE n.usename = :username")
-    Optional<NhanVien> findByTenDangNhap(@Param("username") String username);
+    Optional<NhanVien> findByUsername(String username);
 }
