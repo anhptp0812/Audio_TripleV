@@ -74,6 +74,10 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+<<<<<<< HEAD
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+=======
             <groupId>dom4j</groupId>
             <artifactId>dom4j</artifactId>
             <version>1.1</version>
@@ -92,6 +96,7 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
+>>>>>>> main
         </dependency>
 
     </dependencies>

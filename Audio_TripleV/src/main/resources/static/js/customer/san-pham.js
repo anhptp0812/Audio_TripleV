@@ -1,4 +1,7 @@
+<<<<<<< HEAD
+=======
 
+>>>>>>> main
 document.addEventListener('DOMContentLoaded', function () {
     let cart = [];
 
@@ -80,10 +83,58 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('cart-icon').addEventListener('click', function () {
         document.getElementById('cart-container').style.display = 'block'; // Hiển thị giỏ hàng
         document.querySelector('.product-container').classList.add('collapsed'); // Thu gọn sản phẩm
+<<<<<<< HEAD
+        document.querySelector('.product-container1').classList.add('collapsed'); // Thu gọn sản phẩm
+=======
+>>>>>>> main
     });
 
     document.getElementById('close-cart').addEventListener('click', function () {
         document.getElementById('cart-container').style.display = 'none'; // Ẩn giỏ hàng
         document.querySelector('.product-container').classList.remove('collapsed'); // Khôi phục kích thước sản phẩm
+<<<<<<< HEAD
+        document.querySelector('.product-container1').classList.remove('collapsed'); // Thu gọn sản phẩm
+=======
+>>>>>>> main
     });
 });
+
+function openModal(product, price) {
+    document.getElementById('product').value = product;
+    document.getElementById('price').value = price;
+    document.getElementById('myModal').style.display = "block";
+}
+
+function closeModal() {
+    document.getElementById('myModal').style.display = "none";
+}
+
+window.onclick = function(event) {
+    if (event.target == document.getElementById('myModal')) {
+        closeModal();
+    }
+}
+
+// Gửi yêu cầu mua ngay
+function submitQuickBuy(event) {
+    event.preventDefault();
+
+    const payload = {
+        sanPhamChiTietId: parseInt(document.getElementById('product').value),
+        tenKhachHang: document.getElementById('name').value,
+        sdt: document.getElementById('phone').value,
+        diaChi: document.getElementById('address').value,
+    };
+
+    fetch('/user/orders/quick-buy', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message || 'Đặt hàng thành công!');
+            closeModal('quick-buy-modal');
+        })
+        .catch(error => console.error('Lỗi:', error));
+}

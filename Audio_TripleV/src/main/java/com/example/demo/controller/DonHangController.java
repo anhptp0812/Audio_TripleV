@@ -19,25 +19,32 @@ import com.example.demo.repository.SanPhamChiTietRepository;
 import com.example.demo.repository.SanPhamRepository;
 import com.example.demo.service.DonHangService;
 import com.example.demo.service.HoaDonService;
+import com.example.demo.service.KhachHangService;
 import com.example.demo.service.SanPhamChiTietService;
 //import com.example.demo.service.VnPayService;
 //import com.example.demo.vnPay.VNPayConfig;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+<<<<<<< HEAD
+=======
 import org.springframework.stereotype.Controller;
+>>>>>>> main
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 
 
 import java.util.*;
+<<<<<<< HEAD
+=======
 
 import java.util.Date;
 import java.util.List;
 
+>>>>>>> main
 
 @CrossOrigin(origins = "http://localhost:3000") // Thay đổi URL này theo miền của frontend
-@Controller
+@RestController
 @RequestMapping("/user")
 public class DonHangController {
 //    @Autowired
@@ -79,8 +86,20 @@ public class DonHangController {
     @Autowired
     private HoaDonService hoaDonService;
 
+<<<<<<< HEAD
+    @Autowired
+    private KhachHangService khachHangService;
+
+//    @GetMapping("ban-hang/don-hang/create")
+//    public String createDonHangForm(Model model) {
+//        model.addAttribute("donHang", new DonHang());
+//        return "nhanvien/productProvity";  // Trả về form đơn hàng
+//    }
+
+=======
 //    @Autowired
 //    private VnPayService vnPayService;
+>>>>>>> main
     @GetMapping("/don-hang")
     public String index(Model model) {
         List<HoaDon> list = hoaDonRepository.findAll();
@@ -269,6 +288,8 @@ public class DonHangController {
 //        }
 //
 //        return "Process Success";
+
+
 }
 
 
