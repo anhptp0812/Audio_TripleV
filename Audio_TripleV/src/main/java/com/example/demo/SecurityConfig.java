@@ -7,6 +7,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -28,6 +29,11 @@ public class SecurityConfig {
     }
 
     @Bean
+    public GrantedAuthorityDefaults grantedAuthorityDefaults() {
+        return new GrantedAuthorityDefaults(""); // Không thêm tiền tố "ROLE_"
+    }
+
+    @Bean
     public AuthenticationManager authenticationManager(HttpSecurity httpSecurity, PasswordEncoder passwordEncoder) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder =
                 httpSecurity.getSharedObject(AuthenticationManagerBuilder.class);
@@ -42,7 +48,8 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())  // Tắt CSRF (nếu cần)
                 .authorizeHttpRequests(authz -> authz  // Thay vì authorizeRequests(), sử dụng authorizeHttpRequests()
-                        .requestMatchers("/login", "/css/**").permitAll()
+                        .requestMatchers("/admin/**").hasAuthority("ADMIN")  // Chỉ ADMIN truy cập
+                        .requestMatchers("/user/**").hasAuthority( "USER")
                         .anyRequest().authenticated()
                 )
                 .formLogin(login -> login

@@ -1,6 +1,5 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.DonHang;
 import com.example.demo.entity.DonHangChiTiet;
 import com.example.demo.entity.Hang;
 import com.example.demo.entity.HoaDon;
@@ -10,7 +9,7 @@ import com.example.demo.entity.MauSac;
 import com.example.demo.entity.SanPham;
 import com.example.demo.entity.SanPhamChiTiet;
 import com.example.demo.repository.DonHangChiTietRepository;
-import com.example.demo.entityCustom.DonHangRepository;
+import com.example.demo.repository.DonHangRepository;
 import com.example.demo.repository.HangRepository;
 import com.example.demo.repository.HoaDonChiTietRepository;
 import com.example.demo.repository.HoaDonRepository;
