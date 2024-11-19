@@ -3,48 +3,47 @@ package com.example.demo.service;
 import com.example.demo.entity.NhanVien;
 import com.example.demo.repository.NhanVienRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.security.core.GrantedAuthority;
-//import org.springframework.security.core.authority.SimpleGrantedAuthority;
-//import org.springframework.security.core.userdetails.User;
-//import org.springframework.security.core.userdetails.UserDetails;
-//import org.springframework.security.core.userdetails.UserDetailsService;
-//import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.config.core.GrantedAuthorityDefaults;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Service
-public class NhanVienService  {
+public class NhanVienService implements UserDetailsService{
 //    implements UserDetailsService
 
     @Autowired
-    private NhanVienRepo nhanVienRepo;
+    private final NhanVienRepo nhanVienRepo;
 
-//    @Override
-//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//        Optional<NhanVien> nhanVienOptional = nhanVienRepo.findByTenDangNhap(username);
-//
-//        if (!nhanVienOptional.isPresent()) {
-//            throw new UsernameNotFoundException("User not found");
-//        }
-//
-//        NhanVien nhanVien = nhanVienOptional.get();
-//
-//        // Log vai trò của người dùng
-//        System.out.println("Vai trò của người dùng: " + nhanVien.getRoll());
-//
-//        Collection<GrantedAuthority> authorities = new ArrayList<>();
-//        authorities.add(new SimpleGrantedAuthority(nhanVien.getRoll())); // Lấy vai trò từ database
-//
-//        return new User(nhanVien.getUsename(), nhanVien.getPassword(), authorities);
-//    }
+    public NhanVienService(NhanVienRepo nhanVienRepo) {
+        this.nhanVienRepo = nhanVienRepo;
+    }
+
+        @Override
+        public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+            System.out.println("Trying to authenticate user: " + username);
+            NhanVien nhanVien = nhanVienRepo.findByUsername(username)
+                    .orElseThrow(() -> new UsernameNotFoundException("Username not found"));
+            System.out.println("Found user: " + nhanVien.getUsername());
+
+            GrantedAuthority authority = new SimpleGrantedAuthority(nhanVien.getRole());
+
+            return new User(
+                    nhanVien.getUsername(),
+                    nhanVien.getPassword(),
+                    Collections.singletonList(authority)
+            );
+        }
 
     public List<NhanVien> layTatCaNhanVien() {
         return nhanVienRepo.findAll(); // Lấy tất cả nhân viên từ cơ sở dữ liệu
     }
-//
 
 }

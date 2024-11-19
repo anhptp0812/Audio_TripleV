@@ -5,54 +5,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hồ Sơ Của Tôi</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Link to Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Bootstrap Icons 1.9.1 -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.9.1/font/bootstrap-icons.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/src/main/resources/static/css/khach_hang_acc.css"> <!-- Giữ lại CSS cho khach_hang_acc -->
-    <link th:href="@{/css/admin/khach_hang_acc.css}" rel="stylesheet">
+    <!-- Custom CSS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="../../static/css/khach_hang_acc.css"> <!-- Giữ lại CSS cho khach_hang_acc -->
+    <link href="../../static/css/admin/khach_hang_acc.css" rel="stylesheet">
 </head>
 
-
 <body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container">
-        <!-- Header Section -->
-        <nav class="navbar navbar-expand-lg navbar-custom">
-            <div class="container">
-                <!-- Left section -->
-                <div class="navbar-nav">
-                    <a class="nav-item nav-link" href="#">Sản Phẩm</a>
-                    <a class="nav-item nav-link" href="#">Thương Hiệu</a>
-                    <a class="nav-item nav-link" href="#">Khuyến Mãi</a>
-                    <a class="nav-item nav-link" href="#">Tin Tức</a>
-                </div>
-
-                <!-- Right section with buttons -->
-                <div class="ml-auto d-flex align-items-center">
-                    <!-- Hidden Search Input Field -->
-                    <input type="text" id="searchInput" class="form-control search-input" placeholder="Tìm kiếm...">
-
-                    <!-- Search Button -->
-                    <button class="btn btn-outline-light" type="button" onclick="handleSearch()">
-                        <i class="bi bi-search"></i>
-                    </button>
-
-                    <!-- Account Button Link -->
-                    <a class="btn btn-outline-light" href="/src/main/webapp/views/customer/khach_hang_acc.html">
-                        <i class="bi bi-person-circle"></i> 
-                    </a>
-
-                    <!-- Cart Button - Links to gio_hang.html -->
-                    <a class="btn btn-outline-light" href="/src/main/webapp/views/GioHang/gio_hang.html">
-                        <i class="bi bi-cart4"></i> 
-                    </a>
-                </div>
+        <a class="navbar-brand" href="/trang-chu/hien-thi">
+            <img src="/images/logo.png" width="50" height="50" alt="Logo">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/san-pham/hien-thi">Sản Phẩm</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/thuong-hieu/hien-thi">Thương Hiệu</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/khuyen-mai/hien-thi">Khuyến Mãi</a>
+                </li>
+            </ul>
+            <div class="d-flex">
+                <a href="#" class="me-3"><i class="fas fa-search"></i></a>
+                <a href="#" class="me-3"><i class="fas fa-user"></i></a>
+                <a href="#"><i class="fas fa-shopping-cart"></i></a>
             </div>
-        </nav>
-    
+        </div>
+    </div>
+</nav>
+
+<!-- Nội dung trang -->
+<div class="container">
+    <!-- Header Section -->
 
     <div class="form-container">
         <div class="account-section">
             <div class="account-border">
-                <button class="btn btn-secondary w-100" type="button" data-toggle="collapse" data-target="#accountDetails" aria-expanded="true" aria-controls="accountDetails">
+                <button class="btn btn-secondary w-100" type="button" data-bs-toggle="collapse" data-bs-target="#accountDetails" aria-expanded="true" aria-controls="accountDetails">
                     Tài Khoản Của Tôi
                 </button>
                 <div class="collapse show" id="accountDetails">
@@ -71,7 +76,7 @@
             </div>
 
             <div class="account-border">
-                <button class="btn btn-secondary w-100" type="button" data-toggle="collapse" data-target="#ordersForm" aria-expanded="false" aria-controls="ordersForm">
+                <button class="btn btn-secondary w-100" type="button" data-bs-toggle="collapse" data-bs-target="#ordersForm" aria-expanded="false" aria-controls="ordersForm">
                     Đơn Mua
                 </button>
                 <div class="collapse" id="ordersForm">
@@ -93,16 +98,16 @@
             <!-- Form Hồ Sơ Của Tôi -->
             <div class="collapse show" id="profileForm">
                 <form>
-                    <div class="form-group">
-                        <label for="customerName">Tên Khách Hàng</label>
+                    <div class="mb-3">
+                        <label for="customerName" class="form-label">Tên Khách Hàng</label>
                         <input type="text" class="form-control" id="customerName" placeholder="Nhập tên khách hàng" disabled>
                     </div>
-                    <div class="form-group">
-                        <label for="phone">Số điện thoại</label>
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Số điện thoại</label>
                         <input type="tel" class="form-control" id="phone" placeholder="Nhập số điện thoại" required>
                     </div>
-                    <div class="form-group">
-                        <label for="email">Email</label>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
                         <input type="email" class="form-control" id="email" placeholder="Nhập địa chỉ email" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Lưu Thông Tin</button>
@@ -112,8 +117,8 @@
             <!-- Form Địa Chỉ Của Tôi -->
             <div class="collapse" id="addressForm">
                 <form>
-                    <div class="form-group">
-                        <label for="address">Địa Chỉ</label>
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Địa Chỉ</label>
                         <input type="text" class="form-control" id="address" placeholder="Nhập địa chỉ" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Cập Nhật Địa Chỉ</button>
@@ -123,12 +128,12 @@
             <!-- Form Đổi Mật Khẩu -->
             <div class="collapse" id="passwordForm">
                 <form>
-                    <div class="form-group">
-                        <label for="currentPassword">Mật Khẩu Hiện Tại</label>
+                    <div class="mb-3">
+                        <label for="currentPassword" class="form-label">Mật Khẩu Hiện Tại</label>
                         <input type="password" class="form-control" id="currentPassword" placeholder="Nhập mật khẩu hiện tại" required>
                     </div>
-                    <div class="form-group">
-                        <label for="newPassword">Mật Khẩu Mới</label>
+                    <div class="mb-3">
+                        <label for="newPassword" class="form-label">Mật Khẩu Mới</label>
                         <input type="password" class="form-control" id="newPassword" placeholder="Nhập mật khẩu mới" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Đổi Mật Khẩu</button>
@@ -140,39 +145,70 @@
                 <h3>Lịch Sử Mua Hàng</h3>
                 <table class="table table-striped history-border">
                     <thead>
-                        <tr>
-                            <th>Mã Đơn</th>
-                            <th>Tên Sản Phẩm</th>
-                            <th>Ngày Mua</th>
-                            <th>Trạng Thái</th>
-                            <th>Hành Động</th>
-                        </tr>
+                    <tr>
+                        <th>Mã Đơn</th>
+                        <th>Tên Sản Phẩm</th>
+                        <th>Ngày Mua</th>
+                        <th>Trạng Thái</th>
+                        <th>Hành Động</th>
+                    </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>12345</td>
-                            <td>Sản Phẩm A</td>
-                            <td>2024-10-01</td>
-                            <td>Đã Giao</td>
-                            <td><button class="btn btn-success btn-repurchase">Mua Lại</button></td>
-                        </tr>
-                        <tr>
-                            <td>67890</td>
-                            <td>Sản Phẩm B</td>
-                            <td>2024-09-20</td>
-                            <td>Đã Giao</td>
-                            <td><button class="btn btn-success btn-repurchase">Mua Lại</button></td>
-                        </tr>
+                    <tr>
+                        <td>12345</td>
+                        <td>Sản Phẩm A</td>
+                        <td>2024-10-01</td>
+                        <td>Đã Giao</td>
+                        <td><button class="btn btn-success btn-repurchase">Mua Lại</button></td>
+                    </tr>
+                    <tr>
+                        <td>67890</td>
+                        <td>Sản Phẩm B</td>
+                        <td>2024-09-20</td>
+                        <td>Đã Giao</td>
+                        <td><button class="btn btn-success btn-repurchase">Mua Lại</button></td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 </div>
-    <!-- Bootstrap JS and jQuery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script th:src="@{/js/admin/khach_hang_acc.js}"></script>
+
+<!-- Footer -->
+<footer class="footer mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <h5>Triple V</h5>
+                <p>Địa chỉ: 123 Đường ABC, Quận X, Thành phố Y</p>
+            </div>
+            <div class="col-md-4">
+                <h5>Liên Hệ</h5>
+                <ul class="list-unstyled">
+                    <li><a href="#"><i class="fab fa-facebook-f me-2"></i>Facebook</a></li>
+                    <li><a href="#"><i class="fab fa-instagram me-2"></i>Instagram</a></li>
+                    <li><a href="#"><i class="fab fa-twitter me-2"></i>Twitter</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h5>Đăng ký nhận tin</h5>
+                <form>
+                    <div class="mb-3">
+                        <input type="email" class="form-control" placeholder="Email của bạn">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Đăng Ký</button>
+                </form>
+            </div>
+        </div>
+        <div class="text-center mt-3">
+            <p>&copy; 2024 Triple V. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+<script src="../../static/js/admin/khach_hang_acc.js"></script>
+<!-- Bootstrap 5 JS Bundle (includes Popper) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

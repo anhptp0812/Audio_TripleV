@@ -1,6 +1,5 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.DonHang;
 import com.example.demo.entity.DonHangChiTiet;
 import com.example.demo.entity.Hang;
 import com.example.demo.entity.HoaDon;
@@ -22,16 +21,34 @@ import com.example.demo.service.DonHangService;
 import com.example.demo.service.HoaDonService;
 import com.example.demo.service.KhachHangService;
 import com.example.demo.service.SanPhamChiTietService;
+//import com.example.demo.service.VnPayService;
+//import com.example.demo.vnPay.VNPayConfig;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+<<<<<<< HEAD
+=======
+import org.springframework.stereotype.Controller;
+>>>>>>> main
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+
+
 import java.util.*;
+<<<<<<< HEAD
+=======
+
+import java.util.Date;
+import java.util.List;
+
+>>>>>>> main
 
 @CrossOrigin(origins = "http://localhost:3000") // Thay đổi URL này theo miền của frontend
 @RestController
 @RequestMapping("/user")
 public class DonHangController {
+//    @Autowired
+//    private VNPayConfig vnpayConfig;
 
     @Autowired
     private DonHangService donHangService;
@@ -69,6 +86,7 @@ public class DonHangController {
     @Autowired
     private HoaDonService hoaDonService;
 
+<<<<<<< HEAD
     @Autowired
     private KhachHangService khachHangService;
 
@@ -78,63 +96,32 @@ public class DonHangController {
 //        return "nhanvien/productProvity";  // Trả về form đơn hàng
 //    }
 
+=======
+//    @Autowired
+//    private VnPayService vnPayService;
+>>>>>>> main
     @GetMapping("/don-hang")
     public String index(Model model) {
-        List<DonHang> list = donHangRepository.findAll();
+        List<HoaDon> list = hoaDonRepository.findAll();
         model.addAttribute("listDH", list);
         return "nhanvien/donhang";
 
     }
 
-
-
-
-    //    @GetMapping("ban-hang/chi-tiet/{id}")
-//    public String donHangChiTiet(@PathVariable Integer id, Model model) {
-//        return "nhanvien/donhang";
-//    }
-
-
-//    @PostMapping( value ="/ban-hang/save-details", consumes = MediaType.APPLICATION_JSON_VALUE)
-//    @ResponseBody
-//    public ResponseEntity<String> saveOrderDetails(@RequestBody OrderRequest orderRequest) {
-//        // Lưu từng sản phẩm vào cơ sở dữ liệu
-//
-//        for (SanPhamChiTiet sanPhamChiTiet : orderRequest.getProducts()) {
-//            DonHangChiTiet donHangChiTiet = new DonHangChiTiet();
-//
-//            // Tìm kiếm SanPhamChiTiet từ cơ sở dữ liệu dựa trên ID
-//            SanPhamChiTiet existingProduct = sanPhamChiTietRepository.findById(sanPhamChiTiet.getId())
-//                    .orElseThrow(() -> new RuntimeException("Product not found"));
-//
-//            donHangChiTiet.setSanPhamChiTiet(existingProduct); // Thiết lập đối tượng SanPhamChiTiet
-//            donHangChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong()); // Số lượng
-//       //     donHangChiTiet.setDonGia(sanPhamChiTiet.getDonGia()); // Giá
-//            donHangChiTiet.setNgayTao(new Date()); // Ngày tạo
-//            donHangChiTiet.setNgayCapNhat(new Date()); // Ngày tạo
-//
-//            // Lưu vào cơ sở dữ liệu
-//            donHangChiTietRepository.save(donHangChiTiet);
-//
-//        }
-//
-//        return ResponseEntity.ok("Order saved successfully");
-//    }
-
-
-
     @PostMapping("/ban-hang/{id}")
     public String saveOrderDetails(@PathVariable Integer id,
                                    @RequestParam("spctIds") List<Integer> spctIds,
                                    @RequestParam("soLuong") List<Integer> quantities,
-                                   Model model) {
+                                   @RequestParam("paymentMethod") String paymentMethod,
+                                   Model model, HttpServletRequest request
+                                   ) {
         HoaDon hoaDon = hoaDonService.findByid(id);
         if (hoaDon == null) {
             model.addAttribute("error", "Đơn hàng không tồn tại!");
             return "error";
         }
 
-        double totalAmount = 0;
+        Double totalAmount = hoaDon.getTongGia();
 
         for (int i = 0; i < spctIds.size(); i++) {
             Integer spctId = spctIds.get(i);
@@ -167,16 +154,28 @@ public class DonHangController {
             totalAmount += lineTotal;
 
             // Lưu chi tiết đơn hàng
-            hoaDonChiTietRepository.save(hoaDonChiTiet);
+
+            // Thiết lập tổng giá cho hóa đơn
+            hoaDon.setTongGia(totalAmount);
+            // Lưu thông tin tổng giá của hóa đơn
+
+            // Chuyển hướng đến trang VNPay để thanh toán
+            if ("vnpay".equals(paymentMethod)) {
+                hoaDonRepository.save(hoaDon);
+                hoaDonChiTietRepository.save(hoaDonChiTiet);
+                return "redirect:/vnpay-hien-thi/" + hoaDon.getId();
+            } else if ("cash".equals(paymentMethod)) {
+                // Xử lý thanh toán bằng tiền mặt
+                hoaDon.setTrangThai("Đã thanh toán");
+                hoaDonRepository.save(hoaDon);
+                hoaDonChiTietRepository.save(hoaDonChiTiet);
+                model.addAttribute("message", "Đơn hàng đã được ghi nhận. Vui lòng thanh toán tại cửa hàng!");
+                return "redirect:/user/ban-hang"; // Chuyển hướng đến trang thông báo đơn hàng thành công
+
+            }
         }
-
-        // Thiết lập và lưu tổng giá cho DonHang
-        hoaDon.setTongGia(totalAmount);
-        hoaDonRepository.save(hoaDon);
-
-        return "redirect:/user/ban-hang";
+        return "error";
     }
-
     @GetMapping("ban-hang/details/{id}")
     @ResponseBody
     public List<DonHangChiTiet> getDonHangDetails(@PathVariable Integer id) {

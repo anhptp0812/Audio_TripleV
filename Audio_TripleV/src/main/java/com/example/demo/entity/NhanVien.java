@@ -44,13 +44,13 @@ public class NhanVien {
     @Column(name = "SoDienThoai")
     private String sdt;
 
-    @Column(name = "VaiTro")
-    private String roll;
+    @Column(name = "role")
+    private String role;
 
-    @Column(name = "TenDangNhap")
-    private String usename;
+    @Column(name = "username")
+    private String username;
 
-    @Column(name = "MatKhau")
+    @Column(name = "password")
     private String password;
 
 }

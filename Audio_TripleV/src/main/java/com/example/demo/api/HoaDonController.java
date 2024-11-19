@@ -1,11 +1,20 @@
 package com.example.demo.api;
 
+<<<<<<< HEAD
 import com.example.demo.entity.DonHang;
 import com.example.demo.entity.HoaDon;
 import com.example.demo.entity.HoaDonChiTiet;
 import com.example.demo.entity.KhachHang;
 import com.example.demo.entity.QuickBuyRequest;
 import com.example.demo.entity.SanPhamChiTiet;
+=======
+import com.example.demo.entity.HoaDon;
+import com.example.demo.entity.HoaDonChiTiet;
+import com.example.demo.repository.DonHangRepository;
+import com.example.demo.repository.DonHangChiTietRepository;
+import com.example.demo.repository.HangRepository;
+import com.example.demo.repository.HoaDonChiTietRepository;
+>>>>>>> main
 import com.example.demo.repository.HoaDonRepository;
 import com.example.demo.repository.SanPhamChiTietRepository;
 import com.example.demo.service.DonHangService;
@@ -17,12 +26,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+<<<<<<< HEAD
 
+=======
+>>>>>>> main
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 

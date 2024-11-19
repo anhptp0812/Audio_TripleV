@@ -27,38 +27,15 @@ public class AuthController {
     @Autowired
     private NhanVienRepo nhanVienRepo;
 
-//    @GetMapping("/login")
-//    public String index() {
-//        return "login/auth";
-//    }
 
-//    @GetMapping("/default")
-//    public String defaultAfterLogin(Authentication authentication) {
-//        if (authentication.getAuthorities().stream().anyMatch(grantedAuthority ->
-//                grantedAuthority.equals("ROLE_USER"))){
-//            return "redirect:/admin/home";
-//        }else {
-//            return "redirect:/user/ban-hang";
-//        }
-//    }
+    @GetMapping("/login")
+    public String form() {
+        return "login/auth";
+    }
 
-//    @GetMapping("/login")
-//    public String form() {
-//        return "login/auth";
-//    }
+    @GetMapping("/home")
+    public String login() {
 
-
-//        public String getUserName(Integer id) {
-//        Optional<NhanVien> user = nhanVienRepo.findById(id);
-//        return user != null ? user.get().getTen() : "Unknown User";
-//    }
-    @GetMapping("admin/home")
-    public String login(Model model, Principal principal) {
-//        session.setAttribute("userId", id);
-//        Integer userId = (Integer) session.getAttribute("userId");
-//        String username = getUserName(userId);
-        String username = principal.getName();
-        model.addAttribute("userName", username);
         return "admin/trang_chu";
     }
 

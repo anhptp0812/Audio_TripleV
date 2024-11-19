@@ -10,18 +10,21 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
             crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!--    <link rel="stylesheet" th:href="@{/css/style.css}">-->
     <!--    <link rel="stylesheet" href="/static/css/styles.css">-->
-    <link th:href="@{/css/admin/nhan_vien.css}" rel="stylesheet">
+    <link href="../../static/css/admin/nhan_vien.css" rel="stylesheet">
 
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
     <title>Document</title>
 </head>
 <body>
-<
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container">
-        <!--        <a class="navbar-brand" href="/trang-chu/hien-thi"><img src="/images/logo.png" width="50" height="50"></a>-->
+        <a class="navbar-brand" href="/trang-chu/hien-thi">
+            <img src="/images/logo.png" width="50" height="50" alt="Logo">
+        </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -46,7 +49,6 @@
         </div>
     </div>
 </nav>
-
 <div class="container-fluid">
     <div class="button-container">
         <button class="button" onclick="addRow()">Thêm</button>
@@ -155,7 +157,7 @@
 <!--        })-->
 <!--        .catch(error => console.error('Error fetching data:', error));-->
 <!--</script>-->
-<script th:src="@{/js/admin/nhan_vien.js}"></script>
+<script src="../../static/js/admin/nhan_vien.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
         crossorigin="anonymous"></script>

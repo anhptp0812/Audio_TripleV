@@ -1,10 +1,49 @@
+body {
+    background: linear-gradient(120deg, #f0f8ff, #e6f7ff);
+    font-family: Arial, sans-serif;
+}
+.navbar {
+    background: linear-gradient(to left, #007bff, #ffffff);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
 
+<<<<<<< HEAD
 /* Sản phẩm */
+=======
+.navbar .nav-link {
+    font-size: 16px;
+    font-weight: bold;
+    color: #555;
+    margin-right: 15px;
+}
+
+.navbar .nav-link:hover {
+    color: #007bff;
+}
+.d-flex a{
+    color: white;
+
+}
+>>>>>>> main
 .product-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 20px;
     margin: 20px 0;
+}
+.container {
+    animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .product-container1 {
@@ -35,10 +74,20 @@
     border-radius: 10px;
     margin-bottom: 10px;
 }
+.product-card img:hover {
+    transform: scale(1.1);
+}
 
+<<<<<<< HEAD
 .product-card p {
     font-size: 16px;
     font-weight: 600;
+=======
+.price-container {
+    font-size: 20px;
+    font-weight: bold;
+    color: #e63946;
+>>>>>>> main
     margin-bottom: 10px;
 }
 
@@ -59,6 +108,7 @@
 }
 
 .cart-icon {
+<<<<<<< HEAD
     position: relative;
 }
 
@@ -97,7 +147,45 @@
     font-size: 14px;
     margin: 5px 0;
     cursor: pointer;
+=======
+    color: #007bff; /* Màu xanh nước biển cho biểu tượng */
+    text-decoration: none; /* Bỏ gạch chân cho liên kết */
+    display: inline-block;
+    align-items: center; /* Căn giữa theo chiều dọc */
+    font-size: 18px;
+    cursor: pointer;
+    position: relative;
+}
+
+.cart-icon i {
+    position: relative;
+}
+
+.cart-icon span {
+    font-size: 16px;
+    color: red;
+    padding: 3px 6px;
+    margin-left: 5px;
+    position: absolute;
+    top: -12px;
+    right: -10px;
+    font-weight: bold;
+    z-index: 10;
+}
+
+
+.add-to-cart, .buy-now {
+    display: block;
+    width: 90%;
+    margin: 10px auto;
+    padding: 10px 0;
+    border-radius: 5px;
+    border:none;
+    font-size: 16px;
+>>>>>>> main
     transition: background-color 0.3s ease;
+    cursor: pointer;
+    text-align: center;
 }
 
 .btn-now {
@@ -125,6 +213,7 @@
     position: fixed;
     bottom: 20px;
     right: 20px;
+<<<<<<< HEAD
     background-color: #28a745;
     color: #fff;
     padding: 15px 20px;
@@ -171,6 +260,44 @@
     color: black;
     text-decoration: none;
     cursor: pointer;
+=======
+    z-index: 1000;
+    display: none;
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    font-size: 14px;
+    border-radius: 5px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+
+.notification .close-notification {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-left: 10px;
+    padding: 0;
+    transition: color 0.3s ease;
+}
+
+.notification .close-notification:hover {
+    color: #ffcccc;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+>>>>>>> main
 }
 
 .footer {
@@ -181,15 +308,27 @@
 
 .footer a {
     color: #bbb;
+    text-decoration: none;
 }
 
 .footer a:hover {
     color: white;
 }
+.footer h5 {
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+.footer p {
+    font-size: 14px;
+}
 
 #video-section {
+    background-color: #f9f9f9;
     padding: 20px;
-    background-color: #f9f9f9; /* Light background to separate from other content */
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
 }
 
 .primary-box {
@@ -199,22 +338,24 @@
 }
 
 #play-list {
-    max-height: 370px; /* Bằng với chiều cao của iframe video */
-    overflow-y: auto; /* Bật thanh cuộn dọc khi danh sách vượt quá chiều cao */
-    padding-right: 10px; /* Khoảng cách cho thanh cuộn */
+    max-height: 370px;
+    overflow-y: auto;
+    padding-right: 10px;
+    overflow-x: hidden;
 }
 
 .secondary-box {
     display: flex;
-    padding: 10px;
-    margin-bottom: 10px;
     background-color: #ffffff;
-    border: 1px solid #e0e0e0;
-    border-radius: 5px;
-    transition: box-shadow 0.3s ease;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+    padding: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .secondary-box:hover {
+    transform: translateY(-5px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
@@ -257,7 +398,19 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+    text-align: center;
+    margin: 20px 0;
+    color: #007bff;
 }
+
+.main-title h2 {
+    font-size: 30px;
+    font-weight: bold;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
 
 .title {
     font-size: 24px;
@@ -336,7 +489,22 @@ h2 {
     font-weight: bold;
     color: #e60000;
 }
-
+.carousel{
+    animation: fadeIn 1s ease-in-out;
+}
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.carousel-control-prev-icon, .carousel-control-next-icon {
+    filter: invert(100%);
+}
 /* Responsive Design */
 @media (max-width: 768px) {
     .product-container {
