@@ -14,5 +14,7 @@ public interface KhachHangRepository extends JpaRepository<KhachHang, Integer> {
     List<KhachHang> findByTenContaining(String name);
     List<KhachHang> findBySdtContaining(String phone);
     List<KhachHang> findByTenContainingAndSdtContaining(String name, String phone);
+    public Optional<KhachHang> findBySdt(String sdt);
+
 }
 
