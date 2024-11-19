@@ -84,7 +84,7 @@
                     <td th:text="${spct.sanPham.ten}"></td>
                     <td th:text="${spct.mauSac.ten}"></td>
                     <td th:text="${spct.hang.ten}"></td>
-                    <td><img th:src="@{/images/tainghe/{imageName}(imageName=${spct.hinhAnh.ten})}" alt="Hình Ảnh" width="50px" height="50px"/></td>
+                    <td><img th:src="@{/static/images/tainghe/{imageName}(imageName=${spct.hinhAnh.ten})}" alt="Hình Ảnh" width="50px" height="50px"/></td>
                     <td th:text="${spct.loaiSanPham.kieuDang}"></td>
                     <td th:text="${spct.trangThai}"></td>
                     <td th:text="${#dates.format(spct.ngayTao, 'yyyy-MM-dd')}"></td>
