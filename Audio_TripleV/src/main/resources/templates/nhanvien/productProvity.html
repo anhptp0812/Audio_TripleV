@@ -140,12 +140,14 @@
                 Hàng
             </button>
             <div class="right-buttons">
-                <button class="new-bill-btn" onclick="showForms()"><i class="bi bi-plus-circle"></i></button>
-                <button class="reload-btn"><i class="bi bi-arrow-repeat"></i></button>
+
+                <a href="/user/ban-hang">
+                    <button class="reload-btn"><i class="bi bi-arrow-repeat"></i></button>
+                </a>
             </div>
         </div>
 
-        <div class="form-san-pham" style="display: none;">
+        <div class="form-san-pham">
             <div>
                 <h3>Tạo đơn hàng</h3>
                 <form id="orderFormDetails" th:object="${donHang}" method="post" th:action="@{/user/ban-hang/save}">
@@ -173,18 +175,43 @@
                     <br>
 
                     <label>Ngày Giao:</label>
-                    <input type="date" th:field="*{ngayGiao}" id="ngayGiaoId" min="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" />
+                    <input type="date" th:field="*{ngayGiao}" id="ngayGiaoId"
+                           min="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"/>
 
                     <button type="submit">Lưu đơn hàng</button>
+
                 </form>
                 <button th:onclick="'viewOrderDetails(' + ${donHang.id} + ')'">Xem chi tiết</button>
+<!--                <input type="hidden" th:field="*{donHang.id}">-->
             </div>
+            <script>
+                document.getElementById("orderFormDetails").onsubmit = function (event) {
+                    event.preventDefault(); // Ngăn form tự động submit
+
+                    const formData = new FormData(this);
+
+                    fetch('/user/ban-hang/save', {
+                        method: 'POST',
+                        body: formData
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.redirectUrl) {
+                                // Chuyển hướng đến trang đích
+                                window.location.href = data.redirectUrl;
+                            } else {
+                                alert("Có lỗi xảy ra khi lưu hóa đơn.");
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                };
+            </script>
 
             <!-- Nút để xem chi tiết đơn hàng theo ID đơn hàng -->
 
 
             <!-- Forms to be displayed after "Xem chi tiết" button click -->
-            <div id="orderDetailsForm" class="form-don-hang" style="display: none;">
+            <div id="orderDetailsForm" class="form-don-hang">
                 <h3>Chi tiết đơn hàng</h3>
                 <form th:object="${donHangChiTiet}" th:action="@{/user/ban-hang/{id}(id=${donHang.id})}" method="post">
                     <table class="table table-striped">
@@ -200,24 +227,38 @@
                         <!-- Các sản phẩm sẽ được thêm vào đây -->
                         </tbody>
                     </table>
-                    <button type="submit">Xác nhận tất cả sản phẩm</button>
+
+                    <div class="totals">
+                        <div class="total-item">
+                            <label>Tổng:</label>
+                            <span id="totalAmount">0</span>
+                        </div>
+                        <div class="total-item">
+                            <label>Nhập số tiền khách đưa:</label>
+                            <input type="text" id="customerPayment" oninput="calculateChange()"
+                                   style="text-align: right" placeholder="Nhập số tiền"/>
+                        </div>
+                        <div class="total-item">
+                            <label>Số tiền trả lại:</label>
+                            <span id="changeAmount">0</span>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="history-btn" onclick="toggleHistoryForm()">Lịch Sử</button>
+                        <button class="pay-btn" type="submit" name="paymentMethod" value="cash">Thanh Toán</button>
+                        <button class="pay-btn" type="submit" name="paymentMethod" value="vnpay">Thanh Toán Chuyển
+                            khoản
+                        </button>
+                        <!--                        <a th:href="@{/vnpay-hien-thi/{id}(id=${donHang.id})}" class="btn btn-primary">Thanh toán VNPay</a>-->
+                    </div>
+
                 </form>
+
+
             </div>
 
-            <div class="totals">
-                <div class="total-item">
-                    <label>Tổng:</label>
-                    <span id="totalAmount">0</span>
-                </div>
-                <div class="total-item">
-                    <label>Nhập số tiền khách đưa:</label>
-                    <input type="text" id="customerPayment" oninput="calculateChange()" style="text-align: right" placeholder="Nhập số tiền"/>
-                </div>
-                <div class="total-item">
-                    <label>Số tiền trả lại:</label>
-                    <span id="changeAmount">0</span>
-                </div>
-            </div>
+
             <!-- Customer Form -->
             <div class="customer-form" id="customerForm" style="display: none;">
                 <div class="form-container">
@@ -249,10 +290,7 @@
                 </div>
             </div>
             <!-- Action Buttons -->
-            <div class="action-buttons">
-                <button class="history-btn" onclick="toggleHistoryForm()">Lịch Sử</button>
-                <button class="pay-btn" onclick="processPayment()">Thanh Toán</button> <!-- Thêm onclick ở đây -->
-            </div>
+
 
             <!-- History Form remains unchanged -->
             <div class="history-form" style="display: none;">
