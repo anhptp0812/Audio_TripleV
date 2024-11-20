@@ -50,11 +50,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authz -> authz  // Thay vì authorizeRequests(), sử dụng authorizeHttpRequests()
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")  // Chỉ ADMIN truy cập
                         .requestMatchers("/user/**").hasAuthority( "USER")
+                        .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(login -> login
                         .loginPage("/login")  // Đảm bảo URL đăng nhập hợp lệ
-                        .defaultSuccessUrl("/home", true)  // Chỉ định trang thành công sau khi đăng nhập
+                        .defaultSuccessUrl("/trang-chu/hien-thi", true)  // Chỉ định trang thành công sau khi đăng nhập
                         .failureUrl("/login?error=true")  // Đường dẫn nếu đăng nhập thất bại
                         .permitAll()  // Cho phép tất cả truy cập vào trang đăng nhập
                 );
