@@ -17,7 +17,7 @@ body {
     align-items: center;
 }
 
-/* Container chính cho form đăng nhập */
+/* Container chính cho form đăng nhập và đăng ký */
 .login-container {
     background-color: rgba(255, 255, 255, 0.95);
     padding: 40px 30px;
@@ -97,19 +97,7 @@ body {
     color: #1e3c72;
 }
 
-/* Checkbox Ghi nhớ đăng nhập */
-.form-remember {
-    display: flex;
-    align-items: center;
-}
-
-.form-checkbox {
-    margin-right: 10px;
-    width: 18px;
-    height: 18px;
-}
-
-/* Nút đăng nhập */
+/* Nút đăng nhập và đăng ký */
 .btn {
     width: 100%;
     padding: 12px 0;
@@ -120,7 +108,6 @@ body {
     transition: background-color 0.3s ease;
 }
 
-/* Nút đăng nhập màu xanh biển */
 .btn-primary {
     background-color: #2a5298;
     color: #fff;
@@ -130,7 +117,7 @@ body {
     background-color: #1e3c72;
 }
 
-/* Liên kết Đăng ký tài khoản */
+/* Liên kết Đăng ký và Đăng nhập */
 .register-link {
     text-align: center;
     color: #555;
@@ -155,17 +142,19 @@ body {
         width: 90%;
         padding: 30px 20px;
     }
-
+    
     .login-title {
         font-size: 24px;
     }
-
+    
     .form-input {
         font-size: 14px;
-    } .btn {
-                                font-size: 16px;
-                            }
-
+    }
+    
+    .btn {
+        font-size: 16px;
+    }
+    
     .logo {
         width: 80px;
         height: 80px;
