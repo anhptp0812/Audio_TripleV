@@ -1,6 +1,5 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.DonHang;
 import com.example.demo.entity.DonHangChiTiet;
 import com.example.demo.entity.Hang;
 import com.example.demo.entity.HoaDon;
@@ -10,7 +9,7 @@ import com.example.demo.entity.MauSac;
 import com.example.demo.entity.SanPham;
 import com.example.demo.entity.SanPhamChiTiet;
 import com.example.demo.repository.DonHangChiTietRepository;
-import com.example.demo.entityCustom.DonHangRepository;
+import com.example.demo.repository.DonHangRepository;
 import com.example.demo.repository.HangRepository;
 import com.example.demo.repository.HoaDonChiTietRepository;
 import com.example.demo.repository.HoaDonRepository;
@@ -20,12 +19,13 @@ import com.example.demo.repository.SanPhamChiTietRepository;
 import com.example.demo.repository.SanPhamRepository;
 import com.example.demo.service.DonHangService;
 import com.example.demo.service.HoaDonService;
+import com.example.demo.service.KhachHangService;
 import com.example.demo.service.SanPhamChiTietService;
 //import com.example.demo.service.VnPayService;
 //import com.example.demo.vnPay.VNPayConfig;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,9 +36,8 @@ import java.util.*;
 import java.util.Date;
 import java.util.List;
 
-
 @CrossOrigin(origins = "http://localhost:3000") // Thay đổi URL này theo miền của frontend
-@Controller
+@RestController
 @RequestMapping("/user")
 public class DonHangController {
 //    @Autowired
@@ -80,8 +79,17 @@ public class DonHangController {
     @Autowired
     private HoaDonService hoaDonService;
 
-//    @Autowired
-//    private VnPayService vnPayService;
+
+    @Autowired
+    private KhachHangService khachHangService;
+
+//    @GetMapping("ban-hang/don-hang/create")
+//    public String createDonHangForm(Model model) {
+//        model.addAttribute("donHang", new DonHang());
+//        return "nhanvien/productProvity";  // Trả về form đơn hàng
+//    }
+
+
     @GetMapping("/don-hang")
     public String index(Model model) {
         List<HoaDon> list = hoaDonRepository.findAll();
@@ -270,6 +278,8 @@ public class DonHangController {
 //        }
 //
 //        return "Process Success";
+
+
 }
 
 

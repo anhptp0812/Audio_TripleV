@@ -1,3 +1,5 @@
+
+
 document.querySelectorAll('#play-list .secondary-box').forEach(item => {
     item.addEventListener('click', function () {
         const videoId = this.querySelector('img').getAttribute('data-src').match(/vi\/(.*?)\//)[1];
@@ -96,3 +98,19 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelector('.product-container1').classList.remove('collapsed'); // Thu gọn sản phẩm
     });
 });
+
+function openModal(product, price) {
+    document.getElementById('product').value = product;
+    document.getElementById('price').value = price;
+    document.getElementById('myModal').style.display = "block";
+}
+
+function closeModal() {
+    document.getElementById('myModal').style.display = "none";
+}
+
+window.onclick = function(event) {
+    if (event.target == document.getElementById('myModal')) {
+        closeModal();
+    }
+}

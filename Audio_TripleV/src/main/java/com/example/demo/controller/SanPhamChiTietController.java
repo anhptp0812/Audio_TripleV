@@ -127,8 +127,6 @@ public ResponseEntity<String> addSanPhamChiTiet(
         return "admin/spct-update"; // Trả về trang cập nhật
     }
 
-
-
     @PutMapping("/update")
     public ResponseEntity<?> updateSanPhamChiTiet(@RequestBody SanPhamChiTiet sanPhamChiTiet) {
         try {
@@ -138,4 +136,5 @@ public ResponseEntity<String> addSanPhamChiTiet(
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Lỗi khi cập nhật sản phẩm chi tiết: " + e.getMessage());
         }
     }
+
 }
