@@ -1,0 +1,324 @@
+<!DOCTYPE html>`
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eCommerce Product Detail</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link th:href="@{/css/customer/san-pham-chi-tiet-khach-hang.css}" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+        <a class="navbar-brand" href="/trang-chu/hien-thi"><img src="/images/logo.png" width="50" height="50" alt="Logo"></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/san-pham/hien-thi">Sản Phẩm</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/thuong-hieu/hien-thi">Thương Hiệu</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/khuyen-mai/hien-thi">Khuyến Mãi</a>
+                </li>
+            </ul>
+            <div class="d-flex">
+                <a href="#" class="me-3"><i class="fas fa-search"></i></a>
+                <a href="#" class="me-3"><i class="fas fa-user"></i></a>
+                <a id="cart-icon" class="cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cart-count" >0</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="container my-5" data-aos="fade-up">
+    <div class="card shadow-sm">
+        <div class="row g-0">
+            <!-- Product Image -->
+            <div class="col-md-6 p-3">
+                <div class="preview-pic tab-content">
+                    <div class="tab-pane active" id="pic-1">
+                        <img th:src="@{/images/tainghe/{imageName}(imageName=${spct.hinhAnh.ten})}" alt="Hình Ảnh" class="img-fluid rounded-start" />
+                    </div>
+                    <!--                        <div class="tab-pane" id="pic-2"><img src="http://placekitten.com/400/252" /></div>-->
+                    <!--                        <div class="tab-pane" id="pic-3"><img src="http://placekitten.com/400/252" /></div>-->
+                    <!--                        <div class="tab-pane" id="pic-4"><img src="http://placekitten.com/400/252" /></div>-->
+                    <!--                        <div class="tab-pane" id="pic-5"><img src="http://placekitten.com/400/252" /></div>-->
+                </div>
+                <!--                    <ul class="preview-thumbnail nav nav-tabs">-->
+                <!--                        <li class="active"><a data-target="#pic-1" data-toggle="tab"><img src="http://placekitten.com/200/126" /></a></li>-->
+                <!--                        <li><a data-target="#pic-2" data-toggle="tab"><img src="http://placekitten.com/200/126" /></a></li>-->
+                <!--                        <li><a data-target="#pic-3" data-toggle="tab"><img src="http://placekitten.com/200/126" /></a></li>-->
+                <!--                        <li><a data-target="#pic-4" data-toggle="tab"><img src="http://placekitten.com/200/126" /></a></li>-->
+                <!--                        <li><a data-target="#pic-5" data-toggle="tab"><img src="http://placekitten.com/200/126" /></a></li>-->
+                <!--                    </ul>-->
+
+            </div>
+            <div class="col-md-6">
+                <div class="card-body">
+                    <h3 class="card-title">Tên sản phẩm: <span th:text="${spct.sanPham.ten}"></span></h3>
+                    <h4 class="text-primary">Giá tiền: <span th:text="${spct.donGia}"></span></h4>
+                    <p class="card-text">Giới thiệu sản phẩm: <span th:text="${spct.gioiThieu}"></span></p>
+                    <h5>Màu sắc: <span th:text="${spct.mauSac.ten}"></span></h5>
+                    <h5>Hãng: <span th:text="${spct.hang.ten}"></span></h5>
+                    <div class="mt-4">
+                        <button class="btn btn-primary me-3 add-to-cart"><i class="fas fa-cart-plus me-1"></i>Thêm vào giỏ hàng</button>
+                        <button class="btn btn-success buy-now"><i class="fas fa-shopping-bag me-1"></i>Mua ngay</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mt-5">
+        <div class="row">
+            <!-- Đặc Điểm Nổi Bật -->
+            <div class="col-md-12 mb-4" data-aos="fade-up">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5>Đặc Điểm Nổi Bật</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><i class="fas fa-check-circle text-success me-2"></i><strong>Thiết kế hiện đại:</strong> Tai nghe Beats Solo 4 (LIKE NEW) mới với thiết kế hiện đại, trọng lượng khoảng 217g.</li>
+                            <li class="list-group-item"><i class="fas fa-check-circle text-success me-2"></i><strong>Đệm tai UltraPlush:</strong> Mang tới cảm giác thoải mái suốt cả ngày dài.</li>
+                            <li class="list-group-item"><i class="fas fa-check-circle text-success me-2"></i><strong>Driver 40mm:</strong> Giúp âm thanh sống động và rõ ràng.</li>
+                            <li class="list-group-item"><i class="fas fa-check-circle text-success me-2"></i><strong>Hỗ trợ Fast Fuel:</strong> Sạc nhanh trong 10 phút để dùng 5 giờ.</li>
+                            <li class="list-group-item"><i class="fas fa-check-circle text-success me-2"></i><strong>Kích thước nhỏ gọn:</strong> 6.8 x 17.7 x 15.8cm. Trọng lượng: 217g.</li>
+                            <li class="list-group-item"><i class="fas fa-check-circle text-success me-2"></i><strong>Chất liệu cao cấp:</strong> Thiết kế bền bỉ với vật liệu cao cấp, đảm bảo sử dụng lâu dài.</li>
+                            <li class="list-group-item"><i class="fas fa-check-circle text-success me-2"></i><strong>Kết nối Bluetooth 5.3:</strong> Cung cấp kết nối ổn định và nhanh chóng.</li>
+                            <li class="list-group-item"><i class="fas fa-check-circle text-success me-2"></i><strong>Khử tiếng ồn hiệu quả:</strong> Tích hợp công nghệ khử tiếng ồn, mang lại trải nghiệm âm nhạc tuyệt vời.</li>
+                            <li class="list-group-item"><i class="fas fa-check-circle text-success me-2"></i><strong>Điều khiển dễ dàng:</strong> Có thể điều khiển âm lượng, bài hát và cuộc gọi trực tiếp từ tai nghe.</li>
+                            <li class="list-group-item"><i class="fas fa-check-circle text-success me-2"></i><strong>Tương thích đa thiết bị:</strong> Tương thích với đa dạng các thiết bị như smartphone, laptop và máy tính bảng.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- Thông Số Kỹ Thuật -->
+            <div class="col-md-12 mb-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5>Thông số kỹ thuật</h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Giới hạn thông số kỹ thuật hiển thị ban đầu -->
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-md-4"><strong>Kiểu dáng:</strong></div>
+                                    <div class="col-md-8">On-ear</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-md-4"><strong>Định dạng Bluetooth:</strong></div>
+                                    <div class="col-md-8">5.3</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-md-4"><strong>Thời lượng pin:</strong></div>
+                                    <div class="col-md-8">50 giờ</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-md-4"><strong>Kiểu sạc:</strong></div>
+                                    <div class="col-md-8">Type-C</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-md-4"><strong>Kích thước driver:</strong></div>
+                                    <div class="col-md-8">40mm</div>
+                                </div>
+                            </li>
+                        </ul>
+
+
+                        <!-- Thông số kỹ thuật chi tiết -->
+                        <div class="collapse mt-3" id="moreSpecs">
+                            <hr>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-md-4"><strong>Chống ồn:</strong></div>
+                                        <div class="col-md-8">Active Noise Cancellation</div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-md-4"><strong>Khả năng kết nối:</strong></div>
+                                        <div class="col-md-8">Kết nối đa điểm, hỗ trợ Bluetooth 5.3</div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-md-4"><strong>Tương thích:</strong></div>
+                                        <div class="col-md-8">iOS, Android, Windows, macOS</div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-md-4"><strong>Độ nhạy âm thanh:</strong></div>
+                                        <div class="col-md-8">85 dB</div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-md-4"><strong>Loại tai nghe:</strong></div>
+                                        <div class="col-md-8">Over-ear với đệm tai cao cấp</div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Nút xem thêm thông số kỹ thuật -->
+                        <button class="btn btn-outline-primary w-100 mt-3 toggle-specs" type="button">
+                            <i class="fas fa-chevron-down me-2"></i>Xem cấu hình chi tiết
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Sản phẩm tương tự -->
+    <div class="container mt-5" data-aos="fade-up">
+        <h4 class="text-primary fw-bold mb-4">Sản phẩm tương tự</h4>
+        <div class="row g-4">
+            <!-- Sản phẩm 1 -->
+            <div class="col-md-2 col-sm-4" data-aos="zoom-in" data-aos-delay="400">
+                <div class="card h-100 product-card">
+                    <img src="/images/sample1.jpg" class="card-img-top product-image" alt="Tai nghe Sony WF-C700N">
+                    <div class="card-body text-center">
+                        <h5 class="card-title text-truncate">Sony WF-C700N</h5>
+                        <p class="text-danger fw-bold">0 đ</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Sản phẩm 2 -->
+            <div class="col-md-2 col-sm-4" data-aos="zoom-in" data-aos-delay="500">
+                <div class="card h-100 product-card">
+                    <img src="/images/sample2.jpg" class="card-img-top product-image" alt="Tai nghe Sony WF-1000XM5">
+                    <div class="card-body text-center">
+                        <h5 class="card-title text-truncate">Tai nghe Sony WF-1000XM5</h5>
+                        <p class="text-danger fw-bold">4.290.000 đ</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Sản phẩm 3 -->
+            <div class="col-md-2 col-sm-4" data-aos="zoom-in" data-aos-delay="600">
+                <div class="card h-100 product-card">
+                    <img src="/images/sample3.jpg" class="card-img-top product-image" alt="Tai nghe Bose QuietComfort">
+                    <div class="card-body text-center">
+                        <h5 class="card-title text-truncate">Tai nghe Bose QuietComfort</h5>
+                        <p class="text-danger fw-bold">4.500.000 đ</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Sản phẩm 4 -->
+            <div class="col-md-2 col-sm-4" data-aos="zoom-in" data-aos-delay="700">
+                <div class="card h-100 product-card">
+                    <img src="/images/sample4.jpg" class="card-img-top product-image" alt="Tai nghe Sony WH-1000XM5">
+                    <div class="card-body text-center">
+                        <h5 class="card-title text-truncate">Tai nghe Sony WH-1000XM5</h5>
+                        <p class="text-danger fw-bold">4.999.000 đ</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Sản phẩm 5 -->
+            <div class="col-md-2 col-sm-4" data-aos="zoom-in" data-aos-delay="800">
+                <div class="card h-100 product-card">
+                    <img src="/images/sample5.jpg" class="card-img-top product-image" alt="Tai nghe Sony ULT WEAR">
+                    <div class="card-body text-center">
+                        <h5 class="card-title text-truncate">Tai nghe Sony ULT WEAR</h5>
+                        <p class="text-danger fw-bold">3.499.000 đ</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Sản phẩm 6 -->
+            <div class="col-md-2 col-sm-4" data-aos="zoom-in" data-aos-delay="900">
+                <div class="card h-100 product-card">
+                    <img src="/images/sample6.jpg" class="card-img-top product-image" alt="Tai nghe Apple AirPods">
+                    <div class="card-body text-center">
+                        <h5 class="card-title text-truncate">Tai nghe Apple AirPods</h5>
+                        <p class="text-danger fw-bold">4.150.000 đ</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Footer -->
+<footer class="bg-light py-4 mt-5">
+    <div class="container text-center">
+        <p>© 2024 Shopping Site. All Rights Reserved.</p>
+    </div>
+</footer>
+
+<!-- JavaScript Libraries -->
+<script th:src="@{/js/customer/san-pham-chi-tiet-khach-hang.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- AOS JS for animations -->
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script>
+    // Initialize AOS
+    AOS.init({
+        duration: 1000,
+        once: true,
+    });
+</script>
+<!-- Custom JavaScript for interactive effects -->
+<script>
+    // Add hover effect on product cards
+    document.querySelectorAll('.product-card').forEach(card => {
+        card.addEventListener('mouseover', () => {
+            card.classList.add('shadow-lg');
+        });
+        card.addEventListener('mouseout', () => {
+            card.classList.remove('shadow-lg');
+        });
+    });
+
+    // Toggle icon and smooth scroll for "Xem cấu hình chi tiết" button
+    const toggleSpecsButton = document.querySelector('.toggle-specs');
+    const moreSpecs = document.getElementById('moreSpecs');
+
+    toggleSpecsButton.addEventListener('click', function() {
+        // Toggle the collapse
+        const bsCollapse = new bootstrap.Collapse(moreSpecs, {
+            toggle: false
+        });
+        if (moreSpecs.classList.contains('show')) {
+            bsCollapse.hide();
+        } else {
+            bsCollapse.show();
+        }
+
+        // Toggle the icon
+        const icon = this.querySelector('i');
+        icon.classList.toggle('fa-chevron-down');
+        icon.classList.toggle('fa-chevron-up');
+
+        // Smooth scroll to the detailed specs
+        setTimeout(() => {
+            moreSpecs.scrollIntoView({ behavior: 'smooth' });
+        }, 300); // Delay to allow collapse animation to start
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,228 @@
+/* san-pham-chi-tiet-khach-hang.css */
+
+/* Reset một số kiểu cơ bản */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Đặt nền cho toàn bộ trang */
+body {
+    background: linear-gradient(120deg, #f0f8ff, #e6f7ff);
+    font-family: Arial, sans-serif;
+}
+
+/* Navbar Styles */
+.navbar {
+    background: linear-gradient(to left, #007bff, #ffffff);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.navbar .nav-link {
+    font-size: 16px;
+    font-weight: bold;
+    color: #555;
+    margin-right: 15px;
+}
+
+.navbar .nav-link.active {
+    color: #007bff;
+}
+
+.navbar .nav-link:hover {
+    color: #007bff;
+}
+
+.navbar .d-flex a {
+    color: #555;
+}
+
+#cart-icon {
+    position: relative;
+}
+
+#cart-count {
+    font-size: 0.8rem;
+}
+
+/* Product Detail Styles */
+.card {
+    border: none;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.card img {
+    height: 300px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.card img:hover {
+    transform: scale(1.05);
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.card-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.card-text {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+.details h5 {
+    font-size: 1.1rem;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.action .btn {
+    font-size: 1rem;
+    padding: 10px 20px;
+    margin-right: 10px;
+}
+
+.action .btn-primary {
+    background-color: #007bff;
+    border: none;
+}
+
+.action .btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.action .btn-success {
+    background-color: #28a745;
+    border: none;
+}
+
+.action .btn-success:hover {
+    background-color: #1e7e34;
+}
+
+/* Highlights and Specifications */
+.card-header {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.card-body ul.list-group {
+    list-style-type: disc;
+    padding-left: 20px;
+}
+
+.card-body ul.list-group li {
+    margin-bottom: 10px;
+    color: #555;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 123, 255, 0.05);
+}
+
+.table th {
+    background-color: #007bff;
+    color: #fff;
+    font-weight: bold;
+    width: 40%;
+}
+
+.table td, .table th {
+    vertical-align: middle;
+}
+
+/* Similar Products */
+.product-card {
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+.product-image {
+    height: 150px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.product-image:hover {
+    transform: scale(1.1);
+}
+
+.card-title {
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 5px 0;
+    color: #333;
+}
+
+.text-truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.text-danger {
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+/* Footer Styles */
+footer {
+    background-color: #f8f9fa;
+    padding: 20px 0;
+    color: #555;
+}
+
+footer p {
+    margin: 0;
+}
+
+/* Additional Styles */
+h4.text-primary {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+}
+
+/* Checkmark Icon Styles */
+.list-group-item i {
+    font-size: 1rem;
+}
+
+/* Collapse Button Styles */
+.btn-outline-primary {
+    border-color: #007bff;
+    color: #007bff;
+    font-weight: bold;
+}
+
+.btn-outline-primary:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .card img {
+        height: 250px;
+    }
+    .details h3, .details h4 {
+        font-size: 1.3rem;
+    }
+    .action .btn {
+        font-size: 0.9rem;
+        padding: 8px 16px;
+    }
+}
