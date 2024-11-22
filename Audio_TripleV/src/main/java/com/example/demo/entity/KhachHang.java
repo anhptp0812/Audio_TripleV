@@ -37,6 +37,9 @@ public class KhachHang {
     @Column(name = "MatKhau")
     private String matKhau;
 
+    @Column(name = "role")
+    private String role;
+
     @Column(name = "isRegitered")
     private Boolean isRegistered;
 

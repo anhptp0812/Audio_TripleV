@@ -47,15 +47,16 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())  // Tắt CSRF (nếu cần)
-                .authorizeHttpRequests(authz -> authz  // Thay vì authorizeRequests(), sử dụng authorizeHttpRequests()
+                .authorizeHttpRequests(authz -> authz
+                        .requestMatchers("/css/**", "/js/**", "/images/**", "/khach-hang/**").permitAll()
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")  // Chỉ ADMIN truy cập
-                        .requestMatchers("/user/**").hasAuthority( "USER")
-                        .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers("/user/**").hasAuthority("USER")
+                        .requestMatchers("/khach-hang/**").hasAuthority("KHACHHANG")
                         .anyRequest().authenticated()
                 )
                 .formLogin(login -> login
                         .loginPage("/login")  // Đảm bảo URL đăng nhập hợp lệ
-                        .defaultSuccessUrl("/trang-chu/hien-thi", true)  // Chỉ định trang thành công sau khi đăng nhập
+                        .defaultSuccessUrl("/user/ban-hang", true)  // Chỉ định trang thành công sau khi đăng nhập
                         .failureUrl("/login?error=true")  // Đường dẫn nếu đăng nhập thất bại
                         .permitAll()  // Cho phép tất cả truy cập vào trang đăng nhập
                 );
