@@ -1,5 +1,6 @@
 package com.example.demo;//package com.example.demo;
 
+import com.example.demo.auth.CustomAuthenticationSuccessHandler;
 import com.example.demo.service.NhanVienService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,6 +43,11 @@ public class SecurityConfig {
                 .passwordEncoder(passwordEncoder);
         return authenticationManagerBuilder.build();  // Trả về AuthenticationManager trực tiếp
     }
+    @Bean
+    public CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler() {
+        return new CustomAuthenticationSuccessHandler();
+    }
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -56,7 +62,7 @@ public class SecurityConfig {
                 )
                 .formLogin(login -> login
                         .loginPage("/login")  // Đảm bảo URL đăng nhập hợp lệ
-                        .defaultSuccessUrl("/user/ban-hang", true)  // Chỉ định trang thành công sau khi đăng nhập
+                        .successHandler(customAuthenticationSuccessHandler()) // Chỉ định trang thành công sau khi đăng nhập
                         .failureUrl("/login?error=true")  // Đường dẫn nếu đăng nhập thất bại
                         .permitAll()  // Cho phép tất cả truy cập vào trang đăng nhập
                 );
