@@ -81,6 +81,7 @@ CREATE TABLE KhachHang (
     Email NVARCHAR(255),
 	TaiKhoan NVARCHAR(255),
     MatKhau NVARCHAR(255),
+	role NVARCHAR(255),
 	isRegitered bit ,
 	NgayDangKy datetime,
 
@@ -95,9 +96,9 @@ CREATE TABLE NhanVien (
 	DiaChi NVARCHAR(255),
 	Email NVARCHAR(255),
     SoDienThoai NVARCHAR(15),
-    VaiTro NVARCHAR(255),
-	TenDangNhap NVARCHAR(255),
-    MatKhau NVARCHAR(255)
+    role NVARCHAR(255),
+	username NVARCHAR(255),
+    password NVARCHAR(255)
 
 );
 CREATE TABLE LichSuHoatDong (
@@ -388,27 +389,27 @@ VALUES
        ('truewireless20.jpg', GETDATE(), GETDATE());
 SELECT * FROM HinhAnh
 -- Thêm dữ liệu vào bảng KhachHang
-INSERT INTO KhachHang (Ten, SDT, DiaChi, Email, TaiKhoan, MatKhau, isRegitered,NgayDangKy) VALUES
-(N'Minh Đức ', '0123456789', N'Ninh Binh', 'minhduc@gmail.com', 'minhduc', 'pass1', 1, GETDATE()),
-(N'Hoàng Nam', '0123456788', N'Đà Nẵng', 'hoangnam@gmail.com', 'hoangnam', 'pass2', 1, GETDATE()),
-(N'Khánh Ly', '0123456787', N'Hà Nội', 'khanhly@gmail.com', 'khanhly', 'pass3', 1, GETDATE()),
-(N'Hoài Thương', '0123456786', N'Thanh Hóa', 'hoaithuong@gmail.com', 'hoaithuong', 'pass4', 1, GETDATE()),
-(N'Vũ Tuấn', '0123456785', N'Hà Nam', 'vutuan@gmail.com', 'vutuan', 'pass5', 1, GETDATE());
-
+INSERT INTO KhachHang (Ten, SDT, DiaChi, Email, TaiKhoan, MatKhau, role, isRegitered,NgayDangKy) VALUES
+(N'Minh Đức ', '0123456789', N'Ninh Binh', 'minhduc@gmail.com', 'minhduc', '$2y$10$7lr1KdaHUXfboqAlpoYMi.veiBkdmUyJEvlrnDmvgVFXRKG6t8IlG','KHACHHANG', 1, GETDATE()),
+(N'Hoàng Nam', '0123456788', N'Đà Nẵng', 'hoangnam@gmail.com', 'hoangnam', '$2y$10$O2VwsuqS829atSXlQoRwRudI/c9KS4Hl4CoBJlaFcjN/gGKEfYHES', 'KHACHHANG', 1, GETDATE()),
+(N'Khánh Ly', '0123456787', N'Hà Nội', 'khanhly@gmail.com', 'khanhly', '$2y$10$H0kmrNQ5nuwPkgLP9pcEBeiUEjjMC8iBFmV0g46rUCqBfD.J3pswS', 'KHACHHANG', 1, GETDATE()),
+(N'Hoài Thương', '0123456786', N'Thanh Hóa', 'hoaithuong@gmail.com', 'hoaithuong', '$2y$10$H0kmrNQ5nuwPkgLP9pcEBeiUEjjMC8iBFmV0g46rUCqBfD.J3pswS', 'KHACHHANG', 1, GETDATE()),
+(N'Vũ Tuấn', '0123456785', N'Hà Nam', 'vutuan@gmail.com', 'vutuan', '$2y$10$nzL3M/i3JVlcso/QSvKcC.w8JF3WkNYwozG.ZDfEupiM7HG4F82s6', 'KHACHHANG', 1, GETDATE());
+ 
 
 select * from KhachHang
 
 -- Thêm dữ liệu vào bảng NhanVien
-INSERT INTO NhanVien (Ten, NgaySinh, GioiTinh, DiaChi, Email, SoDienThoai, VaiTro, TenDangNhap, MatKhau)
+INSERT INTO NhanVien (Ten, NgaySinh, GioiTinh, DiaChi, Email, SoDienThoai, role, username, password)
 VALUES
-(N'Phạm Lưu', '2002-02-21', 'Nam', N'Ninh Bình', 'luupvph39811@fpt.edu.vn', '0987654321', 'ROLE_ADMIN', 'ad1', '$2a$10$hnBoIWef0XPTPpXdYKBWAe2r8E1cftkE1XHOEix8Bq1Ydaw.JJOsq'),
-( N'Minh Thành', '2004-12-02', 'Nam', N'Hà Nội', 'thanhhnmph39897@fpt.edu.vn', '0987654322', 'ROLE_ADMIN', 'ad2', '$2a$10$JwQZXenp4rajR0DxxsNvbOZULt/3Vnc/mnenlp1M6A2jj12uwwMWe'),
-(N'Ngọc Thắng', '2004-10-10', 'Nam', N'Thanh Hóa', 'thangpnph39814@fpt.edu.vn', '0987654323', 'ROLE_ADMIN', 'ad3', '$2a$10$tkLEHOkectv0I/ILvT3ikuMcsIE0cun9dkK9ivY3ondoLqkLzGyqK'),
-( N'Đức Việt', '2004-09-29', 'Nam', N'Thái Bình', 'vietndph39784@fpt.edu.vn', '0987654324', 'ROLE_ADMIN', 'ad4', '$2a$10$KRIxanJvyfYH832CHO2zKeRF0VXmHdHLrFFs7qgpg/8fbDG1daHf6'),
-( N'Phúc Anh', '2004-10-15', 'Nam', N'Hải Phòng', 'anhptpph39488@fpt.edu.vn', '0365217002', 'ROLE_ADMIN', 'ad5', '$2a$10$JdkD3l53jrgGi9kGM02XpOTGSzQYs8faJVUx4.DwLhtaeqKpS28Hi'),
-( N'Minh Long', '2004-10-10', 'Nam', N'Thanh Hóa', 'longpmph39814@fpt.edu.vn', '0987654323', 'ROLE_USER', 'nv1', '$2a$10$ELPY6GTdudeNKPLtfkV0B.4OtIdIcJ7D/zl7KHmV0Ft6OYPQ6euDe'),
-( N'Hà Trang', '2004-09-29', N'Nữ', N'Thái Bình', 'trangthph39784@fpt.edu.vn', '0987654324', 'ROLE_USER', 'nv2', '$2a$10$p7210JkDlJ9fIFlVlFSedOgEfgA9ACjZiS6ldtFs2bV8R7y4Fbgoe'),
-( N'Vũ Mai', '2004-10-15', N'Nữ', N'Hải Phòng', 'maivtph39488@fpt.edu.vn', '0365217002', 'ROLE_USER', 'nv3', '$2a$10$KTu12pDQwkjyaRwkEMltHOZfGeARdQOzz5qgLQl8UH4kPgGqzN87q');
+(N'Phạm Lưu', '2002-02-21', 'Nam', N'Ninh Bình', 'luupvph39811@fpt.edu.vn', '0987654321', 'ADMIN', 'ad1', '$2a$10$hnBoIWef0XPTPpXdYKBWAe2r8E1cftkE1XHOEix8Bq1Ydaw.JJOsq'),
+( N'Minh Thành', '2004-12-02', 'Nam', N'Hà Nội', 'thanhhnmph39897@fpt.edu.vn', '0987654322', 'ADMIN', 'ad2', '$2a$10$JwQZXenp4rajR0DxxsNvbOZULt/3Vnc/mnenlp1M6A2jj12uwwMWe'),
+(N'Ngọc Thắng', '2004-10-10', 'Nam', N'Thanh Hóa', 'thangpnph39814@fpt.edu.vn', '0987654323', 'ADMIN', 'ad3', '$2a$10$tkLEHOkectv0I/ILvT3ikuMcsIE0cun9dkK9ivY3ondoLqkLzGyqK'),
+( N'Đức Việt', '2004-09-29', 'Nam', N'Thái Bình', 'vietndph39784@fpt.edu.vn', '0987654324', 'ADMIN', 'ad4', '$2a$10$KRIxanJvyfYH832CHO2zKeRF0VXmHdHLrFFs7qgpg/8fbDG1daHf6'),
+( N'Phúc Anh', '2004-10-15', 'Nam', N'Hải Phòng', 'anhptpph39488@fpt.edu.vn', '0365217002', 'ADMIN', 'ad5', '$2a$10$JdkD3l53jrgGi9kGM02XpOTGSzQYs8faJVUx4.DwLhtaeqKpS28Hi'),
+( N'Minh Long', '2004-10-10', 'Nam', N'Thanh Hóa', 'longpmph39814@fpt.edu.vn', '0987654323', 'USER', 'nv1', '$2a$10$ELPY6GTdudeNKPLtfkV0B.4OtIdIcJ7D/zl7KHmV0Ft6OYPQ6euDe'),
+( N'Hà Trang', '2004-09-29', N'Nữ', N'Thái Bình', 'trangthph39784@fpt.edu.vn', '0987654324', 'USER', 'nv2', '$2a$10$p7210JkDlJ9fIFlVlFSedOgEfgA9ACjZiS6ldtFs2bV8R7y4Fbgoe'),
+( N'Vũ Mai', '2004-10-15', N'Nữ', N'Hải Phòng', 'maivtph39488@fpt.edu.vn', '0365217002', 'USER', 'nv3', '$2a$10$KTu12pDQwkjyaRwkEMltHOZfGeARdQOzz5qgLQl8UH4kPgGqzN87q');
 
 --select * from NhanVien
 	--SELECT * FROM NhanVien WHERE TenDangNhap = 'ad1';
@@ -680,3 +681,4 @@ VALUES
 		select * from SanPhamChiTiet
 		select * from donHang
 		select * from DonHangChiTiet
+		select * from KhachHang
