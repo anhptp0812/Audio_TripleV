@@ -42,3 +42,5 @@
     moreSpecs.scrollIntoView({ behavior: 'smooth' });
 }, 300); // Delay to allow collapse animation to start
 });
+
+

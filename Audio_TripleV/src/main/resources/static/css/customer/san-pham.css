@@ -409,3 +409,6 @@ footer {
     font-weight: bold;
     z-index: 10;
 }
+.no-underline {
+    text-decoration: none;
+}

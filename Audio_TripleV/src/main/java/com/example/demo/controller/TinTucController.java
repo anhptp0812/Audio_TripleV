@@ -46,4 +46,6 @@ public class TinTucController {
         model.addAttribute("spct", sanPhamChiTietService.findById(id));
         return "customer/san-pham-chi-tiet-khach-hang";
     }
+
+
 }
