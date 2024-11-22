@@ -51,7 +51,7 @@ public class SecurityConfig {
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/khach-hang/**").permitAll()
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")  // Chỉ ADMIN truy cập
                         .requestMatchers("/user/**").hasAuthority("USER")
-                        .requestMatchers("/khach-hang/**").hasAuthority("KHACHHANG")
+                       // .requestMatchers("/khach-hang/**").hasAuthority("KHACHHANG")
                         .anyRequest().authenticated()
                 )
                 .formLogin(login -> login
