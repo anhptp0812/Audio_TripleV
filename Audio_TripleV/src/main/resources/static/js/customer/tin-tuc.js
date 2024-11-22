@@ -114,3 +114,7 @@ window.onclick = function(event) {
         closeModal();
     }
 }
+function showProductDetails(productId) {
+    // Chuyển hướng đến trang chi tiết sản phẩm
+    window.location.href = '/san-pham/hien-thi/' + productId;
+}

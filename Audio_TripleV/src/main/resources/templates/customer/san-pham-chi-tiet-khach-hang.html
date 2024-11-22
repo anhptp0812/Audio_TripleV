@@ -66,13 +66,14 @@
             </div>
             <div class="col-md-6">
                 <div class="card-body">
-                    <h3 class="card-title">Tên sản phẩm: <span th:text="${spct.sanPham.ten}"></span></h3>
-                    <h4 class="text-primary">Giá tiền: <span th:text="${spct.donGia}"></span></h4>
+                    <h2 class="card-title">Tên sản phẩm: <span th:text="${spct.sanPham.ten}"></span></h2>
+                    <h4 class="text-primary">Giá tiền: <span th:text="${spct.donGia}  + 'đ'"></span></h4>
 <!--                    <p class="card-text">Giới thiệu sản phẩm: <span th:text="${spct.gioiThieu}"></span></p>-->
                     <h5>Màu sắc: <span th:text="${spct.mauSac.ten}"></span></h5>
                     <h5>Hãng: <span th:text="${spct.hang.ten}"></span></h5>
+                    <h5>Trạng thái : <span th:text="${spct.trangThai}"></span></h5>
                     <div class="mt-4">
-                        <button class="btn btn-primary me-3 add-to-cart"><i class="fas fa-cart-plus me-1"></i>Thêm vào giỏ hàng</button>
+                        <button class="btn btn-primary me-3 add-to-cart" ><i class="fas fa-cart-plus me-1"></i>Thêm vào giỏ hàng</button>
                         <button class="btn btn-success buy-now"><i class="fas fa-shopping-bag me-1"></i>Mua ngay</button>
                     </div>
                 </div>
