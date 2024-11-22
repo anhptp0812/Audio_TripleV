@@ -19,8 +19,12 @@ public class SanPhamController {
     @Autowired
     private SanPhamChiTietService sanPhamChiTietService;
 
+    @Autowired
+    SanPhamRepository sanPhamRepository;
+
     @GetMapping("/san-pham/hien-thi")
     public String getSanPhamChiTiet(Model model) {
+
         List<SanPhamChiTiet> sanPhamChiTietList = sanPhamChiTietService.getAllSanPhamChiTiet();
         model.addAttribute("sanPhamChiTietList", sanPhamChiTietList);
         return "customer/san-pham";
@@ -31,9 +35,6 @@ public class SanPhamController {
         model.addAttribute("sanPhamChiTietList", sanPhamChiTietList);
         return "customer/san-pham"; // Trả về tên template HTML của bạn
     }
-
-    @Autowired
-    SanPhamRepository sanPhamRepository;
 
 //    @GetMapping("san-pham/hien-thi")
 //    public String hienThi(Model model) {
