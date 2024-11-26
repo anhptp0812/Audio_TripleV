@@ -181,7 +181,7 @@
                     <button type="submit">Lưu đơn hàng</button>
                 </form>
                 <button th:onclick="'viewOrderDetails(' + ${donHang.id} + ')'">Xem chi tiết</button>
-                <input type="hidden" th:field="*{donHang.id}">
+<!--                <input type="hidden" th:field="*{donHang.id}">-->
             </div>
             <script>
                 document.getElementById("orderFormDetails").onsubmit = function (event) {
@@ -261,14 +261,19 @@
             <!-- Customer Form -->
             <div class="customer-form" id="customerForm" style="display: none;">
                 <div class="form-container">
-                    <button class="close-btn" onclick="closeCustomerForm()">✖</button> <!-- Close button -->
-                    <label>Nhập tên:</label>
-                    <input type="text" placeholder="Nhập tên" class="form-control" id="customerName">
-                    <label>Nhập SĐT:</label>
-                    <input type="text" placeholder="Nhập SĐT" class="form-control" id="customerPhone">
-                    <button class="btn btn-primary" onclick="searchCustomer()">
-                        <i class="bi bi-search"></i> Tìm kiếm
-                    </button>
+                    <form>
+                        <button class="close-btn" onclick="closeCustomerForm()">✖</button> <!-- Close button -->
+                        <label>Nhập tên:</label>
+                        <input type="text" placeholder="Nhập tên" class="form-control" id="customerName">
+                        <label>Nhập SĐT:</label>
+                        <input type="text" placeholder="Nhập SĐT" class="form-control" id="customerPhone">
+                        <button class="btn btn-primary" onclick="searchCustomer()" type="button">
+                            <i class="bi bi-search"></i> Tìm kiếm
+                        </button>
+                        <button class="btn btn-primary" onclick="addCustomer(event)" type="submit">
+                            <i class="bi bi-search"></i> Thêm
+                        </button>
+                    </form>
                     <table class="table mt-3">
                         <thead>
                         <tr>
