@@ -1,15 +1,6 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,8 +21,11 @@ public class GioHang {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "ID_Khach_Hang")
+    @JoinColumn(name = "ID_Khach_Hang", nullable = false)
     private KhachHang khachHang;
+
+    @Column(name = "TongGia")
+    private Double tongGia = 0.0;
 
     @Column(name = "NgayThem")
     private Date ngayThem;
@@ -39,20 +33,6 @@ public class GioHang {
     @Column(name = "TrangThai")
     private String trangThai;
 
-    // Quan hệ với GioHangChiTiet
-    @OneToMany(mappedBy = "gioHang", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "gioHang", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<GioHangChiTiet> gioHangChiTietList;
-
-    // Phương thức để thêm sản phẩm vào giỏ hàng
-    public void themSanPham(GioHangChiTiet chiTiet) {
-        gioHangChiTietList.add(chiTiet);
-        chiTiet.setGioHang(this); // Thiết lập liên kết hai chiều
-    }
-
-    // Phương thức để tính tổng giá trị giỏ hàng
-    public Double tinhTongGia() {
-        return gioHangChiTietList.stream()
-                .mapToDouble(GioHangChiTiet::tinhTongGia)
-                .sum();
-    }
 }

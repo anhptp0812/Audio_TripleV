@@ -11,7 +11,8 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
-        <a class="navbar-brand" href="/khach-hang/trang-chu/hien-thi"><img src="/images/logo.png" width="50" height="50" alt="Logo"></a>
+        <a class="navbar-brand" href="/khach-hang/trang-chu/hien-thi"><img src="/images/logo.png" width="50" height="50"
+                                                                           alt="Logo"></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -29,11 +30,12 @@
                 </li>
             </ul>
             <div class="d-flex">
+                <p>Xin chào, <span th:text="${fullName}">Tên người dùng</span>!</p>
                 <a href="#" class="me-3"><i class="fas fa-search"></i></a>
                 <a href="#" class="me-3"><i class="fas fa-user"></i></a>
-                <a id="cart-icon" class="cart-icon">
+                <a id="cart-icon" class="cart-icon" href="/khach-hang/gio-hang/hien-thi">
                     <i class="fas fa-shopping-cart"></i>
-                    <span id="cart-count" >0</span>
+                    <span id="cart-count">0</span>
                 </a>
             </div>
         </div>
@@ -66,35 +68,33 @@
 <div class="container">
     <div class="category">
         <div class="category-buttons">
-            <a href="/san-pham/hien-thi" class="btn btn-outline-dark">Tất Cả</a>
-            <a href="/san-pham/loai/1" class="btn btn-outline-dark">Tai nghe true wireless</a>
-            <a href="/san-pham/loai/2" class="btn btn-outline-dark">Tai nghe dây</a>
-            <a href="/san-pham/loai/3" class="btn btn-outline-dark">Onear</a>
-            <a href="/san-pham/loai/4" class="btn btn-outline-dark">Inear</a>
-            <a href="/san-pham/loai/5" class="btn btn-outline-dark">Headphone</a>
+            <a href="/khach-hang/san-pham/hien-thi" class="btn btn-outline-dark">Tất Cả</a>
+            <a href="/khach-hang/san-pham/loai/1" class="btn btn-outline-dark">Tai nghe true wireless</a>
+            <a href="/khach-hang/san-pham/loai/2" class="btn btn-outline-dark">Tai nghe dây</a>
+            <a href="/khach-hang/san-pham/loai/3" class="btn btn-outline-dark">Onear</a>
+            <a href="/khach-hang/san-pham/loai/4" class="btn btn-outline-dark">Inear</a>
+            <a href="/khach-hang/san-pham/loai/5" class="btn btn-outline-dark">Headphone</a>
         </div>
         <div class="product-container">
             <div th:each="sanPhamChiTiet : ${sanPhamChiTietList}" class="product-card">
-                <a th:href="@{/san-pham/hien-thi/{id}(id=${sanPhamChiTiet.id})}" th:title="${sanPhamChiTiet.sanPham.ten}">
+                <a th:href="@{/san-pham/hien-thi/{id}(id=${sanPhamChiTiet.id})}"
+                   th:title="${sanPhamChiTiet.sanPham.ten}">
                     <img th:src="'/images/tainghe/' + ${sanPhamChiTiet.hinhAnh.ten}"
                          th:alt="${sanPhamChiTiet.sanPham.ten}">
                 </a>
-                <a th:href="@{/san-pham/hien-thi/{id}(id=${sanPhamChiTiet.id})}" th:title="${sanPhamChiTiet.sanPham.ten}" class="no-underline">
-                    <p th:text="${sanPhamChiTiet.sanPham.ten}" th:onclick="showProductDetails(${sanPham.id})"  >Tên sản phẩm</p>
+                <a th:href="@{/san-pham/hien-thi/{id}(id=${sanPhamChiTiet.id})}"
+                   th:title="${sanPhamChiTiet.sanPham.ten}" class="no-underline">
+                    <p th:text="${sanPhamChiTiet.sanPham.ten}" th:onclick="showProductDetails(${sanPhamChiTiet.id})">Tên
+                        sản phẩm</p>
                 </a>
                 <div class="price-container">
-                    <span class="current-price" th:text="${sanPhamChiTiet.donGia} + 'đ'">4,790,000đ</span>
+                    <span class="current-price" th:text="${sanPhamChiTiet.donGia} + 'đ'">0đ</span>
                 </div>
                 <p th:text="'Trạng thái: ' + ${sanPhamChiTiet.trangThai}">Trạng thái: Còn hàng</p>
-                <button class="btn add-to-cart"
-                        th:data-id="${sanPhamChiTiet.id}"
-                        th:data-image="${sanPhamChiTiet.hinhAnh.ten}"
-                        th:data-name="${sanPhamChiTiet.sanPham.ten}"
-                        th:data-price="${sanPhamChiTiet.donGia}"
-                        onclick="addToCart(this)">
-                    Thêm vào giỏ
+                <button class="btn add-to-cart" th:data-sanpham-id="${sanPhamChiTiet.id}"
+                        th:data-soLuong="1">Thêm vào giỏ
                 </button>
-                <button class="btn btn-now" th:data-name="${sanPhamChiTiet.sanPham.ten}" th:data-price="${sanPhamChiTiet.donGia}" onclick="openModal(this.getAttribute('data-name'), this.getAttribute('data-price') + 'đ')">Mua ngay</button>
+                <button class="btn btn-now">Mua ngay</button>
             </div>
         </div>
     </div>

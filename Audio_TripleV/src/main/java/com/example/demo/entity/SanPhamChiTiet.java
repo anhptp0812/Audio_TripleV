@@ -65,4 +65,8 @@ public class SanPhamChiTiet {
     @Column(name = "NgayCapNhat")
     private Date ngayCapNhat;
 
+    public SanPhamChiTiet(Integer id) {
+        this.id = id;
+    }
+
 }

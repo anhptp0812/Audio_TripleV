@@ -45,4 +45,7 @@ public class KhachHang {
 
     @Column(name = "NgayDangKy")
     private Date ngayDangKy;
+
+    @OneToOne(mappedBy = "khachHang", cascade = CascadeType.ALL)
+    private GioHang gioHang;
 }
