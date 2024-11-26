@@ -179,8 +179,9 @@
                            min="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"/>
 
                     <button type="submit">Lưu đơn hàng</button>
+                    <button type="button" th:onclick="'viewOrderDetails(' + ${donHang.id} + ')'">Xem chi tiết</button>
                 </form>
-                <button th:onclick="'viewOrderDetails(' + ${donHang.id} + ')'">Xem chi tiết</button>
+
 <!--                <input type="hidden" th:field="*{donHang.id}">-->
             </div>
             <script>
