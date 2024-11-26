@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Repository
 public interface GioHangChiTietRepository extends JpaRepository<GioHangChiTiet, Integer> {
-    @Query("SELECT SUM(gct.soLuong * sp.donGia) FROM GioHangChiTiet gct JOIN gct.sanPhamChiTiet sp WHERE gct.gioHang.id = :gioHangId")
+    @Query("SELECT SUM(gct.soLuong * gct.sanPhamChiTiet.donGia) FROM GioHangChiTiet gct WHERE gct.gioHang.id = :gioHangId")
     Double calculateTotalPrice(@Param("gioHangId") Integer gioHangId);
 
     Optional<GioHangChiTiet> findByGioHangAndSanPhamChiTiet(GioHang gioHang, SanPhamChiTiet sanPhamChiTiet);

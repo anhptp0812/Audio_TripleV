@@ -35,4 +35,11 @@ public class GioHang {
 
     @OneToMany(mappedBy = "gioHang", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<GioHangChiTiet> gioHangChiTietList;
+
+    // Cập nhật tổng giá của giỏ hàng
+    public void updateTongGia() {
+        this.tongGia = gioHangChiTietList.stream()
+                .mapToDouble(GioHangChiTiet::getTongGia)
+                .sum();
+    }
 }

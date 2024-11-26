@@ -26,6 +26,7 @@ import com.example.demo.service.SanPhamChiTietService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,7 +38,7 @@ import java.util.Date;
 import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:3000") // Thay đổi URL này theo miền của frontend
-@RestController
+@Controller
 @RequestMapping("/user")
 public class DonHangController {
 //    @Autowired

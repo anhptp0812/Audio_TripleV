@@ -54,7 +54,7 @@ CREATE TABLE SanPhamChiTiet  (
 	ID_Hang INT ,
 	ID_HinhAnh INT ,
 	ID_LoaiSanPham  INT ,
-	DonGia decimal,
+	DonGia decimal(18, 2),
 	soLuong int,
 	TrangThai NVARCHAR(255),
 	NgayTao datetime,
@@ -71,7 +71,6 @@ CREATE TABLE SanPhamChiTiet  (
 	References LoaiSanPham (ID) 
 
 );
-select * from SanPhamChiTiet
 
 CREATE TABLE KhachHang (
 
@@ -122,7 +121,7 @@ CREATE TABLE GioHang (
 
 	ID INT PRIMARY KEY identity,
     ID_Khach_Hang INT,
-	TongGia decimal,
+	TongGia decimal(18, 2),
 	NgayThem datetime,
 	TrangThai NVARCHAR(255),
 	foreign key(ID_Khach_Hang)
@@ -146,7 +145,7 @@ CREATE TABLE DonHang (
 
 	ID INT PRIMARY KEY identity,
     ID_Khach_Hang INT ,
-	TongGia decimal,
+	TongGia decimal(18, 2),
 	TrangThai NVARCHAR(255),
 	NgayGiao datetime,
 	NgayTao datetime,
@@ -161,7 +160,7 @@ CREATE TABLE DonHangChiTiet (
 	ID_Don_Hang INT ,
 	ID_SPCT INT,
 	SoLuong INT,	
-	DonGia decimal,
+	DonGia decimal(18, 2),
 	NgayTao datetime,
 	NgayCapNhat datetime,
 	foreign key(ID_Don_Hang)
@@ -176,7 +175,7 @@ CREATE TABLE HoaDon (
 	ID_Nhan_Vien INT,
     ID_Khach_Hang INT ,
 	ID_Don_Hang INT,
-	TongGia decimal,
+	TongGia decimal(18, 2),
 	TrangThai NVARCHAR(255),
 	NgayGiao datetime,
 	NgayTao datetime,
@@ -194,7 +193,7 @@ CREATE TABLE HoaDonChiTiet (
 	ID INT PRIMARY KEY identity,
 	ID_Hoa_Don INT ,
 	ID_Spct INT,
-	DonGia decimal,
+	DonGia decimal(18, 2),
 	SoLuong INT,
 	NgayTao datetime,
 	NgayCapNhat datetime,
@@ -208,7 +207,7 @@ CREATE TABLE KhuyenMai (
 
 	ID INT PRIMARY KEY identity,
 	ten NVARCHAR(255) ,
-	giaTri decimal,
+	giaTri decimal(18, 2),
 	NgayBatDau datetime,
 	NgayKetThuc datetime,
 	NgayTao datetime,
@@ -673,6 +672,7 @@ VALUES
 (82, 8, 32, 74, 1, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()); -- Cleer Arc 3
 
 		select * from SanPham
+		select * from SanPhamChiTiet
 		select * from MauSac
 		select * from Hang
 		select * from HinhAnh

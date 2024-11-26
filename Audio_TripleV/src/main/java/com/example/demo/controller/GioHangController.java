@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,22 +38,28 @@ public class GioHangController {
 
     @GetMapping("/hien-thi")
     public String hienThiGioHang(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        // Lấy thông tin khách hàng từ tài khoản đăng nhập
         KhachHang khachHang = khachHangService.findByTaiKhoan(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("Khách hàng không tồn tại"));
 
+        // Lấy giỏ hàng dựa trên khách hàng, nếu chưa có thì tạo mới
         GioHang gioHang = gioHangService.findByKhachHang(khachHang)
                 .orElseGet(() -> gioHangService.createGioHang(khachHang));
 
-        double totalPrice = gioHang.getGioHangChiTietList().stream()
-                .mapToDouble(item -> item.getSoLuong() * item.getSanPhamChiTiet().getDonGia())
-                .sum();
+        // Tính tổng tiền
+        double totalPrice = 0.0;
+        if (gioHang.getGioHangChiTietList() != null && !gioHang.getGioHangChiTietList().isEmpty()) {
+            totalPrice = gioHang.getGioHangChiTietList().stream()
+                    .mapToDouble(item -> item.getSoLuong() * item.getSanPhamChiTiet().getDonGia())
+                    .sum();
+        }
 
+        // Truyền thông tin giỏ hàng và tổng tiền vào model
         model.addAttribute("gioHang", gioHang);
-        model.addAttribute("totalPrice", totalPrice <= 0 ? totalPrice : 0.0);
+        model.addAttribute("totalPrice", totalPrice);
 
-        return "customer/gio-hang";
+        return "customer/gio-hang"; // Tên file HTML trong thư mục template
     }
-
 
     @PostMapping("/them-san-pham")
     public ResponseEntity<String> themSanPham(@RequestParam Integer sanPhamChiTietId,
@@ -93,5 +100,29 @@ public class GioHangController {
         }
     }
 
+    @GetMapping("/xoa/{sanPhamChiTietId}")
+    public ResponseEntity<?> xoaSanPhamKhoiGioHang(@PathVariable Integer sanPhamChiTietId,
+                                                   @AuthenticationPrincipal UserDetails userDetails) {
+        // Lấy thông tin khách hàng từ userDetails
+        KhachHang khachHang = khachHangService.findByTaiKhoan(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("Khách hàng không tồn tại"));
+
+        // Xóa sản phẩm khỏi giỏ hàng
+        gioHangService.removeSanPham(khachHang, sanPhamChiTietId);
+
+        // Cập nhật tổng giá sau khi xóa sản phẩm
+        GioHang gioHang = gioHangService.findByKhachHang(khachHang)
+                .orElseThrow(() -> new RuntimeException("Giỏ hàng không tồn tại"));
+
+        // Kiểm tra nếu giỏ hàng không còn sản phẩm nào
+        if (gioHang.getGioHangChiTietList().isEmpty()) {
+            gioHang.setTongGia(0.0);
+        } else {
+            gioHangService.updateTongGia(gioHang);
+        }
+
+        // Trả về ResponseEntity với mã trạng thái 200 OK và thông báo
+        return ResponseEntity.ok().body("Sản phẩm đã được xóa khỏi giỏ hàng.");
+    }
 
 }
