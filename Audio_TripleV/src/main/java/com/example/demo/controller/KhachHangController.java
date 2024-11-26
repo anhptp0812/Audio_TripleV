@@ -7,7 +7,10 @@ import com.example.demo.service.KhachHangService;
 import com.example.demo.repository.KhachHangRepository;
  //main
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,5 +43,10 @@ public class KhachHangController {
         return khachHangService.searchByNameAndPhone(name, phone); // Tìm kiếm khách hàng theo tên hoặc số điện thoại
     }
 
+    @PostMapping("/api/khach-hang/save")
+    public ResponseEntity<KhachHang> saveKh(@RequestBody KhachHang khachHang) {
+        KhachHang savedKhachHang = khachHangRepository.save(khachHang);
+        return ResponseEntity.ok(savedKhachHang);
+    }
 
 }

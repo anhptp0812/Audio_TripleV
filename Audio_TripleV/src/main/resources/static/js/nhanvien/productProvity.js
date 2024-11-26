@@ -442,6 +442,60 @@ function searchCustomer() {
         });
 }
 
+function addCustomer(event) {
+    event.preventDefault(); // Ngăn form gửi yêu cầu HTTP mặc định
+
+    const name = document.getElementById('customerName').value.trim();
+    const phone = document.getElementById('customerPhone').value.trim();
+
+    // Kiểm tra đầu vào
+    if (!name || !phone) {
+        alert("Vui lòng nhập đầy đủ thông tin tên và SĐT.");
+        return;
+    }
+
+    // Gửi yêu cầu thêm khách hàng
+    fetch('/api/khach-hang/save', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            ten: name,
+            sdt: phone,
+        }),
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Không thể thêm khách hàng.");
+            }
+            return response.json();
+        })
+        .then(newCustomer => {
+            alert(`Đã thêm khách hàng: ${newCustomer.ten} (${newCustomer.sdt})`);
+
+            // Tự động thêm khách hàng mới vào danh sách
+            const customerList = document.getElementById('customer-list');
+            const newRow = document.createElement('tr');
+            newRow.onclick = () =>
+                selectCustomer(newCustomer.id, newCustomer.ten, newCustomer.sdt);
+            newRow.innerHTML = `
+                <td>${newCustomer.ten}</td>
+                <td>${newCustomer.sdt}</td>
+                <td>Chọn</td>
+            `;
+            customerList.appendChild(newRow);
+
+            // Xóa nội dung trong form
+            document.getElementById('customerName').value = '';
+            document.getElementById('customerPhone').value = '';
+        })
+        .catch(error => {
+            console.error("Error saving customer:", error);
+            alert("Có lỗi xảy ra khi thêm khách hàng.");
+        });
+}
+
 window.onload = function () {
     // Lấy id từ URL
     const urlParams = new URLSearchParams(window.location.search);
