@@ -26,6 +26,7 @@ import com.example.demo.service.SanPhamChiTietService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,7 +38,7 @@ import java.util.Date;
 import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:3000") // Thay đổi URL này theo miền của frontend
-@RestController
+@Controller
 @RequestMapping("/user")
 public class DonHangController {
 //    @Autowired
@@ -144,7 +145,6 @@ public class DonHangController {
             totalAmount += lineTotal;
 
             // Lưu chi tiết đơn hàng
-
             // Thiết lập tổng giá cho hóa đơn
             hoaDon.setTongGia(totalAmount);
             // Lưu thông tin tổng giá của hóa đơn
@@ -166,6 +166,7 @@ public class DonHangController {
         }
         return "error";
     }
+
     @GetMapping("ban-hang/details/{id}")
     @ResponseBody
     public List<DonHangChiTiet> getDonHangDetails(@PathVariable Integer id) {
@@ -231,25 +232,24 @@ public class DonHangController {
     }
 
 
-    @PostMapping("/ban-hang/delete/{dhctId}")
-    public String deleteOrderDetail(@PathVariable Integer dhctId) {
-        Optional<DonHangChiTiet> optionalDonHangChiTiet = donHangChiTietRepository.findById(dhctId);
-
-        if (optionalDonHangChiTiet.isPresent()) {
-            DonHangChiTiet donHangChiTiet = optionalDonHangChiTiet.get();
-            SanPhamChiTiet sanPhamChiTiet = donHangChiTiet.getSanPhamChiTiet();
-
-            // Tăng số lượng lại trong SanPhamChiTiet
-            sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() + donHangChiTiet.getSoLuong());
-            sanPhamChiTietRepository.save(sanPhamChiTiet);
-
-            // Xóa chi tiết đơn hàng
-            donHangChiTietRepository.delete(donHangChiTiet);
-        }
-
-        // Điều hướng lại đến trang chi tiết đơn hàng sau khi xóa
-        return "redirect:/user/ban-hang"; // Hoặc trang bạn muốn quay lại sau khi xóa
-    }
+//    @DeleteMapping("/ban-hang/delete/{dhctId}")
+//    public String deleteOrderDetail(@PathVariable Integer dhctId) {
+//        Optional<DonHangChiTiet> optionalDonHangChiTiet = donHangChiTietRepository.findById(dhctId);
+//
+//        if (optionalDonHangChiTiet.isPresent()) {
+//            DonHangChiTiet donHangChiTiet = optionalDonHangChiTiet.get();
+//            SanPhamChiTiet sanPhamChiTiet = donHangChiTiet.getSanPhamChiTiet();
+//
+//            // Tăng số lượng lại trong SanPhamChiTiet
+//            sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() + donHangChiTiet.getSoLuong());
+//            sanPhamChiTietRepository.save(sanPhamChiTiet);
+//
+//            // Xóa chi tiết đơn hàng
+//            donHangChiTietRepository.delete(donHangChiTiet);
+//        }
+//        // Điều hướng lại đến trang chi tiết đơn hàng sau khi xóa
+//        return "redirect:/user/ban-hang"; // Hoặc trang bạn muốn quay lại sau khi xóa
+//    }
 //    @PostMapping("/process-payment")
 //    public String processPayment(@RequestBody OrderRequest orderRequest) {
 //        // Step 1: Create and save DonHang
