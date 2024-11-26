@@ -1,6 +1,7 @@
 ﻿create database Audio_tripleV_final_V1
 go
 use Audio_tripleV_final_V1
+go
 
 CREATE TABLE SanPham (
 
@@ -120,7 +121,8 @@ CREATE TABLE LichSuHoatDong (
 CREATE TABLE GioHang (
 
 	ID INT PRIMARY KEY identity,
-    ID_Khach_Hang INT ,
+    ID_Khach_Hang INT,
+	TongGia decimal,
 	NgayThem datetime,
 	TrangThai NVARCHAR(255),
 	foreign key(ID_Khach_Hang)
@@ -131,10 +133,9 @@ CREATE TABLE GioHang (
 CREATE TABLE GioHangChiTiet (
 
 	ID INT PRIMARY KEY identity,
-    ID_GioHang INT ,
+    ID_GioHang INT,
 	ID_SPCT INT ,
-	SoLuong INT ,
-	TongGia decimal,
+	SoLuong INT,
 	foreign key(ID_GioHang)
 	References GioHang (ID) ,
 	foreign key(ID_SPCT)
@@ -676,9 +677,11 @@ VALUES
 		select * from Hang
 		select * from HinhAnh
 		select * from LoaiSanPham
-		select * from NhanVien
 		select * from khuyenmai
 		select * from SanPhamChiTiet
 		select * from donHang
 		select * from DonHangChiTiet
+		select * from GioHang
+		select * from GioHangChiTiet
 		select * from KhachHang
+		select * from NhanVien
