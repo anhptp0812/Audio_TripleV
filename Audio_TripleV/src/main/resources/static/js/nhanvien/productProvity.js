@@ -150,52 +150,7 @@ function handleSearch() {
 let isOrderCreated = false; // Biến kiểm tra xem hóa đơn đã được tạo hay chưa
 let viewDetail = false;
 
-function addProductToForm(spctId, productName, quantity, price) {
-    // if (isOrderCreated === false) {
-    //     showForms();
-    // }
-    // if (viewDetail === false) {
-    //     alert("Chưa mở Xem chi tiết");
-    //     return;
-    // }
-    const addedProductsTableBody = document.getElementById('addedProductsTableBody');
 
-    if (!addedProductsTableBody) {
-        console.error('Phần tử tbody không tồn tại!');
-        return;
-    }
-
-    // Kiểm tra xem sản phẩm đã tồn tại trong giỏ chưa
-    let existingProduct = selectedProducts.find(product => product.spctId === spctId);
-
-    if (existingProduct) {
-        // Nếu sản phẩm đã có trong giỏ, tăng số lượng lên
-        existingProduct.quantity += quantity;
-
-        // Cập nhật lại số lượng trong bảng giỏ hàng
-        updateProductQuantityInTable(existingProduct);
-    } else {
-        // Nếu chưa có trong giỏ, thêm mới
-        const newProduct = {spctId, productName, quantity, price};
-        selectedProducts.push(newProduct);
-
-        const newRow = document.createElement('tr');
-        newRow.innerHTML = `
-            <td>
-                <span>${productName || 'Chưa có tên sản phẩm'}</span>
-                <input type="hidden" name="spctIds" value="${spctId}"/>
-            </td>
-            <td><input type="number" name="soLuong" value="${quantity}" min="1" onchange="updateProductQuantity(this)" /></td>
-            <td><input type="number" name="donGia" value="${price}" readonly /></td>
-             <td><button onclick="removeProduct(this)">Xóa</button></td>
-        `;
-        addedProductsTableBody.appendChild(newRow);
-    }
-
-
-    // Cập nhật tổng tiền sau khi thêm sản phẩm
-    updateTotalAmount(); // Cập nhật tổng tiền
-}
 
 
 // Hàm cập nhật số lượng trong bảng khi có sự thay đổi
