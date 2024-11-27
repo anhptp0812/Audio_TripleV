@@ -25,4 +25,6 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet,I
     @Query("SELECT s FROM SanPhamChiTiet s ORDER BY s.ngayTao DESC")
     List<SanPhamChiTiet> findTop4NewestProducts(Pageable pageable);
     List<SanPhamChiTiet> findTop4ByOrderByIdDesc();
+
+//    List<SanPhamChiTiet> findBySanPham_Id(String id);
 }
