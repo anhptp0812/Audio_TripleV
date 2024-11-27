@@ -31,7 +31,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 
-
 import java.util.*;
 
 import java.util.Date;
@@ -103,30 +102,28 @@ public class DonHangController {
                                    @RequestParam("spctIds") List<Integer> spctIds,
                                    @RequestParam("soLuong") List<Integer> quantities,
                                    @RequestParam("paymentMethod") String paymentMethod,
-                                   Model model, HttpServletRequest request
-                                   ) {
+                                   Model model) {
         HoaDon hoaDon = hoaDonService.findByid(id);
         if (hoaDon == null) {
             model.addAttribute("error", "Đơn hàng không tồn tại!");
             return "error";
         }
 
-        Double totalAmount = hoaDon.getTongGia();
+        // Tính tổng giá trị hóa đơn
+        double totalAmount = hoaDon.getTongGia() == null ? 0 : hoaDon.getTongGia();
 
         for (int i = 0; i < spctIds.size(); i++) {
             Integer spctId = spctIds.get(i);
             Integer soLuong = quantities.get(i);
 
+            // Lấy thông tin sản phẩm
             SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietService.findById(spctId);
-            if (sanPhamChiTiet == null) continue;
-
-            // Kiểm tra nếu số lượng tồn kho đủ để bán
-            if (sanPhamChiTiet.getSoLuong() < soLuong) {
-                model.addAttribute("error", "Số lượng không đủ cho sản phẩm " + sanPhamChiTiet.getSanPham().getTen());
+            if (sanPhamChiTiet == null || sanPhamChiTiet.getSoLuong() < soLuong) {
+                model.addAttribute("error", "Sản phẩm " + (sanPhamChiTiet != null ? sanPhamChiTiet.getSanPham().getTen() : "không xác định") + " không đủ số lượng.");
                 return "error";
             }
 
-            // Tạo chi tiết đơn hàng
+            // Tạo HoaDonChiTiet
             HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
             hoaDonChiTiet.setHoaDon(hoaDon);
             hoaDonChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
@@ -135,36 +132,40 @@ public class DonHangController {
             hoaDonChiTiet.setNgayTao(new Date());
             hoaDonChiTiet.setNgayCapNhat(new Date());
 
-            // Trừ số lượng từ SanPhamChiTiet và lưu lại
-            sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - soLuong);
-            sanPhamChiTietRepository.save(sanPhamChiTiet); // Lưu số lượng cập nhật vào CSDL
-
-            // Tính tổng cho đơn hàng
-            double lineTotal = sanPhamChiTiet.getDonGia() * soLuong;
-            totalAmount += lineTotal;
-
             // Lưu chi tiết đơn hàng
-            // Thiết lập tổng giá cho hóa đơn
-            hoaDon.setTongGia(totalAmount);
-            // Lưu thông tin tổng giá của hóa đơn
+            hoaDonChiTietRepository.save(hoaDonChiTiet);
 
-            // Chuyển hướng đến trang VNPay để thanh toán
-            if ("vnpay".equals(paymentMethod)) {
-                hoaDonRepository.save(hoaDon);
-                hoaDonChiTietRepository.save(hoaDonChiTiet);
-                return "redirect:/vnpay-hien-thi/" + hoaDon.getId();
-            } else if ("cash".equals(paymentMethod)) {
-                // Xử lý thanh toán bằng tiền mặt
-                hoaDon.setTrangThai("Đã thanh toán");
-                hoaDonRepository.save(hoaDon);
-                hoaDonChiTietRepository.save(hoaDonChiTiet);
-                model.addAttribute("message", "Đơn hàng đã được ghi nhận. Vui lòng thanh toán tại cửa hàng!");
-                return "redirect:/user/ban-hang"; // Chuyển hướng đến trang thông báo đơn hàng thành công
+            // Trừ số lượng tồn kho
+            sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - soLuong);
+            sanPhamChiTietRepository.save(sanPhamChiTiet);
 
-            }
+            // Tính tổng giá cho hóa đơn
+            totalAmount += sanPhamChiTiet.getDonGia() * soLuong;
         }
-        return "error";
+
+        // Cập nhật tổng giá cho hóa đơn
+        hoaDon.setTongGia(totalAmount);
+
+        // Xử lý trạng thái dựa trên phương thức thanh toán
+        if ("cash".equals(paymentMethod)) {
+            if ("Chờ thanh toán".equals(hoaDon.getTrangThai())) {
+                hoaDon.setTrangThai("Đã thanh toán");
+            }
+        } else if ("xacnhan".equals(paymentMethod)) {
+            hoaDon.setTrangThai("Chờ thanh toán");
+        } else if ("vnpay".equals(paymentMethod)) {
+            hoaDon.setTrangThai("Chờ thanh toán VNPay");
+            hoaDonRepository.save(hoaDon);
+            return "redirect:/vnpay-hien-thi/" + hoaDon.getId();
+        }
+
+        // Lưu cập nhật hóa đơn
+        hoaDonRepository.save(hoaDon);
+
+        return "redirect:/user/ban-hang/" + hoaDon.getId();
     }
+
+
 
     @GetMapping("ban-hang/details/{id}")
     @ResponseBody

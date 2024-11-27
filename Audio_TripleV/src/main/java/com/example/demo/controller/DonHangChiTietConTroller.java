@@ -64,13 +64,12 @@ public class DonHangChiTietConTroller {
     }
 
     @DeleteMapping("/ban-hang/delete/{spctId}")
-    public ResponseEntity<?> deleteOrderDetail(@PathVariable Integer spctId) {
+    public ResponseEntity<?>deleteOrderDetail(@PathVariable Integer spctId) {
         Optional<HoaDonChiTiet> hoaDonChiTietOptional = hoaDonChiTietRepository.findById(spctId);
 
         if (hoaDonChiTietOptional.isPresent()) {
             HoaDonChiTiet hoaDonChiTiet = hoaDonChiTietOptional.get();
             SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
-
             sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() + hoaDonChiTiet.getSoLuong());
             sanPhamChiTietRepository.save(sanPhamChiTiet);
             hoaDonChiTietRepository.delete(hoaDonChiTiet);
