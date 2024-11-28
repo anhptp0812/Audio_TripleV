@@ -22,6 +22,8 @@
                     <p><strong>Màu Sắc:</strong> <span th:text="${spct.mauSac.ten}"></span></p>
                     <p><strong>Hãng:</strong> <span th:text="${spct.hang.ten}"></span></p>
                     <p><strong>Loại Sản Phẩm:</strong> <span th:text="${spct.loaiSanPham.kieuDang}"></span></p>
+                    <p><strong>Đơn giá:</strong> <span th:text="${spct.formattedDonGia}"></span></p>
+                    <p><strong>So lượng:</strong> <span th:text="${spct.soLuong}"></span></p>
                     <p><strong>Trạng Thái:</strong> <span th:text="${spct.trangThai}"></span></p>
                     <p><strong>Ngày Tạo:</strong> <span th:text="${#dates.format(spct.ngayTao, 'yyyy-MM-dd')}"></span></p>
                     <p><strong>Ngày Cập Nhật:</strong> <span th:text="${#dates.format(spct.ngayCapNhat, 'yyyy-MM-dd')}"></span></p>

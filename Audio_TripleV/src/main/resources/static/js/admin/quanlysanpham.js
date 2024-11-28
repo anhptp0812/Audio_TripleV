@@ -1,67 +1,3 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Mã để mở modal tạo mới màu sắc
-    const nutThemMauSac = document.getElementById('nutThemMauSac');
-    nutThemMauSac.style.display = 'inline-block';
-    nutThemMauSac.addEventListener('click', function(event) {
-        event.preventDefault();
-        const createColorModal = new bootstrap.Modal(document.getElementById('createColorModal'));
-        createColorModal.show();
-    });
-
-    // Mã để mở modal chỉnh sửa màu sắc
-    const editButtonsColor = document.getElementById('nutSuaMauSac');
-    editButtonsColor.addEventListener('click', function(event) {
-        event.preventDefault();
-        const editColorModal = new bootstrap.Modal(document.getElementById('editColorModal'));
-        editColorModal.show();
-    });
-
-    // Mở model loai sản phẩm
-    const nutThemLoaiSP = document.getElementById('nutThemLoai');
-    nutThemLoaiSP.style.display = 'inline-block';
-    nutThemLoaiSP.addEventListener('click', function(event) {
-        event.preventDefault();
-        const createColorModal = new bootstrap.Modal(document.getElementById('createCategoryModal'));
-        createColorModal.show();
-    });
-
-    //Mowr model sua loai sp
-    const editButtonsCategory = document.getElementById('nutSuaLoai');
-    editButtonsCategory.addEventListener('click', function(event) {
-        event.preventDefault();
-        const editColorModal = new bootstrap.Modal(document.getElementById('editColorModal'));
-        editColorModal.show();
-    });
-
-    // Mở model loai sản phẩm
-    const nutThemHang = document.getElementById('nutThemHang');
-    nutThemHang.style.display = 'inline-block';
-    nutThemHang.addEventListener('click', function(event) {
-        event.preventDefault();
-        const createColorModal = new bootstrap.Modal(document.getElementById('createBrandModal'));
-        createColorModal.show();
-    });
-
-    //Mowr model sua loai sp
-    const editButtonsBarnd = document.getElementById('nutSuaHang');
-    editButtonsBarnd.addEventListener('click', function(event) {
-        event.preventDefault();
-        const editColorModal = new bootstrap.Modal(document.getElementById('editBrandModal'));
-        editColorModal.show();
-    });
-
-    //Mowr model sua loai sp
-    const editButtonsProduct = document.getElementById('nutSuaSanPham');
-    editButtonsProduct.addEventListener('click', function(event) {
-        event.preventDefault();
-        const editColorModal = new bootstrap.Modal(document.getElementById('editProductModal'));
-        editColorModal.show();
-    });
-
-});
-
-
-
 // Hàm để hiển thị bảng đã chọn và cập nhật trạng thái nút tương ứng
 function showTable(tableId, buttonId, title) {
     hideAllTables();
@@ -72,12 +8,12 @@ function showTable(tableId, buttonId, title) {
 
 // Hàm ẩn tất cả bảng và nút "Thêm"
 function hideAllTables() {
-    const tables = ['productTable', 'colorTable', 'categoryTable', 'brandTable'];
+    const tables = ['productTable', 'colorTable', 'categoryTable', 'brandTable', 'imageTable'];
     tables.forEach(table => {
         document.getElementById(table).style.display = 'none';
     });
 
-    const buttons = ['nutThem', 'nutThemMauSac', 'nutThemLoai', 'nutThemHang'];
+    const buttons = ['nutThem', 'nutThemMauSac', 'nutThemLoai', 'nutThemHang', 'nutThemHinhAnh'];
     buttons.forEach(button => {
         document.getElementById(button).style.display = 'none';
     });
@@ -105,6 +41,10 @@ document.getElementById("btnHang").addEventListener("click", function() {
     showTable('brandTable', 'nutThemHang', "Hãng");
 });
 
+document.getElementById("btnHinhAnh").addEventListener("click", function() {
+    showTable('imageTable', 'nutThemHinhAnh', "Hình ảnh");
+});
+
 // Hàm mở modal chỉnh sửa
 function openEditModal(modalId, data) {
     for (const [key, value] of Object.entries(data)) {
@@ -127,6 +67,10 @@ function openEditBrandModal(brandData) {
 
 function openEditProductModal(productData) {
     openEditModal('editProductModal', productData);
+}
+
+function openEditImageModal(imageData) {
+    openEditModal('editImageModal', imageData);
 }
 
 // Hàm lưu cho các thực thể khác nhau
@@ -176,6 +120,13 @@ function saveProduct() {
     saveEntity('/api/product/save', productData, 'Lưu sản phẩm thành công!', 'editProductModal');
 }
 
+function saveImage() {
+    const imageData = {
+        // Thu thập dữ liệu sản phẩm tại đây
+    };
+    saveEntity('/api/image/save', imageData, 'Lưu hình ảnh thành công!', 'editImageModal');
+}
+
 function handleSearch() {
     const searchValue = document.getElementById('searchInput').value;
     alert('Đang tìm kiếm: ' + searchValue);
@@ -195,5 +146,8 @@ window.onload = function() {
     }
     if (activated === 'hang') {
         document.getElementById("btnHang").click();
+    }
+    if (activated === 'hinhAnh') {
+        document.getElementById("btnHinhAnh").click();
     }
 };

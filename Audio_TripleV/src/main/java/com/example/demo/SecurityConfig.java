@@ -54,7 +54,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())  // Tắt CSRF (nếu cần)
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/css/**", "/js/**", "/images/**", "/khach-hang/**").permitAll()
+                        .requestMatchers("/static/**", "/css/**", "/js/**", "/images/**", "/khach-hang/**").permitAll()
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")  // Chỉ ADMIN truy cập
                         .requestMatchers("/user/**").hasAuthority("USER")
                        // .requestMatchers("/khach-hang/**").hasAuthority("KHACHHANG")
