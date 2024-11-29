@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.entity.DonHang;
 import com.example.demo.entity.DonHangChiTiet;
 
+import com.example.demo.entity.GioHang;
 import com.example.demo.entity.KhachHang;
 import com.example.demo.entity.SanPhamChiTiet;
 
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DonHangService {
@@ -55,5 +57,19 @@ public class DonHangService {
         donHangChiTietRepository.save(chiTiet);
 
         return donHang;
+    }
+
+    public DonHang save(DonHang donHang) {
+        return donHangRepository.save(donHang);
+    }
+
+    // Tìm giỏ hàng của khách hàng
+    public List<DonHang> findByKhachHang(KhachHang khachHang) {
+        List<DonHang> donHangList = donHangRepository.findByKhachHang(khachHang);
+        for (DonHang donHang : donHangList) {
+            // Đảm bảo danh sách chi tiết đơn hàng được tải về
+            donHang.getDonHangChiTietList().size();
+        }
+        return donHangList;
     }
 }

@@ -56,9 +56,6 @@ public class GioHangController {
                     .mapToDouble(item -> item.getSoLuong() * item.getSanPhamChiTiet().getDonGia())
                     .sum();
         }
-        int totalQuantity = gioHang.getGioHangChiTietList().stream()
-                .mapToInt(item -> item.getSoLuong())
-                .sum();
 
         // Truyền thông tin giỏ hàng và tổng tiền vào model
         model.addAttribute("gioHang", gioHang);
