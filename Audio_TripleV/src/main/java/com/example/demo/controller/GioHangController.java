@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 @Controller
@@ -41,6 +43,7 @@ public class GioHangController {
         // Lấy thông tin khách hàng từ tài khoản đăng nhập
         KhachHang khachHang = khachHangService.findByTaiKhoan(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("Khách hàng không tồn tại"));
+        model.addAttribute("fullName", khachHang.getTen());
 
         // Lấy giỏ hàng dựa trên khách hàng, nếu chưa có thì tạo mới
         GioHang gioHang = gioHangService.findByKhachHang(khachHang)
@@ -53,6 +56,9 @@ public class GioHangController {
                     .mapToDouble(item -> item.getSoLuong() * item.getSanPhamChiTiet().getDonGia())
                     .sum();
         }
+        int totalQuantity = gioHang.getGioHangChiTietList().stream()
+                .mapToInt(item -> item.getSoLuong())
+                .sum();
 
         // Truyền thông tin giỏ hàng và tổng tiền vào model
         model.addAttribute("gioHang", gioHang);
@@ -62,15 +68,12 @@ public class GioHangController {
     }
 
     @PostMapping("/them-san-pham")
-    public ResponseEntity<String> themSanPham(@RequestParam Integer sanPhamChiTietId,
-                                              @AuthenticationPrincipal UserDetails userDetails,
-                                              @RequestParam Integer soLuong) {
+    public ResponseEntity<Map<String, Object>> themSanPham(@RequestParam Integer sanPhamChiTietId,
+                                                           @AuthenticationPrincipal UserDetails userDetails,
+                                                           @RequestParam Integer soLuong) {
         if (sanPhamChiTietId == null || soLuong == null || soLuong <= 0) {
-            return ResponseEntity.badRequest().body("ID sản phẩm hoặc số lượng không hợp lệ.");
+            return ResponseEntity.badRequest().body(Collections.singletonMap("message", "ID sản phẩm hoặc số lượng không hợp lệ."));
         }
-
-        System.out.println("sanPhamChiTietId: " + sanPhamChiTietId);  // In ra giá trị để kiểm tra
-        System.out.println("soLuong: " + soLuong);  // In ra giá trị số lượng
 
         // Lấy khách hàng hiện tại từ thông tin đăng nhập
         KhachHang khachHang = khachHangService.findByTaiKhoan(userDetails.getUsername())
@@ -82,19 +85,58 @@ public class GioHangController {
         // Lấy sản phẩm chi tiết từ ID
         SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietService.findById(sanPhamChiTietId);
 
-        // Thêm sản phẩm vào giỏ hàng
-        gioHangService.themSanPhamVaoGio(gioHang, sanPhamChiTiet, soLuong);
+        // Kiểm tra nếu số lượng sản phẩm trong kho không đủ
+        if (sanPhamChiTiet.getSoLuong() == 0) {
+            return ResponseEntity.badRequest().body(Collections.singletonMap("message", "Sản phẩm đã hết hàng."));
+        }
 
-        return ResponseEntity.ok("Sản phẩm đã được thêm vào giỏ hàng!");
+        // Kiểm tra sản phẩm đã có trong giỏ hàng chưa
+        boolean exists = gioHang.getGioHangChiTietList().stream()
+                .anyMatch(item -> item.getSanPhamChiTiet().getId().equals(sanPhamChiTietId));
+
+        if (exists) {
+            // Nếu sản phẩm đã có trong giỏ hàng, kiểm tra xem có đủ số lượng không
+            if (sanPhamChiTiet.getSoLuong() < soLuong) {
+                return ResponseEntity.badRequest().body(Collections.singletonMap("message", "Không đủ số lượng sản phẩm trong kho."));
+            }
+            // Cập nhật số lượng sản phẩm trong giỏ hàng
+            return ResponseEntity.ok(Collections.singletonMap("message", "Sản phẩm đã có trong giỏ hàng!"));
+        } else {
+            // Nếu sản phẩm chưa có trong giỏ hàng, kiểm tra xem số lượng có đủ không
+            if (sanPhamChiTiet.getSoLuong() < soLuong) {
+                return ResponseEntity.badRequest().body(Collections.singletonMap("message", "Không đủ số lượng sản phẩm trong kho."));
+            }
+            // Thêm sản phẩm vào giỏ hàng nếu số lượng đủ
+            gioHangService.themSanPhamVaoGio(gioHang, sanPhamChiTiet, soLuong);
+        }
+
+        // Tính lại số lượng sản phẩm trong giỏ hàng
+        Integer cartCount = gioHang.getGioHangChiTietList().stream()
+                .mapToInt(item -> item.getSoLuong())
+                .sum();
+
+        // Trả về số lượng sản phẩm trong giỏ hàng và thông báo
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Sản phẩm đã được thêm vào giỏ hàng!");
+        response.put("cartCount", cartCount);
+
+        return ResponseEntity.ok(response);
     }
-
 
     @PostMapping("/cap-nhat-so-luong")
     @ResponseBody
     public ResponseEntity<?> capNhatSoLuong(@RequestBody CapNhatSoLuongRequest request) {
         try {
+            // Kiểm tra số lượng tồn kho
+            SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietService.findById(request.getProductId());
+            if (sanPhamChiTiet.getSoLuong() < request.getQuantity()) {
+                return ResponseEntity.badRequest().body(Map.of("success", false, "message", "Không đủ số lượng sản phẩm trong kho."));
+            }
+
+            // Cập nhật số lượng trong giỏ hàng
             gioHangService.updateQuantity(request.getProductId(), request.getQuantity());
             return ResponseEntity.ok(Map.of("success", true));
+
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("success", false, "message", e.getMessage()));
         }

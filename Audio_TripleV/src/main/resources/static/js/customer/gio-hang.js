@@ -1,50 +1,29 @@
-function updateTotalPrice(sanPhamChiTietId, donGia) {
-    // Lấy giá trị của số lượng từ input
-    var soLuong = document.getElementById('soLuong_' + sanPhamChiTietId).value;
-
-    // Tính tổng giá
-    var tongGia = soLuong * donGia;
-
-    // Cập nhật lại phần tử hiển thị tổng giá
-    document.getElementById('tongGia_' + sanPhamChiTietId).textContent = tongGia + ' đ';
-
-    // Cập nhật tổng giá của giỏ hàng nếu cần thiết (gửi thông tin này tới server nếu cần thiết)
-    updateCartTotal(); // Hàm này sẽ tính toán tổng giá cho toàn bộ giỏ hàng và gửi lên server nếu cần
-}
-
-function updateCartTotal() {
-    var totalPrice = 0;
-    var totalElements = document.querySelectorAll('[id^="tongGia_"]');
-    totalElements.forEach(function (element) {
-        totalPrice += parseFloat(element.textContent.replace(' đ', '').trim());
-    });
-
-    // Kiểm tra và cập nhật nếu tổng tiền là 0
-    if (totalPrice === 0) {
-        document.getElementById('gioHangTongGia').textContent = 'Tổng Tiền: 0 đ';
-    } else {
-        document.getElementById('gioHangTongGia').textContent = totalPrice + ' đ';
-    }
-}
-
 // Hàm xóa sản phẩm khỏi giỏ hàng và cập nhật tổng tiền
 function removeItemFromCart(sanPhamChiTietId, soLuong, donGia) {
-    // Gửi yêu cầu xóa sản phẩm khỏi giỏ hàng
-    fetch(`/khach-hang/gio-hang/xoa/${sanPhamChiTietId}`, {
-        method: 'GET',
-    }).then(response => {
-        if (response.ok) {
-            // Sau khi xóa thành công, cập nhật lại tổng giá giỏ hàng
-            return response.text();
-        } else {
-            throw new Error("Xóa sản phẩm thất bại");
-        }
-    }).then(message => {
-        alert(message); // Hiển thị thông báo thành công
-        updateTotalPriceAfterRemove(soLuong, donGia); // Cập nhật tổng giá sau khi xóa
-        window.location.href = '/khach-hang/gio-hang/hien-thi';
-    })
-        .catch(error => console.error('Error:', error));
+    // Hiển thị hộp thoại xác nhận trước khi xóa sản phẩm
+    const confirmation = window.confirm("Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng không?");
+
+    // Nếu người dùng chọn 'OK', thực hiện xóa
+    if (confirmation) {
+        fetch(`/khach-hang/gio-hang/xoa/${sanPhamChiTietId}`, {
+            method: 'GET',
+        }).then(response => {
+            if (response.ok) {
+                // Sau khi xóa thành công, cập nhật lại tổng giá giỏ hàng
+                return response.text();
+            } else {
+                throw new Error("Xóa sản phẩm thất bại");
+            }
+        }).then(message => {
+            alert(message); // Hiển thị thông báo thành công
+            updateTotalPriceAfterRemove(soLuong, donGia); // Cập nhật tổng giá sau khi xóa
+            window.location.href = '/khach-hang/gio-hang/hien-thi';  // Điều hướng lại đến trang giỏ hàng sau khi xóa
+        })
+            .catch(error => console.error('Error:', error));
+    } else {
+        // Nếu người dùng chọn 'Cancel', không làm gì
+        console.log("Xóa sản phẩm đã bị hủy.");
+    }
 }
 
 function updateTotalPriceAfterRemove(soLuong, donGia) {
@@ -63,3 +42,77 @@ function updateTotalPriceAfterRemove(soLuong, donGia) {
     }
 }
 
+function updateQuantity(productId, newQuantity) {
+    // Lấy giá trị đơn giá từ thuộc tính data-price của input
+    const unitPrice = parseFloat(document.querySelector(`#soLuong_${productId}`).getAttribute('data-price'));
+
+    // Kiểm tra số lượng mới có hợp lệ không
+    if (newQuantity < 1 || isNaN(newQuantity)) {
+        alert('Số lượng không hợp lệ.');
+        return;
+    }
+
+    // Kiểm tra đơn giá có hợp lệ không
+    if (isNaN(unitPrice)) {
+        alert('Đơn giá không hợp lệ.');
+        return;
+    }
+
+    // Cập nhật lại tổng giá của sản phẩm
+    const totalPrice = unitPrice * newQuantity;
+    const totalPriceElement = document.querySelector(`#tongGia_${productId}`);
+    totalPriceElement.innerText = totalPrice.toFixed(2) + ' đ';
+
+    // Cập nhật tổng tiền của giỏ hàng
+    updateCartTotal();
+
+    // Gửi yêu cầu AJAX để cập nhật số lượng
+    fetch('/khach-hang/gio-hang/cap-nhat-so-luong', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            productId: productId,
+            quantity: newQuantity
+        })
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Cập nhật tổng tiền của giỏ hàng
+                updateCartTotal();
+            } else {
+                alert(data.message);  // Hiển thị thông báo nếu có lỗi (như hết hàng)
+            }
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+function updateCartTotal() {
+    let total = 0;
+    document.querySelectorAll('span[id^="tongGia_"]').forEach(function (element) {
+        const price = parseFloat(element.innerText.replace(' đ', '').replace(',', ''));
+        if (!isNaN(price)) {
+            total += price;
+        }
+    });
+    document.querySelector('#gioHangTongGia').innerText = 'Tổng Tiền: ' + total.toFixed(2) + ' đ';
+}
+
+document.getElementById('user-icon').addEventListener('click', function (event) {
+    event.preventDefault(); // Ngăn chặn hành động mặc định của liên kết
+
+    const dropdown = document.getElementById('user-dropdown');
+    dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+});
+
+// Ẩn menu khi click bên ngoài
+document.addEventListener('click', function (event) {
+    const userIcon = document.getElementById('user-icon');
+    const dropdown = document.getElementById('user-dropdown');
+
+    if (!userIcon.contains(event.target) && !dropdown.contains(event.target)) {
+        dropdown.style.display = 'none';
+    }
+});

@@ -75,46 +75,48 @@ public class SanPhamChiTietController {
         sanPhamChiTietService.deleteById(id);
         return "redirect:/spct/hien-thi?activated=spct";
     }
+
     @GetMapping("/form-add")
     public String add() {
         return "admin/spct-add";
     }
-@PostMapping(value = "/add", consumes = "multipart/form-data")
-public ResponseEntity<String> addSanPhamChiTiet(
-        @RequestParam("sanPham") Integer sanPhamId,
-        @RequestParam("mauSac") Integer mauSacId,
-        @RequestParam("hang") Integer hangId,
-        @RequestParam("hinhAnh") Integer hinhAnhId,
-        @RequestParam("loaiSanPham") Integer loaiSanPhamId,
-        @RequestParam("trangThai") String trangThai) {
 
-    try {
-        // 1. Lấy các đối tượng liên quan
-        SanPham sanPham = sanPhamRepository.findById(sanPhamId).orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm"));
-        MauSac mauSac = mauSacRepository.findById(mauSacId).orElseThrow(() -> new RuntimeException("Không tìm thấy màu sắc"));
-        Hang hang = hangRepository.findById(hangId).orElseThrow(() -> new RuntimeException("Không tìm thấy hãng"));
-        HinhAnh hinhAnh = hinhAnhRepository.findById(hinhAnhId).orElseThrow(() -> new RuntimeException("Không tìm thấy Hinh Anh"));
-        LoaiSanPham loaiSanPham = loaiSanPhamRepository.findById(loaiSanPhamId).orElseThrow(() -> new RuntimeException("Không tìm thấy loại sản phẩm"));
+    @PostMapping(value = "/add", consumes = "multipart/form-data")
+    public ResponseEntity<String> addSanPhamChiTiet(
+            @RequestParam("sanPham") Integer sanPhamId,
+            @RequestParam("mauSac") Integer mauSacId,
+            @RequestParam("hang") Integer hangId,
+            @RequestParam("hinhAnh") Integer hinhAnhId,
+            @RequestParam("loaiSanPham") Integer loaiSanPhamId,
+            @RequestParam("trangThai") String trangThai) {
 
-        // 3. Tạo đối tượng SanPhamChiTiet
-        SanPhamChiTiet sanPhamChiTiet = new SanPhamChiTiet();
-        sanPhamChiTiet.setSanPham(sanPham);
-        sanPhamChiTiet.setMauSac(mauSac);
-        sanPhamChiTiet.setHang(hang);
-        sanPhamChiTiet.setHinhAnh(hinhAnh); // Tạo đối tượng HinhAnh
-        sanPhamChiTiet.setLoaiSanPham(loaiSanPham);
-        sanPhamChiTiet.setTrangThai(trangThai);
-        sanPhamChiTiet.setNgayTao(new Date());
-        sanPhamChiTiet.setNgayCapNhat(new Date());
+        try {
+            // 1. Lấy các đối tượng liên quan
+            SanPham sanPham = sanPhamRepository.findById(sanPhamId).orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm"));
+            MauSac mauSac = mauSacRepository.findById(mauSacId).orElseThrow(() -> new RuntimeException("Không tìm thấy màu sắc"));
+            Hang hang = hangRepository.findById(hangId).orElseThrow(() -> new RuntimeException("Không tìm thấy hãng"));
+            HinhAnh hinhAnh = hinhAnhRepository.findById(hinhAnhId).orElseThrow(() -> new RuntimeException("Không tìm thấy Hinh Anh"));
+            LoaiSanPham loaiSanPham = loaiSanPhamRepository.findById(loaiSanPhamId).orElseThrow(() -> new RuntimeException("Không tìm thấy loại sản phẩm"));
 
-        // 4. Lưu vào cơ sở dữ liệu
-        sanPhamChiTietService.addSanPhamChiTiet(sanPhamChiTiet);
+            // 3. Tạo đối tượng SanPhamChiTiet
+            SanPhamChiTiet sanPhamChiTiet = new SanPhamChiTiet();
+            sanPhamChiTiet.setSanPham(sanPham);
+            sanPhamChiTiet.setMauSac(mauSac);
+            sanPhamChiTiet.setHang(hang);
+            sanPhamChiTiet.setHinhAnh(hinhAnh); // Tạo đối tượng HinhAnh
+            sanPhamChiTiet.setLoaiSanPham(loaiSanPham);
+            sanPhamChiTiet.setTrangThai(trangThai);
+            sanPhamChiTiet.setNgayTao(new Date());
+            sanPhamChiTiet.setNgayCapNhat(new Date());
 
-        return ResponseEntity.ok("Thêm sản phẩm chi tiết thành công!");
-    } catch (Exception e) {
-        return ResponseEntity.badRequest().body("Có lỗi xảy ra: " + e.getMessage());
+            // 4. Lưu vào cơ sở dữ liệu
+            sanPhamChiTietService.addSanPhamChiTiet(sanPhamChiTiet);
+
+            return ResponseEntity.ok("Thêm sản phẩm chi tiết thành công!");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Có lỗi xảy ra: " + e.getMessage());
+        }
     }
-}
 
     @GetMapping("/form-update/{id}")
     public String update(@PathVariable Integer id, Model model) {

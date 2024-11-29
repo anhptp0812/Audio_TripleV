@@ -75,19 +75,6 @@ public class GioHangService {
         updateTongGia(gioHang);
     }
 
-    // Cập nhật tổng giá trị giỏ hàng
-//    @Transactional
-//    public void updateTongGia(GioHang gioHang) {
-//        // Tính tổng giá từ repository hoặc tính toán trong service
-//        Double tongGia = gioHangChiTietRepository.calculateTotalPrice(gioHang.getId());
-//
-//        // Kiểm tra xem tổng giá đã thay đổi chưa, nếu thay đổi thì cập nhật
-//        if (!tongGia.equals(gioHang.getTongGia())) {
-//            gioHang.setTongGia(tongGia);
-//            gioHangRepository.save(gioHang);
-//        }
-//    }
-
     @Transactional
     public void updateTongGia(GioHang gioHang) {
         // Kiểm tra nếu giỏ hàng không trống
@@ -109,7 +96,7 @@ public class GioHangService {
     }
 
     @Transactional
-    public void updateQuantity(Long productId, int quantity) {
+    public void updateQuantity(Integer productId, int quantity) {
         GioHangChiTiet gioHangChiTiet = gioHangChiTietRepository.findBySanPhamChiTiet_Id(productId)
                 .orElseThrow(() -> new RuntimeException("Sản phẩm không tồn tại trong giỏ hàng"));
 

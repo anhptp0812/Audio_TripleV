@@ -1,4 +1,3 @@
-
 // Hàm để thêm sản phẩm chi tiết
 function addSanPhamChiTiet() {
     const formData = new FormData(document.getElementById('addForm')); // Sử dụng FormData để xử lý file upload

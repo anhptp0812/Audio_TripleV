@@ -20,23 +20,38 @@ body {
 .navbar .nav-link:hover {
     color: #007bff;
 }
-.d-flex a{
+.nav-link:hover {
+    color: #007bff;
+}
+.d-flex>a{
     color: white;
+}
+.dropdown-menu{
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+}
+.dropdown-menu {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    z-index: 1000;
+}
+
+.dropdown-item {
+    display: block;
+    padding: 8px 16px;
+    color: #000;
+    text-decoration: none;
+}
+
+.dropdown-item:hover {
+    background-color: #f1f1f1;
 }
 
 .container {
     animation: fadeIn 1s ease-in-out;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
 }
 
 .product-container {
@@ -44,10 +59,6 @@ body {
     justify-content: space-around;
     flex-wrap: wrap;
 
-}
-
-.nav-link:hover {
-    color: #007bff;
 }
 
 .cart-icon {
@@ -114,9 +125,7 @@ body {
 
 .product-card:hover {
     transform: translateY(-5px);
-
     box-shadow: 0 8px 10px rgba(0, 0, 0, 0.15);
-
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
 
 }
@@ -329,15 +338,6 @@ body {
     color: black;
     text-decoration: none;
     cursor: pointer;
-}
-
-/* Footer */
-footer {
-    background-color: #343a40;
-    color: #fff;
-    padding: 10px 0;
-    text-align: center;
-    margin-top: 20px;
 }
 
 /* Thêm lớp này để thu gọn sản phẩm */

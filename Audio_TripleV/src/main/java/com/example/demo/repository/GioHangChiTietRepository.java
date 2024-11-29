@@ -16,7 +16,7 @@ public interface GioHangChiTietRepository extends JpaRepository<GioHangChiTiet, 
     Double calculateTotalPrice(@Param("gioHangId") Integer gioHangId);
 
     Optional<GioHangChiTiet> findByGioHangAndSanPhamChiTiet(GioHang gioHang, SanPhamChiTiet sanPhamChiTiet);
-    Optional<GioHangChiTiet> findBySanPhamChiTiet_Id(Long productId);
+    Optional<GioHangChiTiet> findBySanPhamChiTiet_Id(Integer productId);
 
 
 }

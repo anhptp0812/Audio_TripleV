@@ -32,13 +32,21 @@
                     <a class="nav-link" href="/khach-hang/khuyen-mai/hien-thi">Khuyến Mãi</a>
                 </li>
             </ul>
-            <div class="d-flex">
+            <div class="d-flex position-relative">
+                <p style="padding-right: 10px">Xin chào, <span th:text="${fullName}">Tên người dùng</span>!</p>
                 <a href="#" class="me-3"><i class="fas fa-search"></i></a>
-                <p>Xin chào, <span th:text="${fullName}">Tên người dùng</span>!</p>
-                <a href="/logout">Đăng xuất</a>
+
+                <a href="#" class="me-3" id="user-icon"><i class="fas fa-user"></i></a>
+                <!-- Dropdown menu -->
+                <div id="user-dropdown" class="dropdown-menu">
+                    <a href="/khach-hang/thong-tin" class="dropdown-item">Thông tin tài khoản</a>
+                    <a href="/khach-hang/don-hang" class="dropdown-item">Đơn hàng của tôi</a>
+                    <a href="/logout" class="dropdown-item">Đăng xuất</a>
+                </div>
+
                 <a id="cart-icon" class="cart-icon" href="/khach-hang/gio-hang/hien-thi">
                     <i class="fas fa-shopping-cart"></i>
-                    <span id="cart-count">0</span>
+                    <span id="cart-count" th:text="${cartCount}">0</span>
                 </a>
             </div>
         </div>
@@ -166,54 +174,50 @@
 <div class="container mt-5">
     <h2>TAI NGHE MỚI NHẤT</h2>
     <div class="product-container">
-        <div class="product-container">
-            <div th:each="sanPhamChiTiet : ${sanPhamChiTietList}" class="product-card">
-                <a th:href="@{/san-pham/hien-thi/{id}(id=${sanPhamChiTiet.id})}"
-                   th:title="${sanPhamChiTiet.sanPham.ten}">
-                    <img th:src="'/images/tainghe/' + ${sanPhamChiTiet.hinhAnh.ten}"
-                         th:alt="${sanPhamChiTiet.sanPham.ten}">
-                </a>
-                <a th:href="@{/san-pham/hien-thi/{id}(id=${sanPhamChiTiet.id})}"
-                   th:title="${sanPhamChiTiet.sanPham.ten}" class="no-underline">
-                    <p th:text="${sanPhamChiTiet.sanPham.ten}" th:onclick="showProductDetails(${sanPhamChiTiet.id})">Tên
-                        sản phẩm</p>
-                </a>
-                <div class="price-container">
-                    <span class="current-price" th:text="${sanPhamChiTiet.donGia} + 'đ'">0đ</span>
-                </div>
-                <p th:text="'Trạng thái: ' + ${sanPhamChiTiet.trangThai}">Trạng thái: Còn hàng</p>
-                <button class="btn add-to-cart" th:data-sanpham-id="${sanPhamChiTiet.id}"
-                        th:data-soLuong="1">Thêm vào giỏ
-                </button>
-                <button class="btn btn-now">Mua ngay</button>
+        <div th:each="sanPhamChiTiet : ${sanPhamChiTietList}" class="product-card">
+            <a th:href="@{/san-pham/hien-thi/{id}(id=${sanPhamChiTiet.id})}"
+               th:title="${sanPhamChiTiet.sanPham.ten}">
+                <img th:src="'/images/tainghe/' + ${sanPhamChiTiet.hinhAnh.ten}"
+                     th:alt="${sanPhamChiTiet.sanPham.ten}">
+            </a>
+            <a th:href="@{/san-pham/hien-thi/{id}(id=${sanPhamChiTiet.id})}"
+               th:title="${sanPhamChiTiet.sanPham.ten}" class="no-underline">
+                <p th:text="${sanPhamChiTiet.sanPham.ten}" th:onclick="showProductDetails(${sanPhamChiTiet.id})">Tên
+                    sản phẩm</p>
+            </a>
+            <div class="price-container">
+                <span class="current-price" th:text="${sanPhamChiTiet.donGia} + 'đ'">0đ</span>
             </div>
+            <p th:text="'Trạng thái: ' + ${sanPhamChiTiet.trangThai}">Trạng thái: Còn hàng</p>
+            <button class="btn add-to-cart" th:data-sanpham-id="${sanPhamChiTiet.id}"
+                    th:data-soLuong="1">Thêm vào giỏ
+            </button>
+            <button class="btn btn-now">Mua ngay</button>
         </div>
     </div>
 </div>
 <div class="container mt-5">
     <h2>SẢN PHẨM ĐƯỢC XEM NHIỀU NHẤT</h2>
     <div class="product-container1">
-        <div class="product-container">
-            <div th:each="sanPhamChiTiet : ${sanPhamChiTietList1}" class="product-card">
-                <a th:href="@{/san-pham/hien-thi/{id}(id=${sanPhamChiTiet.id})}"
-                   th:title="${sanPhamChiTiet.sanPham.ten}">
-                    <img th:src="'/images/tainghe/' + ${sanPhamChiTiet.hinhAnh.ten}"
-                         th:alt="${sanPhamChiTiet.sanPham.ten}">
-                </a>
-                <a th:href="@{/san-pham/hien-thi/{id}(id=${sanPhamChiTiet.id})}"
-                   th:title="${sanPhamChiTiet.sanPham.ten}" class="no-underline">
-                    <p th:text="${sanPhamChiTiet.sanPham.ten}" th:onclick="showProductDetails(${sanPhamChiTiet.id})">Tên
-                        sản phẩm</p>
-                </a>
-                <div class="price-container">
-                    <span class="current-price" th:text="${sanPhamChiTiet.donGia} + 'đ'">0đ</span>
-                </div>
-                <p th:text="'Trạng thái: ' + ${sanPhamChiTiet.trangThai}">Trạng thái: Còn hàng</p>
-                <button class="btn add-to-cart" th:data-sanpham-id="${sanPhamChiTiet.id}"
-                        th:data-soLuong="1">Thêm vào giỏ
-                </button>
-                <button class="btn btn-now">Mua ngay</button>
+        <div th:each="sanPhamChiTiet : ${sanPhamChiTietList1}" class="product-card">
+            <a th:href="@{/san-pham/hien-thi/{id}(id=${sanPhamChiTiet.id})}"
+               th:title="${sanPhamChiTiet.sanPham.ten}">
+                <img th:src="'/images/tainghe/' + ${sanPhamChiTiet.hinhAnh.ten}"
+                     th:alt="${sanPhamChiTiet.sanPham.ten}">
+            </a>
+            <a th:href="@{/san-pham/hien-thi/{id}(id=${sanPhamChiTiet.id})}"
+               th:title="${sanPhamChiTiet.sanPham.ten}" class="no-underline">
+                <p th:text="${sanPhamChiTiet.sanPham.ten}" th:onclick="showProductDetails(${sanPhamChiTiet.id})">Tên
+                    sản phẩm</p>
+            </a>
+            <div class="price-container">
+                <span class="current-price" th:text="${sanPhamChiTiet.donGia} + 'đ'">0đ</span>
             </div>
+            <p th:text="'Trạng thái: ' + ${sanPhamChiTiet.trangThai}">Trạng thái: Còn hàng</p>
+            <button class="btn add-to-cart" th:data-sanpham-id="${sanPhamChiTiet.id}"
+                    th:data-soLuong="1">Thêm vào giỏ
+            </button>
+            <button class="btn btn-now">Mua ngay</button>
         </div>
     </div>
 </div>
