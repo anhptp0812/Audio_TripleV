@@ -17,9 +17,9 @@ document.querySelectorAll('.add-to-cart').forEach(button => {
         })
             .then(response => response.json())  // Đảm bảo nhận dữ liệu dưới dạng JSON
             .then(data => {
+                alert(data.message);  // Hiển thị thông báo
                 // Cập nhật số lượng giỏ hàng trên giao diện mà không cần tải lại trang
                 document.querySelector('#cart-count').textContent = data.cartCount;
-                alert(data.message);  // Hiển thị thông báo
             })
             .catch(error => console.error('Error:', error));
     });
