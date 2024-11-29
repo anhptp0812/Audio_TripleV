@@ -1,0 +1,98 @@
+/* Tổng quan */
+body {
+    background: linear-gradient(120deg, #f0f8ff, #e6f7ff);
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
+
+.navbar {
+    background: linear-gradient(to left, #007bff, #ffffff);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.navbar .nav-link {
+    font-size: 16px;
+    font-weight: bold;
+    color: #555;
+    margin-right: 15px;
+}
+
+.navbar .nav-link:hover {
+    color: #007bff;
+}
+.nav-link:hover {
+    color: #007bff;
+}
+.d-flex>a{
+    color: white;
+}
+.dropdown-menu{
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+}
+.dropdown-menu {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    z-index: 1000;
+}
+
+.dropdown-item {
+    display: block;
+    padding: 8px 16px;
+    color: #000;
+    text-decoration: none;
+}
+
+.dropdown-item:hover {
+    background-color: #f1f1f1;
+}
+
+.container {
+    animation: fadeIn 1s ease-in-out;
+}
+
+.cart-icon {
+    position: relative;
+}
+
+.cart-icon #cart-count {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background-color: #dc3545;
+    color: #fff;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.footer {
+    background-color: #343a40;
+    color: white;
+    padding: 20px 0;
+}
+
+.footer a {
+    color: #bbb;
+    text-decoration: none;
+}
+
+.footer a:hover {
+    color: white;
+}
+.footer h5 {
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+.footer p {
+    font-size: 14px;
+}

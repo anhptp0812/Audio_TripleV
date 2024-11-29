@@ -255,9 +255,6 @@ public class DonHangController {
         return "error";
     }
 
-
-
-
     @GetMapping("ban-hang/details/{id}")
     @ResponseBody
     public List<DonHangChiTiet> getDonHangDetails(@PathVariable Integer id) {

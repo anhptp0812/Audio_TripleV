@@ -140,4 +140,10 @@ public class GioHangService {
         // Cập nhật tổng giá giỏ hàng sau khi xóa sản phẩm
         updateTongGia(gioHang); // Gọi lại phương thức tính tổng giá giỏ hàng
     }
+
+    public void clearGioHang(GioHang gioHang) {
+        gioHang.getGioHangChiTietList().clear();
+        gioHang.setTongGia(0.0);
+        gioHangRepository.save(gioHang);
+    }
 }
