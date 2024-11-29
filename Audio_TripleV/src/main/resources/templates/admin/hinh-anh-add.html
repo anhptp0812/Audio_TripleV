@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thêm Hình Ảnh</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link th:href="@{/css/admin/hinh-anh-add.css}" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Thêm Hình Ảnh</h2>
+    <form id="addImageForm" action="/hinh-anh/add" method="post" enctype="multipart/form-data" onsubmit="event.preventDefault(); addHinhAnh();">
+        <div class="form-group">
+            <label for="imageFile">Chọn Hình Ảnh:</label>
+            <input type="file" class="form-control" id="imageFile" name="imageFile" required>
+            <img id="previewImage" src="#" alt="Xem trước hình ảnh" style="display: none; margin-top: 10px; width: 500px; height: auto;">
+        </div>
+        <button type="submit" class="btn btn-success">Thêm</button>
+        <a href="/spct/hien-thi" class="btn btn-secondary">Quay lại</a>
+    </form>
+
+    <!-- Notification -->
+    <div id="notification" class="mt-3" style="display: none;"></div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+<script th:src="@{/js/admin/hinh-anh-add.js}"></script>
+</body>
+</html>

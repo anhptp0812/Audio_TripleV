@@ -106,7 +106,8 @@
 #productTable,
 #colorTable,
 #brandTable,
-#categoryTable {
+#categoryTable,
+#imageTable {
     display: none; /* Hidden by default */
 }
 

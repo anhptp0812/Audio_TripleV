@@ -150,52 +150,7 @@ function handleSearch() {
 let isOrderCreated = false; // Biến kiểm tra xem hóa đơn đã được tạo hay chưa
 let viewDetail = false;
 
-function addProductToForm(spctId, productName, quantity, price) {
-    // if (isOrderCreated === false) {
-    //     showForms();
-    // }
-    // if (viewDetail === false) {
-    //     alert("Chưa mở Xem chi tiết");
-    //     return;
-    // }
-    const addedProductsTableBody = document.getElementById('addedProductsTableBody');
 
-    if (!addedProductsTableBody) {
-        console.error('Phần tử tbody không tồn tại!');
-        return;
-    }
-
-    // Kiểm tra xem sản phẩm đã tồn tại trong giỏ chưa
-    let existingProduct = selectedProducts.find(product => product.spctId === spctId);
-
-    if (existingProduct) {
-        // Nếu sản phẩm đã có trong giỏ, tăng số lượng lên
-        existingProduct.quantity += quantity;
-
-        // Cập nhật lại số lượng trong bảng giỏ hàng
-        updateProductQuantityInTable(existingProduct);
-    } else {
-        // Nếu chưa có trong giỏ, thêm mới
-        const newProduct = {spctId, productName, quantity, price};
-        selectedProducts.push(newProduct);
-
-        const newRow = document.createElement('tr');
-        newRow.innerHTML = `
-            <td>
-                <span>${productName || 'Chưa có tên sản phẩm'}</span>
-                <input type="hidden" name="spctIds" value="${spctId}"/>
-            </td>
-            <td><input type="number" name="soLuong" value="${quantity}" min="1" onchange="updateProductQuantity(this)" /></td>
-            <td><input type="number" name="donGia" value="${price}" readonly /></td>
-             <td><button onclick="removeProduct(this)">Xóa</button></td>
-        `;
-        addedProductsTableBody.appendChild(newRow);
-    }
-
-
-    // Cập nhật tổng tiền sau khi thêm sản phẩm
-    updateTotalAmount(); // Cập nhật tổng tiền
-}
 
 
 // Hàm cập nhật số lượng trong bảng khi có sự thay đổi
@@ -315,6 +270,7 @@ function viewOrderDetails(spctId) {
                     <td>${item.productName || 'Chưa có tên sản phẩm'}</td>
                     <td><input type="number" name="soLuong" value="${item.quantity}" min="1" onchange="updateProductQuantity(this)" /></td>
                     <td><input type="number" name="donGia" value="${item.price}" readonly /></td>
+                    <td><button onclick="removeProductinDatabase()">Xóa</button></td>
              
                 `;
                 addedProductsTableBody.appendChild(newRow);
@@ -342,6 +298,21 @@ function viewOrderDetails(spctId) {
             alert('Có lỗi xảy ra khi tải chi tiết đơn hàng. Vui lòng thử lại sau.');
         });
 }
+
+function removeProductinDatabase(spctId) {
+    if (confirm("Are you sure you want to delete this item?")) {
+        fetch(`/user/ban-hang/delete/${spctId}`, { method: 'DELETE' })
+            .then(response => {
+                if (response.ok) {
+                    location.reload();
+                } else {
+                    console.error('Failed to delete order detail');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+}
+
 
 function deleteProductRow(dhctId, button) {
     if (!dhctId || isNaN(dhctId)) {
@@ -423,6 +394,60 @@ function searchCustomer() {
         })
         .catch(error => {
             console.error('Có lỗi xảy ra khi tìm kiếm khách hàng:', error);
+        });
+}
+
+function addCustomer(event) {
+    event.preventDefault(); // Ngăn form gửi yêu cầu HTTP mặc định
+
+    const name = document.getElementById('customerName').value.trim();
+    const phone = document.getElementById('customerPhone').value.trim();
+
+    // Kiểm tra đầu vào
+    if (!name || !phone) {
+        alert("Vui lòng nhập đầy đủ thông tin tên và SĐT.");
+        return;
+    }
+
+    // Gửi yêu cầu thêm khách hàng
+    fetch('/api/khach-hang/save', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            ten: name,
+            sdt: phone,
+        }),
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Không thể thêm khách hàng.");
+            }
+            return response.json();
+        })
+        .then(newCustomer => {
+            alert(`Đã thêm khách hàng: ${newCustomer.ten} (${newCustomer.sdt})`);
+
+            // Tự động thêm khách hàng mới vào danh sách
+            const customerList = document.getElementById('customer-list');
+            const newRow = document.createElement('tr');
+            newRow.onclick = () =>
+                selectCustomer(newCustomer.id, newCustomer.ten, newCustomer.sdt);
+            newRow.innerHTML = `
+                <td>${newCustomer.ten}</td>
+                <td>${newCustomer.sdt}</td>
+                <td>Chọn</td>
+            `;
+            customerList.appendChild(newRow);
+
+            // Xóa nội dung trong form
+            document.getElementById('customerName').value = '';
+            document.getElementById('customerPhone').value = '';
+        })
+        .catch(error => {
+            console.error("Error saving customer:", error);
+            alert("Có lỗi xảy ra khi thêm khách hàng.");
         });
 }
 

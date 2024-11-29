@@ -19,7 +19,7 @@
     <div class="container">
         <div class="navbar-nav">
             <a class="nav-item nav-link" href="/user/ban-hang">Bán Hàng</a>
-            <a class="nav-item nav-link" href="">Quản Lý</a>
+            <a class="nav-item nav-link" href="/spct/hien-thi">Quản Lý</a>
             <a class="nav-item nav-link">Khách Hàng</a>
             <a class="nav-item nav-link" href="/user/don-hang">Đơn hàng</a>
         </div>
@@ -132,6 +132,55 @@
                 </tbody>
             </table>
         </div>
+        <script>
+            function addProductToForm(spctId, productName, quantity, price) {
+            // if (isOrderCreated === false) {
+            //     showForms();
+            // }
+            // if (viewDetail === false) {
+            //     alert("Chưa mở Xem chi tiết");
+            //     return;
+            // }
+            const addedProductsTableBody = document.getElementById('addedProductsTableBody');
+
+            if (!addedProductsTableBody) {
+                console.error('Phần tử tbody không tồn tại!');
+                return;
+            }
+
+            console.log(spctId, productName, quantity, price)
+            // Kiểm tra xem sản phẩm đã tồn tại trong giỏ chưa
+            let existingProduct = selectedProducts.find(product => product.spctId === spctId);
+
+            if (existingProduct) {
+                // Nếu sản phẩm đã có trong giỏ, tăng số lượng lên
+                existingProduct.quantity += quantity;
+
+                // Cập nhật lại số lượng trong bảng giỏ hàng
+                updateProductQuantityInTable(existingProduct);
+            } else {
+                // Nếu chưa có trong giỏ, thêm mới
+                const newProduct = {spctId, productName, quantity, price};
+                selectedProducts.push(newProduct);
+
+                const newRow = document.createElement('tr');
+                newRow.innerHTML = `
+            <td>
+                <span>${productName || 'Chưa có tên sản phẩm'}</span>
+                <input type="hidden" name="spctIds" value="${spctId}"/>
+            </td>
+            <td><input type="number" name="soLuong" value="${quantity}" min="1" onchange="updateProductQuantity(this)" /></td>
+            <td><input type="number" name="donGia" value="${price}" readonly /></td>
+             <td><button onclick="removeProduct(this)">Xóa</button></td>
+        `;
+                addedProductsTableBody.appendChild(newRow);
+            }
+
+
+            // Cập nhật tổng tiền sau khi thêm sản phẩm
+            updateTotalAmount(); // Cập nhật tổng tiền
+        }
+        </script>
     </div>
 
     <!-- Order Summary -->
@@ -181,9 +230,10 @@
                            min="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"/>
 
                     <button type="submit">Lưu đơn hàng</button>
+                    <button type="button" th:onclick="'viewOrderDetails(' + ${donHang.id} + ')'">Xem chi tiết</button>
                 </form>
-                <button th:onclick="'viewOrderDetails(' + ${donHang.id} + ')'">Xem chi tiết</button>
-                <input type="hidden" th:field="*{donHang.id}">
+
+<!--                <input type="hidden" th:field="*{donHang.id}">-->
             </div>
             <script>
                 document.getElementById("orderFormDetails").onsubmit = function (event) {
@@ -227,6 +277,7 @@
                         <tbody id="addedProductsTableBody">
                         <!-- Các sản phẩm sẽ được thêm vào đây -->
                         </tbody>
+                        <button class="pay-btn" type="submit" name="paymentMethod" value="xacnhan">Xác nhận</button>
                     </table>
 
                     <div class="totals">
@@ -263,14 +314,19 @@
             <!-- Customer Form -->
             <div class="customer-form" id="customerForm" style="display: none;">
                 <div class="form-container">
-                    <button class="close-btn" onclick="closeCustomerForm()">✖</button> <!-- Close button -->
-                    <label>Nhập tên:</label>
-                    <input type="text" placeholder="Nhập tên" class="form-control" id="customerName">
-                    <label>Nhập SĐT:</label>
-                    <input type="text" placeholder="Nhập SĐT" class="form-control" id="customerPhone">
-                    <button class="btn btn-primary" onclick="searchCustomer()">
-                        <i class="bi bi-search"></i> Tìm kiếm
-                    </button>
+                    <form>
+                        <button class="close-btn" onclick="closeCustomerForm()">✖</button> <!-- Close button -->
+                        <label>Nhập tên:</label>
+                        <input type="text" placeholder="Nhập tên" class="form-control" id="customerName">
+                        <label>Nhập SĐT:</label>
+                        <input type="text" placeholder="Nhập SĐT" class="form-control" id="customerPhone">
+                        <button class="btn btn-primary" onclick="searchCustomer()" type="button">
+                            <i class="bi bi-search"></i> Tìm kiếm
+                        </button>
+                        <button class="btn btn-primary" onclick="addCustomer(event)" type="submit">
+                            <i class="bi bi-search"></i> Thêm
+                        </button>
+                    </form>
                     <table class="table mt-3">
                         <thead>
                         <tr>
