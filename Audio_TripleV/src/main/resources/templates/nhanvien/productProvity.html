@@ -200,17 +200,13 @@
             <div>
                 <h3>Tạo đơn hàng</h3>
                 <form id="orderFormDetails" th:object="${donHang}" method="post" th:action="@{/user/ban-hang/save}">
-                    <!--                method="POST"-->
-                    <!--                th:object="${donHang}"-->
-                    <!--                th:action="@{/don-hang/save}"-->
+
                     <label>Đơn Hàng</label>
                     <input type="text" th:field="*{id}" disabled>
-                    <!--                <label>Khách Hàng: </label>-->
-                    <!--                <select th:field="*{khachHang.id}">-->
-                    <!--                    <option th:each="khachHang : ${listKh}"-->
-                    <!--                            th:value="${khachHang.id}"-->
-                    <!--                            th:text="${khachHang.ten}"></option>-->
-                    <!--                </select>-->
+                    <br>
+<!--                    <label>Nhân viên: </label>-->
+<!--                    <span th:field="*{nhanVien.ten}"></span>-->
+<!--                    <br>-->
                     <label>Khách Hàng: </label>
                     <input type="text" id="khachHangInput" placeholder="Khách hàng" readonly
                            th:field="*{khachHang.ten}"/>
@@ -220,7 +216,7 @@
                     <input type="text" th:field="*{tongGia}" value="${donHang.tongGia ?: 0}" disabled>
                     <br>
                     <label>Trạng Thái:</label>
-                    <input type="text" placeholder="Nhập trạng thái" th:field="*{trangThai}"/>
+                    <input type="text" placeholder="trạng thái" th:field="*{trangThai}"/>
                     <br>
 
                     <label>Ngày Giao:</label>
@@ -235,25 +231,36 @@
             </div>
             <script>
                 document.getElementById("orderFormDetails").onsubmit = function (event) {
-                    event.preventDefault(); // Ngăn form tự động submit
+                    event.preventDefault();
 
                     const formData = new FormData(this);
+                    const submitButton = this.querySelector('button[type="submit"]');
+                    submitButton.disabled = true; // Tạm khóa nút bấm
 
                     fetch('/user/ban-hang/save', {
                         method: 'POST',
                         body: formData
                     })
-                        .then(response => response.json())
+                        .then(response => {
+                            submitButton.disabled = false; // Mở khóa nút bấm
+                            if (!response.ok) {
+                                throw new Error('Lỗi khi gửi dữ liệu đến server!');
+                            }
+                            return response.json();
+                        })
                         .then(data => {
                             if (data.redirectUrl) {
-                                // Chuyển hướng đến trang đích
                                 window.location.href = data.redirectUrl;
                             } else {
                                 alert("Có lỗi xảy ra khi lưu hóa đơn.");
                             }
                         })
-                        .catch(error => console.error('Error:', error));
+                        .catch(error => {
+                            submitButton.disabled = false; // Mở khóa nút bấm
+                            alert(error.message);
+                        });
                 };
+
             </script>
 
             <!-- Nút để xem chi tiết đơn hàng theo ID đơn hàng -->

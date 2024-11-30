@@ -6,6 +6,7 @@ import com.example.demo.entity.HoaDon;
 import com.example.demo.entity.HoaDonChiTiet;
 import com.example.demo.entity.LoaiSanPham;
 import com.example.demo.entity.MauSac;
+import com.example.demo.entity.NhanVien;
 import com.example.demo.entity.SanPham;
 import com.example.demo.entity.SanPhamChiTiet;
 import com.example.demo.repository.DonHangChiTietRepository;
@@ -15,11 +16,13 @@ import com.example.demo.repository.HoaDonChiTietRepository;
 import com.example.demo.repository.HoaDonRepository;
 import com.example.demo.repository.LoaiSanPhamRepository;
 import com.example.demo.repository.MauSacRepository;
+import com.example.demo.repository.NhanVienRepo;
 import com.example.demo.repository.SanPhamChiTietRepository;
 import com.example.demo.repository.SanPhamRepository;
 import com.example.demo.service.DonHangService;
 import com.example.demo.service.HoaDonService;
 import com.example.demo.service.KhachHangService;
+import com.example.demo.service.NhanVienService;
 import com.example.demo.service.SanPhamChiTietService;
 //import com.example.demo.service.VnPayService;
 //import com.example.demo.vnPay.VNPayConfig;
@@ -42,6 +45,8 @@ import java.util.List;
 public class DonHangController {
 //    @Autowired
 //    private VNPayConfig vnpayConfig;
+    @Autowired
+    private NhanVienService nhanVienService;
 
     @Autowired
     private DonHangService donHangService;
@@ -82,6 +87,9 @@ public class DonHangController {
     @Autowired
     private KhachHangService khachHangService;
 
+    @Autowired
+    private NhanVienRepo nhanVienRepo;
+
 //    @GetMapping("ban-hang/don-hang/create")
 //    public String createDonHangForm(Model model) {
 //        model.addAttribute("donHang", new DonHang());
@@ -91,6 +99,7 @@ public class DonHangController {
 
     @GetMapping("/don-hang")
     public String index(Model model) {
+        model.addAttribute("donHang", new HoaDon());
         List<HoaDon> list = hoaDonRepository.findAll();
         model.addAttribute("listDH", list);
         return "nhanvien/donhang";
@@ -104,12 +113,20 @@ public class DonHangController {
                                    @RequestParam("paymentMethod") String paymentMethod,
                                    Model model) {
         // Tìm hóa đơn
+        //Integer nhanvienId = get
         HoaDon hoaDon = hoaDonService.findByid(id);
         if (hoaDon == null) {
             model.addAttribute("error", "Đơn hàng không tồn tại!");
             return "error";
         }
+        Integer nhanVienId = nhanVienService.getLoggedInNhanVienId();
+        Optional<NhanVien> nhanVienOptional = nhanVienRepo.findById(nhanVienId);
 
+        if (nhanVienOptional.isPresent()) {
+            NhanVien nhanVien = nhanVienOptional.get();
+
+            // Gán nhân viên vào hóa đơn
+            hoaDon.setNhanVien(nhanVien);
         // Nếu người dùng bấm xác nhận và gửi danh sách sản phẩm
         if (spctIds != null && quantities != null && "xacnhan".equals(paymentMethod)) {
             double totalAmount = hoaDon.getTongGia() == null ? 0 : hoaDon.getTongGia();
@@ -159,7 +176,7 @@ public class DonHangController {
                     hoaDon.setTrangThai("Đã thanh toán");
                     hoaDonRepository.save(hoaDon);
                     return "redirect:/user/ban-hang";
-                }else {
+                } else {
                     double totalAmount = hoaDon.getTongGia() == null ? 0 : hoaDon.getTongGia();
 
                     for (int i = 0; i < spctIds.size(); i++) {
@@ -199,6 +216,7 @@ public class DonHangController {
                     hoaDonRepository.save(hoaDon);
                     return "redirect:/user/ban-hang/" + hoaDon.getId();
                 }
+            }
                  // Chuyển đến trang thành công
             }
             if ("Chưa thanh toán".equals(hoaDon.getTrangThai())){
