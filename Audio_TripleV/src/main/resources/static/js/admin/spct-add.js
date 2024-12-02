@@ -180,3 +180,4 @@ document.getElementById('hinhAnh').addEventListener('change', function () {
         previewImage.style.display = 'none';
     }
 });
+

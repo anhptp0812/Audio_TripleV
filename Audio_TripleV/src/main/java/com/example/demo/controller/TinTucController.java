@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("khach-hang")
+@RequestMapping("/khach-hang")
 public class TinTucController {
     @Autowired
     SanPhamChiTietService sanPhamChiTietService;
