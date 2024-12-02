@@ -5,6 +5,7 @@ import com.example.demo.entity.DonHang;
 import com.example.demo.entity.HoaDon;
 import com.example.demo.entity.HoaDonChiTiet;
 import com.example.demo.entity.KhachHang;
+import com.example.demo.entity.NhanVien;
 import com.example.demo.entity.QuickBuyRequest;
 import com.example.demo.entity.SanPhamChiTiet;
 
@@ -16,9 +17,11 @@ import com.example.demo.repository.HangRepository;
 import com.example.demo.repository.HoaDonChiTietRepository;
 
 import com.example.demo.repository.HoaDonRepository;
+import com.example.demo.repository.NhanVienRepo;
 import com.example.demo.repository.SanPhamChiTietRepository;
 import com.example.demo.service.DonHangService;
 import com.example.demo.service.KhachHangService;
+import com.example.demo.service.NhanVienService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +44,8 @@ public class HoaDonController {
     private DonHangService donHangService;
 
     @Autowired
+    private NhanVienRepo nhanVienRepo;
+    @Autowired
     SanPhamChiTietRepository sanPhamChiTietRepository;
 
     @Autowired
@@ -49,32 +54,52 @@ public class HoaDonController {
     @Autowired
     private KhachHangService khachHangService;
 
+    @Autowired
+    private NhanVienService nhanVienService;
+
     @PostMapping("/ban-hang/save")
-    public ResponseEntity<Map<String, String>> saveDonHang(@ModelAttribute("donHang") HoaDon hoaDon,
-                                                           HoaDonChiTiet hoaDonChiTiet) {
+    public ResponseEntity<Map<String, String>> saveDonHang(@ModelAttribute("donHang") HoaDon hoaDon) {
+        // Lấy ID của nhân viên đang đăng nhập
+        Integer nhanVienId = nhanVienService.getLoggedInNhanVienId();
 
-        // Kiểm tra và thiết lập mặc định nếu trạng thái không có
-        if (hoaDon.getTrangThai() == null || hoaDon.getTrangThai().isEmpty()) {
-            hoaDon.setTrangThai("Chưa thanh toán"); // Thiết lập mặc định
+        // Kiểm tra nếu không có ID nhân viên
+        if (nhanVienId == null) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("error", "Chưa đăng nhập"));
         }
 
-        // Kiểm tra và thiết lập mặc định nếu tổng giá không có
-        if (hoaDon.getTongGia() == null) {
-            hoaDon.setTongGia(0.0); // Thiết lập tổng giá mặc định
+        // Lấy nhân viên từ ID
+        Optional<NhanVien> nhanVienOptional = nhanVienRepo.findById(nhanVienId);
+        if (nhanVienOptional.isPresent()) {
+            NhanVien nhanVien = nhanVienOptional.get();
+
+            // Gán nhân viên vào hóa đơn
+            hoaDon.setNhanVien(nhanVien);
+
+            // Kiểm tra và thiết lập mặc định nếu trạng thái không có
+            if (hoaDon.getTrangThai() == null || hoaDon.getTrangThai().isEmpty()) {
+                hoaDon.setTrangThai("Chưa thanh toán"); // Thiết lập mặc định
+            }
+
+            // Kiểm tra và thiết lập mặc định nếu tổng giá không có
+            if (hoaDon.getTongGia() == null) {
+                hoaDon.setTongGia(0.0); // Thiết lập tổng giá mặc định
+            }
+
+            hoaDon.setNgayTao(new Date());
+            hoaDon.setNgayCapNhat(new Date());
+
+            // Lưu hóa đơn vào cơ sở dữ liệu
+            hoaDonRepository.save(hoaDon);
+
+            // Trả về URL của trang đích sau khi lưu thành công
+            Map<String, String> response = new HashMap<>();
+            response.put("redirectUrl", "/user/ban-hang/" + hoaDon.getId());
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("error", "Không tìm thấy nhân viên"));
         }
-
-        hoaDon.setNgayTao(new Date());
-        hoaDon.setNgayCapNhat(new Date());
-
-        // Lưu hóa đơn
-        hoaDonRepository.save(hoaDon);
-
-        // Trả về URL của trang đích sau khi lưu thành công
-        Map<String, String> response = new HashMap<>();
-        response.put("redirectUrl", "/user/ban-hang/" + hoaDon.getId());
-
-        return ResponseEntity.ok(response);
     }
+
 
     @PostMapping("/orders/quick-buy")
     public ResponseEntity<?> quickBuy(@RequestBody QuickBuyRequest request) {

@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class CapNhatSoLuongRequest {
-    private Long productId;
+    private Integer productId;
     private int quantity;
 }

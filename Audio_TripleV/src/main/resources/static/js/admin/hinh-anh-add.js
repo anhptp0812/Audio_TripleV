@@ -35,10 +35,8 @@ function addHinhAnh() {
         data: formData, // Gửi dữ liệu dưới dạng FormData
         contentType: false, // Không cần định dạng content-type vì FormData tự động xử lý
         processData: false, // Không xử lý dữ liệu
-        beforeSend: function () {
-            $('body').append('<div class="loading">Đang xử lý...</div>');
-        },
         success: function (response) {
+            alert('Thêm hình ảnh thành công!');
             updateNotification('Thêm hình ảnh thành công!', 'success');
             setTimeout(() => {
                 window.location.href = '/spct/hien-thi?activated=hinhAnh';

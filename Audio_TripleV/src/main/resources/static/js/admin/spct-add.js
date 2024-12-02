@@ -40,7 +40,7 @@ function addSanPhamChiTiet(event) {
     // Kiểm tra tính hợp lệ của donGia và soLuong
     if (isNaN(donGia) || donGia <= 1000) {
         alert('Đơn giá phải là số và lớn hơn 1000.');
-       return;
+        return;
     }
 
     if (isNaN(soLuong) || soLuong <= 0) {
@@ -166,7 +166,7 @@ document.getElementById('formId')?.addEventListener('submit', function (event) {
     ensureCurrentSelected('hang', 'hangSuggestionsList');
 });
 
-document.getElementById('hinhAnh').addEventListener('change', function() {
+document.getElementById('hinhAnh').addEventListener('change', function () {
     const selectedOption = this.options[this.selectedIndex];
     const imageName = selectedOption.text; // Tên ảnh lấy từ option
     const imageUrl = imageName ? `/images/tainghe/${imageName}` : '/images/default.jpg'; // Nếu không có, hiển thị ảnh mặc định

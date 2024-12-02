@@ -27,19 +27,12 @@ public class DonHangChiTiet {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "ID_Don_Hang")
+    @JoinColumn(name = "ID_Don_Hang", nullable = false)
     private DonHang donHang;
 
-//    @Column(name = "ID_Don_Hang")
-//    private Integer idDH;
-
     @ManyToOne
-    @JoinColumn(name = "ID_SPCT")  // Reference to SanPhamChiTiet
+    @JoinColumn(name = "ID_SPCT", nullable = false)
     private SanPhamChiTiet sanPhamChiTiet;
-
-
-//    @Column(name = "ID_SPCT")  // Reference to SanPhamChiTiet
-//    private Integer idSPCT;
 
     @Column(name = "SoLuong")
     private Integer soLuong;

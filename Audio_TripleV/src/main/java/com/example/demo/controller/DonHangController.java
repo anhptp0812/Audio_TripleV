@@ -6,6 +6,7 @@ import com.example.demo.entity.HoaDon;
 import com.example.demo.entity.HoaDonChiTiet;
 import com.example.demo.entity.LoaiSanPham;
 import com.example.demo.entity.MauSac;
+import com.example.demo.entity.NhanVien;
 import com.example.demo.entity.SanPham;
 import com.example.demo.entity.SanPhamChiTiet;
 import com.example.demo.repository.DonHangChiTietRepository;
@@ -15,11 +16,13 @@ import com.example.demo.repository.HoaDonChiTietRepository;
 import com.example.demo.repository.HoaDonRepository;
 import com.example.demo.repository.LoaiSanPhamRepository;
 import com.example.demo.repository.MauSacRepository;
+import com.example.demo.repository.NhanVienRepo;
 import com.example.demo.repository.SanPhamChiTietRepository;
 import com.example.demo.repository.SanPhamRepository;
 import com.example.demo.service.DonHangService;
 import com.example.demo.service.HoaDonService;
 import com.example.demo.service.KhachHangService;
+import com.example.demo.service.NhanVienService;
 import com.example.demo.service.SanPhamChiTietService;
 //import com.example.demo.service.VnPayService;
 //import com.example.demo.vnPay.VNPayConfig;
@@ -42,6 +45,8 @@ import java.util.List;
 public class DonHangController {
 //    @Autowired
 //    private VNPayConfig vnpayConfig;
+    @Autowired
+    private NhanVienService nhanVienService;
 
     @Autowired
     private DonHangService donHangService;
@@ -82,6 +87,9 @@ public class DonHangController {
     @Autowired
     private KhachHangService khachHangService;
 
+    @Autowired
+    private NhanVienRepo nhanVienRepo;
+
 //    @GetMapping("ban-hang/don-hang/create")
 //    public String createDonHangForm(Model model) {
 //        model.addAttribute("donHang", new DonHang());
@@ -91,6 +99,7 @@ public class DonHangController {
 
     @GetMapping("/don-hang")
     public String index(Model model) {
+        model.addAttribute("donHang", new HoaDon());
         List<HoaDon> list = hoaDonRepository.findAll();
         model.addAttribute("listDH", list);
         return "nhanvien/donhang";
@@ -104,12 +113,20 @@ public class DonHangController {
                                    @RequestParam("paymentMethod") String paymentMethod,
                                    Model model) {
         // Tìm hóa đơn
+        //Integer nhanvienId = get
         HoaDon hoaDon = hoaDonService.findByid(id);
         if (hoaDon == null) {
             model.addAttribute("error", "Đơn hàng không tồn tại!");
             return "error";
         }
+        Integer nhanVienId = nhanVienService.getLoggedInNhanVienId();
+        Optional<NhanVien> nhanVienOptional = nhanVienRepo.findById(nhanVienId);
 
+        if (nhanVienOptional.isPresent()) {
+            NhanVien nhanVien = nhanVienOptional.get();
+
+            // Gán nhân viên vào hóa đơn
+            hoaDon.setNhanVien(nhanVien);
         // Nếu người dùng bấm xác nhận và gửi danh sách sản phẩm
         if (spctIds != null && quantities != null && "xacnhan".equals(paymentMethod)) {
             double totalAmount = hoaDon.getTongGia() == null ? 0 : hoaDon.getTongGia();
@@ -155,9 +172,52 @@ public class DonHangController {
         // Nếu người dùng bấm Thanh toán
         if ("cash".equals(paymentMethod)) {
             if ("Chờ thanh toán".equals(hoaDon.getTrangThai())) {
-                hoaDon.setTrangThai("Đã thanh toán");
-                hoaDonRepository.save(hoaDon);
-                return "redirect:/user/ban-hang"; // Chuyển đến trang thành công
+                if (spctIds == null) {
+                    hoaDon.setTrangThai("Đã thanh toán");
+                    hoaDonRepository.save(hoaDon);
+                    return "redirect:/user/ban-hang";
+                } else {
+                    double totalAmount = hoaDon.getTongGia() == null ? 0 : hoaDon.getTongGia();
+
+                    for (int i = 0; i < spctIds.size(); i++) {
+                        Integer spctId = spctIds.get(i);
+                        Integer soLuong = quantities.get(i);
+
+                        // Tìm sản phẩm
+                        SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietService.findById(spctId);
+                        if (sanPhamChiTiet == null || sanPhamChiTiet.getSoLuong() < soLuong) {
+                            model.addAttribute("error", "Sản phẩm " + (sanPhamChiTiet != null ? sanPhamChiTiet.getSanPham().getTen() : "không xác định") + " không đủ số lượng.");
+                            return "error";
+                        }
+
+                        // Tạo chi tiết hóa đơn
+                        HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
+                        hoaDonChiTiet.setHoaDon(hoaDon);
+                        hoaDonChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
+                        hoaDonChiTiet.setDonGia(sanPhamChiTiet.getDonGia());
+                        hoaDonChiTiet.setSoLuong(soLuong);
+                        hoaDonChiTiet.setNgayTao(new Date());
+                        hoaDonChiTiet.setNgayCapNhat(new Date());
+
+                        // Lưu chi tiết đơn hàng
+                        hoaDonChiTietRepository.save(hoaDonChiTiet);
+
+                        // Trừ số lượng sản phẩm tồn kho
+                        sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - soLuong);
+                        sanPhamChiTietRepository.save(sanPhamChiTiet);
+
+                        // Tính tổng giá trị hóa đơn
+                        totalAmount += sanPhamChiTiet.getDonGia() * soLuong;
+                    }
+
+                    // Cập nhật tổng giá và trạng thái hóa đơn
+                    hoaDon.setTongGia(totalAmount);
+                    hoaDon.setTrangThai("Đã thanh toán");
+                    hoaDonRepository.save(hoaDon);
+                    return "redirect:/user/ban-hang/" + hoaDon.getId();
+                }
+            }
+                 // Chuyển đến trang thành công
             }
             if ("Chưa thanh toán".equals(hoaDon.getTrangThai())){
 
@@ -213,9 +273,6 @@ public class DonHangController {
         return "error";
     }
 
-
-
-
     @GetMapping("ban-hang/details/{id}")
     @ResponseBody
     public List<DonHangChiTiet> getDonHangDetails(@PathVariable Integer id) {
@@ -230,10 +287,10 @@ public class DonHangController {
                           @RequestParam(required = false) Double minPrice,
                           @RequestParam(required = false) Double maxPrice,
                           @RequestParam(required = false) String donGia, // Thêm tham số donGia
+                          @RequestParam(required = false) String tenSanPham, // Thêm tham số tên sản phẩm
                           @PathVariable Integer id, Model model) {
         HoaDon dh = hoaDonService.findByid(id);
         model.addAttribute("donHang", dh);
-//        DonHangChiTiet dhct = donHangChiTietRepository.findByDonHang_Id(id).orElse(null);
         model.addAttribute("donHangChiTiet", new HoaDonChiTiet());
 
         List<SanPhamChiTiet> list;
@@ -255,13 +312,14 @@ public class DonHangController {
                 (idSanPham == null || idSanPham == 0) &&
                 (mauSac == null || mauSac == 0) &&
                 (hang == null || hang == 0) &&
-                (minPrice == null || maxPrice == null)) {
+                (minPrice == null || maxPrice == null) &&
+                (tenSanPham == null || tenSanPham.isEmpty())) {
             // Nếu không chọn bộ lọc nào thì lấy tất cả sản phẩm
             list = sanPhamChiTietRepository.findAll();
         } else {
             // Lấy danh sách sản phẩm theo các bộ lọc
             list = sanPhamChiTietRepository.findByFilters(
-                    idLoaiSP, idSanPham, mauSac, hang, minPrice, maxPrice);
+                    idLoaiSP, idSanPham, mauSac, hang, minPrice, maxPrice, tenSanPham);
         }
 
         // Thêm danh sách sản phẩm vào model
@@ -280,6 +338,25 @@ public class DonHangController {
         return "nhanvien/productProvity"; // Trả về trang sản phẩm
     }
 
+    @PostMapping("/ban-hang/delete/{dhctId}")
+    public String deleteOrderDetail(@PathVariable Integer dhctId) {
+        Optional<DonHangChiTiet> optionalDonHangChiTiet = donHangChiTietRepository.findById(dhctId);
+
+        if (optionalDonHangChiTiet.isPresent()) {
+            DonHangChiTiet donHangChiTiet = optionalDonHangChiTiet.get();
+            SanPhamChiTiet sanPhamChiTiet = donHangChiTiet.getSanPhamChiTiet();
+
+            // Tăng số lượng lại trong SanPhamChiTiet
+            sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() + donHangChiTiet.getSoLuong());
+            sanPhamChiTietRepository.save(sanPhamChiTiet);
+
+            // Xóa chi tiết đơn hàng
+            donHangChiTietRepository.delete(donHangChiTiet);
+        }
+
+        // Điều hướng lại đến trang chi tiết đơn hàng sau khi xóa
+        return "redirect:/user/ban-hang"; // Hoặc trang bạn muốn quay lại sau khi xóa
+    }
 
 //    @DeleteMapping("/ban-hang/delete/{dhctId}")
 //    public String deleteOrderDetail(@PathVariable Integer dhctId) {

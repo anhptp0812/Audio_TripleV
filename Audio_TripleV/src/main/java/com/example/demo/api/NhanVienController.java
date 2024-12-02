@@ -63,6 +63,7 @@ public class NhanVienController {
                           @RequestParam(required = false) Double minPrice,
                           @RequestParam(required = false) Double maxPrice,
                           @RequestParam(required = false) String donGia, // Thêm tham số donGia
+                          @RequestParam(required = false) String tenSanPham, // Thêm tham số tenSanPham
                           Model model) {
 
         List<SanPhamChiTiet> list;
@@ -84,13 +85,14 @@ public class NhanVienController {
                 (idSanPham == null || idSanPham == 0) &&
                 (mauSac == null || mauSac == 0) &&
                 (hang == null || hang == 0) &&
-                (minPrice == null || maxPrice == null)) {
+                (minPrice == null || maxPrice == null) &&
+                (tenSanPham == null || tenSanPham.isEmpty())) {
             // Nếu không chọn bộ lọc nào thì lấy tất cả sản phẩm
             list = sanPhamChiTietRepository.findAll();
         } else {
             // Lấy danh sách sản phẩm theo các bộ lọc
             list = sanPhamChiTietRepository.findByFilters(
-                    idLoaiSP, idSanPham, mauSac, hang, minPrice, maxPrice);
+                    idLoaiSP, idSanPham, mauSac, hang, minPrice, maxPrice, tenSanPham);
         }
 
         // Thêm danh sách sản phẩm vào model
