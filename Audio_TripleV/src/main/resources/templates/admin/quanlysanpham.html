@@ -84,6 +84,7 @@
                     <th>Đơn Giá</th>
                     <th>Số Lượng</th>
                     <th>Trạng Thái</th>
+                    <th>Mô tả</th>
                     <th>Ngày Tạo</th>
                     <th>Ngày Cập Nhật</th>
                     <th>Hành Động</th>
@@ -100,13 +101,14 @@
                     <td th:text="${spct.formattedDonGia}"></td>
                     <td th:text="${spct.soLuong}"></td>
                     <td th:text="${spct.trangThai}"></td>
+                    <td th:text="${spct.moTa}"></td>
                     <td th:text="${#dates.format(spct.ngayTao, 'yyyy-MM-dd')}"></td>
                     <td th:text="${#dates.format(spct.ngayCapNhat, 'yyyy-MM-dd')}"></td>
                     <td>
                         <a th:href="@{/spct/detail/{id}(id=${spct.id})}" class="btn btn-primary">Chi tiết</a>
                         <a th:href="@{/spct/form-update/{id}(id=${spct.id})}" class="btn btn-warning">Sửa</a>
-                        <a th:href="@{/spct/delete/{id}(id=${spct.id})}" class="btn btn-danger"
-                           onclick="return confirm('Bạn có muốn xóa không?');">Xóa</a>
+<!--                        <a th:href="@{/spct/delete/{id}(id=${spct.id})}" class="btn btn-danger"-->
+<!--                           onclick="return confirm('Bạn có muốn xóa không?');">Xóa</a>-->
                     </td>
                 </tr>
                 </tbody>

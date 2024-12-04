@@ -110,6 +110,7 @@ public class SanPhamChiTietController {
             @RequestParam("hinhAnh") Integer hinhAnhId,
             @RequestParam("loaiSanPham") Integer loaiSanPhamId,
             @RequestParam("trangThai") String trangThai,
+            @RequestParam("moTa") String moTa,
             @RequestParam("donGia") Double donGia,
             @RequestParam("soLuong") Integer soLuong) {
 
@@ -149,6 +150,7 @@ public class SanPhamChiTietController {
             sanPhamChiTiet.setDonGia(donGia);
             sanPhamChiTiet.setSoLuong(soLuong);
             sanPhamChiTiet.setTrangThai(trangThai);
+            sanPhamChiTiet.setMoTa(moTa);
             sanPhamChiTiet.setNgayTao(new Date());
             sanPhamChiTiet.setNgayCapNhat(new Date());
 
@@ -187,6 +189,7 @@ public class SanPhamChiTietController {
             @RequestParam("hinhAnh") Integer hinhAnhId,
             @RequestParam("loaiSanPham") Integer loaiSanPhamId,
             @RequestParam("trangThai") String trangThai,
+            @RequestParam("moTa") String moTa,
             @RequestParam("donGia") Double donGia,
             @RequestParam("soLuong") Integer soLuong) {
 
@@ -233,6 +236,7 @@ public class SanPhamChiTietController {
             sanPhamChiTiet.setHinhAnh(hinhAnh);
             sanPhamChiTiet.setLoaiSanPham(loaiSanPham);
             sanPhamChiTiet.setTrangThai(trangThai);
+            sanPhamChiTiet.setMoTa(moTa);
             sanPhamChiTiet.setDonGia(donGia);
             sanPhamChiTiet.setSoLuong(soLuong);
             sanPhamChiTiet.setNgayCapNhat(new Date());

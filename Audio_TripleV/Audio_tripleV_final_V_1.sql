@@ -57,6 +57,7 @@ CREATE TABLE SanPhamChiTiet  (
 	DonGia decimal(18, 2),
 	soLuong int,
 	TrangThai NVARCHAR(255),
+	MoTa NVARCHAR(max),
 	NgayTao datetime,
 	NgayCapNhat datetime 
 	foreign key(ID_San_Pham)
@@ -147,6 +148,7 @@ CREATE TABLE DonHang (
     ID_Khach_Hang INT ,
 	TongGia decimal(18, 2),
 	TrangThai NVARCHAR(255),
+	TrangThaiPayment NVARCHAR(255),
 	NgayGiao datetime,
 	NgayTao datetime,
 	NgayCapNhat datetime,
@@ -177,6 +179,7 @@ CREATE TABLE HoaDon (
 	ID_Don_Hang INT,
 	TongGia decimal(18, 2),
 	TrangThai NVARCHAR(255),
+	DiaChiGiaoHang NVARCHAR(255),
 	NgayGiao datetime,
 	NgayTao datetime,
 	NgayCapNhat datetime,
@@ -224,6 +227,8 @@ CREATE TABLE SanPhamChiTiet_KhuyenMai (
     FOREIGN KEY (ID_Khuyen_Mai) REFERENCES KhuyenMai(ID)
 
 );
+
+
 
 INSERT INTO LoaiSanPham (KieuDang, NgayTao, NgayCapNhat)
 VALUES 
@@ -685,3 +690,7 @@ VALUES
 		select * from GioHangChiTiet
 		select * from KhachHang
 		select * from NhanVien
+		select * from HoaDon
+	
+
+
