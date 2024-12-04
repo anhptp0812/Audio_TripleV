@@ -92,4 +92,7 @@ public class NhanVienService implements UserDetailsService{
         return nhanVienRepo.findById(id).orElse(null); // Tìm nhân viên trong cơ sở dữ liệu
     }
 
+    public Optional<NhanVien> findByTaiKhoan(String username) {
+        return nhanVienRepo.findByUsername(username);
+    }
 }

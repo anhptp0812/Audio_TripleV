@@ -151,4 +151,14 @@ public class KhachHangController {
         return "customer/don-hang-cua-toi"; // Trang hiển thị danh sách đơn hàng
     }
 
+    @GetMapping("/khach-hang/thong-tin")
+    public String thongTinTaiKhoan(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+        // Lấy khách hàng hiện tại
+        KhachHang khachHang = khachHangService.findByTaiKhoan(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("Khách hàng không tồn tại"));
+        model.addAttribute("khachHang", khachHang);
+
+        return "customer/tai-khoan";
+    }
+
 }

@@ -29,9 +29,18 @@
             <button class="btn btn-outline-light" type="button" onclick="handleSearch()">
                 <i class="bi bi-search"></i>
             </button>
-            <a class="btn btn-outline-light" href="/src/main/webapp/views/admin/accNV/nvAcc.html">
-                <i class="bi bi-person-circle"></i>
-            </a>
+
+                <a class="btn btn-outline-light" id="user-icon" href="#">
+                    <i class="bi bi-person-circle"></i>
+                </a>
+                <div id="user-dropdown" class="dropdown-menu btn btn-outline-light">
+                    <a href="/user/thong-tin" class="dropdown-item">Thông tin tài khoản</a>
+                    <a href="/logout" class="dropdown-item">Đăng xuất</a>
+                </div>
+
+
+
+
         </div>
     </div>
 </nav>
