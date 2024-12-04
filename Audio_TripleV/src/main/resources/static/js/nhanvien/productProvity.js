@@ -504,3 +504,20 @@ function updateTotalAmount() {
     document.getElementById('totalAmount').textContent = total.toFixed(2); // Hiển thị tổng với 2 chữ số thập phân
     calculateChange(); // Cập nhật tiền trả lại mỗi khi tổng tiền thay đổi
 }
+
+document.getElementById('user-icon').addEventListener('click', function (event) {
+    event.preventDefault(); // Ngăn chặn hành động mặc định của liên kết
+
+    const dropdown = document.getElementById('user-dropdown');
+    dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+});
+
+// Ẩn menu khi click bên ngoài
+document.addEventListener('click', function (event) {
+    const userIcon = document.getElementById('user-icon');
+    const dropdown = document.getElementById('user-dropdown');
+
+    if (!userIcon.contains(event.target) && !dropdown.contains(event.target)) {
+        dropdown.style.display = 'none';
+    }
+});

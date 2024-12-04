@@ -30,7 +30,7 @@
                 </li>
             </ul>
             <div class="d-flex position-relative">
-                <p style="padding-right: 10px">Xin chào, <span th:text="${khachHang.ten}">Tên người dùng</span>!</p>
+                <p style="padding-right: 10px">Xin chào, <span th:text="${nhanVien.ten}">Tên người dùng</span>!</p>
                 <a href="#" class="me-3"><i class="fas fa-search"></i></a>
 
                 <a href="#" class="me-3" id="user-icon"><i class="fas fa-user"></i></a>
@@ -56,7 +56,7 @@
                 <div class="header">
                     <div class="avatar"><img class="img-fluid" th:src="@{/shop/images/avatar/avatar.png}" alt="avatar"/></div>
                     <div class="user-info">
-                        <div class="user-name" th:text="${khachHang.ten}"></div>
+                        <div class="user-name" th:text="${nhanVien.ten}"></div>
                         <div class="edit-profile">Chỉnh sửa tài khoản</div>
                     </div>
                 </div>
@@ -77,13 +77,13 @@
                             <div class="full-name item-row col-md-10">
                                 <div class="text required-label">Họ tên</div>
                                 <div>
-                                    <input class="form-control" th:value="${khachHang.ten}" id="in-user-fullname"/>
+                                    <input class="form-control" th:value="${nhanVien.ten}" id="in-user-fullname"/>
                                     <div class="invalid-feedback"></div>
                                 </div>
                             </div>
                             <div class="email item-row col-md-10">
                                 <div class="text required-label">Email</div>
-                                <input class="form-control" disabled="disabled" th:value="${khachHang.email}"/>
+                                <input class="form-control" disabled="disabled" th:value="${nhanVien.email}"/>
                             </div>
                             <div class="password item-row col-md-10">
                                 <div class="text required-label">Mật khẩu</div>
@@ -95,14 +95,14 @@
                             <div class="phone item-row col-md-10">
                                 <div class="text required-label">Số điện thoại</div>
                                 <div>
-                                    <input class="form-control" th:value="${khachHang.sdt}" id="in-user-phone"/>
+                                    <input class="form-control" th:value="${nhanVien.sdt}" id="in-user-phone"/>
                                     <div class="invalid-feedback"></div>
                                 </div>
                             </div>
                             <div class="address item-row col-md-10">
                                 <div class="text">Địa chỉ</div>
                                 <div>
-                                    <textarea class="form-control" rows="5" th:text="${khachHang.diaChi}" id="in-user-address"></textarea>
+                                    <textarea class="form-control" rows="5" th:text="${nhanVien.diaChi}" id="in-user-address"></textarea>
                                 </div>
                             </div>
                             <div class="update-btn-wrapper item-row col-md-10">
