@@ -76,6 +76,11 @@
                 <option value="Hết Hàng">Hết Hàng</option>
             </select>
         </div>
+        <div class="form-group">
+            <label for="sanPham">Mô :</label>
+            <textarea class="form-control" id="moTa" name="moTa" th:value="${sanPhamChiTiet.moTa}"
+                      required></textarea>
+        </div>
         <button type="submit" class="btn btn-primary">Thêm</button>
         <a href="/spct/hien-thi" class="btn btn-secondary">Quay Lại</a>
     </form>

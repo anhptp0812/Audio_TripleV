@@ -175,7 +175,7 @@
     <h2>TAI NGHE MỚI NHẤT</h2>
     <div class="product-container">
         <div th:each="sanPhamChiTiet : ${sanPhamChiTietList}" class="product-card">
-            <a th:href="@{/san-pham/hien-thi/{id}(id=${sanPhamChiTiet.id})}"
+            <a th:href="@{/khach-hang/san-pham/hien-thi/{id}(id=${sanPhamChiTiet.id})}"
                th:title="${sanPhamChiTiet.sanPham.ten}">
                 <img th:src="'/images/tainghe/' + ${sanPhamChiTiet.hinhAnh.ten}"
                      th:alt="${sanPhamChiTiet.sanPham.ten}">
@@ -200,7 +200,7 @@
     <h2>SẢN PHẨM ĐƯỢC XEM NHIỀU NHẤT</h2>
     <div class="product-container1">
         <div th:each="sanPhamChiTiet : ${sanPhamChiTietList1}" class="product-card">
-            <a th:href="@{/san-pham/hien-thi/{id}(id=${sanPhamChiTiet.id})}"
+            <a th:href="@{/khach-hang/san-pham/hien-thi/{id}(id=${sanPhamChiTiet.id})}"
                th:title="${sanPhamChiTiet.sanPham.ten}">
                 <img th:src="'/images/tainghe/' + ${sanPhamChiTiet.hinhAnh.ten}"
                      th:alt="${sanPhamChiTiet.sanPham.ten}">

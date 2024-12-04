@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Chi tiết sản phẩm</title>
@@ -25,6 +25,7 @@
                     <p><strong>Đơn giá:</strong> <span th:text="${spct.formattedDonGia}"></span></p>
                     <p><strong>So lượng:</strong> <span th:text="${spct.soLuong}"></span></p>
                     <p><strong>Trạng Thái:</strong> <span th:text="${spct.trangThai}"></span></p>
+                    <p><strong>Mô tả:</strong> <span th:text="${spct.moTa}"></span></p>
                     <p><strong>Ngày Tạo:</strong> <span th:text="${#dates.format(spct.ngayTao, 'yyyy-MM-dd')}"></span></p>
                     <p><strong>Ngày Cập Nhật:</strong> <span th:text="${#dates.format(spct.ngayCapNhat, 'yyyy-MM-dd')}"></span></p>
                 </div>

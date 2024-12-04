@@ -62,6 +62,9 @@ public class SanPhamChiTiet {
     @Column(name = "TrangThai")
     private String trangThai;
 
+    @Column(name = "MoTa")
+    private String moTa;
+
     @Column(name = "NgayTao")
     private Date ngayTao;
 
