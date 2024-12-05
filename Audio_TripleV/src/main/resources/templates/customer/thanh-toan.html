@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh Toán</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link th:href="@{/css/customer/thanh-toan.css}" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+        <a class="navbar-brand" href="/khach-hang/trang-chu/hien-thi"><img src="/images/logo.png" width="50" height="50"
+                                                                           alt="Logo"></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/khach-hang/san-pham/hien-thi">Sản Phẩm</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/khach-hang/thuong-hieu/hien-thi">Thương Hiệu</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/khach-hang/khuyen-mai/hien-thi">Khuyến Mãi</a>
+                </li>
+            </ul>
+            <div class="d-flex position-relative">
+                <p style="padding-right: 10px">Xin chào, <span th:text="${khachHang.ten}">Tên người dùng</span>!</p>
+                <a href="#" class="me-3"><i class="fas fa-search"></i></a>
+
+                <a href="#" class="me-3" id="user-icon"><i class="fas fa-user"></i></a>
+                <!-- Dropdown menu -->
+                <div id="user-dropdown" class="dropdown-menu">
+                    <a href="/khach-hang/thong-tin" class="dropdown-item">Thông tin tài khoản</a>
+                    <a href="/khach-hang/don-hang/danh-sach" class="dropdown-item">Đơn hàng của tôi</a>
+                    <a href="/logout" class="dropdown-item">Đăng xuất</a>
+                </div>
+
+                <a id="cart-icon" class="cart-icon" href="/khach-hang/gio-hang/hien-thi">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cart-count" th:text="${cartCount}">0</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <h2>Thông Tin Thanh Toán</h2>
+    <div class="row">
+        <!-- Cột trái: Thông tin sản phẩm và khách hàng -->
+        <div class="col-md-8">
+            <div class="border p-3">
+                <h4>Sản Phẩm Trong Giỏ Hàng</h4>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Tên Sản Phẩm</th>
+                        <th>Số Lượng</th>
+                        <th>Đơn Giá</th>
+                        <th>Tổng Giá</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="item, stat : ${gioHang.gioHangChiTietList}">
+                        <td th:text="${stat.index + 1}"></td>
+                        <td th:text="${item.sanPhamChiTiet.sanPham.ten}"></td>
+                        <td th:text="${item.soLuong}"></td>
+                        <td th:text="${item.sanPhamChiTiet.donGia} + ' đ'"></td>
+                        <td th:text="${item.soLuong * item.sanPhamChiTiet.donGia} + ' đ'"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="border p-3">
+                <h4>Thông Tin Khách Hàng</h4>
+                <form th:action="@{/khach-hang/thanh-toan/dat-hang}" method="post" id="payment-form">
+                    <div class="mb-3">
+                        <label for="fullName" class="form-label">Họ và tên</label>
+                        <input type="text" class="form-control" id="fullName" name="fullName"
+                               th:value="${khachHang != null ? khachHang.ten : ''}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email"
+                               th:value="${khachHang != null ? khachHang.email : ''}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Số điện thoại</label>
+                        <input type="tel" class="form-control" id="phone" name="phone"
+                               th:value="${khachHang != null ? khachHang.sdt : ''}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Địa chỉ giao hàng</label>
+                        <textarea class="form-control" id="address" name="address" rows="3"
+                                  th:text="${khachHang != null ? khachHang.diaChi : ''}" required></textarea>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Cột phải: Tổng tiền và nút đặt hàng -->
+        <div class="col-md-4">
+            <div class="border p-3">
+                <div class="d-flex justify-content-between align-items-center w-100">
+                    <h4 class="mb-0">Tổng Tiền:</h4>
+                    <p class="fs-5 mb-0" th:text="${gioHang.tongGia} + ' đ'"></p>
+                </div>
+                <h4>Phương Thức Thanh Toán</h4>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="paymentMethod" id="paymentCash" value="cash"
+                           checked required>
+                    <label class="form-check-label" for="paymentCash">Thanh toán khi nhận hàng</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="paymentMethod" id="paymentCard" value="card">
+                    <label class="form-check-label" for="paymentCard">Thanh toán bằng ví VnPay</label>
+                </div>
+                <div>
+                    <!-- Nút Đặt Hàng -->
+                    <button type="submit" id="dat-hang" class="btn btn-danger w-100 mt-3">Đặt Hàng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <h5>Triple V</h5>
+                <p>Địa chỉ: 123 Đường ABC, Quận X, Thành phố Y</p>
+            </div>
+            <div class="col-md-4">
+                <h5>Liên Hệ</h5>
+                <ul class="list-unstyled">
+                    <li><a href="#">Facebook</a></li>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">Twitter</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h5>Đăng ký nhận tin</h5>
+                <form>
+                    <div class="mb-3">
+                        <input type="email" class="form-control" placeholder="Email của bạn">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Đăng Ký</button>
+                </form>
+            </div>
+        </div>
+        <div class="text-center mt-3">
+            <p>&copy; 2024 Triple V. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<script th:src="@{/js/customer/thanh-toan.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

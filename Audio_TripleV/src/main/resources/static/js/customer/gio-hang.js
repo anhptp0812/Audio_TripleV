@@ -117,14 +117,3 @@ document.addEventListener('click', function (event) {
     }
 });
 
-document.querySelector('#chot-don').addEventListener('click', function () {
-    fetch('/khach-hang/don-hang/chot-don', {
-        method: 'GET'
-    })
-        .then(response => {
-            if (response.redirected) {
-                window.location.href = response.url; // Chuyển hướng đến trang đơn hàng của tôi
-            }
-        })
-        .catch(error => console.error('Error:', error));
-});

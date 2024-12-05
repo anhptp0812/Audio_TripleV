@@ -54,17 +54,21 @@
         <div class="col-lg-3">
             <div class="left-sidebar">
                 <div class="header">
-                    <div class="avatar"><img class="img-fluid" th:src="@{/shop/images/avatar/avatar.png}" alt="avatar"/></div>
+                    <div class="avatar"><img class="img-fluid" th:src="@{/images/avatar.jpg}" alt="avatar"/></div>
                     <div class="user-info">
+
+                        <span th:text="${fullName}">Tên người dùng</span>!</p>
+
                         <div class="user-name" th:text="${khachHang.ten}"></div>
+
                         <div class="edit-profile">Chỉnh sửa tài khoản</div>
                     </div>
                 </div>
                 <div class="break-line"></div>
                 <div class="nav-sidebar">
-                    <a class="account nav-item" href="/tai-khoan">Quản lý tài khoản</a>
-                    <a class="buying-order nav-item" href="/tai-khoan/lich-su-giao-dich">Quản lý đơn hàng</a>
-                    <a class="btn btn-primary red-btn sign-out-btn" href="/api/logout">Đăng xuất</a>
+                    <a class="account nav-item" href="/khach-hang/tai-khoan">Quản lý tài khoản</a>
+                    <a class="buying-order nav-item" href="/khach-hang/don-hang">Quản lý đơn hàng</a>
+                    <a class="btn btn-primary red-btn sign-out-btn" href="/logout">Đăng xuất</a>
                 </div>
             </div>
         </div>
@@ -75,15 +79,27 @@
                     <div class="tab-pane fade show active" id="profile-setting" role="tabpanel" aria-labelledby="profile-setting-tab">
                         <form class="setting-box">
                             <div class="full-name item-row col-md-10">
-                                <div class="text required-label">Họ tên</div>
                                 <div>
+
+                                    <label for="fullName" class="form-label">Họ và tên</label>
+                                    <input type="text" class="form-control" id="fullName" name="fullName"
+                                           th:value="${khachHang != null ? khachHang.ten : ''}" required>
+
                                     <input class="form-control" th:value="${khachHang.ten}" id="in-user-fullname"/>
+
                                     <div class="invalid-feedback"></div>
                                 </div>
                             </div>
                             <div class="email item-row col-md-10">
+
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" name="email"
+                                       th:value="${khachHang != null ? khachHang.email : ''}" required>
+                                <div class="invalid-feedback"></div>
+
                                 <div class="text required-label">Email</div>
                                 <input class="form-control" disabled="disabled" th:value="${khachHang.email}"/>
+
                             </div>
                             <div class="password item-row col-md-10">
                                 <div class="text required-label">Mật khẩu</div>
@@ -93,17 +109,28 @@
                                 </div>
                             </div>
                             <div class="phone item-row col-md-10">
-                                <div class="text required-label">Số điện thoại</div>
                                 <div>
+
+                                    <label for="phone" class="form-label">Số điện thoại</label>
+                                    <input type="tel" class="form-control" id="phone" name="phone"
+                                           th:value="${khachHang != null ? khachHang.sdt : ''}" required>
+
                                     <input class="form-control" th:value="${khachHang.sdt}" id="in-user-phone"/>
+
                                     <div class="invalid-feedback"></div>
                                 </div>
                             </div>
                             <div class="address item-row col-md-10">
+
+                                <label for="address" class="form-label">Địa chỉ</label>
+                                <textarea class="form-control" id="address" name="address" rows="3"
+                                          th:text="${khachHang != null ? khachHang.diaChi : ''}" required></textarea>
+
                                 <div class="text">Địa chỉ</div>
                                 <div>
                                     <textarea class="form-control" rows="5" th:text="${khachHang.diaChi}" id="in-user-address"></textarea>
                                 </div>
+
                             </div>
                             <div class="update-btn-wrapper item-row col-md-10">
                                 <div class="btn btn-primary red-btn update-btn">Cập nhật</div>

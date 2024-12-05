@@ -85,7 +85,7 @@
         </div>
         <div class="product-container">
             <div th:each="sanPhamChiTiet : ${sanPhamChiTietList}" class="product-card">
-                <a th:href="@{/san-pham/hien-thi/{id}(id=${sanPhamChiTiet.id})}"
+                <a th:href="@{/khach-hang/san-pham/hien-thi/{id}(id=${sanPhamChiTiet.id})}"
                    th:title="${sanPhamChiTiet.sanPham.ten}">
                     <img th:src="'/images/tainghe/' + ${sanPhamChiTiet.hinhAnh.ten}"
                          th:alt="${sanPhamChiTiet.sanPham.ten}">
