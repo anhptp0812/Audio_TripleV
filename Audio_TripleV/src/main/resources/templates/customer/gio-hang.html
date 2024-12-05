@@ -103,9 +103,15 @@
         0đ
     </div>
 
-    <!-- Nút Chốt đơn -->
-        <button class="btn btn-primary" id="chot-don" th:disabled="${totalPrice == null || totalPrice == 0}">Chốt đơn</button>
+    <!-- Nút Xác nhận đơn hàng -->
+    <div>
+        <form action="/khach-hang/thanh-toan/hien-thi" method="get">
+            <button type="submit" class="btn btn-primary" th:disabled="${totalPrice == null || totalPrice == 0}">
+                Xác nhận đơn hàng
+            </button>
+        </form>
     </div>
+
 </div>
 
 <!-- Footer -->
