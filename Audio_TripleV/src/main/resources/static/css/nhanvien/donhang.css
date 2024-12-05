@@ -9,24 +9,47 @@
 body {
     background: linear-gradient(120deg, #f6f9fc, #e9f1fa);
     color: #333;
-}
+}/* Navbar styling */
 .navbar-custom {
-    width: 100%;
     background: linear-gradient(90deg, #007bff, #0056b3);
-    padding: 15px 20px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1000;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 10px 20px;
+    color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.navbar-custom .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+
+.navbar-custom .nav-item {
+    margin-right: 20px;
+}
+.navbar-nav a{
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: color 0.3s ease;
+}
+.navbar-custom .nav-item a {
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: color 0.3s ease;
+}
+
+.navbar-custom .nav-item a:hover {
+    color: #ffc107;
+}
+
+.navbar-custom .btn {
+    border: none;
+    background: transparent;
+    color: white;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.navbar-custom .btn:hover {
+    color: #ffc107;
 }
 
 .navbar-custom .nav-link,
@@ -39,12 +62,6 @@ body {
     transition: color 0.3s ease, transform 0.2s ease;
 }
 
-.navbar-custom .nav-link:hover,
-.navbar-custom .btn:hover {
-    color: #ffc107;
-    transform: scale(1.05);
-}
-
 .navbar-custom .btn {
     border: 1px solid white;
     border-radius: 5px;
@@ -55,38 +72,31 @@ body {
 
 .navbar-custom .btn:hover {
     background: white;
-    color: #007bff;
+    color: #ffc107;
 }
 
 .search-input {
-    max-width: 250px;
-    padding: 8px 12px;
+    display: none;
+    transition: width 0.3s ease;
+}
+
+.navbar-custom .form-control {
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
     border-radius: 5px;
-    border: 1px solid #ccc;
-    font-size: 14px;
-    transition: all 0.3s ease;
+    transition: box-shadow 0.3s ease;
 }
 
-.search-input:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-    outline: none;
+.navbar-custom .form-control:focus {
+    box-shadow: 0 4px 6px rgba(0, 123, 255, 0.3);
 }
-
-.navbar-custom .search-container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-
 
 .account-content {
-    margin: 30px auto;
-    width: 85%;
-    padding: 20px;
+    flex: 10;
+    padding: 50px 20px;
     border-radius: 10px;
     animation: fadeIn 0.8s ease-in-out;
+    background: white;
 }
 
 .account-content h2 {
@@ -97,6 +107,11 @@ body {
     font-weight: bold;
 }
 
+.table{
+    min-height: 310px;
+    max-height: 800px;
+    overflow: auto;
+}
 
 table {
     width: 100%;
@@ -284,6 +299,11 @@ table td a:hover {
     color: #007bff;
 }
 
+.main-container {
+    display: flex;
+    gap: 20px;
+    margin: 20px;
+}
 
 @keyframes fadeIn {
     from {
@@ -297,6 +317,10 @@ table td a:hover {
 }
 
 @media (max-width: 768px) {
+    .main-container {
+        flex-direction: column;
+    }
+
     .navbar-custom .nav-link {
         font-size: 14px;
     }
