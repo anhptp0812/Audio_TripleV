@@ -5,8 +5,10 @@ import com.example.demo.entity.NhanVien;
 import com.example.demo.repository.KhachHangRepository;
 import com.example.demo.repository.NhanVienRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -63,9 +65,34 @@ public class NhanVienService implements UserDetailsService{
             throw new UsernameNotFoundException("Username not found: " + username);
         }
 
+    public Integer getLoggedInNhanVienId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+
+            if (principal instanceof UserDetails) {
+                String username = ((UserDetails) principal).getUsername();
+                Optional<NhanVien> nhanVien = nhanVienRepo.findByUsername(username);
+                if (nhanVien.isPresent()) {
+                    return nhanVien.get().getId();
+                }
+            }
+        }
+
+        return null;
+    }
+
+
 
     public List<NhanVien> layTatCaNhanVien() {
         return nhanVienRepo.findAll(); // Lấy tất cả nhân viên từ cơ sở dữ liệu
     }
+    public NhanVien findById(Integer id) {
+        return nhanVienRepo.findById(id).orElse(null); // Tìm nhân viên trong cơ sở dữ liệu
+    }
 
+    public Optional<NhanVien> findByTaiKhoan(String username) {
+        return nhanVienRepo.findByUsername(username);
+    }
 }

@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý sản phẩm</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.9.1/font/bootstrap-icons.min.css"
           rel="stylesheet">
     <link th:href="@{/css/admin/quanlysanpham.css}" rel="stylesheet">
@@ -82,6 +84,7 @@
                     <th>Đơn Giá</th>
                     <th>Số Lượng</th>
                     <th>Trạng Thái</th>
+                    <th>Mô tả</th>
                     <th>Ngày Tạo</th>
                     <th>Ngày Cập Nhật</th>
                     <th>Hành Động</th>
@@ -98,13 +101,14 @@
                     <td th:text="${spct.formattedDonGia + ' đ'}"></td>
                     <td th:text="${spct.soLuong}"></td>
                     <td th:text="${spct.trangThai}"></td>
+                    <td th:text="${spct.moTa}"></td>
                     <td th:text="${#dates.format(spct.ngayTao, 'yyyy-MM-dd')}"></td>
                     <td th:text="${#dates.format(spct.ngayCapNhat, 'yyyy-MM-dd')}"></td>
                     <td>
                         <a th:href="@{/spct/detail/{id}(id=${spct.id})}" class="btn btn-primary">Chi tiết</a>
                         <a th:href="@{/spct/form-update/{id}(id=${spct.id})}" class="btn btn-warning">Sửa</a>
-                        <a th:href="@{/spct/delete/{id}(id=${spct.id})}" class="btn btn-danger"
-                           onclick="return confirm('Bạn có muốn xóa không?');">Xóa</a>
+<!--                        <a th:href="@{/spct/delete/{id}(id=${spct.id})}" class="btn btn-danger"-->
+<!--                           onclick="return confirm('Bạn có muốn xóa không?');">Xóa</a>-->
                     </td>
                 </tr>
                 </tbody>

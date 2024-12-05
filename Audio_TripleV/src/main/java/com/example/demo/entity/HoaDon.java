@@ -38,6 +38,9 @@ public class HoaDon {
     @Column(name = "TrangThai")
     private String trangThai;
 
+    @Column(name = "DiaChiGiaoHang")
+    private String diaChiGiaoHang;
+
     @Column(name = "NgayGiao")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date ngayGiao;

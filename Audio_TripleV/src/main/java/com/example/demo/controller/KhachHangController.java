@@ -207,4 +207,45 @@ public class KhachHangController {
         return "redirect:/khach-hang/don-hang/danh-sach";
     }
 
+
+    @GetMapping("/khach-hang/don-hang/danh-sach")
+    public String danhSachDonHang(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+        // Lấy khách hàng hiện tại
+        KhachHang khachHang = khachHangService.findByTaiKhoan(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("Khách hàng không tồn tại"));
+        model.addAttribute("fullName", khachHang.getTen());
+
+        // Lấy danh sách đơn hàng
+        List<DonHang> donHangList = donHangService.findByKhachHang(khachHang);
+
+        model.addAttribute("donHangList", donHangList);
+        model.addAttribute("counter", 0);
+
+        // Lấy giỏ hàng dựa trên khách hàng, nếu chưa có thì tạo mới
+        GioHang gioHang = gioHangService.findByKhachHang(khachHang)
+                .orElseGet(() -> gioHangService.createGioHang(khachHang));
+
+        // Tính tổng số lượng trong giỏ hàng
+        int totalQuantity = 0; // For cart count
+        if (gioHang.getGioHangChiTietList() != null && !gioHang.getGioHangChiTietList().isEmpty()) {
+            totalQuantity = gioHang.getGioHangChiTietList().stream()
+                    .mapToInt(item -> item.getSoLuong())
+                    .sum();
+        }
+        model.addAttribute("cartCount", totalQuantity);
+
+        return "customer/don-hang-cua-toi"; // Trang hiển thị danh sách đơn hàng
+    }
+
+    @GetMapping("/khach-hang/thong-tin")
+    public String thongTinTaiKhoan(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+        // Lấy khách hàng hiện tại
+        KhachHang khachHang = khachHangService.findByTaiKhoan(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("Khách hàng không tồn tại"));
+        model.addAttribute("khachHang", khachHang);
+
+        return "customer/tai-khoan";
+    }
+
+
 }

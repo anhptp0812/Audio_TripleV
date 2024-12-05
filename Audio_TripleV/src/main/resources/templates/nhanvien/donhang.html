@@ -10,131 +10,309 @@
     <!--    <link rel="stylesheet" href="/src/main/resources/static/css/admin/donHang.css">-->
     <link th:href="@{/css/nhanvien/donhang.css}" rel="stylesheet">
 
+    <style>
+        .category{
+            background: white;
+            flex: 2;
+            text-align: center;
+        }
+
+        .category__heading{
+            color: white;
+            background: gray;
+            font-size: 20px;
+            font-weight: 500;
+            padding: 16px;
+            margin-top: 0;
+            text-transform: uppercase;
+        }
+
+        .category-list{
+            padding: 0 0 8px 0;
+            list-style: none;
+        }
+
+        .category-item{
+            position: relative;
+        }
+
+        .category-item:first-child::before{
+            display: none;
+        }
+
+        .category-item::before{
+            content: "";
+            border-top: 1px solid #e1e1e1;
+            position: absolute;
+            top: 0;
+            left: 20px;
+            right: 20px;
+        }
+
+        .category-item__link{
+            position: relative;
+            padding: 6px 20px;
+            font-size: 18px;
+            text-decoration: none;
+            color: gray;
+            display: block;
+        }
+
+        .category-item__link:hover{
+            color: white;
+            background: #88aebd;
+            text-decoration: none;
+        }
+    </style>
 </head>
 
 <body>
-
 <!-- Header Section (from home.html) -->
-<div class="container">
-    <nav class="navbar navbar-expand-lg navbar-custom">
-        <div class="container">
-            <!-- Left section -->
-            <div class="navbar-nav">
-                <a class="nav-item nav-link" href="/src/main/webapp/views/admin/bill/thanhToan.html">ThanhToan</a>
-                <a class="nav-item nav-link" href="/src/main/webapp/views/admin/mainViewNV/viewNV.html">Quản Lý</a>
-            </div>
+<header class="navbar navbar-expand-lg navbar-custom">
+    <div class="container">
+        <a class="navbar-brand" href="/trang-chu/hien-thi">
+            <img src="/images/logo.png" width="50" height="50" alt="Logo">
+        </a>
 
-            <!-- Right section with buttons -->
-            <div class="ml-auto d-flex align-items-center">
-                <input type="text" id="searchInput" class="form-control search-input" placeholder="Tìm kiếm...">
-                <button class="btn btn-outline-light" type="button" onclick="handleSearch()">
-                    <i class="bi bi-search"></i>
-                </button>
-                <a class="btn btn-outline-light" href="/src/main/webapp/views/admin/accNV/nvAcc.html">
-                    <i class="bi bi-person-circle"></i>
-                </a>
-            </div>
+        <div class="ml-auto d-flex align-items-center">
+            <a class="btn btn-outline-light" href="/src/main/webapp/views/admin/accNV/nvAcc.html">
+                <i class="bi bi-person-circle"></i>
+            </a>
         </div>
-    </nav>
-</div>
+    </div>
+</header>
+<!--<div class="container">-->
+<!--    <nav class="navbar navbar-expand-lg navbar-custom">-->
+<!--        <div class="container">-->
+<!--            &lt;!&ndash; Left section &ndash;&gt;-->
+<!--            <div class="navbar-nav">-->
+<!--                <a class="nav-item nav-link" href="/src/main/webapp/views/admin/bill/thanhToan.html">ThanhToan</a>-->
+<!--                <a class="nav-item nav-link" href="/src/main/webapp/views/admin/mainViewNV/viewNV.html">Quản Lý</a>-->
+<!--            </div>-->
+
+<!--            &lt;!&ndash; Right section with buttons &ndash;&gt;-->
+<!--            <div class="ml-auto d-flex align-items-center">-->
+<!--                <input type="text" id="searchInput" class="form-control search-input" placeholder="Tìm kiếm...">-->
+<!--                <button class="btn btn-outline-light" type="button" onclick="handleSearch()">-->
+<!--                    <i class="bi bi-search"></i>-->
+<!--                </button>-->
+<!--                <a class="btn btn-outline-light" href="/src/main/webapp/views/admin/accNV/nvAcc.html">-->
+<!--                    <i class="bi bi-person-circle"></i>-->
+<!--                </a>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </nav>-->
+<!--</div>-->
 <!-- Account Content (from original donHang.html) -->
-<div class="account-content">
-    <h2>ĐƠN HÀNG CỦA BẠN</h2>
-    <table>
-        <thead>
-        <tr>
-            <th>Tên khách Hàng</th>
-            <th>Tổng giá</th>
-            <th>TT thanh toán</th>
-            <th>Ngày Giao</th>
-            <th colspan="2">Action</th>
+<div class="main-container">
+    <nav class="category">
+        <h3 class="category__heading">Danh mục</h3>
 
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="dh : ${listDH}">
-            <td th:text="${dh.khachHang.ten}"></td>
-            <td th:text="${dh.tongGia}"></td>
-            <td th:text="${dh.trangThai}"></td>
-            <td th:text="${dh.ngayGiao}"></td>
-            <td>
-                <a th:href="@{/user/ban-hang/{id}(id=${dh.id})}" class="btn btn-primary">
-                    Detail
-                </a>
-            </td>
+        <ul class="category-list">
+            <li class="category-item">
+                <a href="/user/ban-hang" class="category-item__link">Bán hàng</a>
+            </li>
+            <li class="category-item">
+                <a href="/spct/hien-thi" class="category-item__link">Quản lý</a>
+            </li>
+            <li class="category-item">
+                <a href="#" class="category-item__link">Khách hàng</a>
+            </li>
+            <li class="category-item">
+                <a href="/user/don-hang" class="category-item__link">Đơn hàng</a>
+            </li>
+        </ul>
+    </nav>
+    <div class="account-content">
+        <div class="table">
+            <h2>ĐƠN HÀNG</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>Tên khách Hàng</th>
+                    <th>Tổng giá</th>
+                    <th>TT thanh toán</th>
+                    <th>Ngày Giao</th>
+                    <th colspan="2">Action</th>
 
-            <td>
-                <a class="btn btn-primary" href="javascript:void(0);" onclick="toggleProductList()">
-                    See more
-                </a>
-            </td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="dh : ${listDH}">
+                    <td th:text="${dh.khachHang.ten}"></td>
+                    <td th:text="${dh.tongGia}"></td>
+                    <td th:text="${dh.trangThai}"></td>
+                    <td th:text="${dh.ngayGiao}"></td>
+                    <td>
+                        <a th:href="@{/user/ban-hang/{id}(id=${dh.id})}" class="btn btn-primary">
+                            Detail
+                        </a>
+                    </td>
 
-            <!-- Phần trổ xuống khi click -->
-        <tr id="productList" style="display:none;">
-            <td colspan="6">
-                <!-- Danh sách sản phẩm -->
-                <div class="product-list" style="display: flex; flex-wrap: wrap; gap: 15px;">
-                    <div class="product-item" style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; flex: 1 1 18%; text-align: center;">
-                        <h5>Tên SP: Tai nghe Sennheiser</h5>
-                        <p>Giá: 1,500,000 VND</p>
-                    </div>
-                    <div class="product-item" style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; flex: 1 1 18%; text-align: center;">
-                        <h5>Tên SP: Tai nghe Sony</h5>
-                        <p>Giá: 1,200,000 VND</p>
-                    </div>
-                    <div class="product-item" style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; flex: 1 1 18%; text-align: center;">
-                        <h5>Tên SP: Tai nghe Bose</h5>
-                        <p>Giá: 3,000,000 VND</p>
-                    </div>
-                    <div class="product-item" style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; flex: 1 1 18%; text-align: center;">
-                        <h5>Tên SP: Tai nghe JBL</h5>
-                        <p>Giá: 1,800,000 VND</p>
-                    </div>
-                    <div class="product-item" style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; flex: 1 1 18%; text-align: center;">
-                        <h5>Tên SP: Tai nghe AKG</h5>
-                        <p>Giá: 2,200,000 VND</p>
-                    </div>
-                </div>
+                    <td>
+                        <a class="btn btn-primary" href="javascript:void(0);" onclick="toggleProductList()">
+                            See more
+                        </a>
+                    </td>
 
-                <!-- Phần phân trang -->
-                <div class="pagination" style="text-align: center; margin-top: 20px; display: flex; justify-content: center;">
-                    <button class="btn btn-outline-primary">
-                        <i class="bi bi-arrow-bar-left"></i> <!-- Về đầu trang -->
-                    </button>
-                    <button class="btn btn-outline-primary">
-                        <i class="bi bi-arrow-left-circle"></i> <!-- Back -->
-                    </button>
+                    <!-- Phần trổ xuống khi click -->
+                <tr id="productList" class="productList" style="display:none;">
+                    <td colspan="6">
+                        <!-- Danh sách sản phẩm -->
+                        <div class="product-list" style="display: flex; flex-wrap: wrap; gap: 15px;">
+                            <div class="product-item" style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; flex: 1 1 18%; text-align: center;">
+                                <h5>Tên SP: Tai nghe Sennheiser</h5>
+                                <p>Giá: 1,500,000 VND</p>
+                            </div>
+                            <div class="product-item" style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; flex: 1 1 18%; text-align: center;">
+                                <h5>Tên SP: Tai nghe Sony</h5>
+                                <p>Giá: 1,200,000 VND</p>
+                            </div>
+                            <div class="product-item" style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; flex: 1 1 18%; text-align: center;">
+                                <h5>Tên SP: Tai nghe Bose</h5>
+                                <p>Giá: 3,000,000 VND</p>
+                            </div>
+                            <div class="product-item" style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; flex: 1 1 18%; text-align: center;">
+                                <h5>Tên SP: Tai nghe JBL</h5>
+                                <p>Giá: 1,800,000 VND</p>
+                            </div>
+                            <div class="product-item" style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; flex: 1 1 18%; text-align: center;">
+                                <h5>Tên SP: Tai nghe AKG</h5>
+                                <p>Giá: 2,200,000 VND</p>
+                            </div>
+                        </div>
 
-                    <!-- Số trang -->
-                    <button class="btn btn-outline-primary">1</button>
-                    <button class="btn btn-outline-primary">2</button>
-                    <button class="btn btn-outline-primary">3</button>
-                    <span class="btn btn-outline-primary">...</span> <!-- Nút "..." cho các trang tiếp theo -->
+                        <!-- Phần phân trang -->
+                        <div class="pagination" style="text-align: center; margin-top: 20px; display: flex; justify-content: center;">
+                            <button class="btn btn-outline-primary">
+                                <i class="bi bi-arrow-bar-left"></i> <!-- Về đầu trang -->
+                            </button>
+                            <button class="btn btn-outline-primary">
+                                <i class="bi bi-arrow-left-circle"></i> <!-- Back -->
+                            </button>
 
-                    <button class="btn btn-outline-primary">10</button> <!-- Trang cuối cùng -->
+                            <!-- Số trang -->
+                            <button class="btn btn-outline-primary">1</button>
+                            <button class="btn btn-outline-primary">2</button>
+                            <button class="btn btn-outline-primary">3</button>
+                            <span class="btn btn-outline-primary">...</span> <!-- Nút "..." cho các trang tiếp theo -->
 
-                    <button class="btn btn-outline-primary">
-                        <i class="bi bi-arrow-right-circle"></i> <!-- Next -->
-                    </button>
-                    <button class="btn btn-outline-primary">
-                        <i class="bi bi-arrow-bar-right"></i> <!-- Về cuối trang -->
-                    </button>
-                </div>
-            </td>
-        </tr>
+                            <button class="btn btn-outline-primary">10</button> <!-- Trang cuối cùng -->
 
-        </tbody>
-    </table>
+                            <button class="btn btn-outline-primary">
+                                <i class="bi bi-arrow-right-circle"></i> <!-- Next -->
+                            </button>
+                            <button class="btn btn-outline-primary">
+                                <i class="bi bi-arrow-bar-right"></i> <!-- Về cuối trang -->
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+        <div class="table mt-5">
+            <h2>ĐƠN HÀNG CHƯA THANH TOÁN</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>Tên khách Hàng</th>
+                    <th>Tổng giá</th>
+                    <th>TT thanh toán</th>
+                    <th>Ngày Giao</th>
+                    <th colspan="2">Action</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="dh : ${listDH}">
+                    <td th:text="${dh.khachHang.ten}"></td>
+                    <td th:text="${dh.tongGia}"></td>
+                    <td th:text="${dh.trangThai}"></td>
+                    <td th:text="${dh.ngayGiao}"></td>
+                    <td>
+                        <a th:href="@{/user/ban-hang/{id}(id=${dh.id})}" class="btn btn-primary">
+                            Detail
+                        </a>
+                    </td>
+
+                    <td>
+                        <a class="btn btn-primary" href="javascript:void(0);" onclick="toggleProductList()">
+                            See more
+                        </a>
+                    </td>
+
+                    <!-- Phần trổ xuống khi click -->
+                <tr id="productList" class="productList" style="display:none;">
+                    <td colspan="6">
+                        <!-- Danh sách sản phẩm -->
+                        <div class="product-list" style="display: flex; flex-wrap: wrap; gap: 15px;">
+                            <div class="product-item" style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; flex: 1 1 18%; text-align: center;">
+                                <h5>Tên SP: Tai nghe Sennheiser</h5>
+                                <p>Giá: 1,500,000 VND</p>
+                            </div>
+                            <div class="product-item" style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; flex: 1 1 18%; text-align: center;">
+                                <h5>Tên SP: Tai nghe Sony</h5>
+                                <p>Giá: 1,200,000 VND</p>
+                            </div>
+                            <div class="product-item" style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; flex: 1 1 18%; text-align: center;">
+                                <h5>Tên SP: Tai nghe Bose</h5>
+                                <p>Giá: 3,000,000 VND</p>
+                            </div>
+                            <div class="product-item" style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; flex: 1 1 18%; text-align: center;">
+                                <h5>Tên SP: Tai nghe JBL</h5>
+                                <p>Giá: 1,800,000 VND</p>
+                            </div>
+                            <div class="product-item" style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; flex: 1 1 18%; text-align: center;">
+                                <h5>Tên SP: Tai nghe AKG</h5>
+                                <p>Giá: 2,200,000 VND</p>
+                            </div>
+                        </div>
+
+                        <!-- Phần phân trang -->
+                        <div class="pagination" style="text-align: center; margin-top: 20px; display: flex; justify-content: center;">
+                            <button class="btn btn-outline-primary">
+                                <i class="bi bi-arrow-bar-left"></i> <!-- Về đầu trang -->
+                            </button>
+                            <button class="btn btn-outline-primary">
+                                <i class="bi bi-arrow-left-circle"></i> <!-- Back -->
+                            </button>
+
+                            <!-- Số trang -->
+                            <button class="btn btn-outline-primary">1</button>
+                            <button class="btn btn-outline-primary">2</button>
+                            <button class="btn btn-outline-primary">3</button>
+                            <span class="btn btn-outline-primary">...</span> <!-- Nút "..." cho các trang tiếp theo -->
+
+                            <button class="btn btn-outline-primary">10</button> <!-- Trang cuối cùng -->
+
+                            <button class="btn btn-outline-primary">
+                                <i class="bi bi-arrow-right-circle"></i> <!-- Next -->
+                            </button>
+                            <button class="btn btn-outline-primary">
+                                <i class="bi bi-arrow-bar-right"></i> <!-- Về cuối trang -->
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
+<footer class="navbar navbar-expand-lg navbar-custom">
+    <div class="container">
+        <span class="m-auto">© 2024 - Bản quyền thuộc về TripleV</span>
+    </div>
+</footer>
 
 <script th:src="@{/js/nhanvien/donhang.js}"></script>
 <!-- Bootstrap JS and jQuery (from home.html) -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-
-
 </body>
 
 </html>

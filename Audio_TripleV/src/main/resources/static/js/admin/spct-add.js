@@ -11,6 +11,7 @@ function addSanPhamChiTiet(event) {
     const donGia = parseFloat(document.getElementById('donGia').value);
     const soLuong = parseInt(document.getElementById('soLuong').value, 10);
     const trangThai = document.getElementById('trangThai').value;
+    const moTa = document.getElementById('moTa').value;
     const ngayTao = new Date().toISOString().split('T')[0];
 
     // Thêm các giá trị vào formData
@@ -22,6 +23,7 @@ function addSanPhamChiTiet(event) {
     formData.append('donGia', donGia);
     formData.append('soLuong', soLuong);
     formData.append('trangThai', trangThai);
+    formData.append('moTa', moTa);
     formData.append('ngayTao', ngayTao);
 
     // Kiểm tra các trường bắt buộc
@@ -180,3 +182,4 @@ document.getElementById('hinhAnh').addEventListener('change', function () {
         previewImage.style.display = 'none';
     }
 });
+

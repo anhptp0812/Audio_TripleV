@@ -10,161 +10,326 @@
           rel="stylesheet">
     <!-- Link CSS remains unchanged as requested -->
     <link th:href="@{/css/nhanvien/productProvity.css}" rel="stylesheet">
+    <style>
+        .category {
+            background: white;
+            flex: 2;
+            text-align: center;
+        }
 
+        .category__heading {
+            color: white;
+            background: gray;
+            font-size: 20px;
+            font-weight: 500;
+            padding: 16px;
+            margin-top: 0;
+            text-transform: uppercase;
+        }
+
+        .category-list {
+            padding: 0 0 8px 0;
+            list-style: none;
+        }
+
+        .category-item {
+            position: relative;
+        }
+
+        .category-item:first-child::before {
+            display: none;
+        }
+
+        .category-item::before {
+            content: "";
+            border-top: 1px solid #e1e1e1;
+            position: absolute;
+            top: 0;
+            left: 20px;
+            right: 20px;
+        }
+
+        .category-item__link {
+            position: relative;
+            padding: 6px 20px;
+            font-size: 18px;
+            text-decoration: none;
+            color: gray;
+            display: block;
+        }
+
+        .category-item__link:hover {
+            color: white;
+            background: #88aebd;
+            text-decoration: none;
+        }
+    </style>
+    <style>
+        .table_order_ .table {
+            min-height: 310px;
+            max-height: 800px;
+            overflow: auto;
+        }
+
+        .table_order_ .account-content h2 {
+            font-size: 24px;
+            color: #007bff;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .table_order_ table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border: 2px solid #007bff;
+        }
+
+        .table_order_ table th, .table_order_ table td {
+            padding: 12px;
+            text-align: left;
+            font-size: 14px;
+            color: #555;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .table_order_ table th {
+            background: linear-gradient(90deg, #007bff, #0056b3);
+            color: white;
+            text-transform: uppercase;
+            font-weight: bold;
+            border-right: 1px solid #0046a5;
+        }
+
+        .table_order_ table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .table_order_ .product-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .table_order_ .product-item {
+            background-color: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            flex: 1 1 18%;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .table_order_ .product-item h5 {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .table_order_ .product-item p {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .category-container {
+            position: relative;
+            padding: 0px;
+        }
+
+        .category-buttons {
+            padding: 20px;
+            position: sticky;
+            top: 0;
+            background-color: #fff;
+            z-index: 10;
+        }
+
+        .menu-items {
+            padding: 20px;
+        }
+    </style>
 </head>
 
 <body>
 <!-- Header Section -->
-<nav class="navbar navbar-expand-lg navbar-custom">
+<header class="navbar navbar-expand-lg navbar-custom">
     <div class="container">
-        <div class="navbar-nav">
-            <a class="nav-item nav-link" href="/user/ban-hang">Bán Hàng</a>
-            <a class="nav-item nav-link" href="/spct/hien-thi">Quản Lý</a>
-            <a class="nav-item nav-link">Khách Hàng</a>
-            <a class="nav-item nav-link" href="/user/don-hang">Đơn hàng</a>
-        </div>
+        <a class="navbar-brand" href="/trang-chu/hien-thi">
+            <img src="/images/logo.png" width="50" height="50" alt="Logo">
+        </a>
+        <!--        <div class="navbar-nav">-->
+        <!--            <a class="nav-item nav-link" href="/user/ban-hang">Bán Hàng</a>-->
+        <!--            <a class="nav-item nav-link" href="/spct/hien-thi">Quản Lý</a>-->
+        <!--            <a class="nav-item nav-link">Khách Hàng</a>-->
+        <!--            <a class="nav-item nav-link" href="/user/don-hang">Đơn hàng</a>-->
+        <!--        </div>-->
 
         <div class="ml-auto d-flex align-items-center">
-            <input type="text" id="searchInput" class="form-control search-input" placeholder="Tìm kiếm...">
-            <button class="btn btn-outline-light" type="button" onclick="handleSearch()">
-                <i class="bi bi-search"></i>
-            </button>
+            <!--            <input type="text" id="searchInput" class="form-control search-input" placeholder="Tìm kiếm...">-->
+            <!--            <button class="btn btn-outline-light" type="button" onclick="handleSearch()">-->
+            <!--                <i class="bi bi-search"></i>-->
+            <!--            </button>-->
             <a class="btn btn-outline-light" href="/src/main/webapp/views/admin/accNV/nvAcc.html">
                 <i class="bi bi-person-circle"></i>
             </a>
         </div>
     </div>
-</nav>
+</header>
 
-<!-- Main Container -->
 <div class="main-container">
+    <nav class="category">
+        <h3 class="category__heading">Danh mục</h3>
+
+        <ul class="category-list">
+            <li class="category-item">
+                <a href="/user/ban-hang" class="category-item__link">Bán hàng</a>
+            </li>
+            <li class="category-item">
+                <a href="/spct/hien-thi" class="category-item__link">Quản lý</a>
+            </li>
+            <li class="category-item">
+                <a href="#" class="category-item__link">Khách hàng</a>
+            </li>
+            <li class="category-item">
+                <a href="/user/don-hang" class="category-item__link">Đơn hàng</a>
+            </li>
+        </ul>
+    </nav>
+    <!-- Main Container -->
     <!-- Category Navigation -->
-    <div class="category-container">
-        <div class="category-buttons">
-            <form id="searchForm"
-                  th:action="@{${donHang.id} != null ? '/user/ban-hang/' + ${donHang.id} : '/user/ban-hang'}"
-                  method="get">
+    <div class="">
+        <div class="category-container">
+            <div class="category-buttons">
+                <form id="searchForm"
+                      th:action="@{${donHang.id} != null ? '/user/ban-hang/' + ${donHang.id} : '/user/ban-hang'}"
+                      method="get">
 
-                <!-- Chọn sản phẩm -->
-<!--                <select name="idSanPham" id="idSanPham">-->
-<!--                    <option value="">Chọn sản phẩm</option>-->
-<!--                    <option th:each="sanPham : ${sanPhams}"-->
-<!--                            th:value="${sanPham.id}"-->
-<!--                            th:text="${sanPham.ten}"></option>-->
-<!--                </select>-->
-                <!-- Tìm kiếm sản phẩm theo tên -->
-                <input type="text" name="tenSanPham" id="tenSanPham" placeholder="Nhập tên sản phẩm"
-                       th:value="${param.tenSanPham}" class="form-control">
-                <!-- Chọn màu sắc -->
-                <select name="mauSac" id="mauSac">
-                    <option value="">Chọn màu sắc</option>
-                    <option th:each="mau : ${mauSacs}"
-                            th:value="${mau.id}"
-                            th:text="${mau.ten}"></option>
-                </select>
+                    <!-- Chọn sản phẩm -->
+                    <!--                <select name="idSanPham" id="idSanPham">-->
+                    <!--                    <option value="">Chọn sản phẩm</option>-->
+                    <!--                    <option th:each="sanPham : ${sanPhams}"-->
+                    <!--                            th:value="${sanPham.id}"-->
+                    <!--                            th:text="${sanPham.ten}"></option>-->
+                    <!--                </select>-->
+                    <!-- Tìm kiếm sản phẩm theo tên -->
+                    <input type="text" name="tenSanPham" id="tenSanPham" placeholder="Nhập tên sản phẩm"
+                           th:value="${param.tenSanPham}" class="form-control">
+                    <!-- Chọn màu sắc -->
+                    <select name="mauSac" id="mauSac">
+                        <option value="">Chọn màu sắc</option>
+                        <option th:each="mau : ${mauSacs}"
+                                th:value="${mau.id}"
+                                th:text="${mau.ten}"></option>
+                    </select>
 
-                <!-- Chọn hãng -->
-                <select name="hang" id="hang">
-                    <option value="">Chọn hãng</option>
-                    <option th:each="hang : ${hangs}"
-                            th:value="${hang.id}"
-                            th:text="${hang.ten}"></option>
-                </select>
+                    <!-- Chọn hãng -->
+                    <select name="hang" id="hang">
+                        <option value="">Chọn hãng</option>
+                        <option th:each="hang : ${hangs}"
+                                th:value="${hang.id}"
+                                th:text="${hang.ten}"></option>
+                    </select>
 
-                <!-- Chọn loại sản phẩm -->
-                <select name="idLoaiSP" id="idLoaiSP">
-                    <option value="">Chọn loại sản phẩm</option>
-                    <option th:each="loaiSP : ${loaiSanPhams}"
-                            th:value="${loaiSP.id}"
-                            th:text="${loaiSP.kieuDang}"></option>
-                </select>
+                    <!-- Chọn loại sản phẩm -->
+                    <select name="idLoaiSP" id="idLoaiSP">
+                        <option value="">Chọn loại sản phẩm</option>
+                        <option th:each="loaiSP : ${loaiSanPhams}"
+                                th:value="${loaiSP.id}"
+                                th:text="${loaiSP.kieuDang}"></option>
+                    </select>
 
-                <!-- Chọn khoảng đơn giá -->
-                <select name="donGia" id="donGia">
-                    <option value="">Chọn khoảng giá</option>
-                    <option value="0-5000000">0 - 5,000,000</option>
-                    <option value="5000001-10000000">5,000,001 - 10,000,000</option>
-                    <option value="10000001-15000000">10,000,001 - 15,000,000</option>
-                    <option value="15000001-20000000">15,000,001 - 20,000,000</option>
-                    <option value="20000001+">Trên 20,000,000</option>
-                </select>
+                    <!-- Chọn khoảng đơn giá -->
+                    <select name="donGia" id="donGia">
+                        <option value="">Chọn khoảng giá</option>
+                        <option value="0-5000000">0 - 5,000,000</option>
+                        <option value="5000001-10000000">5,000,001 - 10,000,000</option>
+                        <option value="10000001-15000000">10,000,001 - 15,000,000</option>
+                        <option value="15000001-20000000">15,000,001 - 20,000,000</option>
+                        <option value="20000001+">Trên 20,000,000</option>
+                    </select>
 
-                <button type="submit" class="btn btn-outline-dark">Tìm Kiếm</button>
-            </form>
-        </div>
+                    <button type="submit" class="btn btn-outline-dark">Tìm Kiếm</button>
+                </form>
+            </div>
 
-        <div class="menu-items">
-            <table id="dataTable" class="table">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Sản phẩm</th>
-                    <th>Màu sắc</th>
-                    <th>Hãng</th>
-                    <th>Hình ảnh</th>
-                    <th>Loại sản phẩm</th>
-                    <th>Đơn giá</th>
-                    <th>Số lượng</th>
-                    <th>Trạng thái</th>
-                    <th>Action</th>
-                </tr>
-                </thead>
-                <tbody id="tableBody">
-                <tr th:each="spct : ${spct}">
-                    <td th:text="${spct.id}"></td>
-                    <td th:text="${spct.sanPham.ten}"></td>
-                    <td th:text="${spct.mauSac.ten}"></td>
-                    <td th:text="${spct.hang.ten}"></td>
-                    <td>
-                        <img th:src="@{/images/tainghe/{ten}(ten=${spct.hinhAnh.ten})}"
-                             style="width: 100px; height: auto;"/>
-                    </td>
-                    <td th:text="${spct.loaiSanPham.kieuDang}"></td>
-                    <td th:text="${spct.donGia}"></td>
-                    <td th:text="${spct.soLuong}"></td>
-                    <td th:text="${spct.trangThai}"></td>
-                    <td>
-                        <button th:attr="onclick='addProductToForm(${spct.id}, ${spct.donGia}, ${spct.soLuong}, ${spct.sanPham.ten})'">
-                            Add Product
-                        </button>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <script>
-            function addProductToForm(spctId, productName, quantity, price) {
-            // if (isOrderCreated === false) {
-            //     showForms();
-            // }
-            // if (viewDetail === false) {
-            //     alert("Chưa mở Xem chi tiết");
-            //     return;
-            // }
-            const addedProductsTableBody = document.getElementById('addedProductsTableBody');
+            <div class="menu-items">
+                <table id="dataTable" class="table">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Sản phẩm</th>
+                        <th>Màu sắc</th>
+                        <th>Hãng</th>
+                        <th>Hình ảnh</th>
+                        <th>Loại sản phẩm</th>
+                        <th>Đơn giá</th>
+                        <th>Số lượng</th>
+                        <th>Trạng thái</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                    <tr th:each="spct : ${spct}">
+                        <td th:text="${spct.id}"></td>
+                        <td th:text="${spct.sanPham.ten}"></td>
+                        <td th:text="${spct.mauSac.ten}"></td>
+                        <td th:text="${spct.hang.ten}"></td>
+                        <td>
+                            <img th:src="@{/images/tainghe/{ten}(ten=${spct.hinhAnh.ten})}"
+                                 style="width: 100px; height: auto;"/>
+                        </td>
+                        <td th:text="${spct.loaiSanPham.kieuDang}"></td>
+                        <td th:text="${spct.donGia}"></td>
+                        <td th:text="${spct.soLuong}"></td>
+                        <td th:text="${spct.trangThai}"></td>
+                        <td>
+                            <button th:attr="onclick='addProductToForm(${spct.id}, ${spct.donGia}, ${spct.soLuong}, ${spct.sanPham.ten})'">
+                                Add Product
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <script>
+                function addProductToForm(spctId, productName, quantity, price) {
+                    // if (isOrderCreated === false) {
+                    //     showForms();
+                    // }
+                    // if (viewDetail === false) {
+                    //     alert("Chưa mở Xem chi tiết");
+                    //     return;
+                    // }
+                    const addedProductsTableBody = document.getElementById('addedProductsTableBody');
 
-            if (!addedProductsTableBody) {
-                console.error('Phần tử tbody không tồn tại!');
-                return;
-            }
+                    if (!addedProductsTableBody) {
+                        console.error('Phần tử tbody không tồn tại!');
+                        return;
+                    }
 
-            console.log(spctId, productName, quantity, price)
-            // Kiểm tra xem sản phẩm đã tồn tại trong giỏ chưa
-            let existingProduct = selectedProducts.find(product => product.spctId === spctId);
+                    console.log(spctId, productName, quantity, price)
+                    // Kiểm tra xem sản phẩm đã tồn tại trong giỏ chưa
+                    let existingProduct = selectedProducts.find(product => product.spctId === spctId);
 
-            if (existingProduct) {
-                // Nếu sản phẩm đã có trong giỏ, tăng số lượng lên
-                existingProduct.quantity += quantity;
+                    if (existingProduct) {
+                        // Nếu sản phẩm đã có trong giỏ, tăng số lượng lên
+                        existingProduct.quantity += quantity;
 
-                // Cập nhật lại số lượng trong bảng giỏ hàng
-                updateProductQuantityInTable(existingProduct);
-            } else {
-                // Nếu chưa có trong giỏ, thêm mới
-                const newProduct = {spctId, productName, quantity, price};
-                selectedProducts.push(newProduct);
+                        // Cập nhật lại số lượng trong bảng giỏ hàng
+                        updateProductQuantityInTable(existingProduct);
+                    } else {
+                        // Nếu chưa có trong giỏ, thêm mới
+                        const newProduct = {spctId, productName, quantity, price};
+                        selectedProducts.push(newProduct);
 
-                const newRow = document.createElement('tr');
-                newRow.innerHTML = `
+                        const newRow = document.createElement('tr');
+                        newRow.innerHTML = `
             <td>
                 <span>${productName || 'Chưa có tên sản phẩm'}</span>
                 <input type="hidden" name="spctIds" value="${spctId}"/>
@@ -173,14 +338,112 @@
             <td><input type="number" name="donGia" value="${price}" readonly /></td>
              <td><button onclick="removeProduct(this)">Xóa</button></td>
         `;
-                addedProductsTableBody.appendChild(newRow);
-            }
+                        addedProductsTableBody.appendChild(newRow);
+                    }
 
 
-            // Cập nhật tổng tiền sau khi thêm sản phẩm
-            updateTotalAmount(); // Cập nhật tổng tiền
-        }
-        </script>
+                    // Cập nhật tổng tiền sau khi thêm sản phẩm
+                    updateTotalAmount(); // Cập nhật tổng tiền
+                }
+            </script>
+        </div>
+        <div class="table_order_">
+            <div class="table">
+                <h2>ĐƠN HÀNG</h2>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Tên khách Hàng</th>
+                        <th>Tổng giá</th>
+                        <th>TT thanh toán</th>
+                        <th>Ngày Giao</th>
+                        <th colspan="2">Action</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="dh : ${listDH}">
+                        <td th:text="${dh.khachHang.ten}"></td>
+                        <td th:text="${dh.tongGia}"></td>
+                        <td th:text="${dh.trangThai}"></td>
+                        <td th:text="${dh.ngayGiao}"></td>
+                        <td>
+                            <a th:href="@{/user/ban-hang/{id}(id=${dh.id})}" class="btn btn-primary">
+                                Detail
+                            </a>
+                        </td>
+
+                        <td>
+                            <a class="btn btn-primary" href="javascript:void(0);" onclick="toggleProductList()">
+                                See more
+                            </a>
+                        </td>
+
+                        <!-- Phần trổ xuống khi click -->
+                    <tr id="productList" class="productList" style="display:none;">
+                        <td colspan="6">
+                            <!-- Danh sách sản phẩm -->
+                            <div class="product-list" style="display: flex; flex-wrap: wrap; gap: 15px;">
+                                <div class="product-item"
+                                     style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; flex: 1 1 18%; text-align: center;">
+                                    <h5>Tên SP: Tai nghe Sennheiser</h5>
+                                    <p>Giá: 1,500,000 VND</p>
+                                </div>
+                                <div class="product-item"
+                                     style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; flex: 1 1 18%; text-align: center;">
+                                    <h5>Tên SP: Tai nghe Sony</h5>
+                                    <p>Giá: 1,200,000 VND</p>
+                                </div>
+                                <div class="product-item"
+                                     style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; flex: 1 1 18%; text-align: center;">
+                                    <h5>Tên SP: Tai nghe Bose</h5>
+                                    <p>Giá: 3,000,000 VND</p>
+                                </div>
+                                <div class="product-item"
+                                     style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; flex: 1 1 18%; text-align: center;">
+                                    <h5>Tên SP: Tai nghe JBL</h5>
+                                    <p>Giá: 1,800,000 VND</p>
+                                </div>
+                                <div class="product-item"
+                                     style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; flex: 1 1 18%; text-align: center;">
+                                    <h5>Tên SP: Tai nghe AKG</h5>
+                                    <p>Giá: 2,200,000 VND</p>
+                                </div>
+                            </div>
+
+                            <!-- Phần phân trang -->
+                            <div class="pagination"
+                                 style="text-align: center; margin-top: 20px; display: flex; justify-content: center;">
+                                <button class="btn btn-outline-primary">
+                                    <i class="bi bi-arrow-bar-left"></i> <!-- Về đầu trang -->
+                                </button>
+                                <button class="btn btn-outline-primary">
+                                    <i class="bi bi-arrow-left-circle"></i> <!-- Back -->
+                                </button>
+
+                                <!-- Số trang -->
+                                <button class="btn btn-outline-primary">1</button>
+                                <button class="btn btn-outline-primary">2</button>
+                                <button class="btn btn-outline-primary">3</button>
+                                <span class="btn btn-outline-primary">...</span>
+                                <!-- Nút "..." cho các trang tiếp theo -->
+
+                                <button class="btn btn-outline-primary">10</button> <!-- Trang cuối cùng -->
+
+                                <button class="btn btn-outline-primary">
+                                    <i class="bi bi-arrow-right-circle"></i> <!-- Next -->
+                                </button>
+                                <button class="btn btn-outline-primary">
+                                    <i class="bi bi-arrow-bar-right"></i> <!-- Về cuối trang -->
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
     <!-- Order Summary -->
@@ -202,17 +465,13 @@
             <div>
                 <h3>Tạo đơn hàng</h3>
                 <form id="orderFormDetails" th:object="${donHang}" method="post" th:action="@{/user/ban-hang/save}">
-                    <!--                method="POST"-->
-                    <!--                th:object="${donHang}"-->
-                    <!--                th:action="@{/don-hang/save}"-->
+
                     <label>Đơn Hàng</label>
                     <input type="text" th:field="*{id}" disabled>
-                    <!--                <label>Khách Hàng: </label>-->
-                    <!--                <select th:field="*{khachHang.id}">-->
-                    <!--                    <option th:each="khachHang : ${listKh}"-->
-                    <!--                            th:value="${khachHang.id}"-->
-                    <!--                            th:text="${khachHang.ten}"></option>-->
-                    <!--                </select>-->
+                    <br>
+                    <!--                    <label>Nhân viên: </label>-->
+                    <!--                    <span th:field="*{nhanVien.ten}"></span>-->
+                    <!--                    <br>-->
                     <label>Khách Hàng: </label>
                     <input type="text" id="khachHangInput" placeholder="Khách hàng" readonly
                            th:field="*{khachHang.ten}"/>
@@ -222,7 +481,7 @@
                     <input type="text" th:field="*{tongGia}" value="${donHang.tongGia ?: 0}" disabled>
                     <br>
                     <label>Trạng Thái:</label>
-                    <input type="text" placeholder="Nhập trạng thái" th:field="*{trangThai}"/>
+                    <input type="text" placeholder="trạng thái" th:field="*{trangThai}"/>
                     <br>
 
                     <label>Ngày Giao:</label>
@@ -233,29 +492,40 @@
                     <button type="button" th:onclick="'viewOrderDetails(' + ${donHang.id} + ')'">Xem chi tiết</button>
                 </form>
 
-<!--                <input type="hidden" th:field="*{donHang.id}">-->
+                <!--                <input type="hidden" th:field="*{donHang.id}">-->
             </div>
             <script>
                 document.getElementById("orderFormDetails").onsubmit = function (event) {
-                    event.preventDefault(); // Ngăn form tự động submit
+                    event.preventDefault();
 
                     const formData = new FormData(this);
+                    const submitButton = this.querySelector('button[type="submit"]');
+                    submitButton.disabled = true; // Tạm khóa nút bấm
 
                     fetch('/user/ban-hang/save', {
                         method: 'POST',
                         body: formData
                     })
-                        .then(response => response.json())
+                        .then(response => {
+                            submitButton.disabled = false; // Mở khóa nút bấm
+                            if (!response.ok) {
+                                throw new Error('Lỗi khi gửi dữ liệu đến server!');
+                            }
+                            return response.json();
+                        })
                         .then(data => {
                             if (data.redirectUrl) {
-                                // Chuyển hướng đến trang đích
                                 window.location.href = data.redirectUrl;
                             } else {
                                 alert("Có lỗi xảy ra khi lưu hóa đơn.");
                             }
                         })
-                        .catch(error => console.error('Error:', error));
+                        .catch(error => {
+                            submitButton.disabled = false; // Mở khóa nút bấm
+                            alert(error.message);
+                        });
                 };
+
             </script>
 
             <!-- Nút để xem chi tiết đơn hàng theo ID đơn hàng -->
@@ -369,6 +639,12 @@
         </div>
     </div>
 </div>
+
+<footer class="navbar navbar-expand-lg navbar-custom">
+    <div class="container">
+        <span class="m-auto">© 2024 - Bản quyền thuộc về TripleV</span>
+    </div>
+</footer>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!--<script th:inline="javascript">-->
 <!--</script>-->
