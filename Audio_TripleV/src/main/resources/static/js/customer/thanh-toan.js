@@ -15,73 +15,69 @@ document.addEventListener('click', function (event) {
     }
 });
 
-function handleFormSubmission(event) {
-    event.preventDefault(); // Chặn form gửi mặc định
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.querySelector("form");
 
-    const ten = document.getElementById('ten').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const phone = document.getElementById('phone').value.trim();
-    const address = document.getElementById('address').value.trim();
-    const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
+    form.addEventListener("submit", function (event) {
+        let isValid = true;
+        const errors = [];
 
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    const phonePattern = /^(\+84|0)\d{9,10}$/;
+        // Lấy giá trị các trường
+        const fullName = document.getElementById("fullName").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const phone = document.getElementById("phone").value.trim();
+        const address = document.getElementById("address").value.trim();
+        const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked')?.value;
 
-    // Kiểm tra các trường dữ liệu
-    if (!ten) {
-        alert('Vui lòng nhập họ và tên.');
-        return;
-    }
+        // Kiểm tra Họ và Tên
+        if (fullName === "") {
+            isValid = false;
+            errors.push("Họ và tên không được để trống.");
+        }
 
-    if (!email || !emailPattern.test(email)) {
-        alert('Vui lòng nhập email hợp lệ.');
-        return;
-    }
+        // Kiểm tra Email
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (email === "") {
+            isValid = false;
+            errors.push("Email không được để trống.");
+        } else if (!emailRegex.test(email)) {
+            isValid = false;
+            errors.push("Email không đúng định dạng.");
+        }
 
-    if (!phone || !phonePattern.test(phone)) {
-        alert('Vui lòng nhập số điện thoại hợp lệ (bắt đầu bằng +84 hoặc 0, 9-10 chữ số).');
-        return;
-    }
+        // Kiểm tra Số điện thoại
+        const phoneRegex = /^[0-9]{10,11}$/; // Chỉ cho phép 10-11 chữ số
+        if (phone === "") {
+            isValid = false;
+            errors.push("Số điện thoại không được để trống.");
+        } else if (!phoneRegex.test(phone)) {
+            isValid = false;
+            errors.push("Số điện thoại không hợp lệ.");
+        }
 
-    if (!address) {
-        alert('Vui lòng nhập địa chỉ giao hàng.');
-        return;
-    }
+        // Kiểm tra Địa chỉ
+        if (address === "") {
+            isValid = false;
+            errors.push("Địa chỉ giao hàng không được để trống.");
+        }
 
-    if (!paymentMethod) {
-        alert('Vui lòng chọn phương thức thanh toán.');
-        return;
-    }
+        // Kiểm tra Phương thức thanh toán
+        if (paymentMethod === "card") {
+            isValid = false;
+            errors.push("Phương thức thanh toán bằng ví VnPay hiện chưa hỗ trợ.");
+        }
 
-    // Dữ liệu để gửi lên server
-    const orderData = {
-        fullName: ten,
-        email: email,
-        phone: phone,
-        address: address,
-        paymentMethod: paymentMethod.value
-    };
+        // Nếu không hợp lệ, ngăn form submit và hiển thị lỗi
+        if (!isValid) {
+            event.preventDefault(); // Ngăn form gửi dữ liệu
+            alert(errors.join("\n")); // Hiển thị lỗi dưới dạng popup
+            return;
+        }
 
-    // Xử lý theo phương thức thanh toán
-    if (paymentMethod.value === 'cash') {
-        // Gửi dữ liệu thanh toán qua fetch
-        fetch('/khach-hang/thanh-toan/dat-hang', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(orderData)
-        })
-            .then(response => {
-                if (response.redirected) {
-                    window.location.href = response.url;
-                }
-            })
-            .catch(error => console.error('Error:', error));
-    } else if (paymentMethod.value === 'card') {
-        alert('Chức năng thanh toán bằng ví VnPay hiện chưa hỗ trợ.');
-    }
-}
-
-// Lắng nghe sự kiện submit của form
-document.getElementById('payment-form').addEventListener('submit', handleFormSubmission);
+        // Xác nhận đặt hàng
+        const confirmOrder = confirm("Xác nhận đặt hàng? Bạn có chắc muốn hoàn tất đơn hàng này không?");
+        if (!confirmOrder) {
+            event.preventDefault(); // Ngăn form nếu người dùng chọn 'Hủy'
+        }
+    });
+});

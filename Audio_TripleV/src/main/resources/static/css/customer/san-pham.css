@@ -31,8 +31,6 @@ body {
     position: absolute;
     top: 100%;
     right: 0;
-}
-.dropdown-menu {
     background-color: #fff;
     border: 1px solid #ccc;
     padding: 10px;
@@ -59,26 +57,6 @@ body {
     justify-content: space-around;
     flex-wrap: wrap;
 
-}
-
-.cart-icon {
-    position: relative;
-}
-
-.cart-icon #cart-count {
-    position: absolute;
-    top: -5px;
-    right: -10px;
-    background-color: #dc3545;
-    color: #fff;
-    font-size: 12px;
-    font-weight: bold;
-    border-radius: 50%;
-    width: 18px;
-    height: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 /* Banner */
@@ -361,6 +339,21 @@ body {
     overflow-y: auto; /* Kích hoạt thanh cuộn dọc */
 }
 
+.cart-icon #cart-count {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background-color: #dc3545;
+    color: #fff;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 .cart-icon {
     color: #007bff; /* Màu xanh nước biển cho biểu tượng */
     text-decoration: none; /* Bỏ gạch chân cho liên kết */

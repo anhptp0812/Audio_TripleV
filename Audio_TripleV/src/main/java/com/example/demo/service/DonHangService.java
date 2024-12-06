@@ -9,6 +9,7 @@ import com.example.demo.entity.SanPhamChiTiet;
 
 import com.example.demo.repository.DonHangRepository;
 import com.example.demo.repository.DonHangChiTietRepository;
+import com.example.demo.repository.SanPhamChiTietRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,9 @@ public class DonHangService {
 
     @Autowired
     private DonHangChiTietRepository donHangChiTietRepository;
+
+    @Autowired
+    private SanPhamChiTietRepository sanPhamChiTietRepository;
 
     public DonHang findByid(Integer id) {
         return donHangRepository.findById(id).orElse(null);
@@ -71,5 +75,25 @@ public class DonHangService {
             donHang.getDonHangChiTietList().size();
         }
         return donHangList;
+    }
+
+    public void huyDonHang(Integer donHangId) {
+        // Lấy đơn hàng theo ID
+        DonHang donHang = donHangRepository.findById(donHangId).orElseThrow(() -> new RuntimeException("Đơn hàng không tồn tại"));
+
+        // Lặp qua danh sách chi tiết đơn hàng
+        for (DonHangChiTiet chiTiet : donHang.getDonHangChiTietList()) {
+            SanPhamChiTiet sanPhamChiTiet = chiTiet.getSanPhamChiTiet();
+
+            // Cập nhật lại số lượng sản phẩm trong SanPhamChiTiet
+            sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() + chiTiet.getSoLuong());
+
+            // Lưu lại cập nhật số lượng trong SanPhamChiTiet
+            sanPhamChiTietRepository.save(sanPhamChiTiet);
+        }
+
+        // Thực hiện hủy đơn hàng, có thể thay đổi trạng thái hoặc xóa đơn hàng
+        donHang.setTrangThai("Đã hủy");
+        donHangRepository.save(donHang);
     }
 }
