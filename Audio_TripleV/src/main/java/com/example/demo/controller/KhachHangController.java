@@ -16,13 +16,17 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Collections;
 import java.util.Date;
@@ -74,7 +78,7 @@ public class KhachHangController {
         // Lấy khách hàng hiện tại
         KhachHang khachHang = khachHangService.findByTaiKhoan(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("Khách hàng không tồn tại"));
-//        model.addAttribute("fullName", khachHang.getTen());
+        model.addAttribute("khachHang", khachHang);
 
         // Lấy danh sách đơn hàng
         List<DonHang> donHangList = donHangService.findByKhachHang(khachHang);
@@ -207,24 +211,13 @@ public class KhachHangController {
         return "redirect:/khach-hang/don-hang/danh-sach";
     }
 
-
-    @GetMapping("/khach-hang/don-hang/danh-sach")
-    public String danhSachDonHang(@AuthenticationPrincipal UserDetails userDetails, Model model) {
-        // Lấy khách hàng hiện tại
+    @GetMapping("/khach-hang/thong-tin")
+    public String thongTinTaiKhoan(@AuthenticationPrincipal UserDetails userDetails, Model model) {
         KhachHang khachHang = khachHangService.findByTaiKhoan(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("Khách hàng không tồn tại"));
-        model.addAttribute("fullName", khachHang.getTen());
-
-        // Lấy danh sách đơn hàng
-        List<DonHang> donHangList = donHangService.findByKhachHang(khachHang);
-
-        model.addAttribute("donHangList", donHangList);
-        model.addAttribute("counter", 0);
-
-        // Lấy giỏ hàng dựa trên khách hàng, nếu chưa có thì tạo mới
+        // Lấy giỏ hàng của khách hàng
         GioHang gioHang = gioHangService.findByKhachHang(khachHang)
-                .orElseGet(() -> gioHangService.createGioHang(khachHang));
-
+                .orElseThrow(() -> new RuntimeException("Giỏ hàng không tồn tại"));
         // Tính tổng số lượng trong giỏ hàng
         int totalQuantity = 0; // For cart count
         if (gioHang.getGioHangChiTietList() != null && !gioHang.getGioHangChiTietList().isEmpty()) {
@@ -233,19 +226,68 @@ public class KhachHangController {
                     .sum();
         }
         model.addAttribute("cartCount", totalQuantity);
-
-        return "customer/don-hang-cua-toi"; // Trang hiển thị danh sách đơn hàng
-    }
-
-    @GetMapping("/khach-hang/thong-tin")
-    public String thongTinTaiKhoan(@AuthenticationPrincipal UserDetails userDetails, Model model) {
-        // Lấy khách hàng hiện tại
-        KhachHang khachHang = khachHangService.findByTaiKhoan(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("Khách hàng không tồn tại"));
         model.addAttribute("khachHang", khachHang);
-
         return "customer/tai-khoan";
     }
 
+    @PostMapping("/khach-hang/thong-tin/cap-nhat")
+    public String capNhatThongTinTaiKhoan(@AuthenticationPrincipal UserDetails userDetails,
+                                          @ModelAttribute KhachHang khachHangCapNhat,
+                                          RedirectAttributes redirectAttributes) {
+        // Lấy khách hàng hiện tại từ cơ sở dữ liệu
+        KhachHang khachHang = khachHangService.findByTaiKhoan(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("Khách hàng không tồn tại"));
 
+        // Cập nhật thông tin
+        khachHang.setTen(khachHangCapNhat.getTen());
+        khachHang.setEmail(khachHangCapNhat.getEmail());
+        khachHang.setSdt(khachHangCapNhat.getSdt());
+        khachHang.setDiaChi(khachHangCapNhat.getDiaChi());
+
+        // Lưu lại thông tin cập nhật
+        khachHangService.save(khachHang);
+
+        redirectAttributes.addFlashAttribute("successMessage", "Cập nhật thông tin thành công!");
+        return "redirect:/khach-hang/thong-tin";
+    }
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @PostMapping("/khach-hang/thong-tin/doi-mat-khau")
+    public String doiMatKhau(@AuthenticationPrincipal UserDetails userDetails,
+                             @RequestParam("matKhauCu") String matKhauCu,
+                             @RequestParam("matKhauMoi") String matKhauMoi,
+                             @RequestParam("xacNhanMatKhauMoi") String xacNhanMatKhauMoi,
+                             RedirectAttributes redirectAttributes) {
+        // Lấy thông tin khách hàng hiện tại
+        KhachHang khachHang = khachHangService.findByTaiKhoan(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("Khách hàng không tồn tại"));
+
+        // Kiểm tra mật khẩu cũ
+        if (!passwordEncoder.matches(matKhauCu, khachHang.getMatKhau())) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Mật khẩu cũ không đúng!");
+            return "redirect:/khach-hang/thong-tin";
+        }
+
+        // Kiểm tra mật khẩu mới có khớp với xác nhận mật khẩu không
+        if (!matKhauMoi.equals(xacNhanMatKhauMoi)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Mật khẩu mới và xác nhận mật khẩu không khớp!");
+            return "redirect:/khach-hang/thong-tin";
+        }
+
+        // Đổi mật khẩu
+        khachHang.setMatKhau(passwordEncoder.encode(matKhauMoi));
+        khachHangService.save(khachHang);
+
+        redirectAttributes.addFlashAttribute("successMessage", "Đổi mật khẩu thành công!");
+        return "redirect:/khach-hang/thong-tin";
+    }
+
+    @PostMapping("/khach-hang/don-hang/huy/{id}")
+    public String huyDonHang(@PathVariable("id") Integer id) {
+        // Logic hủy đơn hàng
+        donHangService.huyDonHang(id); // Giả sử bạn có service xử lý hủy đơn hàng
+        return "redirect:/khach-hang/don-hang/danh-sach"; // Quay lại danh sách đơn hàng
+    }
 }
