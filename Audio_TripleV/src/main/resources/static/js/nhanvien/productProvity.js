@@ -270,7 +270,7 @@ function viewOrderDetails(spctId) {
                     <td>${item.productName || 'Chưa có tên sản phẩm'}</td>
                     <td><input type="number" name="soLuong" value="${item.quantity}" min="1" onchange="updateProductQuantity(this)" /></td>
                     <td><input type="number" name="donGia" value="${item.price}" readonly /></td>
-                    <td><button onclick="removeProductinDatabase()">Xóa</button></td>
+                    <td><button name="paymentMethod" value="xoa" onclick="removeProductinDatabase()">Xóa</button></td>
              
                 `;
                 addedProductsTableBody.appendChild(newRow);
@@ -301,7 +301,7 @@ function viewOrderDetails(spctId) {
 
 function removeProductinDatabase(spctId) {
     if (confirm("Are you sure you want to delete this item?")) {
-        fetch(`/user/ban-hang/delete/${spctId}`, { method: 'DELETE' })
+        fetch(`/user/hoa-hang//${spctId}`, { method: 'POST' })
             .then(response => {
                 if (response.ok) {
                     location.reload();
