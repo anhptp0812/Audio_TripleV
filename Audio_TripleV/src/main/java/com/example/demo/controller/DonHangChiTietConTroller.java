@@ -21,7 +21,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping("user")
+@RequestMapping("/user")
 public class DonHangChiTietConTroller {
 
 
