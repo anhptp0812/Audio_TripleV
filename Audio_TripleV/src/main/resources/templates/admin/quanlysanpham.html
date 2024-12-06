@@ -6,6 +6,7 @@
     <title>Quản lý sản phẩm</title>
 
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.9.1/font/bootstrap-icons.min.css"
           rel="stylesheet">
@@ -71,7 +72,9 @@
         <!-- Danh sách sản phẩm -->
         <div class="col-md-9">
             <h5 id="tableTitle">Danh sách sản phẩm</h5>
-            <a id="nutThem" href="/spct/form-add" class="btn btn-success mb-3" style="display: none;">Thêm Sản Phẩm</a>
+            <a id="nutThem" href="/spct/form-add" class="btn btn-custom btn-custom-add mb-3 custom-add-btn" style="display: none;">
+                <i class="fas fa-plus-circle"></i>
+            </a>
             <!-- Nút Thêm Sản Phẩm -->
             <table id="productTable" class="table table-bordered table-hover">
                 <thead class="thead-light">
@@ -105,10 +108,13 @@
                     <td th:text="${#dates.format(spct.ngayTao, 'yyyy-MM-dd')}"></td>
                     <td th:text="${#dates.format(spct.ngayCapNhat, 'yyyy-MM-dd')}"></td>
                     <td>
-                        <a th:href="@{/spct/detail/{id}(id=${spct.id})}" class="btn btn-primary">Chi tiết</a>
-                        <a th:href="@{/spct/form-update/{id}(id=${spct.id})}" class="btn btn-warning">Sửa</a>
-<!--                        <a th:href="@{/spct/delete/{id}(id=${spct.id})}" class="btn btn-danger"-->
-<!--                           onclick="return confirm('Bạn có muốn xóa không?');">Xóa</a>-->
+                        <a th:href="@{/spct/detail/{id}(id=${spct.id})}" class="btn btn-custom btn-custom-detail">
+                            <i class="fas fa-info-circle"></i>
+                        </a>
+
+                        <a th:href="@{/spct/form-update/{id}(id=${spct.id})}" class="btn btn-custom btn-custom-edit">
+                            <i class="fas fa-edit"></i>
+                        </a>
                     </td>
                 </tr>
                 </tbody>
@@ -116,7 +122,9 @@
 
             <!-- Danh sách màu sắc -->
 
-            <a id="nutThemMauSac" href="/mau-sac/form-add" class="btn btn-success mb-3" style="display: none;">Thêm Màu Sắc</a>
+            <a id="nutThemMauSac" href="/mau-sac/form-add" class="btn btn-custom btn-custom-add mb-3" style="display: none;">
+                <i class="fas fa-plus-circle"></i>
+            </a>
             <table id="colorTable" class="table table-bordered table-hover">
                 <thead class="thead-light">
                 <tr>
@@ -134,10 +142,14 @@
                     <td th:text="${#dates.format(mauSac.ngayTao, 'yyyy-MM-dd')}"></td>
                     <td th:text="${#dates.format(mauSac.ngayCapNhat, 'yyyy-MM-dd')}"></td>
                     <td>
-                        <a id="nutSuaMauSac" class="btn btn-primary">Sửa</a>
-                        <!-- th:href="@{/mau-sac/form-update/{id}(id=${mauSac.id})}" -->
-                        <a th:href="@{/mau-sac/delete/{id}(id=${mauSac.id})}" class="btn btn-danger"
-                           onclick="return confirm('Bạn có muốn xóa không?');">Xóa</a>
+                        <a th:href="@{/mau-sac/form-update/{id}(id=${mauSac.id})}" class="btn btn-custom btn-custom-edit">
+                            <i class="fas fa-edit"></i>
+                        </a>
+
+                        <a th:href="@{/mau-sac/delete/{id}(id=${mauSac.id})}" class="btn btn-custom btn-custom-delete"
+                           onclick="return confirm('Bạn có muốn xóa không?');">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
                     </td>
                 </tr>
                 </tbody>
@@ -145,8 +157,9 @@
 
             <!-- Danh sách loại sản phẩm -->
 
-            <a id="nutThemLoai" href="/loai-san-pham/form-add" class="btn btn-success mb-3" style="display: none;">Thêm
-                Loại Sản Phẩm</a> <!-- Nút Thêm Loại Sản Phẩm -->
+            <a id="nutThemLoai" href="/loai-san-pham/form-add" class="btn btn-custom btn-custom-add mb-3" style="display: none;">
+                <i class="fas fa-plus-circle"></i>
+            </a>
             <table id="categoryTable" class="table table-bordered table-hover">
                 <thead class="thead-light">
                 <tr>
@@ -164,10 +177,14 @@
                     <td th:text="${#dates.format(loaiSanPham.ngayTao, 'yyyy-MM-dd')}"></td>
                     <td th:text="${#dates.format(loaiSanPham.ngayCapNhat, 'yyyy-MM-dd')}"></td>
                     <td>
-                        <a id="nutSuaLoai" class="btn btn-primary">Sửa</a>
-                        <!-- th:href="@{/loai-san-pham/form-update/{id}(id=${loaiSanPham.id})}" -->
-                        <a th:href="@{/loai-san-pham/delete/{id}(id=${loaiSanPham.id})}" class="btn btn-danger"
-                           onclick="return confirm('Bạn có muốn xóa không?');">Xóa</a>
+                        <a th:href="@{/loai-san-pham/form-update/{id}(id=${loaiSanPham.id})}" class="btn btn-custom btn-custom-edit">
+                            <i class="fas fa-edit"></i>
+                        </a>
+
+                        <a th:href="@{/loai-san-pham/delete/{id}(id=${loaiSanPham.id})}" class="btn btn-custom btn-custom-delete"
+                           onclick="return confirm('Bạn có muốn xóa không?');">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
                     </td>
                 </tr>
                 </tbody>
@@ -175,8 +192,9 @@
 
             <!-- Danh sách hãng -->
 
-            <a id="nutThemHang" href="/hang/form-add" class="btn btn-success mb-3" style="display: none;">Thêm Hãng</a>
-            <!-- Nút Thêm Hãng -->
+            <a id="nutThemHang" href="/hang/form-add" class="btn btn-custom btn-custom-add mb-3" style="display: none;">
+                <i class="fas fa-plus-circle"></i>
+            </a>
             <table id="brandTable" class="table table-bordered table-hover">
                 <thead class="thead-light">
                 <tr>
@@ -194,18 +212,23 @@
                     <td th:text="${#dates.format(hang.ngayTao, 'yyyy-MM-dd')}"></td>
                     <td th:text="${#dates.format(hang.ngayCapNhat, 'yyyy-MM-dd')}"></td>
                     <td>
-                        <a id="nutSuaHang" class="btn btn-primary">Sửa</a>
-                        <!-- th:href="@{/hang/form-update/{id}(id=${hang.id})}" -->
-                        <a th:href="@{/hang/delete/{id}(id=${hang.id})}" class="btn btn-danger"
-                           onclick="return confirm('Bạn có muốn xóa không?');">Xóa</a>
+                        <a th:href="@{/hang/form-update/{id}(id=${hang.id})}" class="btn btn-custom btn-custom-edit">
+                            <i class="fas fa-edit"></i>
+                        </a>
+
+                        <a th:href="@{/hang/delete/{id}(id=${hang.id})}" class="btn btn-custom btn-custom-delete"
+                           onclick="return confirm('Bạn có muốn xóa không?');">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
                     </td>
                 </tr>
                 </tbody>
             </table>
 
             <!-- Danh sách hình ảnh -->
-            <a id="nutThemHinhAnh" href="/hinh-anh/form-add" class="btn btn-success mb-3" style="display: none;">Thêm
-                Hình Ảnh</a> <!-- Nút Thêm Hình Ảnh -->
+            <a id="nutThemHinhAnh" href="/hinh-anh/form-add" class="btn btn-custom btn-custom-add mb-3" style="display: none;">
+                <i class="fas fa-plus-circle"></i>
+            </a>
             <table id="imageTable" class="table table-bordered table-hover">
                 <thead class="thead-light">
                 <tr>
@@ -228,309 +251,18 @@
                     <td th:text="${#dates.format(hinhAnh.ngayTao, 'yyyy-MM-dd')}"></td>
                     <td th:text="${#dates.format(hinhAnh.ngayCapNhat, 'yyyy-MM-dd')}"></td>
                     <td>
-                        <a th:href="@{/hinh-anh/form-update/{id}(id=${hinhAnh.id})}" class="btn btn-primary">Sửa</a>
-                        <a th:href="@{/hinh-anh/delete/{id}(id=${hinhAnh.id})}" class="btn btn-danger"
-                           onclick="return confirm('Bạn có muốn xóa không?');">Xóa</a>
+                        <a th:href="@{/hinh-anh/form-update/{id}(id=${hinhAnh.id})}" class="btn btn-custom btn-custom-edit">
+                            <i class="fas fa-edit"></i>
+                        </a>
+
+                        <a th:href="@{/hinh-anh/delete/{id}(id=${hinhAnh.id})}" class="btn btn-custom btn-custom-delete"
+                           onclick="return confirm('Bạn có muốn xóa không?');">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
                     </td>
                 </tr>
                 </tbody>
             </table>
-        </div>
-    </div>
-</div>
-
-<!-- Model create color -->
-<div class="modal fade" id="createColorModal" tabindex="-1" aria-labelledby="createColorModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="createColorModalLabel">Thêm Màu Sắc</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label for="createTenMauSac" class="form-label">Tên Màu Sắc:</label>
-                    <input type="text" class="form-control" id="createTenMauSac" name="ten" required>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success" onclick="addMauSac()">
-                    Thêm
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<!-- Modal Edit Color -->
-<div class="modal fade" id="editColorModal" tabindex="-1" role="dialog" aria-labelledby="editColorModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editColorModalLabel">Chỉnh Sửa Màu Sắc</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="editColorForm">
-                    <div class="form-group">
-                        <label for="colorName">Tên Màu Sắc</label>
-                        <input type="text" class="form-control" id="colorName" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="colorCreatedDate">Ngày Tạo</label>
-                        <input type="date" class="form-control" id="colorCreatedDate" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="colorUpdatedDate">Ngày Sửa</label>
-                        <input type="date" class="form-control" id="colorUpdatedDate" required>
-                    </div>
-                    <button type="button" class="btn btn-success" onclick="saveColor()">
-                        <i class="bi bi-floppy2-fill"></i> Lưu
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Model create category -->
-<div class="modal fade" id="createCategoryModal" tabindex="-1" aria-labelledby="createCategoryModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="createCategoryModalLabel">Thêm Loại Sản Phẩm</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label for="createKieuDang" class="form-label">Kiểu Dáng:</label>
-                    <input type="text" class="form-control" id="createKieuDang" name="kieuDang" required>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success" onclick="addLoaiSP()">
-                    <i class="bi bi-plus-circle me-2"></i> Thêm
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal Edit Category -->
-<div class="modal fade" id="editCategoryModal" tabindex="-1" role="dialog" aria-labelledby="editCategoryModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editCategoryModalLabel">Chỉnh Sửa Loại Sản Phẩm</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="editCategoryForm">
-                    <div class="form-group">
-                        <label for="categoryName">Tên Loại Sản Phẩm</label>
-                        <input type="text" class="form-control" id="categoryName" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="categoryCreatedDate">Ngày Tạo</label>
-                        <input type="date" class="form-control" id="categoryCreatedDate" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="categoryUpdatedDate">Ngày Sửa</label>
-                        <input type="date" class="form-control" id="categoryUpdatedDate" required>
-                    </div>
-                    <button type="button" class="btn btn-success" onclick="saveCategory()">
-                        Lưu
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Model create brand -->
-<div class="modal fade" id="createBrandModal" tabindex="-1" aria-labelledby="createBrandModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="createBrandModalLabel">Thêm Hãng</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label for="createTenHang" class="form-label">Tên Hãng:</label>
-                    <input type="text" class="form-control" id="createTenHang" name="ten" required>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success" onclick="addHang()">
-                    <i class="bi bi-plus-circle me-2"></i> Thêm
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal Edit Brand -->
-<div class="modal fade" id="editBrandModal" tabindex="-1" role="dialog" aria-labelledby="editBrandModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editBrandModalLabel">Chỉnh Sửa Hãng</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="editBrandForm">
-                    <div class="form-group">
-                        <label for="brandName">Tên Hãng</label>
-                        <input type="text" class="form-control" id="brandName" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="brandCreatedDate">Ngày Tạo</label>
-                        <input type="date" class="form-control" id="brandCreatedDate" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="brandUpdatedDate">Ngày Sửa</label>
-                        <input type="date" class="form-control" id="brandUpdatedDate" required>
-                    </div>
-                    <button type="button" class="btn btn-success" onclick="saveBrand()">
-                        Lưu
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal Edit Product -->
-<div class="modal fade" id="editProductModal" tabindex="-1" role="dialog" aria-labelledby="editProductModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editProductModalLabel">Chỉnh Sửa Sản Phẩm</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="editProductForm">
-                    <div class="form-group">
-                        <label for="productName">Tên Sản Phẩm</label>
-                        <input type="text" class="form-control" id="productName" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="productColor">Màu Sắc</label>
-                        <input type="text" class="form-control" id="productColor" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="productBrand">Hãng</label>
-                        <input type="text" class="form-control" id="productBrand" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="productCategory">Loại Sản Phẩm</label>
-                        <input type="text" class="form-control" id="productCategory" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="imageBrand">Hình Ảnh</label>
-                        <input type="text" class="form-control" id="imageBrand" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="productStatus">Trạng Thái</label>
-                        <input type="text" class="form-control" id="productStatus" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="productCreatedDate">Ngày Tạo</label>
-                        <input type="date" class="form-control" id="productCreatedDate" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="productUpdatedDate">Ngày Sửa</label>
-                        <input type="date" class="form-control" id="productUpdatedDate" required>
-                    </div>
-                    <button type="button" class="btn btn-success" onclick="saveProduct()">
-                        <i class="bi bi-floppy2-fill"></i> Lưu
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Model create image -->
-<div class="modal fade" id="createImageModal" tabindex="-1" aria-labelledby="createImageModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="createImageModalLabel">Thêm Hình Ảnh</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label for="createTenHinhAnh" class="form-label">Tên Hình Ảnh:</label>
-                    <input type="text" class="form-control" id="createTenHinhAnh" name="ten" required>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success" onclick="addHinhAnh()">
-                    Thêm
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal Edit Image -->
-<div class="modal fade" id="editImageModal" tabindex="-1" role="dialog" aria-labelledby="editImageModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editImageModalLabel">Chỉnh Sửa Hình Ảnh</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="editImageForm">
-                    <div class="form-group">
-                        <label for="imageName">Tên Hình Ảnh</label>
-                        <input type="text" class="form-control" id="imageName" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="imageURL">URL Hình Ảnh</label>
-                        <input type="date" class="form-control" id="imageURL" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="imageCreatedDate">Ngày Tạo</label>
-                        <input type="date" class="form-control" id="imageCreatedDate" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="imageUpdatedDate">Ngày Sửa</label>
-                        <input type="date" class="form-control" id="imageUpdatedDate" required>
-                    </div>
-                    <button type="button" class="btn btn-success" onclick="saveImage()">
-                        <i class="bi bi-floppy2-fill"></i> Lưu
-                    </button>
-                </form>
-            </div>
         </div>
     </div>
 </div>

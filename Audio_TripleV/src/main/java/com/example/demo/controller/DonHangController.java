@@ -295,6 +295,7 @@ public class DonHangController {
 
         List<SanPhamChiTiet> list;
 
+
         // Xử lý khoảng giá nếu có
         if (donGia != null && !donGia.isEmpty()) {
             String[] priceRange = donGia.split("-");
@@ -316,10 +317,19 @@ public class DonHangController {
                 (tenSanPham == null || tenSanPham.isEmpty())) {
             // Nếu không chọn bộ lọc nào thì lấy tất cả sản phẩm
             list = sanPhamChiTietRepository.findAll();
+
+            for (SanPhamChiTiet spct : list) {
+                // Sử dụng phương thức getFormattedDonGia() để lấy giá trị đã định dạng
+                spct.getFormattedDonGia();
+            }
         } else {
             // Lấy danh sách sản phẩm theo các bộ lọc
             list = sanPhamChiTietRepository.findByFilters(
                     idLoaiSP, idSanPham, mauSac, hang, minPrice, maxPrice, tenSanPham);
+            for (SanPhamChiTiet spct : list) {
+                // Sử dụng phương thức getFormattedDonGia() để lấy giá trị đã định dạng
+                spct.getFormattedDonGia();
+            }
         }
 
         // Thêm danh sách sản phẩm vào model
