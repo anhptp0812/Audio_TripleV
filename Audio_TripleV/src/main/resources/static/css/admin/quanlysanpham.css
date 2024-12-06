@@ -116,3 +116,57 @@
     background-color: #007bff;
     color: white;
 }
+
+/* Nút chung */
+.btn-custom {
+    font-size: 16px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.btn-custom:hover {
+    opacity: 0.8;
+    transform: translateY(-2px);
+}
+
+/* Nút Thêm */
+.btn-custom-add {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-custom-add:hover {
+    background-color: #218838;
+}
+
+/* Nút Sửa */
+.btn-custom-edit {
+    background-color: #ffc107;
+    color: black;
+}
+
+.btn-custom-edit:hover {
+    background-color: #e0a800;
+}
+
+/* Nút Xóa */
+.btn-custom-delete {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-custom-delete:hover {
+    background-color: #c82333;
+}
+
+/* Nút Chi Tiết */
+.btn-custom-detail {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-custom-detail:hover {
+    background-color: #0056b3;
+}
