@@ -55,13 +55,6 @@ function generatePagination(totalPages) {
 // Ví dụ gọi hàm với tổng số trang là 10
 generatePagination(10);
 
-
-
-
-
-
-
-
 function handleSearch() {
     const searchInput = document.getElementById('searchInput');
     if (searchInput.style.display === 'none' || searchInput.style.display === '') {
