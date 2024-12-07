@@ -1,14 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.DonHangChiTiet;
-import com.example.demo.entity.Hang;
-import com.example.demo.entity.HoaDon;
-import com.example.demo.entity.HoaDonChiTiet;
-import com.example.demo.entity.LoaiSanPham;
-import com.example.demo.entity.MauSac;
-import com.example.demo.entity.NhanVien;
-import com.example.demo.entity.SanPham;
-import com.example.demo.entity.SanPhamChiTiet;
+import com.example.demo.entity.*;
 import com.example.demo.repository.DonHangChiTietRepository;
 import com.example.demo.repository.DonHangRepository;
 import com.example.demo.repository.HangRepository;
@@ -29,6 +21,8 @@ import com.example.demo.service.SanPhamChiTietService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -97,13 +91,33 @@ public class DonHangController {
 //    }
 
 
+//    @GetMapping("/don-hang")
+//    public String index(Model model) {
+//        model.addAttribute("donHang", new HoaDon());
+//        List<HoaDon> list = hoaDonRepository.findAll();
+//        model.addAttribute("listDH", list);
+//        return "nhanvien/donhang";
+//
+//    }
+
     @GetMapping("/don-hang")
     public String index(Model model) {
-        model.addAttribute("donHang", new HoaDon());
-        List<HoaDon> list = hoaDonRepository.findAll();
+        model.addAttribute("donHang", new DonHang());
+        List<DonHang> list = donHangRepository.findAll();
         model.addAttribute("listDH", list);
-        return "nhanvien/donhang";
 
+        List<String> trangThaiOptions = List.of("Chờ xử lý", "Đã xác nhận", "Đang giao", "Đã giao hàng", "Đã hủy");
+        model.addAttribute("trangThaiOptions", trangThaiOptions);
+
+        return "nhanvien/donhang";
+    }
+
+    @PostMapping("/don-hang/cap-nhat-trang-thai")
+    public String capNhatTrangThai(@RequestParam("id") Integer id, @RequestParam("trangThai") String trangThai) {
+        DonHang donHang = donHangRepository.findById(id).orElseThrow(() -> new RuntimeException("Không tìm thấy đơn hàng"));
+        donHang.setTrangThai(trangThai);
+        donHangRepository.save(donHang);
+        return "redirect:/user/don-hang"; // Quay lại trang danh sách đơn hàng
     }
 
     @PostMapping("/ban-hang/{id}")

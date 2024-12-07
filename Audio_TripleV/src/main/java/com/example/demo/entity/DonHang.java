@@ -42,6 +42,8 @@ public class DonHang {
     @Column(name = "TrangThai")
     private String trangThai;
 
+    @Column(name = "TrangThaiPayment")
+    private String trangThaiPayment;
 
     @Column(name = "NgayGiao")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
