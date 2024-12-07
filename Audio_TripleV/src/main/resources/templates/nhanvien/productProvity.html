@@ -285,7 +285,7 @@
                                  style="width: 100px; height: auto;"/>
                         </td>
                         <td th:text="${spct.loaiSanPham.kieuDang}"></td>
-                        <td th:text="${spct.donGia}"></td>
+                        <td th:text="${spct.formattedDonGia + ' đ'}"></td>
                         <td th:text="${spct.soLuong}"></td>
                         <td th:text="${spct.trangThai}"></td>
                         <td>
@@ -492,7 +492,7 @@
                     <button type="button" th:onclick="'viewOrderDetails(' + ${donHang.id} + ')'">Xem chi tiết</button>
                 </form>
 
-                <!--                <input type="hidden" th:field="*{donHang.id}">-->
+                                <input type="hidden" th:field="*{donHang.id}">
             </div>
             <script>
                 document.getElementById("orderFormDetails").onsubmit = function (event) {
@@ -542,9 +542,12 @@
                             <th>Số lượng</th>
                             <th>Đơn giá</th>
                             <th>Action</th>
-                        </tr>
+                        </tr >
                         </thead>
                         <tbody id="addedProductsTableBody">
+                        <tr data-id="2">
+
+                        </tr>
                         <!-- Các sản phẩm sẽ được thêm vào đây -->
                         </tbody>
                         <button class="pay-btn" type="submit" name="paymentMethod" value="xacnhan">Xác nhận</button>

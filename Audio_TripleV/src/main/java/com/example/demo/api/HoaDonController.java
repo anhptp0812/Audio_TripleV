@@ -25,15 +25,19 @@ import com.example.demo.service.NhanVienService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -50,6 +54,9 @@ public class HoaDonController {
 
     @Autowired
     private HoaDonRepository hoaDonRepository;
+
+    @Autowired
+    private HoaDonChiTietRepository hoaDonChiTietRepository;
 
     @Autowired
     private KhachHangService khachHangService;
@@ -156,6 +163,43 @@ public class HoaDonController {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", "Có lỗi xảy ra trong quá trình xử lý"));
         }
+    }
+
+    @PostMapping("/hoa-don/{spctId}")
+    public ResponseEntity<?> deleteHoaDon(@PathVariable Integer hoaDonId, @RequestParam("paymentMethod") String paymentMethod, HoaDon hoaDon) {
+        // Tìm hóa đơn theo ID
+        if ("xoa".equals(paymentMethod)) {
+            if ("Chưa thanh toán".equals(hoaDon.getTrangThai())) {
+                Optional<HoaDon> hoaDonOptional = hoaDonRepository.findById(hoaDonId);
+
+                if (hoaDonOptional.isEmpty()) {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Hóa đơn không tồn tại");
+                }
+                hoaDon = hoaDonOptional.get();
+
+                // Lấy danh sách các HoaDonChiTiet liên quan đến hóa đơn
+                List<HoaDonChiTiet> hoaDonChiTietList = hoaDonChiTietRepository.findByHoaDon_Id(hoaDonId);
+
+                // Xóa từng HoaDonChiTiet và cập nhật lại số lượng của SanPhamChiTiet
+                for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTietList) {
+                    SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
+
+                    // Cập nhật lại số lượng của sản phẩm
+                    sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() + hoaDonChiTiet.getSoLuong());
+                    sanPhamChiTietRepository.save(sanPhamChiTiet);
+
+                    // Xóa HoaDonChiTiet
+                    hoaDonChiTietRepository.delete(hoaDonChiTiet);
+                }
+
+                // Sau khi xóa hết các HoaDonChiTiet, xóa Hóa đơn
+
+
+                return ResponseEntity.ok("Xóa hóa đơn và các sản phẩm liên quan thành công");
+            }
+            return ResponseEntity.ok("Xóa hóa đơn và các sản phẩm liên quan thành công");
+        }
+        return ResponseEntity.ok("Xóa hóa đơn và các sản phẩm liên quan thành công");
     }
 
 }

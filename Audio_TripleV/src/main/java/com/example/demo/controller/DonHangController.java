@@ -121,171 +121,139 @@ public class DonHangController {
     }
 
     @PostMapping("/ban-hang/{id}")
-    public String saveOrderDetails(@PathVariable Integer id,
-                                   @RequestParam(required = false, value = "spctIds") List<Integer> spctIds,
-                                   @RequestParam(required = false, value = "soLuong") List<Integer> quantities,
-                                   @RequestParam("paymentMethod") String paymentMethod,
-                                   Model model) {
-        // Tìm hóa đơn
-        //Integer nhanvienId = get
+    public String saveOrderDetails(
+            @PathVariable Integer id,
+            @RequestParam(required = false, value = "spctIds") List<Integer> spctIds,
+            @RequestParam(required = false, value = "soLuong") List<Integer> quantities,
+            @RequestParam("paymentMethod") String paymentMethod,
+            Model model) {
+
         HoaDon hoaDon = hoaDonService.findByid(id);
         if (hoaDon == null) {
             model.addAttribute("error", "Đơn hàng không tồn tại!");
             return "error";
         }
+
         Integer nhanVienId = nhanVienService.getLoggedInNhanVienId();
         Optional<NhanVien> nhanVienOptional = nhanVienRepo.findById(nhanVienId);
 
         if (nhanVienOptional.isPresent()) {
-            NhanVien nhanVien = nhanVienOptional.get();
+            hoaDon.setNhanVien(nhanVienOptional.get());
+        } else {
+            model.addAttribute("error", "Không tìm thấy thông tin nhân viên!");
+            return "error";
+        }
 
-            // Gán nhân viên vào hóa đơn
-            hoaDon.setNhanVien(nhanVien);
-        // Nếu người dùng bấm xác nhận và gửi danh sách sản phẩm
-        if (spctIds != null && quantities != null && "xacnhan".equals(paymentMethod)) {
-            double totalAmount = hoaDon.getTongGia() == null ? 0 : hoaDon.getTongGia();
+        switch (paymentMethod) {
+            case "xacnhan":
+                return handleConfirmation(hoaDon, spctIds, quantities, model);
 
+            case "cash":
+                return handleCashPayment(hoaDon, spctIds, quantities, model);
+
+            case "vnpay":
+                hoaDon.setTrangThai("Chờ thanh toán VNPay");
+                hoaDonRepository.save(hoaDon);
+                return "redirect:/vnpay-hien-thi/" + hoaDon.getId();
+
+            case "xoa":
+                return handleDeletion(hoaDon, model);
+
+            default:
+                model.addAttribute("error", "Hành động không hợp lệ!");
+                return "error";
+        }
+    }
+
+    private String handleConfirmation(HoaDon hoaDon, List<Integer> spctIds, List<Integer> quantities, Model model) {
+        if (spctIds == null || quantities == null) {
+            model.addAttribute("error", "Danh sách sản phẩm hoặc số lượng không hợp lệ!");
+            return "error";
+        }
+
+        double totalAmount = hoaDon.getTongGia() == null ? 0 : hoaDon.getTongGia();
+
+        for (int i = 0; i < spctIds.size(); i++) {
+            Integer spctId = spctIds.get(i);
+            Integer soLuong = quantities.get(i);
+
+            if (!updateProductAndCreateDetail(hoaDon, spctId, soLuong, model)) {
+                return "error";
+            }
+
+            totalAmount += sanPhamChiTietService.findById(spctId).getDonGia() * soLuong;
+        }
+
+        hoaDon.setTongGia(totalAmount);
+        hoaDon.setTrangThai("Chờ thanh toán");
+        hoaDonRepository.save(hoaDon);
+
+        return "redirect:/user/ban-hang/" + hoaDon.getId();
+    }
+
+    private String handleCashPayment(HoaDon hoaDon, List<Integer> spctIds, List<Integer> quantities, Model model) {
+        if ("Đã thanh toán".equals(hoaDon.getTrangThai())) {
+            model.addAttribute("error", "Hóa đơn đã được thanh toán!");
+            return "error";
+        }
+
+        if (spctIds != null && quantities != null) {
             for (int i = 0; i < spctIds.size(); i++) {
                 Integer spctId = spctIds.get(i);
                 Integer soLuong = quantities.get(i);
 
-                // Tìm sản phẩm
-                SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietService.findById(spctId);
-                if (sanPhamChiTiet == null || sanPhamChiTiet.getSoLuong() < soLuong) {
-                    model.addAttribute("error", "Sản phẩm " + (sanPhamChiTiet != null ? sanPhamChiTiet.getSanPham().getTen() : "không xác định") + " không đủ số lượng.");
+                if (!updateProductAndCreateDetail(hoaDon, spctId, soLuong, model)) {
                     return "error";
                 }
-
-                // Tạo chi tiết hóa đơn
-                HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
-                hoaDonChiTiet.setHoaDon(hoaDon);
-                hoaDonChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
-                hoaDonChiTiet.setDonGia(sanPhamChiTiet.getDonGia());
-                hoaDonChiTiet.setSoLuong(soLuong);
-                hoaDonChiTiet.setNgayTao(new Date());
-                hoaDonChiTiet.setNgayCapNhat(new Date());
-
-                // Lưu chi tiết đơn hàng
-                hoaDonChiTietRepository.save(hoaDonChiTiet);
-
-                // Trừ số lượng sản phẩm tồn kho
-                sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - soLuong);
-                sanPhamChiTietRepository.save(sanPhamChiTiet);
-
-                // Tính tổng giá trị hóa đơn
-                totalAmount += sanPhamChiTiet.getDonGia() * soLuong;
             }
-
-            // Cập nhật tổng giá và trạng thái hóa đơn
-            hoaDon.setTongGia(totalAmount);
-            hoaDon.setTrangThai("Chờ thanh toán");
-            hoaDonRepository.save(hoaDon);
-            return "redirect:/user/ban-hang/" + hoaDon.getId();
         }
 
-        // Nếu người dùng bấm Thanh toán
-        if ("cash".equals(paymentMethod)) {
-            if ("Chờ thanh toán".equals(hoaDon.getTrangThai())) {
-                if (spctIds == null) {
-                    hoaDon.setTrangThai("Đã thanh toán");
-                    hoaDonRepository.save(hoaDon);
-                    return "redirect:/user/ban-hang";
-                } else {
-                    double totalAmount = hoaDon.getTongGia() == null ? 0 : hoaDon.getTongGia();
-
-                    for (int i = 0; i < spctIds.size(); i++) {
-                        Integer spctId = spctIds.get(i);
-                        Integer soLuong = quantities.get(i);
-
-                        // Tìm sản phẩm
-                        SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietService.findById(spctId);
-                        if (sanPhamChiTiet == null || sanPhamChiTiet.getSoLuong() < soLuong) {
-                            model.addAttribute("error", "Sản phẩm " + (sanPhamChiTiet != null ? sanPhamChiTiet.getSanPham().getTen() : "không xác định") + " không đủ số lượng.");
-                            return "error";
-                        }
-
-                        // Tạo chi tiết hóa đơn
-                        HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
-                        hoaDonChiTiet.setHoaDon(hoaDon);
-                        hoaDonChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
-                        hoaDonChiTiet.setDonGia(sanPhamChiTiet.getDonGia());
-                        hoaDonChiTiet.setSoLuong(soLuong);
-                        hoaDonChiTiet.setNgayTao(new Date());
-                        hoaDonChiTiet.setNgayCapNhat(new Date());
-
-                        // Lưu chi tiết đơn hàng
-                        hoaDonChiTietRepository.save(hoaDonChiTiet);
-
-                        // Trừ số lượng sản phẩm tồn kho
-                        sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - soLuong);
-                        sanPhamChiTietRepository.save(sanPhamChiTiet);
-
-                        // Tính tổng giá trị hóa đơn
-                        totalAmount += sanPhamChiTiet.getDonGia() * soLuong;
-                    }
-
-                    // Cập nhật tổng giá và trạng thái hóa đơn
-                    hoaDon.setTongGia(totalAmount);
-                    hoaDon.setTrangThai("Đã thanh toán");
-                    hoaDonRepository.save(hoaDon);
-                    return "redirect:/user/ban-hang/" + hoaDon.getId();
-                }
-            }
-                 // Chuyển đến trang thành công
-            }
-            if ("Chưa thanh toán".equals(hoaDon.getTrangThai())){
-
-                    double totalAmount = hoaDon.getTongGia() == null ? 0 : hoaDon.getTongGia();
-
-                    for (int i = 0; i < spctIds.size(); i++) {
-                        Integer spctId = spctIds.get(i);
-                        Integer soLuong = quantities.get(i);
-
-                        // Tìm sản phẩm
-                        SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietService.findById(spctId);
-                        if (sanPhamChiTiet == null || sanPhamChiTiet.getSoLuong() < soLuong) {
-                            model.addAttribute("error", "Sản phẩm " + (sanPhamChiTiet != null ? sanPhamChiTiet.getSanPham().getTen() : "không xác định") + " không đủ số lượng.");
-                            return "error";
-                        }
-
-                        // Tạo chi tiết hóa đơn
-                        HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
-                        hoaDonChiTiet.setHoaDon(hoaDon);
-                        hoaDonChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
-                        hoaDonChiTiet.setDonGia(sanPhamChiTiet.getDonGia());
-                        hoaDonChiTiet.setSoLuong(soLuong);
-                        hoaDonChiTiet.setNgayTao(new Date());
-                        hoaDonChiTiet.setNgayCapNhat(new Date());
-
-                        // Lưu chi tiết đơn hàng
-                        hoaDonChiTietRepository.save(hoaDonChiTiet);
-
-                        // Trừ số lượng sản phẩm tồn kho
-                        sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - soLuong);
-                        sanPhamChiTietRepository.save(sanPhamChiTiet);
-
-                        // Tính tổng giá trị hóa đơn
-                        totalAmount += sanPhamChiTiet.getDonGia() * soLuong;
-                    }
-
-                    // Cập nhật tổng giá và trạng thái hóa đơn
-                    hoaDon.setTongGia(totalAmount);
-                    hoaDon.setTrangThai("Đã thanh toán");
-                    hoaDonRepository.save(hoaDon);
-                    return "redirect:/user/ban-hang/" + hoaDon.getId();
-                }
-
-
-        } else if ("vnpay".equals(paymentMethod)) {
-            hoaDon.setTrangThai("Chờ thanh toán VNPay");
-            hoaDonRepository.save(hoaDon);
-            return "redirect:/vnpay-hien-thi/" + hoaDon.getId();
-        }
-
-        // Nếu không có hành động hợp lệ
-        model.addAttribute("error", "Hành động không hợp lệ!");
-        return "error";
+        hoaDon.setTrangThai("Đã thanh toán");
+        hoaDonRepository.save(hoaDon);
+        return "redirect:/user/ban-hang";
     }
+
+    private boolean updateProductAndCreateDetail(HoaDon hoaDon, Integer spctId, Integer soLuong, Model model) {
+        SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietService.findById(spctId);
+        if (sanPhamChiTiet == null || sanPhamChiTiet.getSoLuong() < soLuong) {
+            model.addAttribute("error", "Sản phẩm " + (sanPhamChiTiet != null ? sanPhamChiTiet.getSanPham().getTen() : "không xác định") + " không đủ số lượng.");
+            return false;
+        }
+
+        HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
+        hoaDonChiTiet.setHoaDon(hoaDon);
+        hoaDonChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
+        hoaDonChiTiet.setDonGia(sanPhamChiTiet.getDonGia());
+        hoaDonChiTiet.setSoLuong(soLuong);
+        hoaDonChiTiet.setNgayTao(new Date());
+        hoaDonChiTiet.setNgayCapNhat(new Date());
+        hoaDonChiTietRepository.save(hoaDonChiTiet);
+
+        sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - soLuong);
+        sanPhamChiTietRepository.save(sanPhamChiTiet);
+
+        return true;
+    }
+
+    private String handleDeletion(HoaDon hoaDon, Model model) {
+        List<HoaDonChiTiet> hoaDonChiTietList = hoaDonChiTietRepository.findByHoaDon_Id(hoaDon.getId());
+        if (hoaDonChiTietList.isEmpty()) {
+            model.addAttribute("error", "Không có chi tiết hóa đơn để xóa!");
+            return "error";
+        }
+
+        for (HoaDonChiTiet hoaDonChiTiet : hoaDonChiTietList) {
+            SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
+            sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() + hoaDonChiTiet.getSoLuong());
+            sanPhamChiTietRepository.save(sanPhamChiTiet);
+
+            hoaDonChiTietRepository.deleteByHoaDon_Id(hoaDon.getId());
+        }
+
+        hoaDonRepository.delete(hoaDon);
+        return "redirect:/user/ban-hang";
+    }
+
 
     @GetMapping("ban-hang/details/{id}")
     @ResponseBody
@@ -309,6 +277,7 @@ public class DonHangController {
 
         List<SanPhamChiTiet> list;
 
+
         // Xử lý khoảng giá nếu có
         if (donGia != null && !donGia.isEmpty()) {
             String[] priceRange = donGia.split("-");
@@ -330,10 +299,19 @@ public class DonHangController {
                 (tenSanPham == null || tenSanPham.isEmpty())) {
             // Nếu không chọn bộ lọc nào thì lấy tất cả sản phẩm
             list = sanPhamChiTietRepository.findAll();
+
+            for (SanPhamChiTiet spct : list) {
+                // Sử dụng phương thức getFormattedDonGia() để lấy giá trị đã định dạng
+                spct.getFormattedDonGia();
+            }
         } else {
             // Lấy danh sách sản phẩm theo các bộ lọc
             list = sanPhamChiTietRepository.findByFilters(
                     idLoaiSP, idSanPham, mauSac, hang, minPrice, maxPrice, tenSanPham);
+            for (SanPhamChiTiet spct : list) {
+                // Sử dụng phương thức getFormattedDonGia() để lấy giá trị đã định dạng
+                spct.getFormattedDonGia();
+            }
         }
 
         // Thêm danh sách sản phẩm vào model
