@@ -5,6 +5,7 @@ import com.example.demo.entity.DonHangChiTiet;
 import com.example.demo.entity.GioHang;
 import com.example.demo.entity.KhachHang;
 import com.example.demo.entity.SanPhamChiTiet;
+import com.example.demo.repository.DonHangRepository;
 import com.example.demo.service.DonHangService;
 import com.example.demo.service.GioHangService;
 import com.example.demo.service.KhachHangService;
@@ -41,6 +42,9 @@ public class KhachHangController {
     @Autowired
     private KhachHangService khachHangService;
 
+    @Autowired
+    private DonHangRepository donHangRepository;
+
     @GetMapping("hien-thi")
     public List<KhachHang> hienThiKhachHang() {
 
@@ -74,14 +78,27 @@ public class KhachHangController {
     private SanPhamChiTietService sanPhamChiTietService;
 
     @GetMapping("/khach-hang/don-hang/danh-sach")
-    public String danhSachDonHang(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+    public String danhSachDonHang(@AuthenticationPrincipal UserDetails userDetails, Model model,
+                                  @RequestParam(value = "trangThai", required = false) String trangThai) {
         // Lấy khách hàng hiện tại
         KhachHang khachHang = khachHangService.findByTaiKhoan(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("Khách hàng không tồn tại"));
         model.addAttribute("khachHang", khachHang);
 
         // Lấy danh sách đơn hàng
-        List<DonHang> donHangList = donHangService.findByKhachHang(khachHang);
+        List<DonHang> donHangList;
+
+        // Lọc đơn hàng theo trạng thái nếu có
+        if (trangThai != null && !trangThai.isEmpty()) {
+            donHangList = donHangRepository.findByTrangThai(trangThai);
+        } else {
+            donHangList = donHangRepository.findAll();
+        }
+
+        // Thông báo nếu không có đơn hàng phù hợp
+        if (donHangList.isEmpty()) {
+            model.addAttribute("message", "Không có đơn hàng phù hợp với tiêu chí tìm kiếm.");
+        }
 
         model.addAttribute("donHangList", donHangList);
 
@@ -142,7 +159,8 @@ public class KhachHangController {
                           @RequestParam String fullName,
                           @RequestParam String email,
                           @RequestParam String phone,
-                          @RequestParam String address) {
+                          @RequestParam String address,
+                          @RequestParam String paymentMethod) { // Nhận giá trị paymentMethod
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -172,6 +190,13 @@ public class KhachHangController {
         donHang.setTongGia(gioHang.getTongGia());
         donHang.setTrangThai("Chờ xử lý");
         donHang.setNgayTao(new Date());
+
+        // Cập nhật trạng thái thanh toán dựa trên phương thức thanh toán
+        if ("cash".equals(paymentMethod)) {
+            donHang.setTrangThaiPayment("Thanh toán khi nhận hàng");
+        } else if ("card".equals(paymentMethod)) {
+            donHang.setTrangThaiPayment("Đã thanh toán");
+        }
 
         // Chuyển các sản phẩm từ giỏ hàng sang chi tiết đơn hàng và cập nhật số lượng
         List<DonHangChiTiet> chiTietList = gioHang.getGioHangChiTietList().stream()

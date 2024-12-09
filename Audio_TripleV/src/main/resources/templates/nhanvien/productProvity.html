@@ -159,7 +159,33 @@
 
 <body>
 <!-- Header Section -->
+
+<header class="navbar navbar-expand-lg navbar-custom">
+    <div class="container">
+        <a class="navbar-brand" href="/trang-chu/hien-thi">
+            <img src="/images/logo.png" width="50" height="50" alt="Logo">
+        </a>
+        <!--        <div class="navbar-nav">-->
+        <!--            <a class="nav-item nav-link" href="/user/ban-hang">Bán Hàng</a>-->
+        <!--            <a class="nav-item nav-link" href="/spct/hien-thi">Quản Lý</a>-->
+        <!--            <a class="nav-item nav-link">Khách Hàng</a>-->
+        <!--            <a class="nav-item nav-link" href="/user/don-hang">Đơn hàng</a>-->
+        <!--        </div>-->
+
+        <div class="ml-auto d-flex align-items-center">
+            <!--            <input type="text" id="searchInput" class="form-control search-input" placeholder="Tìm kiếm...">-->
+            <!--            <button class="btn btn-outline-light" type="button" onclick="handleSearch()">-->
+            <!--                <i class="bi bi-search"></i>-->
+            <!--            </button>-->
+            <a class="btn btn-outline-light" href="#">
+                <i class="bi bi-person-circle"></i>
+            </a>
+        </div>
+    </div>
+</header>
+
 <th:block th:replace="~{/nhanvien/fragments :: nhan-vien-header}"/>
+
 
 <div class="main-container">
     <nav class="category">
@@ -196,6 +222,54 @@
         </ul>
     </nav>
     <!-- Main Container -->
+
+    <!-- Category Navigation -->
+    <div class="">
+        <div class="category-container">
+            <div class="category-buttons">
+                <form id="searchForm"
+                      th:action="@{${donHang.id} != null ? '/user/ban-hang/' + ${donHang.id} : '/user/ban-hang'}"
+                      method="get">
+                    <!-- Tìm kiếm sản phẩm theo tên -->
+                    <input type="text" name="tenSanPham" id="tenSanPham" placeholder="Nhập tên sản phẩm"
+                           th:value="${param.tenSanPham}" class="form-control">
+                    <!-- Chọn màu sắc -->
+                    <select name="mauSac" id="mauSac">
+                        <option value="">Chọn màu sắc</option>
+                        <option th:each="mau : ${mauSacs}"
+                                th:value="${mau.id}"
+                                th:text="${mau.ten}"></option>
+                    </select>
+
+                    <!-- Chọn hãng -->
+                    <select name="hang" id="hang">
+                        <option value="">Chọn hãng</option>
+                        <option th:each="hang : ${hangs}"
+                                th:value="${hang.id}"
+                                th:text="${hang.ten}"></option>
+                    </select>
+
+                    <!-- Chọn loại sản phẩm -->
+                    <select name="idLoaiSP" id="idLoaiSP">
+                        <option value="">Chọn loại sản phẩm</option>
+                        <option th:each="loaiSP : ${loaiSanPhams}"
+                                th:value="${loaiSP.id}"
+                                th:text="${loaiSP.kieuDang}"></option>
+                    </select>
+
+                    <!-- Chọn khoảng đơn giá -->
+                    <select name="donGia" id="donGia">
+                        <option value="">Chọn khoảng giá</option>
+                        <option value="0-5000000">0 - 5,000,000</option>
+                        <option value="5000001-10000000">5,000,001 - 10,000,000</option>
+                        <option value="10000001-15000000">10,000,001 - 15,000,000</option>
+                        <option value="15000001-20000000">15,000,001 - 20,000,000</option>
+                        <option value="20000001+">Trên 20,000,000</option>
+                    </select>
+
+                    <button type="submit" class="btn btn-outline-dark">Tìm Kiếm</button>
+                </form>
+
     <div class="content">
         <div id="category" class="category-content">
             <!-- Category Navigation -->
@@ -633,6 +707,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
 
@@ -681,12 +756,62 @@
                 </table>
             </div>
 
+            <script>
+                function addProductToForm(spctId, productName, quantity, price) {
+                    const addedProductsTableBody = document.getElementById('addedProductsTableBody');
+
+                    if (!addedProductsTableBody) {
+                        console.error('Phần tử tbody không tồn tại!');
+                        return;
+                    }
+
+                    console.log(spctId, productName, quantity, price)
+                    // Kiểm tra xem sản phẩm đã tồn tại trong giỏ chưa
+                    let existingProduct = selectedProducts.find(product => product.spctId === spctId);
+
+                    if (existingProduct) {
+                        // Nếu sản phẩm đã có trong giỏ, tăng số lượng lên
+                        existingProduct.quantity += quantity;
+
+                        // Cập nhật lại số lượng trong bảng giỏ hàng
+                        updateProductQuantityInTable(existingProduct);
+                    } else {
+                        // Nếu chưa có trong giỏ, thêm mới
+                        const newProduct = {spctId, productName, quantity, price};
+                        selectedProducts.push(newProduct);
+
+                        const newRow = document.createElement('tr');
+                        newRow.innerHTML = `
+            <td>
+                <span>${productName || 'Chưa có tên sản phẩm'}</span>
+                <input type="hidden" name="spctIds" value="${spctId}"/>
+            </td>
+            <td><input type="number" name="soLuong" value="${quantity}" min="1" onchange="updateProductQuantity(this)" /></td>
+            <td><input type="number" name="donGia" value="${price}" readonly /></td>
+             <td><button onclick="removeProduct(this)">Xóa</button></td>
+        `;
+                        addedProductsTableBody.appendChild(newRow);
+                    }
+
+                    // Cập nhật tổng tiền sau khi thêm sản phẩm
+                    updateTotalAmount(); // Cập nhật tổng tiền
+                }
+            </script>
+        </div>
+        <div class="table_order_">
+            <div class="table">
+                <h2>ĐƠN HÀNG</h2>
+                <table>
+                    <thead>
+
+
             <!-- Danh sách màu sắc -->
 
             <a id="nutThemMauSac" href="/mau-sac/form-add" class="btn btn-success mb-3" style="display: none;">Thêm Màu Sắc</a>
             <div class="product-item">
                 <table id="colorTable" class="table table-bordered table-hover">
                     <thead class="thead-light">
+
                     <tr>
                         <th>ID Màu Sắc</th>
                         <th>Tên Màu Sắc</th>
@@ -739,6 +864,9 @@
                             <a th:href="@{/loai-san-pham/delete/{id}(id=${loaiSanPham.id})}" class="btn btn-danger"
                                onclick="return confirm('Bạn có muốn xóa không?');">Xóa</a>
                         </td>
+
+                    </tr>
+
                     </tr>
                     </tbody>
                 </table>
@@ -807,6 +935,7 @@
                                onclick="return confirm('Bạn có muốn xóa không?');">Xóa</a>
                         </td>
                     </tr>
+
                     </tbody>
                 </table>
             </div>

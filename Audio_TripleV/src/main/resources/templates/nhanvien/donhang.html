@@ -127,9 +127,22 @@
         </ul>
     </nav>
     <div class="account-content">
+
+        <div class="table text-center">
+            <div class="btn-group my-3 w-100">
+                <a class="btn btn-outline-secondary" href="/user/don-hang">Tất cả</a>
+                <a class="btn btn-outline-secondary" href="/user/don-hang?trangThai=Chờ xử lý">Chờ xử lý</a>
+                <a class="btn btn-outline-secondary" href="/user/don-hang?trangThai=Đã xác nhận">Đã xác nhận</a>
+                <a class="btn btn-outline-secondary" href="/user/don-hang?trangThai=Đang giao hàng">Đang giao hàng</a>
+                <a class="btn btn-outline-secondary" href="/user/don-hang?trangThai=Đã giao hàng">Đã giao hàng</a>
+                <a class="btn btn-outline-secondary" href="/user/don-hang?trangThai=Đã hủy">Đã hủy</a>
+            </div>
+            <table class="table table-hover table-striped">
+
         <div class="table">
             <h2>ĐƠN HÀNG</h2>
             <table>
+
                 <thead>
                 <tr>
                     <th>Tên khách Hàng</th>
@@ -142,6 +155,45 @@
                 </thead>
                 <tbody>
                 <tr th:each="dh : ${listDH}">
+
+                    <form action="#" th:action="@{/user/don-hang/cap-nhat-trang-thai}" method="post">
+                        <td th:text="${dh.khachHang.ten}"></td>
+                        <td th:text="${dh.tongGia}"></td>
+                        <td>
+                            <input type="hidden" th:value="${dh.id}" name="id"/>
+                            <select name="trangThai" required class="form-control">
+                                <!-- Kiểm tra trạng thái hiện tại và chọn các trạng thái hợp lệ -->
+                                <option class="form-control" value="Chờ xử lý"
+                                        th:selected="${dh.trangThai == 'Chờ xử lý'}"
+                                        th:disabled="${dh.trangThai == 'Chờ xử lý' || dh.trangThai == 'Đã xác nhận' || dh.trangThai == 'Đang giao hàng' || dh.trangThai == 'Đã giao hàng'}">Chờ xử lý</option>
+
+                                <option class="form-control" value="Đã xác nhận"
+                                        th:selected="${dh.trangThai == 'Đã xác nhận'}"
+                                        th:disabled="${ dh.trangThai == 'Đã xác nhận' || dh.trangThai == 'Đang giao hàng' || dh.trangThai == 'Đã giao hàng' || dh.trangThai == 'Đã hủy'}">Đã xác nhận</option>
+
+                                <option class="form-control" value="Đang giao hàng"
+                                        th:selected="${dh.trangThai == 'Đang giao hàng'}"
+                                        th:disabled="${dh.trangThai == 'Chờ xử lý' || dh.trangThai == 'Đang giao hàng' || dh.trangThai == 'Đã giao hàng' || dh.trangThai == 'Đã hủy'}">Đang giao hàng</option>
+
+                                <option class="form-control" value="Đã giao hàng"
+                                        th:selected="${dh.trangThai == 'Đã giao hàng'}"
+                                        th:disabled="${dh.trangThai == 'Chờ xử lý' || dh.trangThai == 'Đã xác nhận' || dh.trangThai == 'Đã giao hàng' || dh.trangThai == 'Đã hủy'}">Đã giao hàng</option>
+
+                                <option class="form-control" value="Đã hủy"
+                                        th:selected="${dh.trangThai == 'Đã hủy'}"
+                                        th:disabled="${ dh.trangThai == 'Đã xác nhận' || dh.trangThai == 'Đang giao hàng' || dh.trangThai == 'Đã giao hàng' || dh.trangThai == 'Đã hủy'}">Đã hủy</option>
+                            </select>
+                        </td>
+                        <td th:text="${dh.trangThaiPayment ?: ''}"></td>
+                        <td th:text="${dh.ngayTao}"></td>
+                        <td th:text="${dh.ngayCapNhat}"></td>
+                        <td th:text="${dh.ngayGiao != null ? dh.ngayGiao : ''}"></td>
+
+                        <td>
+                            <button class="btn btn-primary" type="submit">Cập nhật trạng thái</button>
+                        </td>
+                    </form>
+
                     <td th:text="${dh.khachHang.ten}"></td>
                     <td th:text="${dh.tongGia}"></td>
                     <td th:text="${dh.trangThai}"></td>
@@ -210,10 +262,16 @@
                             </button>
                         </div>
                     </td>
+
                 </tr>
 
                 </tbody>
             </table>
+
+            <div th:if="${message}" class="alert alert-info">
+                <span th:text="${message}"></span>
+            </div>
+
         </div>
         <div class="table mt-5">
             <h2>ĐƠN HÀNG CHƯA THANH TOÁN</h2>
@@ -302,6 +360,7 @@
 
                 </tbody>
             </table>
+
         </div>
     </div>
 </div>

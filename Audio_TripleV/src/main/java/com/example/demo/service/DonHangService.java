@@ -94,6 +94,8 @@ public class DonHangService {
 
         // Thực hiện hủy đơn hàng, có thể thay đổi trạng thái hoặc xóa đơn hàng
         donHang.setTrangThai("Đã hủy");
+        donHang.setTrangThaiPayment("Hủy thanh toán");
+        donHang.setNgayCapNhat(new Date());
         donHangRepository.save(donHang);
     }
 
