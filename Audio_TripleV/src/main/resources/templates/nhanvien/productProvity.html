@@ -175,7 +175,7 @@
             <!--            <button class="btn btn-outline-light" type="button" onclick="handleSearch()">-->
             <!--                <i class="bi bi-search"></i>-->
             <!--            </button>-->
-            <a class="btn btn-outline-light" href="/src/main/webapp/views/admin/accNV/nvAcc.html">
+            <a class="btn btn-outline-light" href="#">
                 <i class="bi bi-person-circle"></i>
             </a>
         </div>
@@ -209,14 +209,6 @@
                 <form id="searchForm"
                       th:action="@{${donHang.id} != null ? '/user/ban-hang/' + ${donHang.id} : '/user/ban-hang'}"
                       method="get">
-
-                    <!-- Chọn sản phẩm -->
-                    <!--                <select name="idSanPham" id="idSanPham">-->
-                    <!--                    <option value="">Chọn sản phẩm</option>-->
-                    <!--                    <option th:each="sanPham : ${sanPhams}"-->
-                    <!--                            th:value="${sanPham.id}"-->
-                    <!--                            th:text="${sanPham.ten}"></option>-->
-                    <!--                </select>-->
                     <!-- Tìm kiếm sản phẩm theo tên -->
                     <input type="text" name="tenSanPham" id="tenSanPham" placeholder="Nhập tên sản phẩm"
                            th:value="${param.tenSanPham}" class="form-control">

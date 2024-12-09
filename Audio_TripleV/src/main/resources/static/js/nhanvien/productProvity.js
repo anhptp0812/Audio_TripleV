@@ -301,7 +301,7 @@ function viewOrderDetails(spctId) {
 
 function removeProductinDatabase(spctId) {
     if (confirm("Are you sure you want to delete this item?")) {
-        fetch(`/user/hoa-hang//${spctId}`, { method: 'POST' })
+        fetch(`/user/ban-hang-xoa/${spctId}`, { method: 'GET' })
             .then(response => {
                 if (response.ok) {
                     location.reload();
@@ -312,7 +312,6 @@ function removeProductinDatabase(spctId) {
             .catch(error => console.error('Error:', error));
     }
 }
-
 
 function deleteProductRow(dhctId, button) {
     if (!dhctId || isNaN(dhctId)) {

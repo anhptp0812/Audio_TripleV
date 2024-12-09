@@ -26,6 +26,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 import java.util.*;
@@ -37,7 +38,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/user")
 public class DonHangController {
-//    @Autowired
+    //    @Autowired
 //    private VNPayConfig vnpayConfig;
     @Autowired
     private NhanVienService nhanVienService;
@@ -101,24 +102,76 @@ public class DonHangController {
 //    }
 
     @GetMapping("/don-hang")
-    public String index(Model model) {
-        model.addAttribute("donHang", new DonHang());
-        List<DonHang> list = donHangRepository.findAll();
+    public String index(@RequestParam(value = "trangThai", required = false) String trangThai, Model model) {
+        List<DonHang> list;
+
+        // Lọc đơn hàng theo trạng thái nếu có
+        if (trangThai != null && !trangThai.isEmpty()) {
+            list = donHangRepository.findByTrangThai(trangThai);
+        } else {
+            list = donHangRepository.findAll();
+        }
+
+        // Thông báo nếu không có đơn hàng phù hợp
+        if (list.isEmpty()) {
+            model.addAttribute("message", "Không có đơn hàng phù hợp với tiêu chí tìm kiếm.");
+        }
         model.addAttribute("listDH", list);
 
-        List<String> trangThaiOptions = List.of("Chờ xử lý", "Đã xác nhận", "Đang giao", "Đã giao hàng", "Đã hủy");
+        // Lựa chọn trạng thái có sẵn
+        List<String> trangThaiOptions = List.of("Chờ xử lý", "Đã xác nhận", "Đang giao hàng", "Đã giao hàng", "Đã hủy");
         model.addAttribute("trangThaiOptions", trangThaiOptions);
 
-        return "nhanvien/donhang";
+        // Thêm đối tượng DonHang vào model
+        model.addAttribute("dh", new DonHang()); // Thêm đối tượng DonHang rỗng vào model
+
+        return "nhanvien/donhang"; // Trả về file HTML
     }
 
     @PostMapping("/don-hang/cap-nhat-trang-thai")
-    public String capNhatTrangThai(@RequestParam("id") Integer id, @RequestParam("trangThai") String trangThai) {
-        DonHang donHang = donHangRepository.findById(id).orElseThrow(() -> new RuntimeException("Không tìm thấy đơn hàng"));
+    public String capNhatTrangThai(@ModelAttribute("dh") DonHang dh,
+                                   @RequestParam("id") Integer id,
+                                   @RequestParam("trangThai") String trangThai,
+                                   RedirectAttributes redirectAttributes) {
+        // Tìm đơn hàng theo ID
+        DonHang donHang = donHangRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy đơn hàng với ID: " + id));
+
+        String currentTrangThai = donHang.getTrangThai();
+
+        // Kiểm tra trạng thái hiện tại và trạng thái mới
+        if (currentTrangThai.equals(trangThai)) {
+            redirectAttributes.addFlashAttribute("message", "Trạng thái đơn hàng không thay đổi.");
+            return "redirect:/user/don-hang";
+        }
+
+        // Cập nhật ngày khi thay đổi trạng thái
+        if ("Chờ xử lý".equals(currentTrangThai) && "Đã hủy".equals(trangThai)) {
+            donHang.setTrangThaiPayment("Hủy thanh toán");
+            donHang.setNgayCapNhat(new Date());
+            return "redirect:/user/don-hang?trangThai=Đã hủy";
+        } else if ("Chờ xử lý".equals(currentTrangThai) && "Đã xác nhận".equals(trangThai)) {
+            donHang.setNgayCapNhat(new Date());
+            return "redirect:/user/don-hang?trangThai=Đã xác nhận";
+        } else if ("Đã xác nhận".equals(currentTrangThai) && "Đang giao hàng".equals(trangThai)) {
+            donHang.setNgayCapNhat(new Date());
+            return "redirect:/user/don-hang?trangThai=Đang giao hàng";
+        } else if ("Đang giao hàng".equals(currentTrangThai) && "Đã giao hàng".equals(trangThai)) {
+            donHang.setTrangThaiPayment("Đã thanh toán");
+            donHang.setNgayGiao(new Date());
+            return "redirect:/user/don-hang?trangThai=Đã giao hàng";
+        }
+
+        // Cập nhật trạng thái
         donHang.setTrangThai(trangThai);
         donHangRepository.save(donHang);
-        return "redirect:/user/don-hang"; // Quay lại trang danh sách đơn hàng
+
+        // Thêm thông báo thành công
+        redirectAttributes.addFlashAttribute("message", "Cập nhật trạng thái đơn hàng thành công!");
+
+        return "redirect:/user/don-hang";  // Quay lại trang danh sách đơn hàng
     }
+
 
     @PostMapping("/ban-hang/{id}")
     public String saveOrderDetails(
