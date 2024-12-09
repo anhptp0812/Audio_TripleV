@@ -10,7 +10,7 @@ body {
     font-family: 'Roboto', Arial, sans-serif;
     line-height: 1.6;
 }
-.main-container,.order-summary,.form-san-pham,.form-don-hang,.customer-form,nav {
+.main-container,.order-summary,nav {
     animation: fadeIn 0.8s ease-in-out;
 }
 
@@ -270,84 +270,6 @@ button:hover {
     margin-right: 5px;
 }
 
-.form-san-pham {
-    background-color: #f8f9fa;
-    padding: 20px;
-    border-radius: 10px;
-    border: 1px solid #ddd;
-    margin-top: 20px;
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.form-san-pham h3 {
-    font-size: 18px;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 15px;
-}
-
-.form-san-pham label {
-    font-size: 14px;
-    font-weight: bold;
-    color: #555;
-    margin-bottom: 5px;
-    display: block;
-}
-
-.form-san-pham input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    font-size: 14px;
-    color: #555;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.form-san-pham input:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-}
-
-.form-san-pham button {
-    padding: 10px 20px;
-    font-size: 14px;
-    font-weight: bold;
-    color: #fff;
-    background-color: #28a745;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.form-san-pham button:hover {
-    background-color: #218838;
-    transform: scale(1.05);
-}
-.form-don-hang {
-    margin-top: 20px;
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 10px;
-    border: 1px solid #ddd;
-    display: none;
-    position: relative;
-    z-index: 2;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.form-don-hang.active {
-    display: block;
-}
-
-
 .totals {
     margin-top: 20px;
     padding: 20px;
@@ -404,66 +326,12 @@ button:hover {
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px;
-    font-size: 14px;
-    text-align: left;
-}
-
-.table th, .table td {
-    padding: 10px;
-    border: 1px solid #ddd;
-}
-
-.table th {
-    background-color: #f8f9fa;
-    color: #555;
-    font-weight: bold;
-}
-
 .table-striped tbody tr:nth-of-type(odd) {
     background-color: #f9f9f9;
 }
 
 .table tbody tr:hover {
     background-color: #e6f7ff;
-}
-
-.customer-form {
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1000;
-}
-
-.customer-form input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.customer-form button {
-    background-color: #007bff;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.customer-form button:hover {
-    background-color: #0056b3;
 }
 
 .view-btn{
@@ -476,13 +344,84 @@ button:hover {
         flex-direction: column;
     }
 
-    .category-container,
-    .order-summary {
-        width: 100%;
-    }
-
     .category-buttons {
         flex-direction: column;
         align-items: flex-start;
     }
+}
+
+.customer-form {
+    background-color: #ffffff;
+    width: 500px;
+    max-height: 90vh; /* Giới hạn chiều cao theo chiều dọc */
+    overflow-y: auto; /* Thêm thanh cuộn dọc nếu cần */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden; /* Ẩn bằng visibility để tránh nhảy vị trí */
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+
+.customer-form.show {
+    opacity: 1;
+    visibility: visible; /* Hiện form khi lớp .show được thêm */
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    display: none;
+}
+
+.overlay.show {
+    display: block;
+}
+
+ .customer-form {
+     background-color: #ffffff;
+     width: 500px;
+     max-height: 90vh; /* Giới hạn chiều cao theo chiều dọc */
+     overflow-y: auto; /* Thêm thanh cuộn dọc nếu cần */
+     padding: 20px;
+     border-radius: 10px;
+     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+     position: fixed;
+     top: 50%;
+     left: 50%;
+     transform: translate(-50%, -50%);
+     z-index: 1000;
+     opacity: 0;
+     visibility: hidden; /* Ẩn bằng visibility để tránh nhảy vị trí */
+     transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+ }
+
+.customer-form.show {
+    opacity: 1;
+    visibility: visible; /* Hiện form khi lớp .show được thêm */
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    display: none;
+}
+
+.overlay.show {
+    display: block;
 }

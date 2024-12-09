@@ -27,8 +27,8 @@ public class HoaDonChiTiet {
     @JoinColumn(name = "ID_Spct")
     private SanPhamChiTiet sanPhamChiTiet;
 
-    @Column(name = "SoLuong")
-    private Integer soLuong;
+    @Column(name = "SoLuong", nullable = false, columnDefinition = "int default 0")
+    private Integer soLuong = 0;
 
     @Column(name = "DonGia")
     private Double donGia;

@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -50,4 +51,8 @@ public class HoaDon {
 
     @Column(name = "NgayCapNhat")
     private Date ngayCapNhat;
+
+    @OneToMany(mappedBy = "hoaDon", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    private List<HoaDonChiTiet> hoaDonChiTietList;
+
 }
