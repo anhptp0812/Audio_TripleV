@@ -9,6 +9,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.9.1/font/bootstrap-icons.min.css"
           rel="stylesheet">
     <!-- Link CSS remains unchanged as requested -->
+    <link th:href="@{/css/admin/quanlysanpham.css}" rel="stylesheet">
     <link th:href="@{/css/nhanvien/productProvity.css}" rel="stylesheet">
     <style>
         .category {
@@ -158,6 +159,7 @@
 
 <body>
 <!-- Header Section -->
+
 <header class="navbar navbar-expand-lg navbar-custom">
     <div class="container">
         <a class="navbar-brand" href="/trang-chu/hien-thi">
@@ -182,16 +184,34 @@
     </div>
 </header>
 
+<th:block th:replace="~{/nhanvien/fragments :: nhan-vien-header}"/>
+
+
 <div class="main-container">
     <nav class="category">
         <h3 class="category__heading">Danh mục</h3>
 
         <ul class="category-list">
             <li class="category-item">
-                <a href="/user/ban-hang" class="category-item__link">Bán hàng</a>
+                <a href="#" id="btnBanHang" class="category-item__link btn-product">Bán hàng</a>
+            </li>
+            <!--            <li class="category-item">-->
+            <!--                <a href="/spct/hien-thi" class="category-item__link btn-product">Quản lý</a>-->
+            <!--            </li>-->
+            <li class="category-item">
+                <a href="#" id="btnToanBo" class="category-item__link btn-product">Toàn Bộ Sản Phẩm</a>
             </li>
             <li class="category-item">
-                <a href="/spct/hien-thi" class="category-item__link">Quản lý</a>
+                <a href="#" id="btnMauSac" class="category-item__link btn-product">Màu Sắc Sản Phẩm</a>
+            </li>
+            <li class="category-item">
+                <a href="#" id="btnLoai" class="category-item__link btn-product">Loại Sản Phẩm</a>
+            </li>
+            <li class="category-item">
+                <a href="#" id="btnHang" class="category-item__link btn-product">Hãng</a>
+            </li>
+            <li class="category-item">
+                <a href="#" id="btnHinhAnh" class="category-item__link btn-product">Hình Ảnh</a>
             </li>
             <li class="category-item">
                 <a href="#" class="category-item__link">Khách hàng</a>
@@ -202,6 +222,7 @@
         </ul>
     </nav>
     <!-- Main Container -->
+
     <!-- Category Navigation -->
     <div class="">
         <div class="category-container">
@@ -248,47 +269,493 @@
 
                     <button type="submit" class="btn btn-outline-dark">Tìm Kiếm</button>
                 </form>
+
+    <div class="content">
+        <div id="category" class="category-content">
+            <!-- Category Navigation -->
+            <div class="category-table">
+                <div class="category-container">
+                    <div class="category-buttons">
+                        <form id="searchForm"
+                              th:action="@{${donHang.id} != null ? '/user/ban-hang/' + ${donHang.id} : '/user/ban-hang'}"
+                              method="get">
+
+                            <!-- Chọn sản phẩm -->
+                            <!--                <select name="idSanPham" id="idSanPham">-->
+                            <!--                    <option value="">Chọn sản phẩm</option>-->
+                            <!--                    <option th:each="sanPham : ${sanPhams}"-->
+                            <!--                            th:value="${sanPham.id}"-->
+                            <!--                            th:text="${sanPham.ten}"></option>-->
+                            <!--                </select>-->
+                            <!-- Tìm kiếm sản phẩm theo tên -->
+                            <input type="text" name="tenSanPham" id="tenSanPham" placeholder="Nhập tên sản phẩm"
+                                   th:value="${param.tenSanPham}" class="form-control">
+                            <!-- Chọn màu sắc -->
+                            <select name="mauSac" id="mauSac">
+                                <option value="">Chọn màu sắc</option>
+                                <option th:each="mau : ${mauSacs}"
+                                        th:value="${mau.id}"
+                                        th:text="${mau.ten}"></option>
+                            </select>
+
+                            <!-- Chọn hãng -->
+                            <select name="hang" id="hang">
+                                <option value="">Chọn hãng</option>
+                                <option th:each="hang : ${hangs}"
+                                        th:value="${hang.id}"
+                                        th:text="${hang.ten}"></option>
+                            </select>
+
+                            <!-- Chọn loại sản phẩm -->
+                            <select name="idLoaiSP" id="idLoaiSP">
+                                <option value="">Chọn loại sản phẩm</option>
+                                <option th:each="loaiSP : ${loaiSanPhams}"
+                                        th:value="${loaiSP.id}"
+                                        th:text="${loaiSP.kieuDang}"></option>
+                            </select>
+
+                            <!-- Chọn khoảng đơn giá -->
+                            <select name="donGia" id="donGia">
+                                <option value="">Chọn khoảng giá</option>
+                                <option value="0-5000000">0 - 5,000,000</option>
+                                <option value="5000001-10000000">5,000,001 - 10,000,000</option>
+                                <option value="10000001-15000000">10,000,001 - 15,000,000</option>
+                                <option value="15000001-20000000">15,000,001 - 20,000,000</option>
+                                <option value="20000001+">Trên 20,000,000</option>
+                            </select>
+
+                            <button type="submit" class="btn btn-outline-dark">Tìm Kiếm</button>
+                        </form>
+                    </div>
+
+                    <div class="menu-items">
+                        <table id="dataTable" class="table">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Sản phẩm</th>
+                                <th>Màu sắc</th>
+                                <th>Hãng</th>
+                                <th>Hình ảnh</th>
+                                <th>Loại sản phẩm</th>
+                                <th>Đơn giá</th>
+                                <th>Số lượng</th>
+                                <th>Trạng thái</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+                            <tbody id="tableBody">
+                            <tr th:each="spct : ${spct}">
+                                <td th:text="${spct.id}"></td>
+                                <td th:text="${spct.sanPham.ten}"></td>
+                                <td th:text="${spct.mauSac.ten}"></td>
+                                <td th:text="${spct.hang.ten}"></td>
+                                <td>
+                                    <img th:src="@{/images/tainghe/{ten}(ten=${spct.hinhAnh.ten})}"
+                                         style="width: 100px; height: auto;"/>
+                                </td>
+                                <td th:text="${spct.loaiSanPham.kieuDang}"></td>
+                                <td th:text="${spct.donGia}"></td>
+                                <td th:text="${spct.soLuong}"></td>
+                                <td th:text="${spct.trangThai}"></td>
+                                <td>
+                                    <button th:attr="onclick='addProductToForm(${spct.id}, ${spct.donGia}, ${spct.soLuong}, ${spct.sanPham.ten})'">
+                                        Add Product
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <script>
+                        function addProductToForm(spctId, productName, quantity, price) {
+                            // if (isOrderCreated === false) {
+                            //     showForms();
+                            // }
+                            // if (viewDetail === false) {
+                            //     alert("Chưa mở Xem chi tiết");
+                            //     return;
+                            // }
+                            const addedProductsTableBody = document.getElementById('addedProductsTableBody');
+
+                            if (!addedProductsTableBody) {
+                                console.error('Phần tử tbody không tồn tại!');
+                                return;
+                            }
+
+                            console.log(spctId, productName, quantity, price)
+                            // Kiểm tra xem sản phẩm đã tồn tại trong giỏ chưa
+                            let existingProduct = selectedProducts.find(product => product.spctId === spctId);
+
+                            if (existingProduct) {
+                                // Nếu sản phẩm đã có trong giỏ, tăng số lượng lên
+                                existingProduct.quantity += quantity;
+
+                                // Cập nhật lại số lượng trong bảng giỏ hàng
+                                updateProductQuantityInTable(existingProduct);
+                            } else {
+                                // Nếu chưa có trong giỏ, thêm mới
+                                const newProduct = {spctId, productName, quantity, price};
+                                selectedProducts.push(newProduct);
+
+                                const newRow = document.createElement('tr');
+                                newRow.innerHTML = `
+            <td>
+                <span>${productName || 'Chưa có tên sản phẩm'}</span>
+                <input type="hidden" name="spctIds" value="${spctId}"/>
+            </td>
+            <td><input type="number" name="soLuong" value="${quantity}" min="1" onchange="updateProductQuantity(this)" /></td>
+            <td><input type="number" name="donGia" value="${price}" readonly /></td>
+             <td><button onclick="removeProduct(this)">Xóa</button></td>
+        `;
+                                addedProductsTableBody.appendChild(newRow);
+                            }
+
+
+                            // Cập nhật tổng tiền sau khi thêm sản phẩm
+                            updateTotalAmount(); // Cập nhật tổng tiền
+                        }
+                    </script>
+                </div>
+                <div class="table_order_ mt-5">
+                    <div class="table">
+                        <h2>ĐƠN HÀNG</h2>
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>Tên khách Hàng</th>
+                                <th>Tổng giá</th>
+                                <th>TT thanh toán</th>
+                                <th>Ngày Giao</th>
+                                <th colspan="2">Action</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="dh : ${listDH}">
+                                <td th:text="${dh.khachHang.ten}"></td>
+                                <td th:text="${dh.tongGia}"></td>
+                                <td th:text="${dh.trangThai}"></td>
+                                <td th:text="${dh.ngayGiao}"></td>
+                                <td>
+                                    <a th:href="@{/user/ban-hang/{id}(id=${dh.id})}" class="btn btn-primary">
+                                        Detail
+                                    </a>
+                                </td>
+
+                                <td>
+                                    <a class="btn btn-primary" href="javascript:void(0);" onclick="toggleProductList()">
+                                        See more
+                                    </a>
+                                </td>
+
+                                <!-- Phần trổ xuống khi click -->
+                            <tr id="productList" class="productList" style="display:none;">
+                                <td colspan="6">
+                                    <!-- Danh sách sản phẩm -->
+                                    <div class="product-list" style="display: flex; flex-wrap: wrap; gap: 15px;">
+                                        <div class="product-item"
+                                             style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; flex: 1 1 18%; text-align: center;">
+                                            <h5>Tên SP: Tai nghe Sennheiser</h5>
+                                            <p>Giá: 1,500,000 VND</p>
+                                        </div>
+                                        <div class="product-item"
+                                             style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; flex: 1 1 18%; text-align: center;">
+                                            <h5>Tên SP: Tai nghe Sony</h5>
+                                            <p>Giá: 1,200,000 VND</p>
+                                        </div>
+                                        <div class="product-item"
+                                             style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; flex: 1 1 18%; text-align: center;">
+                                            <h5>Tên SP: Tai nghe Bose</h5>
+                                            <p>Giá: 3,000,000 VND</p>
+                                        </div>
+                                        <div class="product-item"
+                                             style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; flex: 1 1 18%; text-align: center;">
+                                            <h5>Tên SP: Tai nghe JBL</h5>
+                                            <p>Giá: 1,800,000 VND</p>
+                                        </div>
+                                        <div class="product-item"
+                                             style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; flex: 1 1 18%; text-align: center;">
+                                            <h5>Tên SP: Tai nghe AKG</h5>
+                                            <p>Giá: 2,200,000 VND</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Phần phân trang -->
+                                    <div class="pagination"
+                                         style="text-align: center; margin-top: 20px; display: flex; justify-content: center;">
+                                        <button class="btn btn-outline-primary">
+                                            <i class="bi bi-arrow-bar-left"></i> <!-- Về đầu trang -->
+                                        </button>
+                                        <button class="btn btn-outline-primary">
+                                            <i class="bi bi-arrow-left-circle"></i> <!-- Back -->
+                                        </button>
+
+                                        <!-- Số trang -->
+                                        <button class="btn btn-outline-primary">1</button>
+                                        <button class="btn btn-outline-primary">2</button>
+                                        <button class="btn btn-outline-primary">3</button>
+                                        <span class="btn btn-outline-primary">...</span>
+                                        <!-- Nút "..." cho các trang tiếp theo -->
+
+                                        <button class="btn btn-outline-primary">10</button> <!-- Trang cuối cùng -->
+
+                                        <button class="btn btn-outline-primary">
+                                            <i class="bi bi-arrow-right-circle"></i> <!-- Next -->
+                                        </button>
+                                        <button class="btn btn-outline-primary">
+                                            <i class="bi bi-arrow-bar-right"></i> <!-- Về cuối trang -->
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
 
-            <div class="menu-items">
-                <table id="dataTable" class="table">
-                    <thead>
+            <!-- Order Summary -->
+            <div class="order-summary">
+                <!-- Button group for Add Khách Hàng, New Bill, and Reload -->
+                <div class="button-group">
+                    <button class="add-customer-btn" onclick="openCustomerForm()"><i class="bi bi-person-plus"></i> Add Khách
+                        Hàng
+                    </button>
+                    <div class="right-buttons">
+                        <button class="new-bill-btn" onclick="showForms()"><i class="bi bi-plus-circle"></i></button>
+                        <a href="/user/ban-hang">
+                            <button class="reload-btn"><i class="bi bi-arrow-repeat"></i></button>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="form-san-pham">
+                    <div>
+                        <h3>Tạo đơn hàng</h3>
+                        <form id="orderFormDetails" th:object="${donHang}" method="post" th:action="@{/user/ban-hang/save}">
+
+                            <label>Đơn Hàng</label>
+                            <input type="text" th:field="*{id}" disabled>
+                            <br>
+                            <!--                    <label>Nhân viên: </label>-->
+                            <!--                    <span th:field="*{nhanVien.ten}"></span>-->
+                            <!--                    <br>-->
+                            <label>Khách Hàng: </label>
+                            <input type="text" id="khachHangInput" placeholder="Khách hàng" readonly
+                                   th:field="*{khachHang.ten}"/>
+                            <input type="hidden" id="khachHangId" name="idKhachHang" th:field="*{khachHang.id}"/>
+                            <br>
+                            <label>Tổng Giá:</label>
+                            <input type="text" th:field="*{tongGia}" value="${donHang.tongGia ?: 0}" disabled>
+                            <br>
+                            <label>Trạng Thái:</label>
+                            <input type="text" placeholder="trạng thái" th:field="*{trangThai}"/>
+                            <br>
+
+                            <label>Ngày Giao:</label>
+                            <input type="date" th:field="*{ngayGiao}" id="ngayGiaoId"
+                                   min="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"/>
+
+                            <button type="submit" class="mb-1">Lưu đơn hàng</button>
+                            <button type="button" class="mb-1" th:onclick="'viewOrderDetails(' + ${donHang.id} + ')'">Xem chi tiết</button>
+                        </form>
+
+                        <!--                <input type="hidden" th:field="*{donHang.id}">-->
+                    </div>
+                    <script>
+                        document.getElementById("orderFormDetails").onsubmit = function (event) {
+                            event.preventDefault();
+
+                            const formData = new FormData(this);
+                            const submitButton = this.querySelector('button[type="submit"]');
+                            submitButton.disabled = true; // Tạm khóa nút bấm
+
+                            fetch('/user/ban-hang/save', {
+                                method: 'POST',
+                                body: formData
+                            })
+                                .then(response => {
+                                    submitButton.disabled = false; // Mở khóa nút bấm
+                                    if (!response.ok) {
+                                        throw new Error('Lỗi khi gửi dữ liệu đến server!');
+                                    }
+                                    return response.json();
+                                })
+                                .then(data => {
+                                    if (data.redirectUrl) {
+                                        window.location.href = data.redirectUrl;
+                                    } else {
+                                        alert("Có lỗi xảy ra khi lưu hóa đơn.");
+                                    }
+                                })
+                                .catch(error => {
+                                    submitButton.disabled = false; // Mở khóa nút bấm
+                                    alert(error.message);
+                                });
+                        };
+
+                    </script>
+
+                    <!-- Nút để xem chi tiết đơn hàng theo ID đơn hàng -->
+
+
+                    <!-- Forms to be displayed after "Xem chi tiết" button click -->
+                    <div id="orderDetailsForm" class="form-don-hang">
+                        <h3>Chi tiết đơn hàng</h3>
+                        <form th:object="${donHangChiTiet}" th:action="@{/user/ban-hang/{id}(id=${donHang.id})}" method="post">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Tên sản phẩm</th>
+                                    <th>Số lượng</th>
+                                    <th>Đơn giá</th>
+                                    <th>Action</th>
+                                </tr>
+                                </thead>
+                                <tbody id="addedProductsTableBody">
+                                <!-- Các sản phẩm sẽ được thêm vào đây -->
+                                </tbody>
+                                <button class="pay-btn" type="submit" name="paymentMethod" value="xacnhan">Xác nhận</button>
+                            </table>
+
+                            <div class="totals">
+                                <div class="total-item">
+                                    <label>Tổng:</label>
+                                    <span id="totalAmount">0</span>
+                                </div>
+                                <div class="total-item">
+                                    <label>Nhập số tiền khách đưa:</label>
+                                    <input type="text" id="customerPayment" oninput="calculateChange()"
+                                           style="text-align: right" placeholder="Nhập số tiền"/>
+                                </div>
+                                <div class="total-item">
+                                    <label>Số tiền trả lại:</label>
+                                    <span id="changeAmount">0</span>
+                                </div>
+                            </div>
+
+                            <div class="action-buttons">
+                                <button class="history-btn" onclick="toggleHistoryForm()">Lịch Sử</button>
+                                <button class="pay-btn" type="submit" name="paymentMethod" value="cash">Thanh Toán</button>
+                                <button class="pay-btn" type="submit" name="paymentMethod" value="vnpay">Thanh Toán Chuyển
+                                    khoản
+                                </button>
+                                <!--                        <a th:href="@{/vnpay-hien-thi/{id}(id=${donHang.id})}" class="btn btn-primary">Thanh toán VNPay</a>-->
+                            </div>
+
+                        </form>
+
+
+                    </div>
+
+
+                    <!-- Customer Form -->
+                    <div class="customer-form" id="customerForm" style="display: none;">
+                        <div class="form-container">
+                            <form>
+                                <button class="close-btn" onclick="closeCustomerForm()">✖</button> <!-- Close button -->
+                                <label>Nhập tên:</label>
+                                <input type="text" placeholder="Nhập tên" class="form-control" id="customerName">
+                                <label>Nhập SĐT:</label>
+                                <input type="text" placeholder="Nhập SĐT" class="form-control" id="customerPhone">
+                                <button class="btn btn-primary" onclick="searchCustomer()" type="button">
+                                    <i class="bi bi-search"></i> Tìm kiếm
+                                </button>
+                                <button class="btn btn-primary" onclick="addCustomer(event)" type="submit">
+                                    <i class="bi bi-search"></i> Thêm
+                                </button>
+                            </form>
+                            <table class="table mt-3">
+                                <thead>
+                                <tr>
+                                    <th>Tên KH</th>
+                                    <th>SĐT</th>
+                                    <th>Action</th>
+                                </tr>
+                                </thead>
+                                <tbody id="customer-list">
+                                <tr th:each="kh : ${listKh}"
+                                    onclick="selectCustomer([[${kh.id}]], '[[${kh.ten}]]', '[[${kh.sdt}]]')">
+                                    <td th:text="${kh.ten}"></td>
+                                    <td th:text="${kh.sdt}"></td>
+                                    <td>Chọn</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- Action Buttons -->
+
+
+                    <!-- History Form remains unchanged -->
+                    <div class="history-form" style="display: none;">
+                        <div class="form-container">
+                            <label for="history-code">Mã Lịch Sử:</label>
+                            <input type="text" id="history-code" placeholder="Nhập mã lịch sử">
+                            <button class="search-btn"><i class="bi bi-search"></i></button>
+                        </div>
+                        <div class="list-data">
+                            <ul>
+                                <li>Mã Danh Sách 1</li>
+                                <li>Mã Danh Sách 2</li>
+                                <li>Mã Danh Sách 3</li>
+                                <li>Mã Danh Sách 4</li>
+                                <li>Mã Danh Sách 5</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="w-100 product-table" style="display: none">
+            <h5 id="tableTitle" style="display: none">Danh sách sản phẩm</h5>
+            <a id="nutThem" href="/spct/form-add" class="btn btn-success mb-3" style="display: none;">Thêm Sản Phẩm</a>
+            <!-- Nút Thêm Sản Phẩm -->
+            <div class="product-item">
+                <table id="productTable" class="table table-bordered table-hover">
+                    <thead class="thead-light">
                     <tr>
-                        <th>ID</th>
-                        <th>Sản phẩm</th>
-                        <th>Màu sắc</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Màu Sắc</th>
                         <th>Hãng</th>
-                        <th>Hình ảnh</th>
-                        <th>Loại sản phẩm</th>
-                        <th>Đơn giá</th>
-                        <th>Số lượng</th>
-                        <th>Trạng thái</th>
-                        <th>Action</th>
+                        <th>Hình Ảnh</th>
+                        <th>Loại Sản Phẩm</th>
+                        <th>Đơn Giá</th>
+                        <th>Số Lượng</th>
+                        <th>Trạng Thái</th>
+                        <th>Ngày Tạo</th>
+                        <th>Ngày Cập Nhật</th>
+                        <th>Hành Động</th>
                     </tr>
                     </thead>
-                    <tbody id="tableBody">
+                    <tbody>
                     <tr th:each="spct : ${spct}">
-                        <td th:text="${spct.id}"></td>
                         <td th:text="${spct.sanPham.ten}"></td>
                         <td th:text="${spct.mauSac.ten}"></td>
                         <td th:text="${spct.hang.ten}"></td>
-                        <td>
-                            <img th:src="@{/images/tainghe/{ten}(ten=${spct.hinhAnh.ten})}"
-                                 style="width: 100px; height: auto;"/>
-                        </td>
+                        <td><img th:src="@{/images/tainghe/{imageName}(imageName=${spct.hinhAnh.ten})}" alt="Hình Ảnh"
+                                 width="50px" height="50px"/></td>
                         <td th:text="${spct.loaiSanPham.kieuDang}"></td>
-                        <td th:text="${spct.formattedDonGia + ' đ'}"></td>
+                        <td th:text="${spct.formattedDonGia}"></td>
                         <td th:text="${spct.soLuong}"></td>
                         <td th:text="${spct.trangThai}"></td>
+                        <td th:text="${#dates.format(spct.ngayTao, 'yyyy-MM-dd')}"></td>
+                        <td th:text="${#dates.format(spct.ngayCapNhat, 'yyyy-MM-dd')}"></td>
                         <td>
-                            <button th:attr="onclick='addProductToForm(${spct.id}, ${spct.donGia}, ${spct.soLuong}, ${spct.sanPham.ten})'">
-                                Add Product
-                            </button>
+                            <a th:href="@{/spct/detail/{id}(id=${spct.id})}" class="btn btn-primary">Chi tiết</a>
+                            <a th:href="@{/spct/form-update/{id}(id=${spct.id})}" class="btn btn-warning">Sửa</a>
+                            <a th:href="@{/spct/delete/{id}(id=${spct.id})}" class="btn btn-danger"
+                               onclick="return confirm('Bạn có muốn xóa không?');">Xóa</a>
                         </td>
                     </tr>
                     </tbody>
                 </table>
             </div>
+
             <script>
                 function addProductToForm(spctId, productName, quantity, price) {
                     const addedProductsTableBody = document.getElementById('addedProductsTableBody');
@@ -336,245 +803,453 @@
                 <h2>ĐƠN HÀNG</h2>
                 <table>
                     <thead>
-                    <tr>
-                        <th>Tên khách Hàng</th>
-                        <th>Tổng giá</th>
-                        <th>TT thanh toán</th>
-                        <th>Ngày Giao</th>
-                        <th colspan="2">Action</th>
 
+
+            <!-- Danh sách màu sắc -->
+
+            <a id="nutThemMauSac" href="/mau-sac/form-add" class="btn btn-success mb-3" style="display: none;">Thêm Màu Sắc</a>
+            <div class="product-item">
+                <table id="colorTable" class="table table-bordered table-hover">
+                    <thead class="thead-light">
+
+                    <tr>
+                        <th>ID Màu Sắc</th>
+                        <th>Tên Màu Sắc</th>
+                        <th>Ngày Tạo</th>
+                        <th>Ngày Sửa</th>
+                        <th>Hành Động</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="dh : ${listDH}">
-                        <td th:text="${dh.khachHang.ten}"></td>
-                        <td th:text="${dh.tongGia}"></td>
-                        <td th:text="${dh.trangThai}"></td>
-                        <td th:text="${dh.ngayGiao}"></td>
+                    <tr th:each="mauSac : ${mausac}">
+                        <td th:text="${mauSac.id}"></td>
+                        <td th:text="${mauSac.ten}"></td>
+                        <td th:text="${#dates.format(mauSac.ngayTao, 'yyyy-MM-dd')}"></td>
+                        <td th:text="${#dates.format(mauSac.ngayCapNhat, 'yyyy-MM-dd')}"></td>
                         <td>
-                            <a th:href="@{/user/ban-hang/{id}(id=${dh.id})}" class="btn btn-primary">
-                                Detail
-                            </a>
-                        </td>
-
-                        <td>
-                            <a class="btn btn-primary" href="javascript:void(0);" onclick="toggleProductList()">
-                                See more
-                            </a>
+                            <a id="nutSuaMauSac" class="btn btn-primary">Sửa</a>
+                            <!-- th:href="@{/mau-sac/form-update/{id}(id=${mauSac.id})}" -->
+                            <a th:href="@{/mau-sac/delete/{id}(id=${mauSac.id})}" class="btn btn-danger"
+                               onclick="return confirm('Bạn có muốn xóa không?');">Xóa</a>
                         </td>
                     </tr>
                     </tbody>
                 </table>
             </div>
-        </div>
-    </div>
 
-    <!-- Order Summary -->
-    <div class="order-summary">
-        <!-- Button group for Add Khách Hàng, New Bill, and Reload -->
-        <div class="button-group">
-            <button class="add-customer-btn" onclick="openCustomerForm()"><i class="bi bi-person-plus"></i> Add Khách
-                Hàng
-            </button>
-            <div class="right-buttons">
-                <button class="new-bill-btn" onclick="showForms()"><i class="bi bi-plus-circle"></i></button>
-                <a href="/user/ban-hang">
-                    <button class="reload-btn"><i class="bi bi-arrow-repeat"></i></button>
-                </a>
-            </div>
-        </div>
+            <!-- Danh sách loại sản phẩm -->
 
-        <div class="form-san-pham">
-            <div>
-                <h3>Tạo đơn hàng</h3>
-                <form id="orderFormDetails" th:object="${donHang}" method="post" th:action="@{/user/ban-hang/save}">
+            <a id="nutThemLoai" href="/loai-san-pham/form-add" class="btn btn-success mb-3" style="display: none;">Thêm
+                Loại Sản Phẩm</a> <!-- Nút Thêm Loại Sản Phẩm -->
+            <div class="product-item">
+                <table id="categoryTable" class="table table-bordered table-hover">
+                    <thead class="thead-light">
+                    <tr>
+                        <th>ID Loại Sản Phẩm</th>
+                        <th>Kiểu Dáng</th>
+                        <th>Ngày Tạo</th>
+                        <th>Ngày Sửa</th>
+                        <th>Hành Động</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="loaiSanPham : ${loaisp}">
+                        <td th:text="${loaiSanPham.id}"></td>
+                        <td th:text="${loaiSanPham.kieuDang}"></td>
+                        <td th:text="${#dates.format(loaiSanPham.ngayTao, 'yyyy-MM-dd')}"></td>
+                        <td th:text="${#dates.format(loaiSanPham.ngayCapNhat, 'yyyy-MM-dd')}"></td>
+                        <td>
+                            <a id="nutSuaLoai" class="btn btn-primary">Sửa</a>
+                            <!-- th:href="@{/loai-san-pham/form-update/{id}(id=${loaiSanPham.id})}" -->
+                            <a th:href="@{/loai-san-pham/delete/{id}(id=${loaiSanPham.id})}" class="btn btn-danger"
+                               onclick="return confirm('Bạn có muốn xóa không?');">Xóa</a>
+                        </td>
 
-                    <label>Đơn Hàng</label>
-                    <input type="text" th:field="*{id}" disabled>
-                    <br>
-                    <!--                    <label>Nhân viên: </label>-->
-                    <!--                    <span th:field="*{nhanVien.ten}"></span>-->
-                    <!--                    <br>-->
-                    <label>Khách Hàng: </label>
-                    <input type="text" id="khachHangInput" placeholder="Khách hàng" readonly
-                           th:field="*{khachHang.ten}"/>
-                    <input type="hidden" id="khachHangId" name="idKhachHang" th:field="*{khachHang.id}"/>
-                    <br>
-                    <label>Tổng Giá:</label>
-                    <input type="text" th:field="*{tongGia}" value="${donHang.tongGia ?: 0}" disabled>
-                    <br>
-                    <label>Trạng Thái:</label>
-                    <input type="text" placeholder="trạng thái" th:field="*{trangThai}"/>
-                    <br>
+                    </tr>
 
-                    <label>Ngày Giao:</label>
-                    <input type="date" th:field="*{ngayGiao}" id="ngayGiaoId"
-                           min="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"/>
-
-                    <button type="submit">Lưu đơn hàng</button>
-                    <button type="button" th:onclick="'viewOrderDetails(' + ${donHang.id} + ')'">Xem chi tiết</button>
-                </form>
-
-                                <input type="hidden" th:field="*{donHang.id}">
-            </div>
-            <script>
-                document.getElementById("orderFormDetails").onsubmit = function (event) {
-                    event.preventDefault();
-
-                    const formData = new FormData(this);
-                    const submitButton = this.querySelector('button[type="submit"]');
-                    submitButton.disabled = true; // Tạm khóa nút bấm
-
-                    fetch('/user/ban-hang/save', {
-                        method: 'POST',
-                        body: formData
-                    })
-                        .then(response => {
-                            submitButton.disabled = false; // Mở khóa nút bấm
-                            if (!response.ok) {
-                                throw new Error('Lỗi khi gửi dữ liệu đến server!');
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            if (data.redirectUrl) {
-                                window.location.href = data.redirectUrl;
-                            } else {
-                                alert("Có lỗi xảy ra khi lưu hóa đơn.");
-                            }
-                        })
-                        .catch(error => {
-                            submitButton.disabled = false; // Mở khóa nút bấm
-                            alert(error.message);
-                        });
-                };
-
-            </script>
-
-            <!-- Nút để xem chi tiết đơn hàng theo ID đơn hàng -->
-
-
-            <!-- Forms to be displayed after "Xem chi tiết" button click -->
-            <div id="orderDetailsForm" class="form-don-hang">
-                <h3>Chi tiết đơn hàng</h3>
-                <form th:object="${donHangChiTiet}" th:action="@{/user/ban-hang/{id}(id=${donHang.id})}" method="post">
-                    <table class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th>Tên sản phẩm</th>
-                            <th>Số lượng</th>
-                            <th>Đơn giá</th>
-                            <th>Action</th>
-                        </tr >
-                        </thead>
-                        <tbody id="addedProductsTableBody">
-                        <tr data-id="2">
-
-                        </tr>
-                        <!-- Các sản phẩm sẽ được thêm vào đây -->
-                        </tbody>
-                        <button class="pay-btn" type="submit" name="paymentMethod" value="xacnhan">Xác nhận</button>
-                    </table>
-
-                    <div class="totals">
-                        <div class="total-item">
-                            <label>Tổng:</label>
-                            <span id="totalAmount">0</span>
-                        </div>
-                        <div class="total-item">
-                            <label>Nhập số tiền khách đưa:</label>
-                            <input type="text" id="customerPayment" oninput="calculateChange()"
-                                   style="text-align: right" placeholder="Nhập số tiền"/>
-                        </div>
-                        <div class="total-item">
-                            <label>Số tiền trả lại:</label>
-                            <span id="changeAmount">0</span>
-                        </div>
-                    </div>
-
-                    <div class="action-buttons">
-                        <button class="history-btn" onclick="toggleHistoryForm()">Lịch Sử</button>
-                        <button class="pay-btn" type="submit" name="paymentMethod" value="cash">Thanh Toán</button>
-                        <button class="pay-btn" type="submit" name="paymentMethod" value="vnpay">Thanh Toán Chuyển
-                            khoản
-                        </button>
-                        <!--                        <a th:href="@{/vnpay-hien-thi/{id}(id=${donHang.id})}" class="btn btn-primary">Thanh toán VNPay</a>-->
-                    </div>
-
-                </form>
-
-
+                    </tr>
+                    </tbody>
+                </table>
             </div>
 
+            <!-- Danh sách hãng -->
 
-            <!-- Customer Form -->
-            <div class="customer-form" id="customerForm" style="display: none;">
-                <div class="form-container">
-                    <form>
-                        <button class="close-btn" onclick="closeCustomerForm()">✖</button> <!-- Close button -->
-                        <label>Nhập tên:</label>
-                        <input type="text" placeholder="Nhập tên" class="form-control" id="customerName">
-                        <label>Nhập SĐT:</label>
-                        <input type="text" placeholder="Nhập SĐT" class="form-control" id="customerPhone">
-                        <button class="btn btn-primary" onclick="searchCustomer()" type="button">
-                            <i class="bi bi-search"></i> Tìm kiếm
-                        </button>
-                        <button class="btn btn-primary" onclick="addCustomer(event)" type="submit">
-                            <i class="bi bi-search"></i> Thêm
-                        </button>
-                    </form>
-                    <table class="table mt-3">
-                        <thead>
-                        <tr>
-                            <th>Tên KH</th>
-                            <th>SĐT</th>
-                            <th>Action</th>
-                        </tr>
-                        </thead>
-                        <tbody id="customer-list">
-                        <tr th:each="kh : ${listKh}"
-                            onclick="selectCustomer([[${kh.id}]], '[[${kh.ten}]]', '[[${kh.sdt}]]')">
-                            <td th:text="${kh.ten}"></td>
-                            <td th:text="${kh.sdt}"></td>
-                            <td>Chọn</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <a id="nutThemHang" href="/hang/form-add" class="btn btn-success mb-3" style="display: none;">Thêm Hãng</a>
+            <!-- Nút Thêm Hãng -->
+            <div class="product-item">
+                <table id="brandTable" class="table table-bordered table-hover">
+                    <thead class="thead-light">
+                    <tr>
+                        <th>ID Hãng</th>
+                        <th>Tên Hãng</th>
+                        <th>Ngày Tạo</th>
+                        <th>Ngày Sửa</th>
+                        <th>Hành Động</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="hang : ${hang}">
+                        <td th:text="${hang.id}"></td>
+                        <td th:text="${hang.ten}"></td>
+                        <td th:text="${#dates.format(hang.ngayTao, 'yyyy-MM-dd')}"></td>
+                        <td th:text="${#dates.format(hang.ngayCapNhat, 'yyyy-MM-dd')}"></td>
+                        <td>
+                            <a id="nutSuaHang" class="btn btn-primary">Sửa</a>
+                            <!-- th:href="@{/hang/form-update/{id}(id=${hang.id})}" -->
+                            <a th:href="@{/hang/delete/{id}(id=${hang.id})}" class="btn btn-danger"
+                               onclick="return confirm('Bạn có muốn xóa không?');">Xóa</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
-            <!-- Action Buttons -->
 
+            <!-- Danh sách hình ảnh -->
+            <a id="nutThemHinhAnh" href="/hinh-anh/form-add" class="btn btn-success mb-3" style="display: none;">Thêm
+                Hình Ảnh</a> <!-- Nút Thêm Hình Ảnh -->
+            <div class="product-item">
+                <table id="imageTable" class="table table-bordered table-hover">
+                    <thead class="thead-light">
+                    <tr>
+                        <th>ID Hình Ảnh</th>
+                        <th>Tên Hình Ảnh</th>
+                        <th>URL Hình Ảnh</th>
+                        <th>Ngày Tạo</th>
+                        <th>Ngày Sửa</th>
+                        <th>Hành Động</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="hinhAnh : ${hinhAnhs}">
+                        <td th:text="${hinhAnh.id}"></td>
+                        <td th:text="${hinhAnh.ten}"></td>
+                        <td>
+                            <img th:src="@{/images/tainghe/{imageName}(imageName=${hinhAnh.ten})}" alt="Hình Ảnh"
+                                 width="50px" height="50px"/>
+                        </td>
+                        <td th:text="${#dates.format(hinhAnh.ngayTao, 'yyyy-MM-dd')}"></td>
+                        <td th:text="${#dates.format(hinhAnh.ngayCapNhat, 'yyyy-MM-dd')}"></td>
+                        <td>
+                            <a th:href="@{/hinh-anh/form-update/{id}(id=${hinhAnh.id})}" class="btn btn-primary">Sửa</a>
+                            <a th:href="@{/hinh-anh/delete/{id}(id=${hinhAnh.id})}" class="btn btn-danger"
+                               onclick="return confirm('Bạn có muốn xóa không?');">Xóa</a>
+                        </td>
+                    </tr>
 
-            <!-- History Form remains unchanged -->
-            <div class="history-form" style="display: none;">
-                <div class="form-container">
-                    <label for="history-code">Mã Lịch Sử:</label>
-                    <input type="text" id="history-code" placeholder="Nhập mã lịch sử">
-                    <button class="search-btn"><i class="bi bi-search"></i></button>
-                </div>
-                <div class="list-data">
-                    <ul>
-                        <li>Mã Danh Sách 1</li>
-                        <li>Mã Danh Sách 2</li>
-                        <li>Mã Danh Sách 3</li>
-                        <li>Mã Danh Sách 4</li>
-                        <li>Mã Danh Sách 5</li>
-                    </ul>
-                </div>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 </div>
 
-<footer class="navbar navbar-expand-lg navbar-custom">
-    <div class="container">
-        <span class="m-auto">© 2024 - Bản quyền thuộc về TripleV</span>
+<!-- Footer Section -->
+<th:block th:replace="~{/nhanvien/fragments :: nhan-vien-footer}"/>
+
+<!-- Model create color -->
+<div class="modal fade" id="createColorModal" tabindex="-1" aria-labelledby="createColorModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createColorModalLabel">Thêm Màu Sắc</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="createTenMauSac" class="form-label">Tên Màu Sắc:</label>
+                    <input type="text" class="form-control" id="createTenMauSac" name="ten" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="addMauSac()">
+                    Thêm
+                </button>
+            </div>
+        </div>
     </div>
-</footer>
+</div>
+
+
+<!-- Modal Edit Color -->
+<div class="modal fade" id="editColorModal" tabindex="-1" role="dialog" aria-labelledby="editColorModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editColorModalLabel">Chỉnh Sửa Màu Sắc</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editColorForm">
+                    <div class="form-group">
+                        <label for="colorName">Tên Màu Sắc</label>
+                        <input type="text" class="form-control" id="colorName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="colorCreatedDate">Ngày Tạo</label>
+                        <input type="date" class="form-control" id="colorCreatedDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="colorUpdatedDate">Ngày Sửa</label>
+                        <input type="date" class="form-control" id="colorUpdatedDate" required>
+                    </div>
+                    <button type="button" class="btn btn-success" onclick="saveColor()">
+                        <i class="bi bi-floppy2-fill"></i> Lưu
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Model create category -->
+<div class="modal fade" id="createCategoryModal" tabindex="-1" aria-labelledby="createCategoryModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createCategoryModalLabel">Thêm Loại Sản Phẩm</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="createKieuDang" class="form-label">Kiểu Dáng:</label>
+                    <input type="text" class="form-control" id="createKieuDang" name="kieuDang" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="addLoaiSP()">
+                    <i class="bi bi-plus-circle me-2"></i> Thêm
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Edit Category -->
+<div class="modal fade" id="editCategoryModal" tabindex="-1" role="dialog" aria-labelledby="editCategoryModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editCategoryModalLabel">Chỉnh Sửa Loại Sản Phẩm</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editCategoryForm">
+                    <div class="form-group">
+                        <label for="categoryName">Tên Loại Sản Phẩm</label>
+                        <input type="text" class="form-control" id="categoryName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="categoryCreatedDate">Ngày Tạo</label>
+                        <input type="date" class="form-control" id="categoryCreatedDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="categoryUpdatedDate">Ngày Sửa</label>
+                        <input type="date" class="form-control" id="categoryUpdatedDate" required>
+                    </div>
+                    <button type="button" class="btn btn-success" onclick="saveCategory()">
+                        Lưu
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Model create brand -->
+<div class="modal fade" id="createBrandModal" tabindex="-1" aria-labelledby="createBrandModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createBrandModalLabel">Thêm Hãng</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="createTenHang" class="form-label">Tên Hãng:</label>
+                    <input type="text" class="form-control" id="createTenHang" name="ten" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="addHang()">
+                    <i class="bi bi-plus-circle me-2"></i> Thêm
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Edit Brand -->
+<div class="modal fade" id="editBrandModal" tabindex="-1" role="dialog" aria-labelledby="editBrandModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editBrandModalLabel">Chỉnh Sửa Hãng</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editBrandForm">
+                    <div class="form-group">
+                        <label for="brandName">Tên Hãng</label>
+                        <input type="text" class="form-control" id="brandName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="brandCreatedDate">Ngày Tạo</label>
+                        <input type="date" class="form-control" id="brandCreatedDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="brandUpdatedDate">Ngày Sửa</label>
+                        <input type="date" class="form-control" id="brandUpdatedDate" required>
+                    </div>
+                    <button type="button" class="btn btn-success" onclick="saveBrand()">
+                        Lưu
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Edit Product -->
+<div class="modal fade" id="editProductModal" tabindex="-1" role="dialog" aria-labelledby="editProductModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProductModalLabel">Chỉnh Sửa Sản Phẩm</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editProductForm">
+                    <div class="form-group">
+                        <label for="productName">Tên Sản Phẩm</label>
+                        <input type="text" class="form-control" id="productName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productColor">Màu Sắc</label>
+                        <input type="text" class="form-control" id="productColor" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productBrand">Hãng</label>
+                        <input type="text" class="form-control" id="productBrand" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productCategory">Loại Sản Phẩm</label>
+                        <input type="text" class="form-control" id="productCategory" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="imageBrand">Hình Ảnh</label>
+                        <input type="text" class="form-control" id="imageBrand" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productStatus">Trạng Thái</label>
+                        <input type="text" class="form-control" id="productStatus" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productCreatedDate">Ngày Tạo</label>
+                        <input type="date" class="form-control" id="productCreatedDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productUpdatedDate">Ngày Sửa</label>
+                        <input type="date" class="form-control" id="productUpdatedDate" required>
+                    </div>
+                    <button type="button" class="btn btn-success" onclick="saveProduct()">
+                        <i class="bi bi-floppy2-fill"></i> Lưu
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Model create image -->
+<div class="modal fade" id="createImageModal" tabindex="-1" aria-labelledby="createImageModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createImageModalLabel">Thêm Hình Ảnh</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="createTenHinhAnh" class="form-label">Tên Hình Ảnh:</label>
+                    <input type="text" class="form-control" id="createTenHinhAnh" name="ten" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="addHinhAnh()">
+                    Thêm
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Edit Image -->
+<div class="modal fade" id="editImageModal" tabindex="-1" role="dialog" aria-labelledby="editImageModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editImageModalLabel">Chỉnh Sửa Hình Ảnh</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editImageForm">
+                    <div class="form-group">
+                        <label for="imageName">Tên Hình Ảnh</label>
+                        <input type="text" class="form-control" id="imageName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="imageURL">URL Hình Ảnh</label>
+                        <input type="date" class="form-control" id="imageURL" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="imageCreatedDate">Ngày Tạo</label>
+                        <input type="date" class="form-control" id="imageCreatedDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="imageUpdatedDate">Ngày Sửa</label>
+                        <input type="date" class="form-control" id="imageUpdatedDate" required>
+                    </div>
+                    <button type="button" class="btn btn-success" onclick="saveImage()">
+                        <i class="bi bi-floppy2-fill"></i> Lưu
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!--<script th:inline="javascript">-->
 <!--</script>-->
 <script th:inline="javascript" th:src="@{/js/nhanvien/productProvity.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script th:src="@{/js/admin/quanlysanpham.js}"></script>
 </body>
 
 </html>
