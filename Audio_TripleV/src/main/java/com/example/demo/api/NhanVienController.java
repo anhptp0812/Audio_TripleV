@@ -1,17 +1,16 @@
 package com.example.demo.api;
 
-import com.example.demo.entity.*;
-import com.example.demo.repository.HangRepository;
-import com.example.demo.repository.KhachHangRepository;
-import com.example.demo.repository.LoaiSanPhamRepository;
-import com.example.demo.repository.MauSacRepository;
-import com.example.demo.repository.SanPhamChiTietRepository;
-import com.example.demo.repository.SanPhamRepository;
+import com.example.demo.entity.DonHang;
+import com.example.demo.entity.DonHangChiTiet;
+import com.example.demo.entity.Hang;
+import com.example.demo.entity.KhachHang;
+import com.example.demo.entity.LoaiSanPham;
+import com.example.demo.entity.MauSac;
+import com.example.demo.entity.SanPham;
+import com.example.demo.entity.SanPhamChiTiet;
+import com.example.demo.repository.*;
 import com.example.demo.service.KhachHangService;
-import com.example.demo.service.NhanVienService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,10 +31,6 @@ public class NhanVienController {
     private KhachHangRepository khachHangRepository;
 
     @Autowired
-    private NhanVienService nhanVienService;
-
-
-    @Autowired
     private LoaiSanPhamRepository loaiSanPhamRepository;
 
     @Autowired
@@ -46,6 +41,9 @@ public class NhanVienController {
 
     @Autowired
     private HangRepository hangRepository;
+
+    @Autowired
+    private HinhAnhRepository hinhAnhRepository;
 
 //    @Autowired
 //    private SanPhamChiTietService
@@ -116,37 +114,20 @@ public class NhanVienController {
         model.addAttribute("donHang", new DonHang());
         model.addAttribute("donHangChiTiet", new DonHangChiTiet());
 
+        List<SanPhamChiTiet> spctList = sanPhamChiTietRepository.findAll();
+
+        for (SanPhamChiTiet spct : spctList) {
+            // Sử dụng phương thức getFormattedDonGia() để lấy giá trị đã định dạng
+            spct.getFormattedDonGia();
+        }
+
+        model.addAttribute("spct", spctList);
+        model.addAttribute("mausac", mauSacRepository.findAll());
+        model.addAttribute("hang", hangRepository.findAll());
+        model.addAttribute("hinhAnhs", hinhAnhRepository.findAll());
+        model.addAttribute("loaisp", loaiSanPhamRepository.findAll());
+
         return "nhanvien/productProvity"; // Trả về trang sản phẩm
-    }
-
-
-    @GetMapping("/user/thong-tin")
-    public String thongTinTaiKhoanNV(@AuthenticationPrincipal UserDetails userDetails, Model model) {
-        // Lấy khách hàng hiện tại
-        NhanVien nhanVien = nhanVienService.findByTaiKhoan(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("Nhân Viên không tồn tại"));
-        model.addAttribute("nhanVien", nhanVien);
-
-//        // Lấy danh sách đơn hàng
-//        List<DonHang> donHangList = donHangService.findByKhachHang(khachHang);
-//
-//        model.addAttribute("donHangList", donHangList);
-//        model.addAttribute("counter", 0);
-//
-//        // Lấy giỏ hàng dựa trên khách hàng, nếu chưa có thì tạo mới
-//        GioHang gioHang = gioHangService.findByKhachHang(khachHang)
-//                .orElseGet(() -> gioHangService.createGioHang(khachHang));
-//
-//        // Tính tổng số lượng trong giỏ hàng
-//        int totalQuantity = 0; // For cart count
-//        if (gioHang.getGioHangChiTietList() != null && !gioHang.getGioHangChiTietList().isEmpty()) {
-//            totalQuantity = gioHang.getGioHangChiTietList().stream()
-//                    .mapToInt(item -> item.getSoLuong())
-//                    .sum();
-//        }
-//        model.addAttribute("cartCount", totalQuantity);khoan
-
-        return "nhanvien/tai-khoan-user"; // Trang hiển thị danh sách đơn hàng
     }
 
 }
