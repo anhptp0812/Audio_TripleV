@@ -12,7 +12,6 @@ CREATE TABLE SanPham (
 
 );
 
-
 CREATE TABLE LoaiSanPham (
 
     ID INT PRIMARY KEY identity,
@@ -683,14 +682,14 @@ VALUES
 		select * from HinhAnh
 		select * from LoaiSanPham
 		select * from khuyenmai
-		select * from SanPhamChiTiet
 		select * from donHang
 		select * from DonHangChiTiet
 		select * from GioHang
 		select * from GioHangChiTiet
+		select * from HoaDon
+		select * from HoaDonChiTiet
 		select * from KhachHang
 		select * from NhanVien
-		select * from HoaDon
 	
 
 

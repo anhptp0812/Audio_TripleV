@@ -18,7 +18,6 @@ public class HoaDonService {
     @Autowired
     private HoaDonChiTietRepository hoaDonChiTietRepository;
 
-
     public HoaDon findByid(Integer id) {
         return hoaDonRepository.findById(id).orElse(null);
     }
