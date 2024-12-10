@@ -13,8 +13,8 @@ public interface KhachHangRepository extends JpaRepository<KhachHang, Integer> {
     Optional<KhachHang> findByTaiKhoan(String taiKhoan);
     List<KhachHang> findByTenContaining(String name);
     List<KhachHang> findBySdtContaining(String phone);
-    List<KhachHang> findByTenContainingAndSdtContaining(String name, String phone);
-    public Optional<KhachHang> findBySdt(String sdt);
-
+    List<KhachHang> findByTenContainingAndSdtContaining(String ten, String sdt);
+    Optional<KhachHang> findBySdt(String sdt);
+    Optional<Object> findByTen(String ten);
 }
 
