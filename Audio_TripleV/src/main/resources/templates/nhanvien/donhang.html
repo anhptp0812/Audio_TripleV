@@ -69,7 +69,19 @@
 
 <body>
 <!-- Header Section (from home.html) -->
-<th:block th:replace="~{/nhanvien/fragments :: nhan-vien-header}"/>
+<header class="navbar navbar-expand-lg navbar-custom">
+    <div class="container">
+        <a class="navbar-brand" href="/trang-chu/hien-thi">
+            <img src="/images/logo.png" width="50" height="50" alt="Logo">
+        </a>
+
+        <div class="ml-auto d-flex align-items-center">
+            <a class="btn btn-outline-light" href="/src/main/webapp/views/admin/accNV/nvAcc.html">
+                <i class="bi bi-person-circle"></i>
+            </a>
+        </div>
+    </div>
+</header>
 <!--<div class="container">-->
 <!--    <nav class="navbar navbar-expand-lg navbar-custom">-->
 <!--        <div class="container">-->
@@ -99,25 +111,10 @@
 
         <ul class="category-list">
             <li class="category-item">
-                <a href="#" id="btnBanHang" class="category-item__link btn-product">Bán hàng</a>
-            </li>
-            <!--            <li class="category-item">-->
-            <!--                <a href="/spct/hien-thi" class="category-item__link btn-product">Quản lý</a>-->
-            <!--            </li>-->
-            <li class="category-item">
-                <a href="#" id="btnToanBo" class="category-item__link btn-product">Toàn Bộ Sản Phẩm</a>
+                <a href="/user/ban-hang" class="category-item__link">Bán hàng</a>
             </li>
             <li class="category-item">
-                <a href="#" id="btnMauSac" class="category-item__link btn-product">Màu Sắc Sản Phẩm</a>
-            </li>
-            <li class="category-item">
-                <a href="#" id="btnLoai" class="category-item__link btn-product">Loại Sản Phẩm</a>
-            </li>
-            <li class="category-item">
-                <a href="#" id="btnHang" class="category-item__link btn-product">Hãng</a>
-            </li>
-            <li class="category-item">
-                <a href="#" id="btnHinhAnh" class="category-item__link btn-product">Hình Ảnh</a>
+                <a href="/spct/hien-thi" class="category-item__link">Quản lý</a>
             </li>
             <li class="category-item">
                 <a href="#" class="category-item__link">Khách hàng</a>
@@ -128,6 +125,7 @@
         </ul>
     </nav>
     <div class="account-content">
+<<<<<<< Updated upstream
 
         <div class="table text-center">
             <div class="btn-group my-3 w-100">
@@ -148,6 +146,19 @@
                     <th>Trạng Thái Thanh Toán</th>
                     <th>Ngày Tạo</th>
                     <th>Ngày Cập Nhật</th>
+=======
+        <div class="table">
+            <h2>ĐƠN HÀNG CHƯA XÁC NHẬN</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>Tên khách Hàng</th>
+                    <th>Tổng giá</th>
+                    <th>TT đơn hàng</th>
+                    <th>TT thanh toán</th>
+                    <th>Ngày tạo</th>
+                    <th>Ngày cập nhật</th>
+>>>>>>> Stashed changes
                     <th>Ngày Giao</th>
                     <th colspan="2">Action</th>
                 </tr>
@@ -159,6 +170,7 @@
                         <td th:text="${dh.tongGia}"></td>
                         <td>
                             <input type="hidden" th:value="${dh.id}" name="id"/>
+<<<<<<< Updated upstream
                             <select name="trangThai" required class="form-control">
                                 <!-- Kiểm tra trạng thái hiện tại và chọn các trạng thái hợp lệ -->
                                 <option class="form-control" value="Chờ xử lý"
@@ -190,31 +202,143 @@
                                         th:disabled="${ dh.trangThai == 'Đã xác nhận' || dh.trangThai == 'Đang giao hàng' || dh.trangThai == 'Đã giao hàng' || dh.trangThai == 'Đã hủy'}">
                                     Đã hủy
                                 </option>
+=======
+                            <select name="trangThai" required>
+                                <option value="Chờ xử lý" th:selected="${dh.trangThai == 'Chờ xử lý'}">Chờ xử lý
+                                </option>
+                                <option value="Đã xác nhận" th:selected="${dh.trangThai == 'Đã xác nhận'}">Đã xác nhận
+                                </option>
+                                <option value="Đang giao hàng" th:selected="${dh.trangThai == 'Đang giao hàng'}">Đang
+                                    giao hàng
+                                </option>
+                                <option value="Đã giao hàng" th:selected="${dh.trangThai == 'Đã giao hàng'}">Đã giao
+                                    hàng
+                                </option>
+                                <option value="Đã hủy" th:selected="${dh.trangThai == 'Đã hủy'}">Đã hủy</option>
+>>>>>>> Stashed changes
                             </select>
                         </td>
                         <td th:text="${dh.trangThaiPayment ?: ''}"></td>
                         <td th:text="${dh.ngayTao}"></td>
                         <td th:text="${dh.ngayCapNhat}"></td>
-                        <td th:text="${dh.ngayGiao != null ? dh.ngayGiao : ''}"></td>
-
+                        <td th:text="${dh.ngayGiao}"></td>
                         <td>
-                            <button class="btn btn-primary" type="submit">Cập nhật trạng thái</button>
+                            <button type="submit">Cập nhật trạng thái</button>
                         </td>
                     </form>
                 </tr>
-
                 </tbody>
             </table>
+<<<<<<< Updated upstream
 
             <div th:if="${message}" class="alert alert-info">
                 <span th:text="${message}"></span>
             </div>
+=======
+        </div>
+        <div class="table mt-5">
+            <h2>ĐƠN HÀNG ĐÃ XÁC NHẬN</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>Tên khách Hàng</th>
+                    <th>Tổng giá</th>
+                    <th>TT thanh toán</th>
+                    <th>Ngày Giao</th>
+                    <th colspan="2">Action</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="dh : ${listDH}">
+                    <td th:text="${dh.khachHang.ten}"></td>
+                    <td th:text="${dh.tongGia}"></td>
+                    <td th:text="${dh.trangThai}"></td>
+                    <td th:text="${dh.ngayGiao}"></td>
+                    <td>
+                        <a th:href="@{/user/ban-hang/{id}(id=${dh.id})}" class="btn btn-primary">
+                            Detail
+                        </a>
+                    </td>
+
+                    <td>
+                        <a class="btn btn-primary" href="javascript:void(0);" onclick="toggleProductList()">
+                            See more
+                        </a>
+                    </td>
+
+                    <!-- Phần trổ xuống khi click -->
+                <tr id="productList" class="productList" style="display:none;">
+                    <td colspan="6">
+                        <!-- Danh sách sản phẩm -->
+                        <div class="product-list" style="display: flex; flex-wrap: wrap; gap: 15px;">
+                            <div class="product-item"
+                                 style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; flex: 1 1 18%; text-align: center;">
+                                <h5>Tên SP: Tai nghe Sennheiser</h5>
+                                <p>Giá: 1,500,000 VND</p>
+                            </div>
+                            <div class="product-item"
+                                 style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; flex: 1 1 18%; text-align: center;">
+                                <h5>Tên SP: Tai nghe Sony</h5>
+                                <p>Giá: 1,200,000 VND</p>
+                            </div>
+                            <div class="product-item"
+                                 style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; flex: 1 1 18%; text-align: center;">
+                                <h5>Tên SP: Tai nghe Bose</h5>
+                                <p>Giá: 3,000,000 VND</p>
+                            </div>
+                            <div class="product-item"
+                                 style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; flex: 1 1 18%; text-align: center;">
+                                <h5>Tên SP: Tai nghe JBL</h5>
+                                <p>Giá: 1,800,000 VND</p>
+                            </div>
+                            <div class="product-item"
+                                 style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; flex: 1 1 18%; text-align: center;">
+                                <h5>Tên SP: Tai nghe AKG</h5>
+                                <p>Giá: 2,200,000 VND</p>
+                            </div>
+                        </div>
+
+                        <!-- Phần phân trang -->
+                        <div class="pagination"
+                             style="text-align: center; margin-top: 20px; display: flex; justify-content: center;">
+                            <button class="btn btn-outline-primary">
+                                <i class="bi bi-arrow-bar-left"></i> <!-- Về đầu trang -->
+                            </button>
+                            <button class="btn btn-outline-primary">
+                                <i class="bi bi-arrow-left-circle"></i> <!-- Back -->
+                            </button>
+
+                            <!-- Số trang -->
+                            <button class="btn btn-outline-primary">1</button>
+                            <button class="btn btn-outline-primary">2</button>
+                            <button class="btn btn-outline-primary">3</button>
+                            <span class="btn btn-outline-primary">...</span> <!-- Nút "..." cho các trang tiếp theo -->
+
+                            <button class="btn btn-outline-primary">10</button> <!-- Trang cuối cùng -->
+
+                            <button class="btn btn-outline-primary">
+                                <i class="bi bi-arrow-right-circle"></i> <!-- Next -->
+                            </button>
+                            <button class="btn btn-outline-primary">
+                                <i class="bi bi-arrow-bar-right"></i> <!-- Về cuối trang -->
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+>>>>>>> Stashed changes
         </div>
     </div>
 </div>
 
-<!--Footer section-->
-<th:block th:replace="~{/nhanvien/fragments :: nhan-vien-footer}"/>
+<footer class="navbar navbar-expand-lg navbar-custom">
+    <div class="container">
+        <span class="m-auto">© 2024 - Bản quyền thuộc về TripleV</span>
+    </div>
+</footer>
 
 <script th:src="@{/js/nhanvien/donhang.js}"></script>
 <!-- Bootstrap JS and jQuery (from home.html) -->
