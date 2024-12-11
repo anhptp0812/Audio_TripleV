@@ -28,11 +28,24 @@ function selectCustomer(id, name, phone) {
         });
 }
 
+function toggleSidebar() {
+    var sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('expanded');
+}
+
+// Hàm xử lý tìm kiếm (có thể thêm logic tìm kiếm tại đây)
 function handleSearch() {
-    const searchInput = document.getElementById('searchInput');
+    var searchQuery = document.getElementById('searchInput').value;
+    alert("Tìm kiếm: " + searchQuery);
+}
+
+function toggleSearchInput() {
+    var searchInput = document.getElementById('searchInput');
     if (searchInput.style.display === 'none' || searchInput.style.display === '') {
-        function handleSearch() {
-        }
+        searchInput.style.display = 'block';
+        searchInput.focus();
+    } else {
+        searchInput.style.display = 'none';
     }
 }
 
