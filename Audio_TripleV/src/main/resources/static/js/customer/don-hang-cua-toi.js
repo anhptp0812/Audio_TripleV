@@ -14,16 +14,3 @@ document.addEventListener('click', function (event) {
         dropdown.style.display = 'none';
     }
 });
-
-document.addEventListener("DOMContentLoaded", function () {
-    const params = new URLSearchParams(window.location.search);
-    const trangThai = params.get("trangThai");
-
-    if (trangThai) {
-        document.querySelectorAll('.btn-group .btn').forEach(btn => {
-            if (btn.textContent.trim() === trangThai) {
-                btn.classList.add("active");
-            }
-        });
-    }
-});

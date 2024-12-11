@@ -1,27 +1,16 @@
 // Hàm để hiển thị bảng đã chọn và cập nhật trạng thái nút tương ứng
 function showTable(tableId, buttonId, title) {
     hideAllTables();
-    if (tableId === 'category'){
-        document.getElementById(tableId).style.display = 'flex';
-        document.querySelector(".product-table").style.display = 'none';
-
-    } else {
-        if (document.querySelector(".product-table")){
-            document.querySelector(".product-table").style.display = 'block';
-        }
-        document.getElementById(tableId).style.display = 'table';
-        document.getElementById(buttonId).style.display = 'block'; // Hiện nút "Thêm" tương ứng
-        updateTableTitle(title);
-    }
+    document.getElementById(tableId).style.display = 'table';
+    document.getElementById(buttonId).style.display = 'block'; // Hiện nút "Thêm" tương ứng
+    updateTableTitle(title);
 }
 
 // Hàm ẩn tất cả bảng và nút "Thêm"
 function hideAllTables() {
-    const tables = ['category', 'productTable', 'colorTable', 'categoryTable', 'brandTable', 'imageTable'];
+    const tables = ['productTable', 'colorTable', 'categoryTable', 'brandTable', 'imageTable'];
     tables.forEach(table => {
-        if (document.getElementById(table)){
-            document.getElementById(table).style.display = 'none';
-        }
+        document.getElementById(table).style.display = 'none';
     });
 
     const buttons = ['nutThem', 'nutThemMauSac', 'nutThemLoai', 'nutThemHang', 'nutThemHinhAnh'];
@@ -32,11 +21,6 @@ function hideAllTables() {
 
 // Cập nhật tiêu đề bảng
 function updateTableTitle(title) {
-    if (title === ''){
-        document.getElementById('tableTitle').style.display = 'none';
-    } else {
-        document.getElementById('tableTitle').style.display = 'block';
-    }
     document.getElementById("tableTitle").innerText = title;
 }
 
@@ -59,10 +43,6 @@ document.getElementById("btnHang").addEventListener("click", function() {
 
 document.getElementById("btnHinhAnh").addEventListener("click", function() {
     showTable('imageTable', 'nutThemHinhAnh', "Hình ảnh");
-});
-
-document.getElementById("btnBanHang").addEventListener("click", function() {
-    showTable('category', 'category', "");
 });
 
 // Hàm mở modal chỉnh sửa
