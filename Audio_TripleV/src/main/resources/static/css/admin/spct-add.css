@@ -128,4 +128,11 @@ button[type="submit"] {
     background-color: #fff;
     box-sizing: border-box;
 }
+#moTa {
+    font-size: 16px; /* Tăng kích thước chữ */
+    line-height: 1.5; /* Tăng khoảng cách dòng */
+    padding: 10px; /* Thêm khoảng trống bên trong */
+    border: 1px solid #ccc; /* Đường viền mềm mại */
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* Hiệu ứng chìm */
+}
 

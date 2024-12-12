@@ -5,39 +5,97 @@
     <title>Chi tiết sản phẩm</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link href="../../static/css/admin/spct-detail.css" rel="stylesheet">
+    <style>
+        .info-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .info-row label {
+            min-width: 150px; /* Đảm bảo các nhãn có cùng kích thước */
+            font-weight: bold;
+        }
+        .info-row span {
+            margin-left: 10px;
+        }
+    </style>
 </head>
 <body>
 <div class="container mt-5">
-    <h2>Chi tiết sản phẩm</h2>
-    <div class="card">
-        <div class="card-header">
-            <h4 th:text="${spct.sanPham.ten}">Tên sản phẩm</h4>
-        </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <img th:src="@{/images/tainghe/{imageName}(imageName=${spct.hinhAnh.ten})}" alt="Hình Ảnh" class="img-fluid" width="300px" height="300px"/>
+    <h2 class="text-center">Chi tiết sản phẩm</h2>
+    <form>
+        <div class="card">
+            <div class="card-header text-center">
+                <h4 th:text="${spct.sanPham.ten}">Tên sản phẩm</h4>
+            </div>
+            <div class="card-body">
+                <!-- Hình ảnh và thông tin sản phẩm -->
+                <div class="row mb-4">
+                    <div class="col-md-6 text-center">
+                        <img th:src="@{/images/tainghe/{imageName}(imageName=${spct.hinhAnh.ten})}"
+                             alt="Hình Ảnh"
+                             class="img-fluid rounded border"
+                             style="max-width: 300px; max-height: 300px;"/>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-row">
+                            <label>Màu Sắc:</label>
+                            <span th:text="${spct.mauSac.ten}"></span>
+                        </div>
+                        <div class="info-row">
+                            <label>Hãng:</label>
+                            <span th:text="${spct.hang.ten}"></span>
+                        </div>
+                        <div class="info-row">
+                            <label>Loại Sản Phẩm:</label>
+                            <span th:text="${spct.loaiSanPham.kieuDang}"></span>
+                        </div>
+                        <div class="info-row">
+                            <label>Đơn Giá:</label>
+                            <span th:text="${spct.formattedDonGia}"></span>
+                        </div>
+                        <div class="info-row">
+                            <label>Số Lượng:</label>
+                            <span th:text="${spct.soLuong}"></span>
+                        </div>
+                        <div class="info-row">
+                            <label>Trạng Thái:</label>
+                            <span th:text="${spct.trangThai}"></span>
+                        </div>
+                        <div class="info-row">
+                            <label>Ngày Tạo:</label>
+                            <span th:text="${#dates.format(spct.ngayTao, 'yyyy-MM-dd')}"></span>
+                        </div>
+                        <div class="info-row">
+                            <label>Ngày Cập Nhật:</label>
+                            <span th:text="${#dates.format(spct.ngayCapNhat, 'yyyy-MM-dd')}"></span>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-6">
-                    <p><strong>Màu Sắc:</strong> <span th:text="${spct.mauSac.ten}"></span></p>
-                    <p><strong>Hãng:</strong> <span th:text="${spct.hang.ten}"></span></p>
-                    <p><strong>Loại Sản Phẩm:</strong> <span th:text="${spct.loaiSanPham.kieuDang}"></span></p>
-                    <p><strong>Đơn giá:</strong> <span th:text="${spct.formattedDonGia}"></span></p>
-                    <p><strong>So lượng:</strong> <span th:text="${spct.soLuong}"></span></p>
-                    <p><strong>Trạng Thái:</strong> <span th:text="${spct.trangThai}"></span></p>
-                    <p><strong>Mô tả:</strong> <span th:text="${spct.moTa}"></span></p>
-                    <p><strong>Ngày Tạo:</strong> <span th:text="${#dates.format(spct.ngayTao, 'yyyy-MM-dd')}"></span></p>
-                    <p><strong>Ngày Cập Nhật:</strong> <span th:text="${#dates.format(spct.ngayCapNhat, 'yyyy-MM-dd')}"></span></p>
+
+                <!-- Mô tả sản phẩm -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label><strong>Mô tả sản phẩm:</strong></label>
+                            <textarea class="form-control" rows="5" readonly
+                                      style="resize: none;" th:text="${spct.moTa}"></textarea>
+                        </div>
+                    </div>
                 </div>
+
+
+
+            </div>
+            <div class="card-footer text-center">
+                <a th:href="@{/spct/hien-thi}" class="btn btn-secondary">Quay lại</a>
+                <a th:href="@{/spct/delete(id=${spct.id})}" class="btn btn-danger"
+                   onclick="return confirm('Bạn có muốn xóa không?');">Xóa sản phẩm</a>
             </div>
         </div>
-        <div class="card-footer">
-            <a th:href="@{/spct/hien-thi}" class="btn btn-secondary">Quay lại</a>
-            <a th:href="@{/spct/delete(id=${spct.id})}" class="btn btn-danger"
-               onclick="return confirm('Bạn có muốn xóa không?');">Xóa sản phẩm</a>
-        </div>
-    </div>
+    </form>
 </div>
+
 <script src="../../static/js/admin/spct-detail.js"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
