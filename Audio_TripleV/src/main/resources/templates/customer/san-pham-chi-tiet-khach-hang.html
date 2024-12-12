@@ -89,101 +89,16 @@
                         <h5>Đặc Điểm Nổi Bật</h5>
                     </div>
                     <div class="card-body">
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item"><i class="fas fa-check-circle text-success me-2"></i><strong>Thiết kế hiện đại:</strong>
-                                Tai nghe Beats Solo 4 (LIKE NEW) mới với thiết kế hiện đại, trọng lượng khoảng 217g. <br>
-                                Tai nghe Beats Solo 4 (LIKE NEW) mới với thiết kế hiện đại, trọng lượng khoảng 217g.
-
-                            </li>
-
-
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <!-- Thông Số Kỹ Thuật -->
-            <div class="col-md-12 mb-4" data-aos="fade-up" data-aos-delay="200">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-header bg-primary text-white">
-                        <h5>Thông số kỹ thuật</h5>
-                    </div>
-                    <div class="card-body">
-                        <!-- Giới hạn thông số kỹ thuật hiển thị ban đầu -->
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">
-                                <div class="row">
-                                    <div class="col-md-4"><strong>Kiểu dáng:</strong></div>
-                                    <div class="col-md-8">On-ear</div>
-                                </div>
-                            </li>
-                            <!--                            <li class="list-group-item">-->
-                            <!--                                <div class="row">-->
-                            <!--                                    <div class="col-md-4"><strong>Định dạng Bluetooth:</strong></div>-->
-                            <!--                                    <div class="col-md-8">5.3</div>-->
-                            <!--                                </div>-->
-                            <!--                            </li>-->
-                            <!--                            <li class="list-group-item">-->
-                            <!--                                <div class="row">-->
-                            <!--                                    <div class="col-md-4"><strong>Thời lượng pin:</strong></div>-->
-                            <!--                                    <div class="col-md-8">50 giờ</div>-->
-                            <!--                                </div>-->
-                            <!--                            </li>-->
-                            <!--                            <li class="list-group-item">-->
-                            <!--                                <div class="row">-->
-                            <!--                                    <div class="col-md-4"><strong>Kiểu sạc:</strong></div>-->
-                            <!--                                    <div class="col-md-8">Type-C</div>-->
-                            <!--                                </div>-->
-                            <!--                            </li>-->
-                            <!--                            <li class="list-group-item">-->
-                            <!--                                <div class="row">-->
-                            <!--                                    <div class="col-md-4"><strong>Kích thước driver:</strong></div>-->
-                            <!--                                    <div class="col-md-8">40mm</div>-->
-                            <!--                                </div>-->
-                            <!--                            </li>-->
-                        </ul>
-
-
-                        <!-- Thông số kỹ thuật chi tiết -->
-                        <div class="collapse mt-3" id="moreSpecs">
-                            <hr>
+                        <form>
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item">
-                                    <div class="row">
-                                        <div class="col-md-4"><strong>Chống ồn:</strong></div>
-                                        <div class="col-md-8">Active Noise Cancellation</div>
-                                    </div>
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    <strong th:text="${spct.sanPham.ten}">Tai Nghe:</strong>
+                                    <!-- Hiển thị đầy đủ nội dung mô tả -->
+                                    <div class="mt-2" th:utext="${spct.moTa}" style="white-space: pre-line;"></div>
                                 </li>
-                                <!--                                <li class="list-group-item">-->
-                                <!--                                    <div class="row">-->
-                                <!--                                        <div class="col-md-4"><strong>Khả năng kết nối:</strong></div>-->
-                                <!--                                        <div class="col-md-8">Kết nối đa điểm, hỗ trợ Bluetooth 5.3</div>-->
-                                <!--                                    </div>-->
-                                <!--                                </li>-->
-                                <!--                                <li class="list-group-item">-->
-                                <!--                                    <div class="row">-->
-                                <!--                                        <div class="col-md-4"><strong>Tương thích:</strong></div>-->
-                                <!--                                        <div class="col-md-8">iOS, Android, Windows, macOS</div>-->
-                                <!--                                    </div>-->
-                                <!--                                </li>-->
-                                <!--                                <li class="list-group-item">-->
-                                <!--                                    <div class="row">-->
-                                <!--                                        <div class="col-md-4"><strong>Độ nhạy âm thanh:</strong></div>-->
-                                <!--                                        <div class="col-md-8">85 dB</div>-->
-                                <!--                                    </div>-->
-                                <!--                                </li>-->
-                                <!--                                <li class="list-group-item">-->
-                                <!--                                    <div class="row">-->
-                                <!--                                        <div class="col-md-4"><strong>Loại tai nghe:</strong></div>-->
-                                <!--                                        <div class="col-md-8">Over-ear với đệm tai cao cấp</div>-->
-                                <!--                                    </div>-->
-                                <!--                                </li>-->
                             </ul>
-                        </div>
-
-                        <!-- Nút xem thêm thông số kỹ thuật -->
-                        <button class="btn btn-outline-primary w-100 mt-3 toggle-specs" type="button">
-                            <i class="fas fa-chevron-down me-2"></i>Xem cấu hình chi tiết
-                        </button>
+                        </form>
                     </div>
                 </div>
             </div>
