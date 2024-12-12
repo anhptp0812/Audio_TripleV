@@ -75,18 +75,17 @@ body {
     visibility: visible;
 }
 
-.order-form {
+.spct-form {
     padding: 10px;
 }
 
-.order-details {
+.spct-details {
     border: 1px solid gray;
     padding: 10px;
     overflow: auto;
     height: 800px;
     box-sizing: border-box;
 }
-
 
 /* Tùy chỉnh mũi tên */
 .toggle-menu {

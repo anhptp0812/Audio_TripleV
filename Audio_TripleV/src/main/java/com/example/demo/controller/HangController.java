@@ -24,6 +24,12 @@ public class HangController {
     @Autowired
     private HangService hangService;
 
+    @GetMapping("/hien-thi")
+    public String hienThi(Model model) {
+        model.addAttribute("hang", hangService.findAll());
+        return "admin/hang";
+    }
+
     // Hiển thị form thêm màu sắc
     @GetMapping("/form-add")
     public String add() {
@@ -48,7 +54,7 @@ public class HangController {
     @GetMapping("/delete/{id}")
     public String deleteColor(@PathVariable Integer id) {
         hangService.deleteById(id);
-        return "redirect:/spct/hien-thi?activated=hang"; // Thêm tham số activated
+        return "redirect:/hang/hien-thi"; // Thêm tham số activated
     }
 
     @GetMapping("/form-update/{id}")

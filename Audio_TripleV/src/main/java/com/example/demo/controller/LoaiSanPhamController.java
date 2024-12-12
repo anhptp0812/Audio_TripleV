@@ -25,6 +25,12 @@ public class LoaiSanPhamController {
     @Autowired
     private LoaiSanPhamService loaiSanPhamService;
 
+    @GetMapping("/hien-thi")
+    public String hienThi(Model model) {
+        model.addAttribute("loaisp", loaiSanPhamService.findAll());
+        return "admin/loai-san-pham";
+    }
+
     @GetMapping("/form-add")
     public String add() {
         return "admin/loai-san-pham-add";
@@ -46,7 +52,7 @@ public class LoaiSanPhamController {
     @GetMapping("/delete/{id}")
     public String deleteLoaiSanPham(@PathVariable Integer id) {
         loaiSanPhamService.deleteById(id);
-        return "redirect:/spct/hien-thi?activated=loaisp";
+        return "redirect:/loai-san-pham/hien-thi";
     }
 
     @GetMapping("/form-update/{id}")

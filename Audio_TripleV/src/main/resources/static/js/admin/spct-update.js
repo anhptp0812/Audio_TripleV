@@ -59,7 +59,7 @@ function updateSanPhamChiTiet(event) {
         contentType: false,
         success: function (response) {
             alert("Cập nhật sản phẩm thành công!");
-            window.location.href = '/spct/hien-thi?activated=spct';
+            window.location.href = '/spct/hien-thi';
         },
         error: function (xhr) {
             let errorMessage = 'Có lỗi xảy ra.';

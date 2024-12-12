@@ -20,7 +20,7 @@ function updateMauSac() {
         data: JSON.stringify(formData),
         success: function(response) {
             alert('Cập nhật màu sắc thành công!');
-            window.location.href = '/spct/hien-thi?activated=colors';
+            window.location.href = '/mau-sac/hien-thi';
         },
         error: function(xhr) {
             alert('Có lỗi xảy ra: ' + xhr.responseText);

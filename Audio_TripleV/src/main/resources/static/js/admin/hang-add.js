@@ -11,7 +11,7 @@ function addHang() {
         },
         success: function(response) {
             alert('Thêm hãng thành công!');
-            window.location.href = '/spct/hien-thi?activated=hang';
+            window.location.href = '/hang/hien-thi';
         },
         error: function() {
             alert('Có lỗi xảy ra khi thêm hãng.');

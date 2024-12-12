@@ -20,7 +20,7 @@ function updateLoaiSP() {
         data: JSON.stringify(formData),
         success: function(response) {
             alert('Cập nhật Loại thành công!');
-            window.location.href = '/spct/hien-thi?activated=loaisp';
+            window.location.href = '/loai-san-pham/hien-thi';
         },
         error: function(xhr) {
             alert('Có lỗi xảy ra: ' + xhr.responseText);

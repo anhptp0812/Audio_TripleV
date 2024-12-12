@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hình Ảnh</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.9.1/font/bootstrap-icons.min.css"
+          rel="stylesheet">
+    <link th:href="@{/css/admin/hinh-anh.css}" rel="stylesheet">
+</head>
+
+<body>
+
+<th:block th:replace="~{/nhanvien/fragments :: nhan-vien-header}"/>
+
+<div class="main-container">
+    <div class="header d-flex align-items-center">
+        <input type="text" id="searchInput" class="form-control search-input me-2" placeholder="Tìm kiếm..."
+               style="display: none;">
+        <button class="btn btn-outline-light me-2" type="button" onclick="toggleSearchInput()">
+            <i class="bi bi-search"></i>
+        </button>
+        <a class="btn btn-outline-light" href="#">
+            <i class="bi bi-person-circle"></i>
+        </a>
+    </div>
+    <div class="hinhanh-form">
+        <div class="hinhanh-details text-center">
+            <h5 id="tableTitle">Hình Ảnh</h5>
+            <a id="nutThemHinhAnh" href="/hinh-anh/form-add" class="btn btn-success w-100">
+                <i class="bi bi-plus-circle"></i>
+            </a>
+            <table id="imageTable" class="table table-bordered table-hover">
+                <thead class="thead-light">
+                <tr>
+                    <th>ID Hình Ảnh</th>
+                    <th>Tên Hình Ảnh</th>
+                    <th>URL Hình Ảnh</th>
+                    <th>Ngày Tạo</th>
+                    <th>Ngày Sửa</th>
+                    <th>Hành Động</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="hinhAnh : ${hinhAnhs}">
+                    <td th:text="${hinhAnh.id}"></td>
+                    <td th:text="${hinhAnh.ten}"></td>
+                    <td>
+                        <img th:src="@{/images/tainghe/{imageName}(imageName=${hinhAnh.ten})}" alt="Hình Ảnh"
+                             width="50px" height="50px"/>
+                    </td>
+                    <td th:text="${#dates.format(hinhAnh.ngayTao, 'yyyy-MM-dd')}"></td>
+                    <td th:text="${#dates.format(hinhAnh.ngayCapNhat, 'yyyy-MM-dd')}"></td>
+                    <td>
+                        <a th:href="@{/hinh-anh/form-update/{id}(id=${hinhAnh.id})}" class="btn btn-custom btn-warning">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+
+                        <a th:href="@{/hinh-anh/delete/{id}(id=${hinhAnh.id})}" class="btn btn-danger"
+                           onclick="return confirm('Bạn có chắc chắn muốn xóa?')">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!--Footer section-->
+    <th:block th:replace="~{/nhanvien/fragments :: nhan-vien-footer}"/>
+</div>
+
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/admin/spct.js}"></script>
+
+</html>

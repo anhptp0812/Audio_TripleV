@@ -62,6 +62,23 @@ public class SanPhamChiTietController {
     @Autowired
     private LoaiSanPhamRepository loaiSanPhamRepository;
 
+//    @GetMapping("/hien-thi")
+//    public String hienThi(Model model) {
+//        List<SanPhamChiTiet> spctList = sanPhamChiTietRepository.findAll();
+//
+//        for (SanPhamChiTiet spct : spctList) {
+//            // Sử dụng phương thức getFormattedDonGia() để lấy giá trị đã định dạng
+//            spct.getFormattedDonGia();
+//        }
+//
+//        model.addAttribute("spct", spctList);
+//        model.addAttribute("mausac", mauSacRepository.findAll());
+//        model.addAttribute("hang", hangRepository.findAll());
+//        model.addAttribute("hinhAnhs", hinhAnhRepository.findAll());
+//        model.addAttribute("loaisp", loaiSanPhamRepository.findAll());
+//        return "admin/quanlysanpham";
+//    }
+
     @GetMapping("/hien-thi")
     public String hienThi(Model model) {
         List<SanPhamChiTiet> spctList = sanPhamChiTietRepository.findAll();
@@ -72,12 +89,9 @@ public class SanPhamChiTietController {
         }
 
         model.addAttribute("spct", spctList);
-        model.addAttribute("mausac", mauSacRepository.findAll());
-        model.addAttribute("hang", hangRepository.findAll());
-        model.addAttribute("hinhAnhs", hinhAnhRepository.findAll());
-        model.addAttribute("loaisp", loaiSanPhamRepository.findAll());
-        return "admin/quanlysanpham";
+        return "admin/spct";
     }
+
 
     @GetMapping("/detail/{id}")
     public String getDetail(@PathVariable Integer id, Model model) {
@@ -89,7 +103,7 @@ public class SanPhamChiTietController {
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Integer id) {
         sanPhamChiTietService.deleteById(id);
-        return "redirect:/spct/hien-thi?activated=spct";
+        return "redirect:/spct/hien-thi";
     }
 
     @GetMapping("/form-add")

@@ -75,7 +75,7 @@ function updateHinhAnh() {
         contentType: false,
         success: function () {
             alert('Cập nhật hình ảnh thành công!');
-            window.location.href = '/spct/hien-thi?activated=hinhAnh';
+            window.location.href = '/hinh-anh/hien-thi';
         },
         error: function (xhr) {
             const errorMessage = xhr.responseJSON?.message || 'Có lỗi xảy ra khi cập nhật hình ảnh.';
