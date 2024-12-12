@@ -23,6 +23,12 @@ public class MauSacController {
     @Autowired
     private MauSacService mauSacService;
 
+    @GetMapping("/hien-thi")
+    public String hienThi(Model model) {
+        model.addAttribute("mausac", mauSacService.findAll());
+        return "admin/mau-sac";
+    }
+
     // Hiển thị form thêm màu sắc
     @GetMapping("/form-add")
     public String add() {
@@ -73,6 +79,6 @@ public class MauSacController {
     @GetMapping("/delete/{id}")
     public String deleteColor(@PathVariable Integer id) {
         mauSacService.deleteById(id);
-        return "redirect:/spct/hien-thi?activated=colors"; // Thêm tham số activated
+        return "redirect:/mau-sac/hien-thi"; // Thêm tham số activated
     }
 }

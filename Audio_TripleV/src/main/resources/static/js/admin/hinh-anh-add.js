@@ -39,7 +39,7 @@ function addHinhAnh() {
             alert('Thêm hình ảnh thành công!');
             updateNotification('Thêm hình ảnh thành công!', 'success');
             setTimeout(() => {
-                window.location.href = '/spct/hien-thi?activated=hinhAnh';
+                window.location.href = '/hinh-anh/hien-thi';
             }, 1500);
         },
         error: function (xhr) {

@@ -29,6 +29,12 @@ public class HinhAnhController {
     @Autowired
     private HinhAnhService hinhAnhService;
 
+    @GetMapping("/hien-thi")
+    public String hienThi(Model model) {
+        model.addAttribute("hinhAnhs", hinhAnhService.findAll());
+        return "admin/hinh-anh";
+    }
+
     @Value("${upload.dir}")
     private String uploadDir;
 
@@ -128,7 +134,7 @@ public class HinhAnhController {
     @GetMapping("/delete/{id}")
     public String deleteHinhAnh(@PathVariable Integer id) {
         hinhAnhService.deleteById(id);
-        return "redirect:/spct/hien-thi?activated=hinhAnh"; // Thêm tham số activated
+        return "redirect:/hinh-anh/hien-thi"; // Thêm tham số activated
     }
 
 }

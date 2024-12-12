@@ -11,7 +11,7 @@ function addMauSac() {
         },
         success: function(response) {
             alert('Thêm màu sắc thành công!');
-            window.location.href = '/spct/hien-thi?activated=colors'; // Chuyển hướng về trang danh sách màu sắc
+            window.location.href = '/mau-sac/hien-thi'; // Chuyển hướng về trang danh sách màu sắc
         },
         error: function() {
             alert('Có lỗi xảy ra khi thêm màu sắc.');

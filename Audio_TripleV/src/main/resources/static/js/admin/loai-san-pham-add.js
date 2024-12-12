@@ -11,7 +11,7 @@ function addLoaiSP() {
         },
         success: function(response) {
             alert('Thêm loại sản phẩm thành công!');
-            window.location.href = '/spct/hien-thi?activated=loaisp'; // Chuyển hướng về trang danh sách màu sắc
+            window.location.href = '/loai-san-pham/hien-thi'; // Chuyển hướng về trang danh sách màu sắc
         },
         error: function() {
             alert('Có lỗi xảy ra khi thêm loại sản phẩm.');

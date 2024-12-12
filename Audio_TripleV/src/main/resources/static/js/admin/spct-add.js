@@ -59,7 +59,7 @@ function addSanPhamChiTiet(event) {
         contentType: false, // Trình duyệt tự động thiết lập content-type cho multipart/form-data
         success: function (response) {
             alert("Thêm sản phẩm thành công!");
-            window.location.href = '/spct/hien-thi?activated=spct'; // Chuyển hướng về trang quản lý sản phẩm
+            window.location.href = '/spct/hien-thi'; // Chuyển hướng về trang quản lý sản phẩm
         },
         error: function (xhr) {
             let errorMessage = 'Có lỗi xảy ra.';

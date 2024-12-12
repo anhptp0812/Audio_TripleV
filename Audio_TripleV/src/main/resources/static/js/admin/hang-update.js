@@ -19,7 +19,7 @@ function updateHang() {
         data: JSON.stringify(formData),
         success: function(response) {
             alert('Cập nhật hãng thành công!');
-            window.location.href = '/spct/hien-thi?activated=hang';
+            window.location.href = '/hang/hien-thi';
         },
         error: function(xhr) {
             alert('Có lỗi xảy ra: ' + xhr.responseText);

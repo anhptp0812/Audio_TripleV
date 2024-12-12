@@ -9,124 +9,27 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.9.1/font/bootstrap-icons.min.css">
     <!--    <link rel="stylesheet" href="/src/main/resources/static/css/admin/donHang.css">-->
     <link th:href="@{/css/nhanvien/hoa-don.css}" rel="stylesheet">
-
-    <style>
-        .category{
-            background: white;
-            flex: 2;
-            text-align: center;
-        }
-
-        .category__heading{
-            color: white;
-            background: gray;
-            font-size: 20px;
-            font-weight: 500;
-            padding: 16px;
-            margin-top: 0;
-            text-transform: uppercase;
-        }
-
-        .category-list{
-            padding: 0 0 8px 0;
-            list-style: none;
-        }
-
-        .category-item{
-            position: relative;
-        }
-
-        .category-item:first-child::before{
-            display: none;
-        }
-
-        .category-item::before{
-            content: "";
-            border-top: 1px solid #e1e1e1;
-            position: absolute;
-            top: 0;
-            left: 20px;
-            right: 20px;
-        }
-
-        .category-item__link{
-            position: relative;
-            padding: 6px 20px;
-            font-size: 18px;
-            text-decoration: none;
-            color: gray;
-            display: block;
-        }
-
-        .category-item__link:hover{
-            color: white;
-            background: #88aebd;
-            text-decoration: none;
-        }
-    </style>
 </head>
 
 <body>
-<!-- Header Section (from home.html) -->
-<header class="navbar navbar-expand-lg navbar-custom">
-    <div class="container">
-        <a class="navbar-brand" href="/trang-chu/hien-thi">
-            <img src="/images/logo.png" width="50" height="50" alt="Logo">
-        </a>
 
-        <div class="ml-auto d-flex align-items-center">
-            <a class="btn btn-outline-light" href="/src/main/webapp/views/admin/accNV/nvAcc.html">
-                <i class="bi bi-person-circle"></i>
-            </a>
-        </div>
-    </div>
-</header>
-<!--<div class="container">-->
-<!--    <nav class="navbar navbar-expand-lg navbar-custom">-->
-<!--        <div class="container">-->
-<!--            &lt;!&ndash; Left section &ndash;&gt;-->
-<!--            <div class="navbar-nav">-->
-<!--                <a class="nav-item nav-link" href="/src/main/webapp/views/admin/bill/thanhToan.html">ThanhToan</a>-->
-<!--                <a class="nav-item nav-link" href="/src/main/webapp/views/admin/mainViewNV/viewNV.html">Quản Lý</a>-->
-<!--            </div>-->
+<th:block th:replace="~{/nhanvien/fragments :: nhan-vien-header}"/>
 
-<!--            &lt;!&ndash; Right section with buttons &ndash;&gt;-->
-<!--            <div class="ml-auto d-flex align-items-center">-->
-<!--                <input type="text" id="searchInput" class="form-control search-input" placeholder="Tìm kiếm...">-->
-<!--                <button class="btn btn-outline-light" type="button" onclick="handleSearch()">-->
-<!--                    <i class="bi bi-search"></i>-->
-<!--                </button>-->
-<!--                <a class="btn btn-outline-light" href="/src/main/webapp/views/admin/accNV/nvAcc.html">-->
-<!--                    <i class="bi bi-person-circle"></i>-->
-<!--                </a>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </nav>-->
-<!--</div>-->
-<!-- Account Content (from original donHang.html) -->
 <div class="main-container">
-    <nav class="category">
-        <h3 class="category__heading">Danh mục</h3>
-
-        <ul class="category-list">
-            <li class="category-item">
-                <a href="/user/ban-hang" class="category-item__link">Bán hàng</a>
-            </li>
-            <li class="category-item">
-                <a href="/spct/hien-thi" class="category-item__link">Quản lý</a>
-            </li>
-            <li class="category-item">
-                <a href="#" class="category-item__link">Khách hàng</a>
-            </li>
-            <li class="category-item">
-                <a href="/user/don-hang" class="category-item__link">Đơn hàng</a>
-            </li>
-        </ul>
-    </nav>
-    <div class="account-content">
-        <div class="table">
-            <h2>ĐƠN HÀNG</h2>
-            <table>
+    <div class="header d-flex align-items-center">
+        <input type="text" id="searchInput" class="form-control search-input me-2" placeholder="Tìm kiếm..."
+               style="display: none;">
+        <button class="btn btn-outline-light me-2" type="button" onclick="toggleSearchInput()">
+            <i class="bi bi-search"></i>
+        </button>
+        <a class="btn btn-outline-light" href="#">
+            <i class="bi bi-person-circle"></i>
+        </a>
+    </div>
+    <div class="bill-form">
+        <div class="bill-details text-center">
+            <h2>HÓA ĐƠN</h2>
+            <table class="table table-hover table-striped">
                 <thead>
                 <tr>
                     <th>Tên khách Hàng</th>
@@ -301,18 +204,14 @@
             </table>
         </div>
     </div>
+    <th:block th:replace="~{/nhanvien/fragments :: nhan-vien-footer}"/>
 </div>
 
-<footer class="navbar navbar-expand-lg navbar-custom">
-    <div class="container">
-        <span class="m-auto">© 2024 - Bản quyền thuộc về TripleV</span>
-    </div>
-</footer>
-
-<script th:src="@{/js/nhanvien/hoa-don.js}"></script>
-<!-- Bootstrap JS and jQuery (from home.html) -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/nhanvien/hoa-don.js}"></script>
 
 </html>
