@@ -205,15 +205,15 @@ document.addEventListener("click", function (event) {
     }
 });
 
-function addProductToForm(productId, price, quantity, productName) {
-    if (isNaN(productId) || isNaN(price) || isNaN(quantity)) {
-        alert("Dữ liệu không hợp lệ. Vui lòng kiểm tra lại!");
+function updateQuantity(productId, quantity) {
+    if (isNaN(quantity) || quantity <= 0) {
+        alert("Số lượng không hợp lệ. Vui lòng nhập số lượng lớn hơn 0!");
         return;
     }
 
     const hoaDonId = document.getElementById("hoaDonId").value;
     if (!hoaDonId) {
-        alert("Chưa tạo hóa đơn. Vui lòng tạo hóa đơn trước khi thêm sản phẩm!");
+        alert("Chưa tạo hóa đơn. Vui lòng tạo hóa đơn trước!");
         return;
     }
 
@@ -222,37 +222,22 @@ function addProductToForm(productId, price, quantity, productName) {
         quantity: quantity
     })
         .done(function (response) {
-            const tableBody = document.getElementById("addedProductsTableBody");
-            const existingRow = tableBody.querySelector(`tr[data-id="${response.id}"]`);
+            if (response.isUpdated) {
+                const tableRow = document.querySelector(`tr[data-id="${response.id}"]`);
+                if (tableRow) {
+                    const quantityCell = tableRow.querySelector("td:nth-child(2)");
+                    const priceCell = tableRow.querySelector("td:nth-child(3)");
 
-            if (response.isUpdated && existingRow) {
-                // Nếu sản phẩm đã tồn tại, cập nhật số lượng và giá
-                const quantityCell = existingRow.querySelector("td:nth-child(2)");
-                const priceCell = existingRow.querySelector("td:nth-child(3)");
-
-                // Cập nhật số lượng và tổng giá
-                quantityCell.textContent = response.quantity;
-                priceCell.textContent = (response.price * response.quantity).toLocaleString() + " đ";
+                    quantityCell.textContent = response.quantity;
+                    priceCell.textContent = (response.price * response.quantity).toLocaleString() + " đ";
+                }
+                updateTotalAmount(response.totalAmount);
             } else {
-                // Nếu sản phẩm chưa tồn tại, thêm hàng mới
-                const newRow = `
-        <tr data-id="${response.id}">
-            <td>${response.productName}</td>
-            <td>${response.quantity}</td>
-            <td>${(response.price * response.quantity).toLocaleString()} đ</td>
-            <td>
-                <button class="btn btn-danger" onclick="removeProduct(${response.id})">Xóa</button>
-            </td>
-        </tr>
-        `;
-                tableBody.insertAdjacentHTML("beforeend", newRow);
+                alert("Lỗi: " + response.message);
             }
-
-            // Cập nhật tổng tiền hóa đơn
-            updateTotalAmount(response.totalAmount);
         })
         .fail(function (error) {
-            alert("Lỗi khi thêm sản phẩm vào hóa đơn: " + (error.responseJSON?.message || error.responseText));
+            alert("Lỗi khi cập nhật số lượng: " + (error.responseJSON?.message || error.responseText));
         });
 }
 
@@ -292,6 +277,7 @@ function loadProducts() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+    searchCustomer();
     loadProducts();
 });
 

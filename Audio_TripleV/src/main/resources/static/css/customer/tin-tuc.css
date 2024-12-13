@@ -1,7 +1,7 @@
 body {
     background: linear-gradient(120deg, #f0f8ff, #e6f7ff);
     font-family: Arial, sans-serif;
-    padding: 20px;
+    padding-top: 80px;
 }
 .navbar {
     background: linear-gradient(to left, #007bff, #ffffff);

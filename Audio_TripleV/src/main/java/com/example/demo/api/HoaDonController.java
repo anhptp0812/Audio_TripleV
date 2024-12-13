@@ -1,6 +1,7 @@
 package com.example.demo.api;
 
 
+import com.example.demo.entity.GioHangChiTiet;
 import com.example.demo.entity.Hang;
 import com.example.demo.entity.HoaDon;
 import com.example.demo.entity.HoaDonChiTiet;
@@ -334,34 +335,14 @@ public class HoaDonController {
                 .orElseThrow(() -> new RuntimeException("Sản phẩm không tồn tại"));
 
         // Tìm HoaDonChiTiet
-        // Kiểm tra sản phẩm đã tồn tại trong hóa đơn chưa
         Optional<HoaDonChiTiet> existingDetail = hoaDonChiTietRepository.findByHoaDonAndSanPhamChiTiet(hoaDon, sanPhamChiTiet);
 
         if (existingDetail.isPresent()) {
-            // Nếu sản phẩm đã tồn tại, tăng số lượng
-            HoaDonChiTiet hoaDonChiTiet = existingDetail.get();
-            hoaDonChiTiet.setSoLuong(hoaDonChiTiet.getSoLuong() + quantity);
-            hoaDonChiTiet.setNgayTao(new Date());
-
-            // Lưu lại đối tượng đã cập nhật
-            hoaDonChiTietRepository.save(hoaDonChiTiet);  // Quan trọng: Lưu lại vào database
-
-            // Cập nhật tổng giá trị của hóa đơn
-            double newTotal = (hoaDon.getTongGia() != null ? hoaDon.getTongGia() : 0)
-                    + sanPhamChiTiet.getDonGia() * quantity;
-            hoaDon.setTongGia(newTotal);
-            hoaDonRepository.save(hoaDon);
-
-            return ResponseEntity.ok(Map.of(
-                    "id", hoaDonChiTiet.getId(),
-                    "productName", sanPhamChiTiet.getSanPham().getTen(),
-                    "quantity", hoaDonChiTiet.getSoLuong(),
-                    "price", sanPhamChiTiet.getDonGia(),
-                    "totalAmount", newTotal,
-                    "isUpdated", true // Đánh dấu đây là bản ghi được cập nhật
+            return ResponseEntity.badRequest().body(Map.of(
+                    "message", "Sản phẩm đã tồn tại trong hóa đơn. Vui lòng cập nhật số lượng!"
             ));
         } else {
-            // Nếu sản phẩm chưa có trong hóa đơn, tạo mới chi tiết hóa đơn
+            // Nếu sản phẩm chưa có trong hóa đơn, tạo mới
             HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
             hoaDonChiTiet.setHoaDon(hoaDon);
             hoaDonChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
@@ -377,12 +358,13 @@ public class HoaDonController {
             hoaDonRepository.save(hoaDon);
 
             return ResponseEntity.ok(Map.of(
-                    "id", hoaDonChiTiet.getId(),
+                    "id", sanPhamChiTiet.getId(),
                     "productName", sanPhamChiTiet.getSanPham().getTen(),
                     "quantity", quantity,
                     "price", sanPhamChiTiet.getDonGia(),
                     "totalAmount", newTotal,
-                    "isUpdated", false // Đánh dấu đây là bản ghi mới
+                    "isUpdated", false, // Bản ghi mới
+                    "message", "Sản phẩm mới đã được thêm vào hóa đơn."
             ));
         }
     }
@@ -397,7 +379,7 @@ public class HoaDonController {
         // Sử dụng kiểu dữ liệu đơn giản cho Map
         List<Map<String, Object>> products = details.stream().map(detail -> {
             Map<String, Object> product = new HashMap<>();
-            product.put("id", detail.getId());
+            product.put("id", detail.getSanPhamChiTiet().getId());
             product.put("productName", detail.getSanPhamChiTiet().getSanPham().getTen());
             product.put("quantity", detail.getSoLuong());
             product.put("price", detail.getDonGia());
@@ -408,29 +390,41 @@ public class HoaDonController {
         return ResponseEntity.ok(products);
     }
 
-    @DeleteMapping("/ban-hang/{hoaDonId}/remove-product/{productId}")
+    @DeleteMapping("/ban-hang/{hoaDonId}/remove-product/{sanPhamChiTietId}")
     public ResponseEntity<Map<String, Object>> removeProductFromOrder(
             @PathVariable Integer hoaDonId,
-            @PathVariable Integer productId) {
+            @PathVariable Integer sanPhamChiTietId) {
 
+        // Tìm hóa đơn
         HoaDon hoaDon = hoaDonRepository.findById(hoaDonId)
                 .orElseThrow(() -> new RuntimeException("Hóa đơn không tồn tại"));
 
-        HoaDonChiTiet detail = hoaDonChiTietRepository.findById(productId)
+        // Tìm sản phẩm trong hóa đơn
+        List<HoaDonChiTiet> hoaDonChiTietList = hoaDon.getHoaDonChiTietList();
+
+        HoaDonChiTiet chiTiet = hoaDonChiTietList.stream()
+                .filter(item -> item.getSanPhamChiTiet().getId().equals(sanPhamChiTietId))
+                .findFirst()
                 .orElseThrow(() -> new RuntimeException("Sản phẩm không tồn tại trong hóa đơn"));
 
-        // Trừ giá trị sản phẩm khỏi tổng giá trị hóa đơn
-        double updatedTotal = (hoaDon.getTongGia() != null ? hoaDon.getTongGia() : 0)
-                - detail.getDonGia() * detail.getSoLuong();
-        hoaDon.setTongGia(updatedTotal);
+        // Xóa sản phẩm khỏi hóa đơn
+        hoaDonChiTietList.remove(chiTiet);
+        hoaDon.setHoaDonChiTietList(hoaDonChiTietList);
+
+        // Xóa sản phẩm khỏi cơ sở dữ liệu
+        hoaDonChiTietRepository.delete(chiTiet);
+
+        double newTotal = (hoaDon.getTongGia() != null ? hoaDon.getTongGia() : 0)
+                - chiTiet.getDonGia() * chiTiet.getSoLuong();
+        hoaDon.setTongGia(newTotal);
+
+        // Lưu hóa đơn cập nhật
         hoaDonRepository.save(hoaDon);
 
-        // Xóa sản phẩm khỏi hóa đơn
-        hoaDonChiTietRepository.delete(detail);
-
+        // Trả về kết quả
         return ResponseEntity.ok(Map.of(
                 "message", "Đã xóa sản phẩm thành công",
-                "totalAmount", updatedTotal
+                "totalAmount", newTotal
         ));
     }
 

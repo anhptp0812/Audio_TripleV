@@ -4,6 +4,8 @@ import com.example.demo.entity.HoaDon;
 import com.example.demo.entity.HoaDonChiTiet;
 import com.example.demo.entity.SanPhamChiTiet;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,5 +21,8 @@ public interface HoaDonChiTietRepository extends JpaRepository<HoaDonChiTiet, In
 
     List<HoaDonChiTiet> findByHoaDon(HoaDon hoaDon);
 
-   // Optional<HoaDonChiTiet> findBySanPhamChiTiet(Integer integer);
+    @Query("SELECT SUM(hdct.soLuong * hdct.donGia) FROM HoaDonChiTiet hdct WHERE hdct.hoaDon.id = :hoaDonId")
+    Double calculateTotalPrice(@Param("hoaDonId") Integer hoaDonId);
+
+    // Optional<HoaDonChiTiet> findBySanPhamChiTiet(Integer integer);
 }

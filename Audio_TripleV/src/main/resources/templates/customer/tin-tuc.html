@@ -13,15 +13,18 @@
 <body>
 
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
     <div class="container">
-        <a class="navbar-brand" href="/trang-chu/hien-thi"><img src="/images/logo.png" width="50" height="50"></a>
+        <a class="navbar-brand" href="/khach-hang/trang-chu/hien-thi"><img src="/images/logo.png" width="50" height="50"></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/khach-hang/trang-chu/hien-thi">Trang chủ</a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/khach-hang/san-pham/hien-thi">Sản Phẩm</a>
                 </li>
@@ -172,7 +175,10 @@
     </div>
 </div>
 <div class="container mt-5">
-    <h2>TAI NGHE MỚI NHẤT</h2>
+    <div class="main-title">
+        <h2>TAI NGHE MỚI NHẤT</h2>
+    </div>
+
     <div class="product-container">
         <div th:each="sanPhamChiTiet : ${sanPhamChiTietList}" class="product-card">
             <a th:href="@{/khach-hang/san-pham/hien-thi/{id}(id=${sanPhamChiTiet.id})}"
@@ -197,7 +203,9 @@
     </div>
 </div>
 <div class="container mt-5">
-    <h2>SẢN PHẨM ĐƯỢC XEM NHIỀU NHẤT</h2>
+    <div class="main-title">
+        <h2>SẢN PHẨM ĐƯỢC XEM NHIỀU NHẤT</h2>
+    </div>
     <div class="product-container1">
         <div th:each="sanPhamChiTiet : ${sanPhamChiTietList1}" class="product-card">
             <a th:href="@{/khach-hang/san-pham/hien-thi/{id}(id=${sanPhamChiTiet.id})}"
