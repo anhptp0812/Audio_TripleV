@@ -85,7 +85,7 @@ body {
 }
 
 .product-form {
-    width: 70%; /* Chiếm 60% chiều rộng */
+    width: 66%; /* Chiếm 60% chiều rộng */
     padding: 10px;
     box-sizing: border-box;
     border: 1px solid #ccc;
@@ -94,7 +94,7 @@ body {
 }
 
 .order-summary {
-    width: 29%; /* Chiếm 30% chiều rộng */
+    width: 33%; /* Chiếm 30% chiều rộng */
     padding: 10px;
     box-sizing: border-box;
     border: 1px solid #ccc;
@@ -110,7 +110,7 @@ body {
     left: 50%; /* Đặt form vào giữa màn hình theo chiều ngang */
     transform: translate(-50%, -50%); /* Đưa form vào chính giữa */
     width: 550px; /* Chiều rộng cố định */
-    height: 750px; /* Chiều cao cố định */
+    height: 650px; /* Chiều cao cố định */
     background-color: #fff;
     border-radius: 5px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);

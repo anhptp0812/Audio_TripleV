@@ -35,7 +35,7 @@
                     <th>Tên khách Hàng</th>
                     <th>Tổng giá</th>
                     <th>TT thanh toán</th>
-                    <th>Ngày Giao</th>
+                    <th>Ngày Tao</th>
                     <th colspan="2">Action</th>
 
                 </tr>
@@ -45,7 +45,7 @@
                     <td th:text="${dh.khachHang.ten}"></td>
                     <td th:text="${dh.tongGia}"></td>
                     <td th:text="${dh.trangThai}"></td>
-                    <td th:text="${dh.ngayGiao}"></td>
+                    <td th:text="${dh.ngayTao}"></td>
                     <td>
                         <a th:href="@{/user/ban-hang/{id}(id=${dh.id})}" class="btn btn-primary">
                             Detail
@@ -57,149 +57,6 @@
                             See more
                         </a>
                     </td>
-
-                    <!-- Phần trổ xuống khi click -->
-                <tr id="productList" class="productList" style="display:none;">
-                    <td colspan="6">
-                        <!-- Danh sách sản phẩm -->
-                        <div class="product-list" style="display: flex; flex-wrap: wrap; gap: 15px;">
-                            <div class="product-item" style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; flex: 1 1 18%; text-align: center;">
-                                <h5>Tên SP: Tai nghe Sennheiser</h5>
-                                <p>Giá: 1,500,000 VND</p>
-                            </div>
-                            <div class="product-item" style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; flex: 1 1 18%; text-align: center;">
-                                <h5>Tên SP: Tai nghe Sony</h5>
-                                <p>Giá: 1,200,000 VND</p>
-                            </div>
-                            <div class="product-item" style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; flex: 1 1 18%; text-align: center;">
-                                <h5>Tên SP: Tai nghe Bose</h5>
-                                <p>Giá: 3,000,000 VND</p>
-                            </div>
-                            <div class="product-item" style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; flex: 1 1 18%; text-align: center;">
-                                <h5>Tên SP: Tai nghe JBL</h5>
-                                <p>Giá: 1,800,000 VND</p>
-                            </div>
-                            <div class="product-item" style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; flex: 1 1 18%; text-align: center;">
-                                <h5>Tên SP: Tai nghe AKG</h5>
-                                <p>Giá: 2,200,000 VND</p>
-                            </div>
-                        </div>
-
-                        <!-- Phần phân trang -->
-                        <div class="pagination" style="text-align: center; margin-top: 20px; display: flex; justify-content: center;">
-                            <button class="btn btn-outline-primary">
-                                <i class="bi bi-arrow-bar-left"></i> <!-- Về đầu trang -->
-                            </button>
-                            <button class="btn btn-outline-primary">
-                                <i class="bi bi-arrow-left-circle"></i> <!-- Back -->
-                            </button>
-
-                            <!-- Số trang -->
-                            <button class="btn btn-outline-primary">1</button>
-                            <button class="btn btn-outline-primary">2</button>
-                            <button class="btn btn-outline-primary">3</button>
-                            <span class="btn btn-outline-primary">...</span> <!-- Nút "..." cho các trang tiếp theo -->
-
-                            <button class="btn btn-outline-primary">10</button> <!-- Trang cuối cùng -->
-
-                            <button class="btn btn-outline-primary">
-                                <i class="bi bi-arrow-right-circle"></i> <!-- Next -->
-                            </button>
-                            <button class="btn btn-outline-primary">
-                                <i class="bi bi-arrow-bar-right"></i> <!-- Về cuối trang -->
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-
-                </tbody>
-            </table>
-        </div>
-        <div class="table mt-5">
-            <h2>ĐƠN HÀNG CHƯA THANH TOÁN</h2>
-            <table>
-                <thead>
-                <tr>
-                    <th>Tên khách Hàng</th>
-                    <th>Tổng giá</th>
-                    <th>TT thanh toán</th>
-                    <th>Ngày Giao</th>
-                    <th colspan="2">Action</th>
-
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="dh : ${listDH}">
-                    <td th:text="${dh.khachHang.ten}"></td>
-                    <td th:text="${dh.tongGia}"></td>
-                    <td th:text="${dh.trangThai}"></td>
-                    <td th:text="${dh.ngayGiao}"></td>
-                    <td>
-                        <a th:href="@{/user/ban-hang/{id}(id=${dh.id})}" class="btn btn-primary">
-                            Detail
-                        </a>
-                    </td>
-
-                    <td>
-                        <a class="btn btn-primary" href="javascript:void(0);" onclick="toggleProductList()">
-                            See more
-                        </a>
-                    </td>
-
-                    <!-- Phần trổ xuống khi click -->
-                <tr id="productList" class="productList" style="display:none;">
-                    <td colspan="6">
-                        <!-- Danh sách sản phẩm -->
-                        <div class="product-list" style="display: flex; flex-wrap: wrap; gap: 15px;">
-                            <div class="product-item" style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; flex: 1 1 18%; text-align: center;">
-                                <h5>Tên SP: Tai nghe Sennheiser</h5>
-                                <p>Giá: 1,500,000 VND</p>
-                            </div>
-                            <div class="product-item" style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; flex: 1 1 18%; text-align: center;">
-                                <h5>Tên SP: Tai nghe Sony</h5>
-                                <p>Giá: 1,200,000 VND</p>
-                            </div>
-                            <div class="product-item" style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; flex: 1 1 18%; text-align: center;">
-                                <h5>Tên SP: Tai nghe Bose</h5>
-                                <p>Giá: 3,000,000 VND</p>
-                            </div>
-                            <div class="product-item" style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; flex: 1 1 18%; text-align: center;">
-                                <h5>Tên SP: Tai nghe JBL</h5>
-                                <p>Giá: 1,800,000 VND</p>
-                            </div>
-                            <div class="product-item" style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; flex: 1 1 18%; text-align: center;">
-                                <h5>Tên SP: Tai nghe AKG</h5>
-                                <p>Giá: 2,200,000 VND</p>
-                            </div>
-                        </div>
-
-                        <!-- Phần phân trang -->
-                        <div class="pagination" style="text-align: center; margin-top: 20px; display: flex; justify-content: center;">
-                            <button class="btn btn-outline-primary">
-                                <i class="bi bi-arrow-bar-left"></i> <!-- Về đầu trang -->
-                            </button>
-                            <button class="btn btn-outline-primary">
-                                <i class="bi bi-arrow-left-circle"></i> <!-- Back -->
-                            </button>
-
-                            <!-- Số trang -->
-                            <button class="btn btn-outline-primary">1</button>
-                            <button class="btn btn-outline-primary">2</button>
-                            <button class="btn btn-outline-primary">3</button>
-                            <span class="btn btn-outline-primary">...</span> <!-- Nút "..." cho các trang tiếp theo -->
-
-                            <button class="btn btn-outline-primary">10</button> <!-- Trang cuối cùng -->
-
-                            <button class="btn btn-outline-primary">
-                                <i class="bi bi-arrow-right-circle"></i> <!-- Next -->
-                            </button>
-                            <button class="btn btn-outline-primary">
-                                <i class="bi bi-arrow-bar-right"></i> <!-- Về cuối trang -->
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-
                 </tbody>
             </table>
         </div>
