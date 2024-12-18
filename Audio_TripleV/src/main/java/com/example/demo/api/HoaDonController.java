@@ -1,6 +1,7 @@
 package com.example.demo.api;
 
 
+import com.example.demo.entity.CapNhatSoLuongRequest;
 import com.example.demo.entity.GioHangChiTiet;
 import com.example.demo.entity.Hang;
 import com.example.demo.entity.HoaDon;
@@ -24,7 +25,16 @@ import com.example.demo.service.DonHangService;
 import com.example.demo.service.HoaDonService;
 import com.example.demo.service.KhachHangService;
 import com.example.demo.service.NhanVienService;
+import com.example.demo.service.SanPhamChiTietService;
+import jakarta.servlet.http.HttpServletResponse;
+import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.XWPFTable;
+import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,13 +42,20 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.IOException;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -65,7 +82,7 @@ public class HoaDonController {
     private HoaDonChiTietRepository hoaDonChiTietRepository;
 
     @Autowired
-    private KhachHangService khachHangService;
+    private SanPhamChiTietService sanPhamChiTietService;
 
     @Autowired
     private NhanVienService nhanVienService;
@@ -249,7 +266,6 @@ public class HoaDonController {
         HoaDon hoaDon = new HoaDon();
         hoaDon.setKhachHang(khachHang);
         hoaDon.setTrangThai("Chưa thanh toán");
-        hoaDon.setNgayGiao(new Date());
         hoaDon.setNgayTao(new Date());
         hoaDonRepository.save(hoaDon);
 
@@ -321,9 +337,9 @@ public class HoaDonController {
     public ResponseEntity<Map<String, Object>> addProductToOrder(
             @PathVariable Integer hoaDonId,
             @RequestParam Integer spctId,
-            @RequestParam Integer quantity) {
+            @RequestParam Integer soLuong) {
 
-        if (spctId == null || spctId <= 0 || quantity == null || quantity <= 0) {
+        if (spctId == null || spctId <= 0 || soLuong == null || soLuong <= 0) {
             throw new RuntimeException("Dữ liệu không hợp lệ: spctId hoặc quantity không hợp lệ");
         }
 
@@ -337,36 +353,157 @@ public class HoaDonController {
         // Tìm HoaDonChiTiet
         Optional<HoaDonChiTiet> existingDetail = hoaDonChiTietRepository.findByHoaDonAndSanPhamChiTiet(hoaDon, sanPhamChiTiet);
 
-        if (existingDetail.isPresent()) {
-            return ResponseEntity.badRequest().body(Map.of(
-                    "message", "Sản phẩm đã tồn tại trong hóa đơn. Vui lòng cập nhật số lượng!"
-            ));
-        } else {
-            // Nếu sản phẩm chưa có trong hóa đơn, tạo mới
-            HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
-            hoaDonChiTiet.setHoaDon(hoaDon);
-            hoaDonChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
-            hoaDonChiTiet.setDonGia(sanPhamChiTiet.getDonGia());
-            hoaDonChiTiet.setSoLuong(quantity);
-            hoaDonChiTiet.setNgayTao(new Date());
-            hoaDonChiTietRepository.save(hoaDonChiTiet);
-
-            // Cập nhật tổng giá trị của hóa đơn
-            double newTotal = (hoaDon.getTongGia() != null ? hoaDon.getTongGia() : 0)
-                    + sanPhamChiTiet.getDonGia() * quantity;
-            hoaDon.setTongGia(newTotal);
-            hoaDonRepository.save(hoaDon);
-
-            return ResponseEntity.ok(Map.of(
-                    "id", sanPhamChiTiet.getId(),
-                    "productName", sanPhamChiTiet.getSanPham().getTen(),
-                    "quantity", quantity,
-                    "price", sanPhamChiTiet.getDonGia(),
-                    "totalAmount", newTotal,
-                    "isUpdated", false, // Bản ghi mới
-                    "message", "Sản phẩm mới đã được thêm vào hóa đơn."
-            ));
+        // Kiểm tra nếu số lượng sản phẩm trong kho không đủ
+        if (sanPhamChiTiet.getSoLuong() == 0) {
+            return ResponseEntity.badRequest().body(Collections.singletonMap("message", "Sản phẩm đã hết hàng."));
         }
+
+        // Kiểm tra sản phẩm đã có trong giỏ hàng chưa
+        boolean exists = hoaDon.getHoaDonChiTietList().stream()
+                .anyMatch(item -> item.getSanPhamChiTiet().getId().equals(spctId));
+
+        if (exists) {
+            // Nếu sản phẩm đã có trong giỏ hàng, kiểm tra xem có đủ số lượng không
+            if (sanPhamChiTiet.getSoLuong() < soLuong) {
+                return ResponseEntity.badRequest().body(Collections.singletonMap("message", "Không đủ số lượng sản phẩm trong kho."));
+            }
+            // Cập nhật số lượng sản phẩm trong giỏ hàng
+            return ResponseEntity.ok(Collections.singletonMap("message", "Sản phẩm đã có trong giỏ hàng!"));
+        } else {
+            // Nếu sản phẩm chưa có trong giỏ hàng, kiểm tra xem số lượng có đủ không
+            if (sanPhamChiTiet.getSoLuong() < soLuong) {
+                return ResponseEntity.badRequest().body(Collections.singletonMap("message", "Không đủ số lượng sản phẩm trong kho."));
+            }
+            // Thêm sản phẩm vào giỏ hàng nếu số lượng đủ
+            hoaDonService.themSanPhamVaoGio(hoaDon, sanPhamChiTiet, soLuong);
+        }
+
+        // Giảm số lượng sản phẩm trong kho
+        sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - soLuong);
+        sanPhamChiTietRepository.save(sanPhamChiTiet);
+
+        double newTotal = (hoaDon.getTongGia() != null ? hoaDon.getTongGia() : 0)
+                + sanPhamChiTiet.getDonGia() * soLuong;
+        hoaDon.setTongGia(newTotal);
+        hoaDonRepository.save(hoaDon);
+
+        return ResponseEntity.ok(Map.of(
+                "id", sanPhamChiTiet.getId(),
+                "productName", sanPhamChiTiet.getSanPham().getTen(),
+                "quantity", soLuong,
+                "price", sanPhamChiTiet.getDonGia(),
+                "totalAmount", newTotal,
+                "remainingQuantity", sanPhamChiTiet.getSoLuong(),
+                "isUpdated", false, // Bản ghi mới
+                "message", "Sản phẩm mới đã được thêm vào hóa đơn."
+        ));
+    }
+
+    @PostMapping("/cap-nhat-so-luong")
+    @ResponseBody
+    public ResponseEntity<?> capNhatSoLuong(@RequestBody CapNhatSoLuongRequest request) {
+        try {
+            // Lấy thông tin sản phẩm chi tiết
+            SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietService.findById(request.getProductId());
+            if (sanPhamChiTiet == null) {
+                return ResponseEntity.badRequest().body(Map.of("success", false, "message", "Sản phẩm không tồn tại."));
+            }
+
+            // Lấy hóa đơn chi tiết liên quan đến sản phẩm
+            HoaDonChiTiet hoaDonChiTiet = hoaDonService.findHoaDonChiTietByProductId(request.getProductId());
+            if (hoaDonChiTiet == null) {
+                return ResponseEntity.badRequest().body(Map.of("success", false, "message", "Sản phẩm không thuộc giỏ hàng."));
+            }
+
+            int currentQuantity = hoaDonChiTiet.getSoLuong();
+            int newQuantity = request.getQuantity();
+
+            if (newQuantity < 0) {
+                return ResponseEntity.badRequest().body(Map.of("success", false, "message", "Số lượng không hợp lệ."));
+            }
+
+            // Kiểm tra nếu tăng số lượng
+            if (newQuantity > currentQuantity) {
+                int additionalQuantity = newQuantity - currentQuantity;
+
+                // Kiểm tra tồn kho có đủ số lượng không
+                if (sanPhamChiTiet.getSoLuong() < additionalQuantity) {
+                    return ResponseEntity.badRequest().body(Map.of("success", false, "message", "Không đủ số lượng sản phẩm trong kho."));
+                }
+
+                // Giảm số lượng tồn kho
+                sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - additionalQuantity);
+
+            } else if (newQuantity < currentQuantity) {
+                // Nếu giảm số lượng, hoàn lại số lượng vào kho
+                int returnedQuantity = currentQuantity - newQuantity;
+                sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() + returnedQuantity);
+            }
+
+            // Cập nhật hoặc xóa sản phẩm trong giỏ hàng
+            if (newQuantity == 0) {
+                hoaDonService.removeProductFromCart(request.getProductId());
+            } else {
+                hoaDonService.updateQuantity(request.getProductId(), newQuantity);
+            }
+
+            // Lưu thay đổi tồn kho
+            sanPhamChiTietRepository.save(sanPhamChiTiet);
+
+            return ResponseEntity.ok(Map.of("success", true, "message", "Cập nhật số lượng thành công."));
+
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("success", false, "message", "Đã xảy ra lỗi: " + e.getMessage()));
+        }
+    }
+
+    @DeleteMapping("/ban-hang/{hoaDonId}/remove-product/{sanPhamChiTietId}")
+    public ResponseEntity<Map<String, Object>> removeProductFromOrder(
+            @PathVariable Integer hoaDonId,
+            @PathVariable Integer sanPhamChiTietId) {
+
+        // Tìm hóa đơn
+        HoaDon hoaDon = hoaDonRepository.findById(hoaDonId)
+                .orElseThrow(() -> new RuntimeException("Hóa đơn không tồn tại."));
+
+        // Tìm sản phẩm trong hóa đơn
+        List<HoaDonChiTiet> hoaDonChiTietList = hoaDon.getHoaDonChiTietList();
+
+        HoaDonChiTiet chiTiet = hoaDonChiTietList.stream()
+                .filter(item -> item.getSanPhamChiTiet().getId().equals(sanPhamChiTietId))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Sản phẩm không tồn tại trong hóa đơn."));
+
+        // Hoàn lại số lượng sản phẩm vào kho
+        SanPhamChiTiet sanPhamChiTiet = chiTiet.getSanPhamChiTiet();
+        sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() + chiTiet.getSoLuong());
+        sanPhamChiTietRepository.save(sanPhamChiTiet);
+
+        // Xóa sản phẩm khỏi hóa đơn
+        hoaDonChiTietList.remove(chiTiet);
+        hoaDon.setHoaDonChiTietList(hoaDonChiTietList);
+
+        // Cập nhật tổng giá trị hóa đơn
+        double newTotal = (hoaDon.getTongGia() != null ? hoaDon.getTongGia() : 0)
+                - chiTiet.getDonGia() * chiTiet.getSoLuong();
+        hoaDon.setTongGia(Math.max(newTotal, 0)); // Đảm bảo tổng giá trị không âm
+
+        // Nếu không còn sản phẩm nào, có thể cập nhật trạng thái hóa đơn
+        if (hoaDonChiTietList.isEmpty()) {
+            hoaDon.setTrangThai("TRỐNG");
+        }
+
+        // Lưu hóa đơn cập nhật
+        hoaDonRepository.save(hoaDon);
+
+        // Xóa sản phẩm khỏi cơ sở dữ liệu
+        hoaDonChiTietRepository.delete(chiTiet);
+
+        // Trả về kết quả
+        return ResponseEntity.ok(Map.of(
+                "message", "Đã xóa sản phẩm thành công.",
+                "totalAmount", hoaDon.getTongGia()
+        ));
     }
 
     @GetMapping("/ban-hang/{hoaDonId}/products")
@@ -390,42 +527,155 @@ public class HoaDonController {
         return ResponseEntity.ok(products);
     }
 
-    @DeleteMapping("/ban-hang/{hoaDonId}/remove-product/{sanPhamChiTietId}")
-    public ResponseEntity<Map<String, Object>> removeProductFromOrder(
+    @PostMapping("/ban-hang/{hoaDonId}/payment")
+    public ResponseEntity<Map<String, Object>> processPayment(
             @PathVariable Integer hoaDonId,
-            @PathVariable Integer sanPhamChiTietId) {
+            @RequestParam String paymentMethod) {
 
-        // Tìm hóa đơn
+        // Kiểm tra nếu hóa đơn không tồn tại
         HoaDon hoaDon = hoaDonRepository.findById(hoaDonId)
                 .orElseThrow(() -> new RuntimeException("Hóa đơn không tồn tại"));
 
-        // Tìm sản phẩm trong hóa đơn
-        List<HoaDonChiTiet> hoaDonChiTietList = hoaDon.getHoaDonChiTietList();
+        // Xử lý thanh toán (ở đây là thanh toán bằng tiền mặt)
+        if ("cash".equals(paymentMethod)) {
+            // Thực hiện xử lý thanh toán tiền mặt
+            hoaDon.setTrangThai("Đã thanh toán");  // Ví dụ: Cập nhật trạng thái hóa đơn
+            hoaDonRepository.save(hoaDon);
 
-        HoaDonChiTiet chiTiet = hoaDonChiTietList.stream()
-                .filter(item -> item.getSanPhamChiTiet().getId().equals(sanPhamChiTietId))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Sản phẩm không tồn tại trong hóa đơn"));
+            return ResponseEntity.ok(Collections.singletonMap("message", "Thanh toán thành công"));
+        } else {
+            return ResponseEntity.badRequest().body(Collections.singletonMap("message", "Phương thức thanh toán không hợp lệ"));
+        }
+    }
 
-        // Xóa sản phẩm khỏi hóa đơn
-        hoaDonChiTietList.remove(chiTiet);
-        hoaDon.setHoaDonChiTietList(hoaDonChiTietList);
+    @PostMapping("/ban-hang/{hoaDonId}/thanh-toan")
+    public ResponseEntity<Map<String, Object>> thanhToan(@PathVariable Integer hoaDonId,
+                                                         @RequestParam("customerPayment") Double customerPayment) {
+        try {
+            // Tìm hóa đơn theo ID
+            HoaDon hoaDon = hoaDonService.findByid(hoaDonId);
+            if (hoaDon == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Hóa đơn không tồn tại!"));
+            }
 
-        // Xóa sản phẩm khỏi cơ sở dữ liệu
-        hoaDonChiTietRepository.delete(chiTiet);
+            // Kiểm tra số tiền khách đưa
+            if (customerPayment < hoaDon.getTongGia()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("message", "Số tiền khách đưa không đủ để thanh toán!"));
+            }
 
-        double newTotal = (hoaDon.getTongGia() != null ? hoaDon.getTongGia() : 0)
-                - chiTiet.getDonGia() * chiTiet.getSoLuong();
-        hoaDon.setTongGia(newTotal);
+            // Tính số tiền thừa
+            Double tienThua = customerPayment - hoaDon.getTongGia();
 
-        // Lưu hóa đơn cập nhật
-        hoaDonRepository.save(hoaDon);
+            // Cập nhật thông tin hóa đơn
+            hoaDon.setTienKhachDua(customerPayment);
+            hoaDon.setTienThua(tienThua);
+            hoaDon.setTrangThai("Đã thanh toán");
+            hoaDonRepository.save(hoaDon);
 
-        // Trả về kết quả
-        return ResponseEntity.ok(Map.of(
-                "message", "Đã xóa sản phẩm thành công",
-                "totalAmount", newTotal
-        ));
+            // Định dạng số tiền trả về
+            NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Thanh toán thành công!");
+            response.put("customerPayment", currencyFormat.format(customerPayment));
+            response.put("changeAmount", currencyFormat.format(tienThua));
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("message", "Đã xảy ra lỗi trong quá trình xử lý!"));
+        }
+    }
+
+    @GetMapping("/ban-hang/in-hoa-don/{id}")
+    public void inHoaDon(@PathVariable Integer id, HttpServletResponse response) throws IOException {
+        HoaDon hoaDon = hoaDonService.findByid(id);
+
+        // Tạo tài liệu Word
+        XWPFDocument document = new XWPFDocument();
+
+        // Tiêu đề hóa đơn (canh giữa và chữ to, chỉ làm đậm phần tiêu đề)
+        XWPFParagraph titleParagraph = document.createParagraph();
+        titleParagraph.setAlignment(ParagraphAlignment.CENTER); // Canh giữa
+        XWPFRun titleRun = titleParagraph.createRun();
+        titleRun.setText("Hóa đơn thanh toán: " + hoaDon.getId());
+        titleRun.setBold(true); // Làm chữ đậm
+        titleRun.setFontSize(18); // Cỡ chữ lớn hơn
+        titleRun.addBreak();
+
+        // Thông tin khách hàng
+        XWPFParagraph customerParagraph = document.createParagraph();
+        XWPFRun customerRun = customerParagraph.createRun();
+        customerRun.setText("Tên khách hàng: " + hoaDon.getKhachHang().getTen());
+        customerRun.addBreak();
+        customerRun.setText("Số điện thoại: " + hoaDon.getKhachHang().getSdt());
+
+        // Hiển thị ngày tạo bên dưới bảng
+        // Hiển thị ngày tạo bên dưới bảng
+        XWPFParagraph dateParagraph = document.createParagraph();
+        XWPFRun dateRun = dateParagraph.createRun();
+        dateRun.setText("Ngày tạo: " + new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(hoaDon.getNgayTao()));
+        dateRun.addBreak();
+
+        NumberFormat currencyFormat = NumberFormat.getNumberInstance(new Locale("vi", "VN"));
+
+        // Thêm chi tiết sản phẩm dưới dạng bảng
+        XWPFTable table = document.createTable();
+
+        // Tạo header của bảng và làm đậm
+        XWPFTableRow headerRow = table.getRow(0);
+        XWPFRun headerRun0 = headerRow.getCell(0).getParagraphs().get(0).createRun();
+        headerRun0.setText("Tên sản phẩm");
+        headerRun0.setBold(true);
+
+        XWPFRun headerRun1 = headerRow.addNewTableCell().getParagraphs().get(0).createRun();
+        headerRun1.setText("Số lượng");
+        headerRun1.setBold(true);
+
+        XWPFRun headerRun2 = headerRow.addNewTableCell().getParagraphs().get(0).createRun();
+        headerRun2.setText("Đơn giá");
+        headerRun2.setBold(true);
+
+        XWPFRun headerRun3 = headerRow.addNewTableCell().getParagraphs().get(0).createRun();
+        headerRun3.setText("Tổng giá");
+        headerRun3.setBold(true);
+
+        // Đặt chiều rộng cố định cho các cột
+        table.setWidth("100%"); // Cấu hình cho bảng rộng tối đa
+        headerRow.getCell(0).setWidth("4000"); // Cột "Tên sản phẩm" rộng hơn
+        headerRow.getCell(1).setWidth("1000");
+        headerRow.getCell(2).setWidth("1500");
+        headerRow.getCell(3).setWidth("1500");
+
+        // Thêm các chi tiết sản phẩm vào bảng
+        for (HoaDonChiTiet chiTiet : hoaDon.getHoaDonChiTietList()) {
+            XWPFTableRow row = table.createRow();
+            row.getCell(0).setText(chiTiet.getSanPhamChiTiet().getSanPham().getTen());
+            row.getCell(1).setText(String.valueOf(chiTiet.getSoLuong()));
+            row.getCell(2).setText(currencyFormat.format(chiTiet.getDonGia()) + " VNĐ");
+            row.getCell(3).setText(currencyFormat.format(chiTiet.getDonGia() * chiTiet.getSoLuong()) + " VNĐ");
+        }
+
+        // Tổng tiền
+        XWPFParagraph totalParagraph = document.createParagraph();
+        XWPFRun totalRun = totalParagraph.createRun();
+        totalRun.addBreak();
+        totalRun.setText("Tổng tiền: " + currencyFormat.format(hoaDon.getTongGia()) + " VNĐ");
+        totalRun.addBreak();
+
+        // Số tiền khách đưa
+        totalRun.setText("Tiền khách đưa: " + currencyFormat.format(hoaDon.getTienKhachDua()) + " VNĐ");
+        totalRun.addBreak();
+
+        // Số tiền thừa
+        totalRun.setText("Tiền thừa: " + currencyFormat.format(hoaDon.getTienThua()) + " VNĐ");
+
+        // Cấu hình để tải xuống file
+        response.setContentType("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+        response.setHeader("Content-Disposition", "attachment; filename=hoa-don-" + hoaDon.getId() + ".docx");
+
+        // Xuất file Word vào response
+        document.write(response.getOutputStream());
+        document.close();
     }
 
 }

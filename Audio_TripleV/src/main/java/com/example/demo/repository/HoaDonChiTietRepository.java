@@ -24,5 +24,7 @@ public interface HoaDonChiTietRepository extends JpaRepository<HoaDonChiTiet, In
     @Query("SELECT SUM(hdct.soLuong * hdct.donGia) FROM HoaDonChiTiet hdct WHERE hdct.hoaDon.id = :hoaDonId")
     Double calculateTotalPrice(@Param("hoaDonId") Integer hoaDonId);
 
+    Optional<HoaDonChiTiet> findBySanPhamChiTiet_Id(Integer productId);
+
     // Optional<HoaDonChiTiet> findBySanPhamChiTiet(Integer integer);
 }

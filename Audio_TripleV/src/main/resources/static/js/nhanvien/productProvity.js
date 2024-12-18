@@ -3,18 +3,12 @@ function selectCustomer(id, name, phone) {
     document.getElementById("khachHangName").value = name;
     document.getElementById("khachHangId").value = id;
 
-    // Example: assume we are passing a productId and quantity to create HoaDonChiTiet
-    const productId = 1;  // Example product ID
-    const quantity = 1;   // Example quantity
-
     closeForm();
 
     // Make a POST request to create an invoice for the selected customer
     $.post("/user/ban-hang/create", {
         idKhachHang: id,
         tenKhachHang: name,  // Add this line to send 'tenKhachHang'
-        productId: productId,
-        quantity: quantity
     })
         .done(function (response) {
             // Assuming the server returns the ID of the created invoice
@@ -177,158 +171,346 @@ function validateCustomerForm() {
     return isValid;
 }
 
-function updateTotalAmount(totalAmount) {
-    document.getElementById("totalAmount").innerText = totalAmount.toLocaleString() + " đ";
-}
+const hoaDonId = document.getElementById('hoaDonId') ? document.getElementById('hoaDonId').value : null;
 
-document.addEventListener("click", function (event) {
-    if (event.target.classList.contains("add-product-btn")) {
-        const button = event.target;
-        console.log("Button data attributes:", {
-            id: button.getAttribute("data-id"),
-            price: button.getAttribute("data-price"),
-            quantity: button.getAttribute("data-quantity"),
-            name: button.getAttribute("data-name"),
-        });
-
-        const productId = button.getAttribute("data-id");
-        const price = parseFloat(button.getAttribute("data-price")) || 0;
-        const quantity = parseInt(button.getAttribute("data-quantity")) || 1;
-        const productName = button.getAttribute("data-name");
-
-        if (!productId || isNaN(productId)) {
-            alert("Không tìm thấy ID sản phẩm hợp lệ. Vui lòng kiểm tra lại.");
-            return;
-        }
-
-        addProductToForm(productId, price, quantity, productName);
-    }
-});
-
-function updateQuantity(productId, quantity) {
-    if (isNaN(quantity) || quantity <= 0) {
-        alert("Số lượng không hợp lệ. Vui lòng nhập số lượng lớn hơn 0!");
-        return;
-    }
-
-    const hoaDonId = document.getElementById("hoaDonId").value;
+// Xử lý thêm sản phẩm vào hóa đơn
+function addProductToOrder(productId, quantity) {
     if (!hoaDonId) {
-        alert("Chưa tạo hóa đơn. Vui lòng tạo hóa đơn trước!");
+        alert('Vui lòng tạo hóa đơn trước!');
         return;
     }
 
-    $.post(`/user/ban-hang/${hoaDonId}/add-product`, {
-        spctId: productId,
-        quantity: quantity
+    fetch(`/user/ban-hang/${hoaDonId}/add-product`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `spctId=${productId}&soLuong=${quantity}`
     })
-        .done(function (response) {
-            if (response.isUpdated) {
-                const tableRow = document.querySelector(`tr[data-id="${response.id}"]`);
-                if (tableRow) {
-                    const quantityCell = tableRow.querySelector("td:nth-child(2)");
-                    const priceCell = tableRow.querySelector("td:nth-child(3)");
-
-                    quantityCell.textContent = response.quantity;
-                    priceCell.textContent = (response.price * response.quantity).toLocaleString() + " đ";
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                // Nếu sản phẩm đã có trong hóa đơn, hiển thị thông báo và không thêm vào bảng
+                if (data.message === "Sản phẩm đã có trong giỏ hàng!") {
+                    alert(data.message);
+                } else {
+                    updateProductQuantityInTable(productId, data.remainingQuantity); // Cập nhật số lượng trong kho
+                    addProductToOrderTable(data); // Cập nhật bảng chi tiết hóa đơn
+                    updateTotalAmount(data.totalAmount); // Cập nhật tổng giá
                 }
-                updateTotalAmount(response.totalAmount);
-            } else {
-                alert("Lỗi: " + response.message);
             }
         })
-        .fail(function (error) {
-            alert("Lỗi khi cập nhật số lượng: " + (error.responseJSON?.message || error.responseText));
+        .catch(error => {
+            console.error('Lỗi:', error);
+            alert('Có lỗi xảy ra khi thêm sản phẩm');
         });
 }
 
-function loadProducts() {
-    const hoaDonId = document.getElementById("hoaDonId").value;
-    if (!hoaDonId) {
-        console.error("Không tìm thấy hóa đơn ID.");
+
+// Thêm sản phẩm vào bảng chi tiết hóa đơn
+function addProductToOrderTable(productData) {
+    const tableBody = document.getElementById('addedProductsTableBody');
+    let existingRow = document.querySelector(`tr[data-product-id="${productData.id}"]`);
+
+    if (existingRow) {
+        // Cập nhật số lượng và tổng giá nếu sản phẩm đã tồn tại
+        const quantityInput = existingRow.querySelector('.quantity-input');
+        const totalCell = existingRow.querySelector('.total-price');
+        quantityInput.value = productData.quantity;
+        totalCell.textContent = formatCurrency(productData.quantity * productData.price);
+    } else {
+        // Thêm sản phẩm mới vào bảng
+        const newRow = document.createElement('tr');
+        newRow.setAttribute('data-product-id', productData.id);
+
+        newRow.innerHTML = `
+            <td>${productData.productName}</td>
+            <td>
+                <input type="number" 
+                       class="form-control quantity-input" 
+                       value="${productData.quantity}" 
+                       min="1" 
+                       data-product-id="${productData.id}"
+                       onchange="updateProductQuantity(this)"
+                />
+            </td>
+            <td>${formatCurrency(productData.price)}</td>
+            <td class="total-price">${formatCurrency(productData.quantity * productData.price)}</td>
+            <td>
+                <button class="btn btn-danger btn-sm" 
+                        onclick="removeProductFromOrder(${productData.id})">
+                    Xóa
+                </button>
+            </td>
+        `;
+
+        tableBody.appendChild(newRow);
+    }
+}
+
+function updateProductQuantityInTable(productId, newQuantity) {
+    const stockCell = document.getElementById(`stock-${productId}`);
+    if (stockCell) {
+        stockCell.textContent = newQuantity;
+    }
+}
+
+// Xóa sản phẩm khỏi hóa đơn
+function removeProductFromOrder(productId) {
+    fetch(`/user/ban-hang/${hoaDonId}/remove-product/${productId}`, {
+        method: 'DELETE'
+    })
+        .then(response => response.json())
+        .then(data => {
+            // Xóa dòng sản phẩm khỏi bảng
+            const rowToRemove = document.querySelector(`input[data-product-id="${productId}"]`).closest('tr');
+            if (rowToRemove) {
+                rowToRemove.remove();
+            }
+
+            // Cập nhật số lượng sản phẩm trong kho
+            updateProductQuantityInTable(productId, data.remainingQuantity);
+
+            // Cập nhật tổng giá
+            updateTotalAmount(data.totalAmount);
+        })
+        .catch(error => {
+            console.error('Lỗi:', error);
+            alert('Có lỗi xảy ra khi xóa sản phẩm');
+        });
+}
+
+// Cập nhật số lượng sản phẩm
+function updateProductQuantity(inputElement) {
+    const productId = inputElement.dataset.productId;
+    const newQuantity = parseInt(inputElement.value);
+
+    // Kiểm tra số lượng hợp lệ
+    if (isNaN(newQuantity) || newQuantity <= 0) {
+        alert('Số lượng không hợp lệ');
         return;
     }
 
-    $.get(`/user/ban-hang/${hoaDonId}/products`)
-        .done(function (response) {
-            const tableBody = document.getElementById("addedProductsTableBody");
-            tableBody.innerHTML = ""; // Xóa dữ liệu cũ
+    fetch('/user/cap-nhat-so-luong', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            productId: productId,
+            quantity: newQuantity
+        })
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Cập nhật lại dòng sản phẩm
+                const row = inputElement.closest('tr');
+                const priceCell = row.querySelector('td:nth-child(3)');
+                const totalPriceCell = row.querySelector('td:nth-child(4)');
 
-            response.forEach(product => {
-                const newRow = `
-                <tr data-id="${product.id}">
+                const price = parseFloat(priceCell.textContent.replace(/[^0-9.-]+/g, ""));
+                const totalPrice = price * newQuantity;
+
+                totalPriceCell.textContent = formatCurrency(totalPrice);
+
+                // Tải lại tổng giá
+                loadOrderDetails();
+            } else {
+                alert(data.message || 'Không thể cập nhật số lượng');
+                // Khôi phục số lượng ban đầu
+                inputElement.value = inputElement.defaultValue;
+            }
+        })
+        .catch(error => {
+            console.error('Lỗi:', error);
+            alert('Có lỗi xảy ra khi cập nhật số lượng');
+        });
+}
+
+
+function loadOrderDetails() {
+    if (!hoaDonId) return;
+
+    fetch(`/user/ban-hang/${hoaDonId}/products`)
+        .then(response => response.json())
+        .then(products => {
+            const tableBody = document.getElementById('addedProductsTableBody');
+            tableBody.innerHTML = ''; // Xóa các dòng cũ
+
+            let totalAmount = 0;
+            products.forEach(product => {
+                const newRow = document.createElement('tr');
+                newRow.innerHTML = `
                     <td>${product.productName}</td>
-                    <td>${product.quantity}</td>
-                    <td>${product.totalPrice.toLocaleString()} đ</td>
                     <td>
-                        <button class="btn btn-danger" onclick="removeProduct(${product.id})">Xóa</button>
+                        <input type="number" 
+                               class="form-control quantity-input" 
+                               value="${product.quantity}" 
+                               min="1" 
+                               data-product-id="${product.id}"
+                               onchange="updateProductQuantity(this)"
+                        />
                     </td>
-                </tr>
+                    <td>${formatCurrency(product.price)}</td>
+                    <td>${formatCurrency(product.totalPrice)}</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" 
+                                onclick="removeProductFromOrder(${product.id})">
+                            Xóa
+                        </button>
+                    </td>
                 `;
-                tableBody.insertAdjacentHTML("beforeend", newRow);
+
+                tableBody.appendChild(newRow);
+                totalAmount += product.totalPrice;
             });
 
-            // Cập nhật tổng tiền hóa đơn
-            const totalAmount = response.reduce((sum, product) => sum + product.totalPrice, 0);
+            // Cập nhật tổng giá
             updateTotalAmount(totalAmount);
         })
-        .fail(function (error) {
-            console.error("Không thể tải danh sách sản phẩm:", error);
+        .catch(error => {
+            console.error('Lỗi:', error);
         });
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-    searchCustomer();
-    loadProducts();
+// Xử lý các nút thêm sản phẩm
+const addProductButtons = document.querySelectorAll('.add-product-btn');
+addProductButtons.forEach(button => {
+    button.addEventListener('click', function () {
+        const productId = this.getAttribute('data-id');
+        const maxQuantity = parseInt(this.getAttribute('data-max-quantity'));
+        const productName = this.getAttribute('data-name');
+
+        if (!hoaDonId) {
+            alert('Vui lòng tạo hóa đơn trước!');
+            return;
+        } else {
+
+            // Hiển thị modal nhập số lượng
+            const quantity = prompt(`Nhập số lượng cho sản phẩm ${productName} (Tối đa: ${maxQuantity}):`, '1');
+
+            if (quantity !== null) {
+                const parsedQuantity = parseInt(quantity);
+
+                if (isNaN(parsedQuantity) || parsedQuantity <= 0) {
+                    alert('Số lượng không hợp lệ');
+                    return;
+                }
+
+                if (parsedQuantity > maxQuantity) {
+                    alert(`Số lượng vượt quá số lượng tồn kho (${maxQuantity})`);
+                    return;
+                }
+
+                addProductToOrder(productId, parsedQuantity);
+            }
+        }
+    });
 });
 
-function removeProduct(productId) {
-    const hoaDonId = document.getElementById("hoaDonId").value;
-
-    if (!hoaDonId) {
-        alert("Không tìm thấy hóa đơn.");
-        return;
+// Cập nhật tổng giá
+function updateTotalAmount(amount) {
+    const totalAmountElement = document.getElementById('totalAmount');
+    if (totalAmountElement) {
+        totalAmountElement.textContent = formatCurrency(amount);
     }
 
-    if (!confirm("Bạn có chắc chắn muốn xóa sản phẩm này?")) {
-        return;
+    // Cập nhật input tổng giá
+    const tongGiaInput = document.getElementById('tongGia');
+    if (tongGiaInput) {
+        // Loại bỏ ký tự "₫" khi gán giá trị vào input
+        tongGiaInput.value = amount.toLocaleString('vi-VN');  // Định dạng số theo kiểu Việt Nam
     }
 
-    $.ajax({
-        url: `/user/ban-hang/${hoaDonId}/remove-product/${productId}`,
-        type: "DELETE"
-    })
-        .done(function (response) {
-            // Xóa hàng trong bảng
-            const row = document.querySelector(`tr[data-id="${productId}"]`);
-            if (row) {
-                row.remove();
-            }
+    validatePaymentAmount();
+}
 
-            // Cập nhật tổng tiền
-            updateTotalAmount(response.totalAmount);
-            alert(response.message);
+// Hàm validatePaymentAmount để kiểm tra số tiền khách đưa và tính số tiền trả lại
+function validatePaymentAmount() {
+    // Lấy giá trị từ giao diện
+    const customerPaymentInput = document.getElementById("customerPayment");
+    const totalAmountElement = document.getElementById("totalAmount");
+    const changeAmountElement = document.getElementById("changeAmount");
+    const paymentErrorElement = document.getElementById("paymentError");
+    const paymentButton = document.getElementById("paymentButton");
+    const paymentVnPayButton = document.getElementById("paymentVnPayButton");
+
+    // Xử lý giá trị tiền khách đưa và tổng tiền
+    const customerPayment = parseFloat(customerPaymentInput.value.replace(/\D/g, "")) || 0;
+    const totalAmount = parseFloat(totalAmountElement.textContent.replace(/\D/g, "")) || 0;
+
+    // Kiểm tra giá trị hợp lệ
+    if (isNaN(totalAmount) || totalAmount <= 0) {
+        paymentErrorElement.style.display = "block";
+        paymentErrorElement.textContent = "Vui lòng nhập số tiền hợp lệ!";
+        paymentButton.disabled = true;
+        paymentVnPayButton.disabled = true;
+        changeAmountElement.textContent = formatCurrency(0);
+    } else if (customerPayment < totalAmount) {
+        paymentErrorElement.style.display = "block";
+        paymentErrorElement.textContent = "Số tiền khách đưa không đủ!";
+        paymentButton.disabled = true;
+        paymentVnPayButton.disabled = true;
+        changeAmountElement.textContent = formatCurrency(0);
+    } else {
+        const changeAmount = (customerPayment - totalAmount).toFixed(2);
+        changeAmountElement.textContent = formatCurrency(parseFloat(changeAmount));
+        paymentErrorElement.style.display = "none";
+        paymentButton.disabled = false;
+        paymentVnPayButton.disabled = false;
+    }
+}
+
+// Hàm formatCurrency để hiển thị số tiền theo định dạng Việt Nam
+function formatCurrency(amount) {
+    return amount.toLocaleString('vi-VN', {style: 'currency', currency: 'VND'});
+}
+
+function confirmPayment(event) {
+    event.preventDefault(); // Ngừng hành động submit mặc định
+
+    // Lấy giá trị tiền khách đưa từ giao diện
+    const tienKhachDua = document.getElementById("customerPayment").value;
+    const hoaDonId = document.getElementById("hoaDonId").value; // ID hóa đơn từ giao diện
+
+    if (confirm("Bạn có muốn thanh toán không?")) {
+        // Gửi yêu cầu thanh toán
+        fetch(`/user/ban-hang/${hoaDonId}/thanh-toan?customerPayment=${tienKhachDua}`, {
+            method: 'POST'
         })
-        .fail(function (error) {
-            alert("Lỗi khi xóa sản phẩm: " + (error.responseJSON?.message || error.responseText));
-        });
+            .then(response => response.json()) // Chuyển đổi response thành JSON
+            .then(data => {
+                if (data.message) {
+                    alert(data.message);  // Hiển thị thông báo thành công
+
+                    // Cập nhật giao diện với số tiền thừa
+                    document.getElementById("changeAmount").textContent = data.changeAmount;
+
+                    // Sau khi thanh toán thành công, yêu cầu in hóa đơn
+                    if (confirm("Bạn có muốn in hóa đơn không?")) {
+                        // Chuyển hướng đến in hóa đơn
+                        window.location.href = "/user/ban-hang/in-hoa-don/" + hoaDonId;
+
+                        // Sau khi tải xong file, quay lại trang bán hàng
+                        setTimeout(function() {
+                            window.location.href = "/user/ban-hang";
+                        }, 2000); // Sau 2 giây (hoặc tùy theo thời gian tải)
+                    } else {
+                        // Nếu không in hóa đơn, quay lại trang bán hàng
+                        window.location.href = "/user/ban-hang";
+                    }
+                } else {
+                    alert("Thanh toán không thành công.");
+                }
+            })
+            .catch(error => {
+                alert("Có lỗi xảy ra khi thanh toán.");
+            });
+    }
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-    // Kiểm tra xem URL có chứa "/user/ban-hang/{hoaDonId}" không
-    const currentPath = window.location.pathname;
-    const match = currentPath.match(/\/user\/ban-hang\/(\d+)/);
-
-    if (match && match[1]) {
-        // Lấy ID hóa đơn từ URL
-        const hoaDonId = match[1];
-        const hoaDonIdElement = document.getElementById("hoaDonId");
-
-        // Cập nhật giá trị của input #hoaDonId
-        if (hoaDonIdElement) {
-            hoaDonIdElement.value = hoaDonId;
-        }
-
-        // Gọi hàm loadProducts để tải sản phẩm
-        loadProducts();
-    }
+    loadOrderDetails();
+    searchCustomer();
 });
