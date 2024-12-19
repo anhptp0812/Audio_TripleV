@@ -189,12 +189,62 @@
                         <input type="text" id="trangThai" class="form-control" placeholder="Trạng thái"
                                th:field="*{trangThai}" disabled>
                     </div>
+
                     <div class="mb-3">
                         <label for="ngayTaoId" class="form-label">Ngày Tạo</label>
                         <input type="datetime-local" class="form-control" th:field="*{ngayTao}" id="ngayTaoId"
                                min="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" disabled>
                     </div>
                 </form>
+
+
+                <div class="order-summary">
+                    <!-- Button group for Add Khách Hàng, New Bill, and Reload -->
+                    <div class="button-group">
+                        <button class="btn btn-success" onclick="openVoucherForm()">
+                            <i class="bi bi-person-plus"></i> Add Voucher
+                        </button>
+                    </div>
+                    <!-- Form chọn khách hàng -->
+<!--                    <div id="overlay" class="overlay" onclick="closeForm()"></div>-->
+                    <div id="voucherForm" class="customer-form">
+                        <div class="form-container p-3">
+                            <div class="d-flex justify-content-end pe-2">
+                                <button class="btn btn-danger" onclick="closeForm()">✖</button>
+                            </div>
+                            <div>
+                                <label>Nhập tên:</label>
+                                <input type="text" placeholder="Nhập tên" class="form-control" id="voucherName">
+
+                            </div>
+
+                            <div>
+                                <label>loại Voucher:</label>
+                                <select></select>
+
+                            </div>
+
+                            <div class="pt-3">
+                                <button class="btn btn-primary" type="button" onclick="searchVoucher()">
+                                    <i class="bi bi-search"></i> Tìm kiếm
+                                </button>
+                            </div>
+                        </div>
+                        <table class="table table-striped table-hover">
+                            <thead>
+                            <tr>
+                                <th>Tên Voucher</th>
+                                <th>Gía trị</th>
+                                <th>Loại Voucher</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+                            <tbody id="voucher-list">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
                 <div id="billDetailsForm" class="form-hdct" th:if="${hoaDon.id != null}">
                     <h3 class="mb-4">Chi Tiết Hóa Đơn</h3>

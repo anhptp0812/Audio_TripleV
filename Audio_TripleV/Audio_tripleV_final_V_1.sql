@@ -171,12 +171,26 @@ CREATE TABLE DonHangChiTiet (
                                     References SanPhamChiTiet (ID)
 
 );
+
+CREATE TABLE Voucher (
+                         ID INT PRIMARY KEY IDENTITY,
+                         Ten NVARCHAR(255),
+                         GiaTri DECIMAL(18, 2),
+                         LoaiVoucher NVARCHAR(255),
+                         NgayBatDau DATETIME NOT NULL,
+                         NgayKetThuc DATETIME NOT NULL,
+                         TrangThai NVARCHAR(255),
+                         NgayTao DATETIME DEFAULT GETDATE(),
+                         NgayCapNhat DATETIME DEFAULT GETDATE()
+);
+
 CREATE TABLE HoaDon (
 
                         ID INT PRIMARY KEY identity,
                         ID_Nhan_Vien INT,
                         ID_Khach_Hang INT ,
                         ID_Don_Hang INT,
+                        ID_Voucher INT,
                         TongGia decimal(18, 2),
                         TrangThai NVARCHAR(255),
                         DiaChiGiaoHang NVARCHAR(255),
@@ -189,6 +203,8 @@ CREATE TABLE HoaDon (
                             References KhachHang (ID) ,
                         foreign key(ID_Don_Hang)
                             References DonHang (ID),
+                        foreign key(ID_Voucher)
+                            References Voucher(ID)
 
 );
 CREATE TABLE HoaDonChiTiet (
@@ -227,8 +243,6 @@ CREATE TABLE SanPhamChiTiet_KhuyenMai (
                                           FOREIGN KEY (ID_Khuyen_Mai) REFERENCES KhuyenMai(ID)
 
 );
-
-
 
 INSERT INTO LoaiSanPham (KieuDang, NgayTao, NgayCapNhat)
 VALUES
@@ -676,6 +690,14 @@ VALUES
     (81, 8, 17, 73, 1, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Cambridge Audio Melomania 100
     (82, 8, 32, 74, 1, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()); -- Cleer Arc 3
 
+INSERT INTO Voucher (Ten, GiaTri, LoaiVoucher, NgayBatDau, NgayKetThuc, NgayTao, NgayCapNhat)
+VALUES
+(N'Giảm 10% cho đơn hàng trên 20 triệu', 10.00, 'percent', '2024-12-01 00:00:00', '2024-12-31 23:59:59', GETDATE(), GETDATE()),
+(N'Giảm 20% cho đơn hàng trên 30 triệu', 20.00, 'percent', '2024-12-15 00:00:00', '2025-01-15 23:59:59', GETDATE(), GETDATE()),
+(N'Giảm 10% cho đơn hàng trên 500k', 10.00, 'amount', '2024-12-01 00:00:00', '2024-12-31 23:59:59', GETDATE(), GETDATE()),
+(N'Giảm 50k cho đơn hàng trên 300k', 50000.00, 'amount', '2024-12-15 00:00:00', '2025-01-15 23:59:59', GETDATE(), GETDATE());
+
+
 select * from SanPham
 select * from SanPhamChiTiet
 select * from MauSac
@@ -692,5 +714,5 @@ select * from KhachHang
 select * from NhanVien
 select * from HoaDon
 select * from HoaDonChiTiet
-
+select * from Voucher
 

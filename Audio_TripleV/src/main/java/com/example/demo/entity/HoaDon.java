@@ -29,6 +29,10 @@ public class HoaDon {
     @JoinColumn(name = "ID_Khach_Hang")
     private KhachHang khachHang;
 
+    @ManyToOne
+    @JoinColumn(name = "ID_Voucher")
+    private Voucher voucher;
+
     @Column(name = "TongGia")
     private Double tongGia;
 
@@ -49,5 +53,7 @@ public class HoaDon {
 
     @OneToMany(mappedBy = "hoaDon", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<HoaDonChiTiet> hoaDonChiTietList;
+
+
 
 }

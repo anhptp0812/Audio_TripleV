@@ -66,12 +66,23 @@ function openCustomerForm() {
     overlay.classList.add('show');
 }
 
+function openVoucherForm() {
+    const form = document.getElementById('voucherForm');
+    const overlay = document.getElementById('overlay');
+
+    // Đảm bảo hiển thị từ giữa ngay lập tức
+    form.classList.add('show');
+    overlay.classList.add('show');
+}
+
 function closeForm() {
     const form = document.getElementById('customerForm');
+    const form1 = document.getElementById('voucherForm');
     const overlay = document.getElementById('overlay');
 
     // Ẩn form
     form.classList.remove('show');
+    form1.classList.remove('show');
     overlay.classList.remove('show');
 }
 
