@@ -28,9 +28,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.text.NumberFormat;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Controller
@@ -83,6 +86,25 @@ public class KhachHangController {
         // Lấy danh sách đơn hàng
         List<DonHang> donHangList = donHangService.findByKhachHang(khachHang);
 
+        // Định dạng tổng giá của đơn hàng
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        donHangList.forEach(donHang -> {
+            // Định dạng tổng giá của đơn hàng
+            String formattedTongGia = currencyFormat.format(donHang.getTongGia());
+            donHang.setFormattedTongGia(formattedTongGia);
+
+            // Định dạng các chi tiết đơn hàng
+            donHang.getDonHangChiTietList().forEach(chiTiet -> {
+                String formattedDonGia = currencyFormat.format(chiTiet.getDonGia());
+                chiTiet.setFormattedDonGia(formattedDonGia);
+
+                // Tính và định dạng thành tiền
+                double thanhTien = chiTiet.getDonGia() * chiTiet.getSoLuong();
+                String formattedThanhTien = currencyFormat.format(thanhTien);
+                chiTiet.setFormattedThanhTien(formattedThanhTien);
+            });
+        });
+
         model.addAttribute("donHangList", donHangList);
 
         // Lấy giỏ hàng dựa trên khách hàng, nếu chưa có thì tạo mới
@@ -90,7 +112,7 @@ public class KhachHangController {
                 .orElseGet(() -> gioHangService.createGioHang(khachHang));
 
         // Tính tổng số lượng trong giỏ hàng
-        int totalQuantity = 0; // For cart count
+        int totalQuantity = 0;
         if (gioHang.getGioHangChiTietList() != null && !gioHang.getGioHangChiTietList().isEmpty()) {
             totalQuantity = gioHang.getGioHangChiTietList().stream()
                     .mapToInt(item -> item.getSoLuong())
@@ -102,7 +124,7 @@ public class KhachHangController {
     }
 
     @GetMapping("/khach-hang/thanh-toan/hien-thi")
-    public String hienThiThanhToan(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+    public String hienThiThanhToan(Model model, @RequestParam(required = false) String selectedItems, @AuthenticationPrincipal UserDetails userDetails) {
         // Lấy thông tin khách hàng từ tài khoản đăng nhập
         KhachHang khachHang = khachHangService.findByTaiKhoan(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("Khách hàng không tồn tại"));
@@ -111,31 +133,44 @@ public class KhachHangController {
         GioHang gioHang = gioHangService.findByKhachHang(khachHang)
                 .orElseThrow(() -> new RuntimeException("Giỏ hàng không tồn tại"));
 
-        // Kiểm tra nếu giỏ hàng rỗng
-        if (gioHang.getGioHangChiTietList() == null || gioHang.getGioHangChiTietList().isEmpty()) {
-            model.addAttribute("message", "Giỏ hàng của bạn đang trống. Hãy thêm sản phẩm trước khi thanh toán.");
-            return "customer/gio-hang"; // Quay lại giỏ hàng nếu trống
+        // Nếu có các sản phẩm được chọn, lọc giỏ hàng để chỉ hiển thị sản phẩm được chọn
+        if (selectedItems != null && !selectedItems.isEmpty()) {
+            List<Integer> selectedProductIds = Arrays.stream(selectedItems.split(","))
+                    .map(Integer::parseInt)
+                    .collect(Collectors.toList());
+
+            gioHang.setGioHangChiTietList(gioHang.getGioHangChiTietList().stream()
+                    .filter(item -> selectedProductIds.contains(item.getSanPhamChiTiet().getId()))
+                    .collect(Collectors.toList()));
         }
 
-        // Tính tổng tiền
+        // Tính tổng tiền và số lượng trong giỏ hàng
         double totalPrice = gioHang.getGioHangChiTietList().stream()
                 .mapToDouble(item -> item.getSoLuong() * item.getSanPhamChiTiet().getDonGia())
                 .sum();
-        // Tính tổng số lượng trong giỏ hàng
-        int totalQuantity = 0; // For cart count
-        if (gioHang.getGioHangChiTietList() != null && !gioHang.getGioHangChiTietList().isEmpty()) {
-            totalQuantity = gioHang.getGioHangChiTietList().stream()
-                    .mapToInt(item -> item.getSoLuong())
-                    .sum();
-        }
+        int totalQuantity = gioHang.getGioHangChiTietList().stream()
+                .mapToInt(item -> item.getSoLuong())
+                .sum();
+
+        // Định dạng tổng tiền theo tiền tệ Việt Nam
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        String formattedTotalPrice = currencyFormat.format(totalPrice);
+
+        // Định dạng từng sản phẩm trong giỏ hàng
+        gioHang.getGioHangChiTietList().forEach(item -> {
+            String formattedDonGia = item.getSanPhamChiTiet().getFormattedDonGia();
+            item.getSanPhamChiTiet().setFormattedDonGia(formattedDonGia);
+        });
+
+        // Thêm dữ liệu vào model
         model.addAttribute("cartCount", totalQuantity);
-        // Truyền thông tin cần thiết vào model
         model.addAttribute("khachHang", khachHang);
         model.addAttribute("gioHang", gioHang);
-        model.addAttribute("totalPrice", totalPrice);
+        model.addAttribute("totalPrice", formattedTotalPrice);  // Truyền tổng tiền đã định dạng
 
         return "customer/thanh-toan"; // Tên file HTML trong thư mục template
     }
+
 
     @PostMapping("/khach-hang/thanh-toan/dat-hang")
     public String datHang(@AuthenticationPrincipal UserDetails userDetails,
@@ -144,11 +179,6 @@ public class KhachHangController {
                           @RequestParam String phone,
                           @RequestParam String address) {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser")) {
-            return "redirect:/login"; // Chuyển hướng đến trang đăng nhập nếu người dùng chưa đăng nhập
-        }
         // Lấy khách hàng hiện tại
         KhachHang khachHang = khachHangService.findByTaiKhoan(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("Khách hàng không tồn tại"));

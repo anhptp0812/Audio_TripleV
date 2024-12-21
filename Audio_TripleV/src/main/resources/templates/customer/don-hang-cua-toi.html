@@ -84,16 +84,14 @@
 
                 <!-- Hiển thị danh sách đơn hàng -->
                 <div class="table-responsive">
-                    <table class="table table-striped table-bordered table-hover"
-                           th:each="donHang, stat : ${donHangList}">
+                    <table class="table table-striped table-bordered table-hover" th:each="donHang, stat : ${donHangList}">
                         <thead>
                         <tr>
                             <th>ID</th>
                             <th>Ngày Tạo</th>
                             <th>Tổng Giá</th>
                             <th>Trạng Thái</th>
-                            <th data-bs-toggle="collapse" th:data-bs-target="'#details-' + ${stat.index}"
-                                style="background-color: pink">
+                            <th data-bs-toggle="collapse" th:data-bs-target="'#details-' + ${stat.index}" style="background-color: pink">
                                 Xem Chi Tiết
                             </th>
                         </tr>
@@ -102,7 +100,7 @@
                         <tr data-bs-toggle="collapse" th:data-bs-target="'#details-' + ${stat.index}">
                             <td th:text="${donHang.id}"></td>
                             <td th:text="${#dates.format(donHang.ngayTao, 'dd/MM/yyyy HH:mm')}"></td>
-                            <td th:text="${donHang.tongGia} + ' đ'"></td>
+                            <td th:text="${donHang.formattedTongGia}"></td> <!-- Hiển thị tổng giá đã được định dạng -->
                             <td th:text="${donHang.trangThai}"></td>
                             <td>
                                 <div th:id="'details-' + ${stat.index}" class="collapse">
@@ -124,8 +122,8 @@
                                             </td>
                                             <td th:text="${chiTiet.sanPhamChiTiet.sanPham.ten}"></td>
                                             <td th:text="${chiTiet.soLuong}"></td>
-                                            <td th:text="${chiTiet.donGia} + ' đ'"></td>
-                                            <td th:text="${chiTiet.soLuong * chiTiet.donGia} + ' đ'"></td>
+                                            <td th:text="${chiTiet.formattedDonGia}"></td> <!-- Hiển thị đơn giá đã được định dạng -->
+                                            <td th:text="${chiTiet.formattedThanhTien}"></td> <!-- Hiển thị thành tiền đã được định dạng -->
                                         </tr>
                                         </tbody>
                                     </table>

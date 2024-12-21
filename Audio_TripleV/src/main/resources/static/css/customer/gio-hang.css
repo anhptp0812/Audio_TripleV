@@ -1,7 +1,9 @@
 body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
     background: linear-gradient(120deg, #f0f8ff, #e6f7ff);
     font-family: Arial, sans-serif;
-    padding-top: 80px;
 }
 
 .navbar {
@@ -54,6 +56,9 @@ body {
     border-radius: 8px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }
+.container {
+    flex-grow: 1; /* Cho phép phần container chiếm không gian còn lại */
+}
 
 h4 {
     font-weight: bold;
@@ -90,7 +95,9 @@ h4 {
 .payment-summary .form-group {
     margin-bottom: 1rem;
 }
+
 .footer {
+    margin-top: auto; /* Đảm bảo footer sẽ "dính" dưới cùng */
     background-color: #343a40;
     color: white;
     padding: 20px 0;
@@ -111,4 +118,8 @@ h4 {
 
 .footer p {
     font-size: 14px;
+}
+
+.total-price{
+    font-weight: bold;
 }

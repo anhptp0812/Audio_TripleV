@@ -33,4 +33,10 @@ public class GioHangChiTiet {
         // Tính tổng giá cho chi tiết giỏ hàng
         return soLuong * sanPhamChiTiet.getDonGia();
     }
+
+    @Transient
+    private String formattedDonGia;
+
+    @Transient
+    private String formattedTongGia;
 }

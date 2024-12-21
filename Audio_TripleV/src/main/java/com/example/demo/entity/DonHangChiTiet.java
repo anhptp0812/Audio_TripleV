@@ -45,4 +45,14 @@ public class DonHangChiTiet {
 
     @Column(name = "NgayCapNhat")
     private Date ngayCapNhat;
+
+    private String formattedDonGia;
+    private String formattedThanhTien;
+
+    public void setFormattedDonGia(String formattedDonGia) {
+        this.formattedDonGia = formattedDonGia;
+    }
+    public void setFormattedThanhTien(String formattedThanhTien) {
+        this.formattedThanhTien = formattedThanhTien;
+    }
 }
