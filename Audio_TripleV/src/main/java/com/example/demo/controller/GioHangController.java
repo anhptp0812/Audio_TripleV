@@ -4,6 +4,7 @@ import com.example.demo.entity.CapNhatSoLuongRequest;
 import com.example.demo.entity.GioHang;
 import com.example.demo.entity.KhachHang;
 import com.example.demo.entity.SanPhamChiTiet;
+import com.example.demo.service.GioHangChiTietService;
 import com.example.demo.service.GioHangService;
 import com.example.demo.service.KhachHangService;
 import com.example.demo.service.SanPhamChiTietService;
@@ -21,8 +22,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.text.NumberFormat;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 @Controller
@@ -37,6 +41,9 @@ public class GioHangController {
 
     @Autowired
     SanPhamChiTietService sanPhamChiTietService;
+
+    @Autowired
+    private GioHangChiTietService gioHangChiTietService;
 
     @GetMapping("/hien-thi")
     public String hienThiGioHang(Model model, @AuthenticationPrincipal UserDetails userDetails) {
@@ -56,10 +63,19 @@ public class GioHangController {
                     .mapToDouble(item -> item.getSoLuong() * item.getSanPhamChiTiet().getDonGia())
                     .sum();
         }
+        // Định dạng tổng tiền theo định dạng tiền tệ Việt Nam
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        String formattedTotalPrice = currencyFormat.format(totalPrice);
 
         // Truyền thông tin giỏ hàng và tổng tiền vào model
         model.addAttribute("gioHang", gioHang);
-        model.addAttribute("totalPrice", totalPrice);
+        model.addAttribute("totalPrice", formattedTotalPrice);
+
+        // Định dạng các giá trị đơn giá và tổng giá của các sản phẩm trong giỏ hàng
+        gioHang.getGioHangChiTietList().forEach(item -> {
+            item.setFormattedDonGia(currencyFormat.format(item.getSanPhamChiTiet().getDonGia()));
+            item.setFormattedTongGia(currencyFormat.format(item.getTongGia()));
+        });
 
         return "customer/gio-hang"; // Tên file HTML trong thư mục template
     }
@@ -122,7 +138,8 @@ public class GioHangController {
 
     @PostMapping("/cap-nhat-so-luong")
     @ResponseBody
-    public ResponseEntity<?> capNhatSoLuong(@RequestBody CapNhatSoLuongRequest request) {
+    public ResponseEntity<?> capNhatSoLuong(@RequestBody CapNhatSoLuongRequest request,
+                                            @AuthenticationPrincipal UserDetails userDetails) {
         try {
             // Kiểm tra số lượng tồn kho
             SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietService.findById(request.getProductId());
@@ -130,9 +147,24 @@ public class GioHangController {
                 return ResponseEntity.badRequest().body(Map.of("success", false, "message", "Không đủ số lượng sản phẩm trong kho."));
             }
 
+            // Lấy khách hàng hiện tại từ thông tin đăng nhập
+            KhachHang khachHang = khachHangService.findByTaiKhoan(userDetails.getUsername())
+                    .orElseThrow(() -> new RuntimeException("Khách hàng không tồn tại"));
+
             // Cập nhật số lượng trong giỏ hàng
             gioHangService.updateQuantity(request.getProductId(), request.getQuantity());
-            return ResponseEntity.ok(Map.of("success", true));
+            GioHang gioHang = gioHangService.findByKhachHang(khachHang)
+                    .orElseGet(() -> gioHangService.createGioHang(khachHang));
+
+            double totalPrice = gioHang.getGioHangChiTietList().stream()
+                    .mapToDouble(item -> item.getSoLuong() * item.getSanPhamChiTiet().getDonGia())
+                    .sum();
+
+            // Định dạng lại tổng tiền
+            NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+            String formattedTotalPrice = currencyFormat.format(totalPrice);
+
+            return ResponseEntity.ok(Map.of("success", true, "totalPrice", formattedTotalPrice));
 
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("success", false, "message", e.getMessage()));
@@ -149,7 +181,7 @@ public class GioHangController {
         // Xóa sản phẩm khỏi giỏ hàng
         gioHangService.removeSanPham(khachHang, sanPhamChiTietId);
 
-        // Cập nhật tổng giá sau khi xóa sản phẩm
+        // Cập nhật giỏ hàng sau khi xóa
         GioHang gioHang = gioHangService.findByKhachHang(khachHang)
                 .orElseThrow(() -> new RuntimeException("Giỏ hàng không tồn tại"));
 
@@ -164,4 +196,40 @@ public class GioHangController {
         return ResponseEntity.ok().body("Sản phẩm đã được xóa khỏi giỏ hàng.");
     }
 
+    @PostMapping("/xoa-tat-ca")
+    public ResponseEntity<?> xoaNhieuSanPhamKhoiGioHang(@RequestBody List<Integer> sanPhamChiTietIds,
+                                                        @AuthenticationPrincipal UserDetails userDetails) {
+        // Lấy thông tin khách hàng từ userDetails
+        KhachHang khachHang = khachHangService.findByTaiKhoan(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("Khách hàng không tồn tại"));
+
+        // Xóa từng sản phẩm khỏi giỏ hàng
+        sanPhamChiTietIds.forEach(sanPhamChiTietId -> gioHangService.removeSanPham(khachHang, sanPhamChiTietId));
+
+        // Cập nhật giỏ hàng sau khi xóa
+        GioHang gioHang = gioHangService.findByKhachHang(khachHang)
+                .orElseThrow(() -> new RuntimeException("Giỏ hàng không tồn tại"));
+
+        // Tính toán tổng tiền mới
+        double totalPrice = gioHang.getGioHangChiTietList().stream()
+                .mapToDouble(item -> item.getSoLuong() * item.getSanPhamChiTiet().getDonGia())
+                .sum();
+
+        if (gioHang.getGioHangChiTietList().isEmpty()) {
+            gioHang.setTongGia(0.0);
+        } else {
+            gioHangService.updateTongGia(gioHang);
+        }
+
+        // Định dạng tổng tiền
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        String formattedTotalPrice = currencyFormat.format(totalPrice);
+
+        // Trả về phản hồi với tổng tiền được định dạng
+        return ResponseEntity.ok(Map.of(
+                "success", true,
+                "message", "Các sản phẩm đã được xóa khỏi giỏ hàng.",
+                "totalPrice", formattedTotalPrice
+        ));
+    }
 }

@@ -60,11 +60,20 @@
         <p>Giỏ hàng của bạn đang trống. Hãy thêm sản phẩm vào giỏ hàng.</p>
     </div>
 
+    <!-- Nút "Xóa tất cả" -->
+    <button id="deleteSelectedBtn" class="btn btn-danger" onclick="removeSelectedItems()" disabled>
+        Xóa Tất Cả
+    </button>
+
+
     <!-- Bảng hiển thị giỏ hàng -->
     <table class="table table-striped table-hover">
         <thead>
         <tr>
-            <th>STT</th>
+            <th>
+                <!-- Checkbox để chọn/deselect tất cả -->
+                <input type="checkbox" id="selectAll" onclick="toggleSelectAll()" />
+            </th>
             <th>Hình Ảnh</th>
             <th>Tên Sản Phẩm</th>
             <th>Số Lượng</th>
@@ -74,23 +83,21 @@
         </tr>
         </thead>
         <tbody>
+        <!-- Checkbox chọn sản phẩm trong giỏ hàng -->
         <tr th:each="item, stat : ${gioHang.gioHangChiTietList}">
-            <td th:text="${stat.index + 1}">STT</td>
             <td>
-                <img th:src="@{/images/tainghe/} + ${item.sanPhamChiTiet.hinhAnh.ten}" alt="Hình ảnh sản phẩm"
-                     width="50"/>
+                <input type="checkbox" th:id="'checkbox_' + ${item.sanPhamChiTiet.id}" th:value="${item.sanPhamChiTiet.id}" />
+            </td>
+            <td>
+                <img th:src="@{/images/tainghe/} + ${item.sanPhamChiTiet.hinhAnh.ten}" alt="Hình ảnh sản phẩm" width="50"/>
             </td>
             <td th:text="${item.sanPhamChiTiet.sanPham.ten}">Tên Sản Phẩm</td>
             <td>
-                <input type="number" th:name="soLuong" th:value="${item.soLuong}" min="1" class="form-control"
-                       th:id="'soLuong_' + ${item.sanPhamChiTiet.id}"
-                       th:data-price="${item.sanPhamChiTiet.donGia}"
-                       th:onchange="'updateQuantity(' + ${item.sanPhamChiTiet.id} + ',' + this.value + ')'"/>
+                <input type="number" th:name="soLuong" th:value="${item.soLuong}" min="1" class="form-control" th:id="'soLuong_' + ${item.sanPhamChiTiet.id}" th:data-price="${item.sanPhamChiTiet.donGia}" th:onchange="'updateQuantity(' + ${item.sanPhamChiTiet.id} + ',' + this.value + ')'"/>
             </td>
-            <td th:text="${item.sanPhamChiTiet.donGia} + ' đ'">Đơn Giá</td>
+            <td th:text="${item.formattedDonGia}">Đơn Giá</td>
             <td>
-            <span th:id="'tongGia_' + ${item.sanPhamChiTiet.id}"
-                  th:text="${item.soLuong * item.sanPhamChiTiet.donGia} + ' đ'">Tổng Giá</span>
+                <span th:id="'tongGia_' + ${item.sanPhamChiTiet.id}" th:text="${item.formattedTongGia}">Tổng Giá</span>
             </td>
             <td>
                 <button class="btn btn-danger" th:onclick="'removeItemFromCart(' + ${item.sanPhamChiTiet.id} + ',' + ${item.soLuong} + ',' + ${item.sanPhamChiTiet.donGia} + ')'">
@@ -102,14 +109,17 @@
     </table>
 
     <!-- Hiển thị tổng tiền -->
-    <div class="total-price mt-3" id="gioHangTongGia" th:text="'Tổng Tiền: ' + ${gioHang.tongGia} + ' đ'">Tổng Tiền:
+    <div class="total-price mt-3 text-end" id="gioHangTongGia" th:text="'Tổng Tiền: ' + ${totalPrice}">Tổng Tiền:
         0đ
     </div>
 
     <!-- Nút Xác nhận đơn hàng -->
     <div>
         <form action="/khach-hang/thanh-toan/hien-thi" method="get">
-            <button type="submit" class="btn btn-primary" th:disabled="${totalPrice == null || totalPrice == 0}">
+            <!-- Thêm trường input ẩn để lưu trữ sản phẩm được chọn -->
+            <input type="hidden" id="selectedItems" name="selectedItems" value=""/>
+
+            <button type="submit" class="btn btn-primary" id="confirmOrderBtn" disabled>
                 Xác nhận đơn hàng
             </button>
         </form>

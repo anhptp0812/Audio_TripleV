@@ -12,7 +12,7 @@ document.querySelectorAll('.add-to-cart').forEach(button => {
         // Gửi yêu cầu POST với cả sanPhamChiTietId và soLuong
         fetch('/khach-hang/gio-hang/them-san-pham', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             body: `sanPhamChiTietId=${sanPhamChiTietId}&soLuong=${soLuong}`  // Thêm soLuong vào body
         })
             .then(response => response.json())  // Đảm bảo nhận dữ liệu dưới dạng JSON
@@ -41,3 +41,28 @@ document.addEventListener('click', function (event) {
         dropdown.style.display = 'none';
     }
 });
+
+function updatePageNumber(input) {
+    const totalPages = parseInt(document.querySelector('.pagination-container').getAttribute('data-total-pages'));
+    let pageNumber = parseInt(input.value) - 1;
+
+    // Kiểm tra và giới hạn trang
+    if (isNaN(pageNumber) || pageNumber < 0) pageNumber = 0;
+    if (pageNumber >= totalPages) pageNumber = totalPages - 1;
+
+    input.dataset.page = pageNumber; // Lưu trang tạm thời vào data-page
+}
+
+function goToPage(input) {
+    const pageNumber = input.dataset.page;
+
+    if (pageNumber !== undefined) {
+        window.location.href = `/khach-hang/san-pham/hien-thi?page=${pageNumber}`;
+    }
+}
+
+function handleEnter(event) {
+    if (event.key === "Enter") {
+        goToPage(event.target);
+    }
+}

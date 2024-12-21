@@ -3,7 +3,9 @@ package com.example.demo.service;
 import com.example.demo.entity.SanPhamChiTiet;
 import com.example.demo.repository.SanPhamChiTietRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 //Thanh
 
@@ -23,6 +25,11 @@ public class SanPhamChiTietService {
     }
     public List<SanPhamChiTiet> findByLoaiSanPham(int idLoaiSP) {
         return sanPhamChiTietRepository.findByLoaiSanPham_Id(idLoaiSP);
+    }
+    // Lấy danh sách sản phẩm chi tiết với phân trang
+    public Page<SanPhamChiTiet> getSanPhamChiTietWithPagination(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size); // page bắt đầu từ 0
+        return sanPhamChiTietRepository.findAll(pageable);
     }
 
     public List<SanPhamChiTiet> getTop4NewestProducts() {

@@ -77,8 +77,8 @@
                             <td th:text="${stat.index + 1}"></td>
                             <td th:text="${item.sanPhamChiTiet.sanPham.ten}"></td>
                             <td th:text="${item.soLuong}"></td>
-                            <td th:text="${item.sanPhamChiTiet.donGia} + ' đ'"></td>
-                            <td th:text="${item.soLuong * item.sanPhamChiTiet.donGia} + ' đ'"></td>
+                            <td th:text="${item.sanPhamChiTiet.formattedDonGia} + ' đ'"></td>  <!-- Giá từng sản phẩm đã được định dạng -->
+                            <td th:text="${item.sanPhamChiTiet.formattedDonGia * item.soLuong} + ' đ'"></td>
                         </tr>
                         </tbody>
                     </table>
@@ -117,7 +117,7 @@
                 <div class="border p-3">
                     <!-- Tổng tiền -->
                     <div class="mb-3">
-                        <h5>Tổng tiền: <span th:text="${totalPrice}">0</span> đ</h5>
+                        <h5>Tổng tiền: <span th:text="${totalPrice}">0</span></h5>
                     </div>
                     <!-- Phương thức thanh toán -->
                     <div class="mb-3">

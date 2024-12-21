@@ -71,6 +71,8 @@ public class SanPhamChiTiet {
     @Column(name = "NgayCapNhat")
     private Date ngayCapNhat;
 
+    private String formattedDonGia;
+
     public SanPhamChiTiet(Integer id) {
         this.id = id;
     }
@@ -82,5 +84,10 @@ public class SanPhamChiTiet {
 
         DecimalFormat decimalFormat = new DecimalFormat("#,###", symbols);
         return decimalFormat.format(donGia);
+    }
+
+    public void setFormattedDonGia(String formattedDonGia) {
+        this.formattedDonGia = formattedDonGia;
+
     }
 }

@@ -55,6 +55,9 @@ public class DonHang {
     @Column(name = "NgayCapNhat")
     private Date ngayCapNhat;
 
+    private String formattedTongGia;
+
+
     @OneToMany(mappedBy = "donHang", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<DonHangChiTiet> donHangChiTietList = new ArrayList<>();
 }

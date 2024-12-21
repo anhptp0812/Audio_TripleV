@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -18,6 +19,6 @@ public interface GioHangChiTietRepository extends JpaRepository<GioHangChiTiet, 
     Optional<GioHangChiTiet> findByGioHangAndSanPhamChiTiet(GioHang gioHang, SanPhamChiTiet sanPhamChiTiet);
     Optional<GioHangChiTiet> findBySanPhamChiTiet_Id(Integer productId);
 
-
+    List<GioHangChiTiet> findBySanPhamChiTiet_IdInAndGioHang_KhachHang_Id(List<Integer> productIds, Integer khachHangId);
 }
 
