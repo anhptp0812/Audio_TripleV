@@ -21,9 +21,15 @@
         <button class="btn btn-outline-light me-2" type="button" onclick="toggleSearchInput()">
             <i class="bi bi-search"></i>
         </button>
-        <a class="btn btn-outline-light" href="#">
-            <i class="bi bi-person-circle"></i>
+        <a class="btn btn-outline-light"  id="user-icon" href="#">
+                <i class="bi bi-person-circle"></i>
+            <div id="user-dropdown" class="dropdown-menu btn btn-outline-light">
+                <a href="/user/thong-tin" class="dropdown-item">Thông tin tài khoản</a>
+                <a href="/logout" class="dropdown-item">Đăng xuất</a>
+            </div>
         </a>
+
+
     </div>
 
     <div class="category-container content">
