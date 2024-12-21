@@ -280,6 +280,7 @@ public class HoaDonController {
     }
 
     @GetMapping("/khach-hang/tim-kiem")
+    @ResponseBody
     public ResponseEntity<List<KhachHang>> timKiemKhachHang(
             @RequestParam(required = false) String ten,
             @RequestParam(required = false) String sdt) {

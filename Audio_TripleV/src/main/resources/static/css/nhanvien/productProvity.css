@@ -195,3 +195,24 @@ body {
     display: block;
     opacity: 1; /* Hiển thị với hiệu ứng mờ */
 }
+.dropdown-menu{
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+}
+.dropdown-menu {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    z-index: 1000;
+}
+.dropdown-item {
+    display: block;
+    padding: 8px 16px;
+    color: #000;
+    text-decoration: none;
+}
+.dropdown-item:hover {
+    background-color: #f1f1f1;
+}
