@@ -49,10 +49,13 @@ public class HinhAnhController {
     @ResponseBody
     public ResponseEntity<String> addHinhAnh(@RequestParam("imageFile") MultipartFile imageFile) {
         try {
+            if(hinhAnhService.isExist(imageFile.getOriginalFilename())){
+                return ResponseEntity.status(500).body("Hình ảnh đã tồn tại");
+            }
             // Tạo đối tượng HinhAnh mới
             HinhAnh hinhAnh = new HinhAnh();
             String fileName = imageFile.getOriginalFilename();
-            hinhAnh.setTen(fileName); // Gán tên hình ảnh bằng tên file
+            hinhAnh.setTen(fileName);
             hinhAnh.setNgayTao(new Date());
             hinhAnh.setNgayCapNhat(new Date());
 

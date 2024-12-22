@@ -10,7 +10,7 @@ import java.util.List;
 
 @Service
 public class HinhAnhService {
-    
+
     @Autowired
     private HinhAnhRepository hinhAnhRepository;
 
@@ -42,5 +42,9 @@ public class HinhAnhService {
         } else {
             throw new RuntimeException("Không tìm thấy hình ảnh với ID: " + hinhAnh.getId());
         }
+    }
+
+    public Boolean isExist(String name){
+        return hinhAnhRepository.findAll().stream().anyMatch(a-> a.getTen().equals(name));
     }
 }

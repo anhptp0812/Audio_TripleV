@@ -28,7 +28,7 @@ public class AuthController {
     private NhanVienRepo nhanVienRepo;
 
 
-    @GetMapping("/login")
+    @GetMapping(value = {"/", "/login"})
     public String form() {
         return "login/auth";
     }

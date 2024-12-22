@@ -1,74 +1,79 @@
 function addSanPhamChiTiet(event) {
     event.preventDefault();
-    const formData = new FormData()
+    const userConfirmed = confirm("Bạn có chắc chắn muốn thêm sản phẩm không?");
+    if (!userConfirmed) {
+        event.preventDefault();
+    } else {
+        const formData = new FormData()
 
-    // Lấy giá trị từ các trường và thêm vào FormData
-    const sanPham = document.getElementById('sanPham').value;
-    const mauSac = document.getElementById('mauSac').dataset.value;
-    const hang = document.getElementById('hang').dataset.value;
-    const hinhAnh = document.getElementById('hinhAnh').value;
-    const loaiSanPham = document.getElementById('loaiSanPham').value;
-    const donGia = parseFloat(document.getElementById('donGia').value);
-    const soLuong = parseInt(document.getElementById('soLuong').value, 10);
-    const trangThai = document.getElementById('trangThai').value;
-    const moTa = document.getElementById('moTa').value;
-    const ngayTao = new Date().toISOString().split('T')[0];
+        // Lấy giá trị từ các trường và thêm vào FormData
+        const sanPham = document.getElementById('sanPham').value;
+        const mauSac = document.getElementById('mauSac').dataset.value;
+        const hang = document.getElementById('hang').dataset.value;
+        const hinhAnh = document.getElementById('hinhAnh').value;
+        const loaiSanPham = document.getElementById('loaiSanPham').value;
+        const donGia = parseFloat(document.getElementById('donGia').value);
+        const soLuong = parseInt(document.getElementById('soLuong').value, 10);
+        const trangThai = document.getElementById('trangThai').value;
+        const moTa = document.getElementById('moTa').value;
+        const ngayTao = new Date().toISOString().split('T')[0];
 
-    // Thêm các giá trị vào formData
-    formData.append('sanPham', sanPham);
-    formData.append('mauSac', mauSac);
-    formData.append('hang', hang);
-    formData.append('hinhAnh', hinhAnh); // Sử dụng ID hình ảnh
-    formData.append('loaiSanPham', loaiSanPham);
-    formData.append('donGia', donGia);
-    formData.append('soLuong', soLuong);
-    formData.append('trangThai', trangThai);
-    formData.append('moTa', moTa);
-    formData.append('ngayTao', ngayTao);
+        // Thêm các giá trị vào formData
+        formData.append('sanPham', sanPham);
+        formData.append('mauSac', mauSac);
+        formData.append('hang', hang);
+        formData.append('hinhAnh', hinhAnh); // Sử dụng ID hình ảnh
+        formData.append('loaiSanPham', loaiSanPham);
+        formData.append('donGia', donGia);
+        formData.append('soLuong', soLuong);
+        formData.append('trangThai', trangThai);
+        formData.append('moTa', moTa);
+        formData.append('ngayTao', ngayTao);
 
-    // Kiểm tra các trường bắt buộc
-    if (!sanPham || !loaiSanPham || !trangThai) {
-        alert('Vui lòng điền tất cả thông tin.');
-        return;
-    }
-    if (!mauSac) {
-        alert('Vui lòng chọn màu sắc từ danh sách gợi ý.');
-        return;
-    }
-    if (!hang) {
-        alert('Vui lòng chọn hãng từ danh sách gợi ý.');
-        return;
-    }
-    // Kiểm tra tính hợp lệ của donGia và soLuong
-    if (isNaN(donGia) || donGia <= 1000) {
-        alert('Đơn giá phải là số và lớn hơn 1000.');
-        return;
-    }
-
-    if (isNaN(soLuong) || soLuong <= 0) {
-        alert('Số lượng phải là số và lớn hơn 0.');
-        return;
-    }
-
-    // Gửi AJAX request
-    $.ajax({
-        url: '/spct/add', // Thay đổi thành endpoint thực tế của bạn
-        type: 'POST', // Sử dụng POST để thêm dữ liệu
-        data: formData,
-        processData: false, // Không chuyển đổi dữ liệu
-        contentType: false, // Trình duyệt tự động thiết lập content-type cho multipart/form-data
-        success: function (response) {
-            alert("Thêm sản phẩm thành công!");
-            window.location.href = '/spct/hien-thi'; // Chuyển hướng về trang quản lý sản phẩm
-        },
-        error: function (xhr) {
-            let errorMessage = 'Có lỗi xảy ra.';
-            if (xhr.responseJSON && xhr.responseJSON.message) {
-                errorMessage = xhr.responseJSON.message;
-            }
-            alert(errorMessage);
+        // Kiểm tra các trường bắt buộc
+        if (!sanPham || !loaiSanPham || !trangThai) {
+            alert('Vui lòng điền tất cả thông tin.');
+            return;
         }
-    });
+        if (!mauSac) {
+            alert('Vui lòng chọn màu sắc từ danh sách gợi ý.');
+            return;
+        }
+        if (!hang) {
+            alert('Vui lòng chọn hãng từ danh sách gợi ý.');
+            return;
+        }
+        // Kiểm tra tính hợp lệ của donGia và soLuong
+        if (isNaN(donGia) || donGia <= 1000) {
+            alert('Đơn giá phải là số và lớn hơn 1000.');
+            return;
+        }
+
+        // if (isNaN(soLuong) || soLuong <= 0) {
+        //     alert('Số lượng phải là số và lớn hơn 0.');
+        //     return;
+        // }
+
+        // Gửi AJAX request
+        $.ajax({
+            url: '/spct/add', // Thay đổi thành endpoint thực tế của bạn
+            type: 'POST', // Sử dụng POST để thêm dữ liệu
+            data: formData,
+            processData: false, // Không chuyển đổi dữ liệu
+            contentType: false, // Trình duyệt tự động thiết lập content-type cho multipart/form-data
+            success: function (response) {
+                alert("Thêm sản phẩm thành công!");
+                window.location.href = '/spct/hien-thi'; // Chuyển hướng về trang quản lý sản phẩm
+            },
+            error: function (xhr) {
+                let errorMessage = 'Có lỗi xảy ra.';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMessage = xhr.responseJSON.message;
+                }
+                alert(errorMessage);
+            }
+        });
+    }
 }
 
 // Hàm thiết lập chức năng gợi ý
