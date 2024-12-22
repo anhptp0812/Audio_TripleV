@@ -5,11 +5,11 @@ import com.example.demo.entity.DonHangChiTiet;
 import com.example.demo.entity.GioHang;
 import com.example.demo.entity.KhachHang;
 import com.example.demo.entity.SanPhamChiTiet;
-import com.example.demo.service.DonHangService;
-import com.example.demo.service.GioHangService;
-import com.example.demo.service.KhachHangService;
+import com.example.demo.service.*;
 import com.example.demo.repository.KhachHangRepository;
-import com.example.demo.service.SanPhamChiTietService;
+import com.example.demo.vnconfig.PaymentInfoDTO;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.UnsupportedEncodingException;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.Collections;
@@ -43,6 +44,9 @@ public class KhachHangController {
 
     @Autowired
     private KhachHangService khachHangService;
+
+    @Autowired
+    private VNPayService vnPayService;
 
     @GetMapping("hien-thi")
     public List<KhachHang> hienThiKhachHang() {
@@ -171,20 +175,47 @@ public class KhachHangController {
         return "customer/thanh-toan"; // Tên file HTML trong thư mục template
     }
 
-
     @PostMapping("/khach-hang/thanh-toan/dat-hang")
     public String datHang(@AuthenticationPrincipal UserDetails userDetails,
                           @RequestParam String fullName,
                           @RequestParam String email,
                           @RequestParam String phone,
-                          @RequestParam String address) {
+                          @RequestParam String address,
+                          @RequestParam String paymentMethod,
+                          HttpServletRequest request) throws UnsupportedEncodingException {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
+        if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser")) {
+            return "redirect:/login"; // Chuyển hướng đến trang đăng nhập nếu người dùng chưa đăng nhập
+        }
+
+        if(paymentMethod.equals("card")) {
+            KhachHang khachHang = khachHangService.findByTaiKhoan(userDetails.getUsername()).get();
+            GioHang gioHang = gioHangService.findByKhachHang(khachHang).get();
+
+            String url = vnPayService.createOrder(gioHang.getTongGia().intValue(), userDetails.getUsername(), fullName, email, phone, address, request);
+            return "redirect:" + url;
+        }
+        processThanhToan(userDetails.getUsername(), fullName, email, phone, address);
+        return "redirect:/khach-hang/don-hang/danh-sach";
+    }
+
+
+    @GetMapping("/khach-hang/thanh-toan/vnpay_return")
+    public String vnpayReturn(HttpServletResponse response, @ModelAttribute PaymentInfoDTO paymentInfoDTO){
+        String[] userDetail = paymentInfoDTO.getVnp_OrderInfo().split(", ");
+        processThanhToan(userDetail[0], userDetail[1], userDetail[2], userDetail[3], userDetail[4]);
+        return "redirect:/khach-hang/don-hang/danh-sach";
+    }
+    void processThanhToan( String username, String fullName, String email, String phone, String address){
         // Lấy khách hàng hiện tại
-        KhachHang khachHang = khachHangService.findByTaiKhoan(userDetails.getUsername())
+        KhachHang khachHang = khachHangService.findByTaiKhoan(username)
                 .orElseThrow(() -> new RuntimeException("Khách hàng không tồn tại"));
 
         // Cập nhật thông tin khách hàng nếu có thay đổi
-        khachHang.setTen(fullName);
+        if(!fullName.contains("?")){
+            khachHang.setTen(fullName);
+        }
         khachHang.setEmail(email);
         khachHang.setSdt(phone);
         khachHang.setDiaChi(address);
@@ -236,9 +267,6 @@ public class KhachHangController {
 
         // Xóa giỏ hàng sau khi tạo đơn hàng
         gioHangService.clearGioHang(gioHang);
-
-        // Chuyển hướng sang trang "Đơn hàng của tôi"
-        return "redirect:/khach-hang/don-hang/danh-sach";
     }
 
     @GetMapping("/khach-hang/thong-tin")

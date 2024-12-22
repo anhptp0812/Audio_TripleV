@@ -62,7 +62,7 @@ public class SanPhamChiTiet {
     @Column(name = "TrangThai")
     private String trangThai;
 
-    @Column(name = "MoTa")
+    @Column(name = "MoTa", columnDefinition = "NVARCHAR(MAX)")
     private String moTa;
 
     @Column(name = "NgayTao")

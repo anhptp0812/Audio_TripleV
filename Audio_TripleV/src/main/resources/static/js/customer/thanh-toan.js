@@ -62,10 +62,10 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         // Kiểm tra Phương thức thanh toán
-        if (paymentMethod === "card") {
-            isValid = false;
-            errors.push("Phương thức thanh toán bằng ví VnPay hiện chưa hỗ trợ.");
-        }
+        // if (paymentMethod === "card") {
+        //     isValid = false;
+        //     errors.push("Phương thức thanh toán bằng ví VnPay hiện chưa hỗ trợ.");
+        // }
 
         // Nếu không hợp lệ, ngăn form submit và hiển thị lỗi
         if (!isValid) {

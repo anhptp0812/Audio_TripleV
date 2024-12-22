@@ -132,9 +132,9 @@ public class SanPhamChiTietController {
             return ResponseEntity.badRequest().body("Đơn giá phải lớn hơn 1000 và không được để trống.");
         }
 
-        if (soLuong == null || soLuong <= 0) {
-            return ResponseEntity.badRequest().body("Số lượng phải lớn hơn 0 và không được để trống.");
-        }
+//        if (soLuong == null || soLuong <= 0) {
+//            return ResponseEntity.badRequest().body("Số lượng phải lớn hơn 0 và không được để trống.");
+//        }
 
         try {
             SanPham sanPham = sanPhamRepository.findByTen(sanPhamName)

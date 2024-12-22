@@ -43,7 +43,8 @@ function addHinhAnh() {
             }, 1500);
         },
         error: function (xhr) {
-            const errorMessage = xhr.responseJSON?.message || 'Có lỗi xảy ra khi thêm hình ảnh.';
+            console.log(xhr);
+            const errorMessage = xhr.responseText || 'Có lỗi xảy ra khi thêm hình ảnh.';
             updateNotification(errorMessage, 'danger');
         },
         complete: function () {
