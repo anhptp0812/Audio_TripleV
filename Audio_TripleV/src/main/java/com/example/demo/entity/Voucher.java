@@ -30,20 +30,26 @@ public class Voucher {
     @Column(name = "Ten")
     private String ten;
 
-    @Column(name = "GiaTri")
-    private Double giaTri;
-
-    @Column(name = "LoaiVoucher")
+    @Column(name = "Loai")
     private String loai;
+
+    @Column(name = "GiaTriTien")
+    private Double giaTriTien;
+
+    @Column(name = "GiaTriPhanTram")
+    private Double giaTriPhanTram;
+
+    @Column(name = "GiaTriHoaDonToiThieu")
+    private Double giaTriHoaDonToiThieu;
+
+    @Column(name = "TrangThai")
+    private String trangThai;
 
     @Column(name = "NgayBatDau")
     private Date ngayBatDau;
 
     @Column(name = "NgayKetThuc")
     private Date ngayKetThuc;
-
-    @Column(name = "TrangThai")
-    private String trangThai;
 
     @Column(name = "NgayTao")
     private Date ngayTao;
