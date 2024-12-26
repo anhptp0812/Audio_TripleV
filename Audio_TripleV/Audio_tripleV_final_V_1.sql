@@ -732,3 +732,6 @@ select * from HoaDon
 select * from HoaDonChiTiet
 select * from Voucher
 
+ALTER TABLE Voucher
+DROP CONSTRAINT DF__Voucher__GiaTriH__4222D4EF;
+
