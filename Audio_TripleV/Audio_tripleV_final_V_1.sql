@@ -142,10 +142,25 @@ CREATE TABLE GioHangChiTiet (
                                     References SanPhamChiTiet (ID) ,
 
 );
+CREATE TABLE Voucher (
+                         Id INT PRIMARY KEY IDENTITY,
+                         Ten NVARCHAR(255) NOT NULL,
+                         Loai NVARCHAR(50) NOT NULL, -- 'GiamTien' hoặc 'GiamPhanTram'
+                         GiaTriTien DECIMAL(18, 2),
+                         GiaTriPhanTram DECIMAL(5, 2),
+                         GiaTriHoaDonToiThieu DECIMAL(18, 2) DEFAULT NULL, -- (Tùy chọn) Giá trị hóa đơn tối thiểu
+                         TrangThai NVARCHAR(50),
+                         NgayBatDau DATE NOT NULL,
+                         NgayKetThuc DATE NOT NULL,
+                         NgayTao DATETIME,
+                         NgayCapNhat DATETIME
+);
+
 CREATE TABLE DonHang (
 
                          ID INT PRIMARY KEY identity,
                          ID_Khach_Hang INT ,
+                         ID_Voucher INT,
                          TongGia decimal(18, 2),
                          TrangThai NVARCHAR(255),
                          TrangThaiPayment NVARCHAR(255),
@@ -154,7 +169,8 @@ CREATE TABLE DonHang (
                          NgayCapNhat datetime,
                          foreign key(ID_Khach_Hang)
                              References KhachHang (ID) ,
-
+                         foreign key(ID_Voucher)
+                             References Voucher(ID)
 );
 CREATE TABLE DonHangChiTiet (
 
@@ -172,17 +188,11 @@ CREATE TABLE DonHangChiTiet (
 
 );
 
-CREATE TABLE Voucher (
-                         ID INT PRIMARY KEY IDENTITY,
-                         Ten NVARCHAR(255),
-                         GiaTri DECIMAL(18, 2),
-                         LoaiVoucher NVARCHAR(255),
-                         NgayBatDau DATETIME NOT NULL,
-                         NgayKetThuc DATETIME NOT NULL,
-                         TrangThai NVARCHAR(255),
-                         NgayTao DATETIME DEFAULT GETDATE(),
-                         NgayCapNhat DATETIME DEFAULT GETDATE()
-);
+
+
+
+
+
 
 CREATE TABLE HoaDon (
 
@@ -690,12 +700,18 @@ VALUES
     (81, 8, 17, 73, 1, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Cambridge Audio Melomania 100
     (82, 8, 32, 74, 1, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()); -- Cleer Arc 3
 
-INSERT INTO Voucher (Ten, GiaTri, LoaiVoucher, NgayBatDau, NgayKetThuc, NgayTao, NgayCapNhat)
-VALUES
-(N'Giảm 10% cho đơn hàng trên 20 triệu', 10.00, 'percent', '2024-12-01 00:00:00', '2024-12-31 23:59:59', GETDATE(), GETDATE()),
-(N'Giảm 20% cho đơn hàng trên 30 triệu', 20.00, 'percent', '2024-12-15 00:00:00', '2025-01-15 23:59:59', GETDATE(), GETDATE()),
-(N'Giảm 10% cho đơn hàng trên 500k', 10.00, 'amount', '2024-12-01 00:00:00', '2024-12-31 23:59:59', GETDATE(), GETDATE()),
-(N'Giảm 50k cho đơn hàng trên 300k', 50000.00, 'amount', '2024-12-15 00:00:00', '2025-01-15 23:59:59', GETDATE(), GETDATE());
+-- Voucher 1: Giảm 10% cho hóa đơn trên 5 triệu
+INSERT INTO Voucher (Ten, Loai, GiaTriPhanTram, GiaTriHoaDonToiThieu, NgayBatDau, NgayKetThuc, TrangThai)
+VALUES (N'Voucher 10% cho đơn hàng trên 15 triệu', 'GiamPhanTram', 10.00, 10000000, '2024-12-01', '2024-12-31', 'Hoạt động');
+
+-- Voucher 2: Giảm 500.000 đồng cho hóa đơn trên 7 triệu
+INSERT INTO Voucher (Ten, Loai, GiaTriTien, GiaTriHoaDonToiThieu, NgayBatDau, NgayKetThuc, TrangThai)
+VALUES (N'Voucher giảm 500K cho đơn hàng trên 10 triệu', 'GiamTien', 500000, 7000000, '2024-12-01', '2024-12-31', 'Hoạt động');
+
+-- Voucher 3: Giảm 200.000 đồng cho hóa đơn từ 3 triệu đến dưới 5 triệu
+INSERT INTO Voucher (Ten, Loai, GiaTriTien, GiaTriHoaDonToiThieu, NgayBatDau, NgayKetThuc, TrangThai)
+VALUES (N'Voucher giảm 200K cho đơn hàng trên 7 triệu', 'GiamTien', 200000, 3000000, '2024-12-01', '2024-12-31', 'Hoạt động');
+
 
 
 select * from SanPham

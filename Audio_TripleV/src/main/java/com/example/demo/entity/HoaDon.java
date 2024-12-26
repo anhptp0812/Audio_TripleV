@@ -31,7 +31,7 @@ public class HoaDon {
 
     @ManyToOne
     @JoinColumn(name = "ID_Voucher")
-    private Voucher voucher;
+    private Voucher vouCher;
 
     @Column(name = "TongGia")
     private Double tongGia;
