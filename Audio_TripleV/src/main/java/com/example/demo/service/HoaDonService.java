@@ -116,7 +116,7 @@ public class HoaDonService {
 
         // Nếu giỏ hàng trống, cập nhật trạng thái hóa đơn
         if (hoaDon.getHoaDonChiTietList().isEmpty()) {
-            hoaDon.setTrangThai("TRỐNG");
+            hoaDon.setTrangThai("Chưa thanh toán");
         }
 
         // Lưu hóa đơn cập nhật
@@ -130,5 +130,9 @@ public class HoaDonService {
         // Tìm kiếm HoaDonChiTiet theo productId
         return hoaDonChiTietRepository.findBySanPhamChiTiet_Id(productId)
                 .orElseThrow(() -> new RuntimeException("Sản phẩm không tồn tại trong giỏ hàng."));
+    }
+
+    public HoaDon findById(Integer id) {
+        return hoaDonRepository.findById(id).orElse(null);
     }
 }

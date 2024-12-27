@@ -28,5 +28,7 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet,I
     List<SanPhamChiTiet> findTop4NewestProducts(Pageable pageable);
     List<SanPhamChiTiet> findTop4ByOrderByIdDesc();
 
+    List<SanPhamChiTiet> findByHangId(Integer hangId);
+
 //    List<SanPhamChiTiet> findBySanPham_Id(String id);
 }

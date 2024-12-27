@@ -41,3 +41,7 @@ document.addEventListener('click', function (event) {
         dropdown.style.display = 'none';
     }
 });
+function changeVideo(videoId) {
+    var iframe = document.getElementById("ifram-play");
+    iframe.src = "https://www.youtube.com/embed/" + videoId + "?autoplay=1";
+}

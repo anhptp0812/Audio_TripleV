@@ -104,13 +104,73 @@ public class HoaDonController {
     private KhachHangRepository khachHangRepository;
 
     @GetMapping("/hoa-don")
-    public String index(Model model) {
-        model.addAttribute("donHang", new HoaDon());
-        List<HoaDon> list = hoaDonRepository.findAll();
-        model.addAttribute("listDH", list);
-        return "nhanvien/hoa-don";
+    public String index(@RequestParam(value = "trangThai", required = false) String trangThai, Model model) {
+        List<HoaDon> list;
 
+        // Lọc theo trạng thái nếu có
+        if (trangThai != null && !trangThai.isEmpty()) {
+            list = hoaDonRepository.findByTrangThai(trangThai);
+        } else {
+            list = hoaDonRepository.findAll();
+        }
+
+        // Định dạng tiền tệ cho các giá trị trong HoaDon
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        for (HoaDon hoaDon : list) {
+            // Kiểm tra nếu tongGia khác null mới định dạng
+            if (hoaDon.getTongGia() != null) {
+                hoaDon.setFormattedTongGia(currencyFormat.format(hoaDon.getTongGia()));
+            } else {
+                hoaDon.setFormattedTongGia(currencyFormat.format(0.0)); // Thay thế với giá trị mặc định nếu null
+            }
+
+            // Làm tương tự với các trường khác nếu cần
+            if (hoaDon.getTienKhachDua() != null) {
+                hoaDon.setFormattedTienKhachDua(currencyFormat.format(hoaDon.getTienKhachDua()));
+            } else {
+                hoaDon.setFormattedTienKhachDua(currencyFormat.format(0.0));
+            }
+
+            if (hoaDon.getTienThua() != null) {
+                hoaDon.setFormattedTienThua(currencyFormat.format(hoaDon.getTienThua()));
+            } else {
+                hoaDon.setFormattedTienThua(currencyFormat.format(0.0));
+            }
+        }
+
+        model.addAttribute("listHD", list);
+        return "nhanvien/hoa-don";
     }
+
+    @GetMapping("/hoa-don-detail/{id}")
+    public String viewHoaDonDetail(@PathVariable Integer id, Model model) {
+        HoaDon hoaDon = hoaDonService.findById(id);
+        if (hoaDon != null) {
+            System.out.println("Hoa Don Found: " + hoaDon.getId());  // Kiểm tra thông tin của hoaDon
+            // Định dạng giá trị tiền tệ
+            NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+
+            // Định dạng các giá trị trong hoaDon
+            hoaDon.setFormattedTongGia(currencyFormat.format(hoaDon.getTongGia()));
+            hoaDon.setFormattedTienKhachDua(currencyFormat.format(hoaDon.getTienKhachDua()));
+            hoaDon.setFormattedTienThua(currencyFormat.format(hoaDon.getTienThua()));
+
+            // Định dạng giá trị cho từng chi tiết hóa đơn
+            for (HoaDonChiTiet hdct : hoaDon.getHoaDonChiTietList()) {
+                hdct.setFormattedDonGia(currencyFormat.format(hdct.getDonGia()));
+                hdct.setFormattedTongGia(currencyFormat.format(hdct.getTongGia()));
+            }
+
+            // Lấy danh sách hóa đơn từ repository
+            List<HoaDon> list = hoaDonRepository.findAll();
+
+            model.addAttribute("hoaDon", hoaDon);
+            model.addAttribute("hoaDonList", list); // Truyền danh sách hóa đơn vào model nếu cần
+            return "nhanvien/hoa-don-detail"; // Trả về trang chi tiết hóa đơn
+        }
+        return "redirect:/user/hoa-don"; // Nếu không tìm thấy hóa đơn, quay lại danh sách hóa đơn
+    }
+
 
     @GetMapping("/ban-hang")
     public String banHang(@RequestParam(required = false) Integer idLoaiSP,
@@ -119,8 +179,8 @@ public class HoaDonController {
                           @RequestParam(required = false) Integer hang,
                           @RequestParam(required = false) Double minPrice,
                           @RequestParam(required = false) Double maxPrice,
-                          @RequestParam(required = false) String donGia, // Thêm tham số donGia
-                          @RequestParam(required = false) String tenSanPham, // Thêm tham số tenSanPham
+                          @RequestParam(required = false) String donGia,
+                          @RequestParam(required = false) String tenSanPham,
                           Model model) {
 
         List<SanPhamChiTiet> list;
@@ -144,12 +204,19 @@ public class HoaDonController {
                 (hang == null || hang == 0) &&
                 (minPrice == null || maxPrice == null) &&
                 (tenSanPham == null || tenSanPham.isEmpty())) {
-            // Nếu không chọn bộ lọc nào thì lấy tất cả sản phẩm
             list = sanPhamChiTietRepository.findAll();
         } else {
-            // Lấy danh sách sản phẩm theo các bộ lọc
             list = sanPhamChiTietRepository.findByFilters(
                     idLoaiSP, idSanPham, mauSac, hang, minPrice, maxPrice, tenSanPham);
+        }
+
+        // Thêm trạng thái sản phẩm dựa trên số lượng
+        for (SanPhamChiTiet spct : list) {
+            if (spct.getSoLuong() == 0) {
+                spct.setTrangThai("Hết hàng");
+            } else {
+                spct.setTrangThai("Còn hàng");
+            }
         }
 
         // Thêm danh sách sản phẩm vào model
@@ -173,9 +240,8 @@ public class HoaDonController {
         model.addAttribute("hoaDon", new HoaDon());
         model.addAttribute("hoaDonChiTiet", new HoaDonChiTiet());
 
-        return "nhanvien/productProvity"; // Trả về trang sản phẩm
+        return "nhanvien/productProvity";
     }
-
     @GetMapping("/ban-hang/{hoaDonId}")
     public String donHang(@RequestParam(required = false) Integer idLoaiSP,
                           @RequestParam(required = false) Integer idSanPham,
@@ -361,14 +427,8 @@ public class HoaDonController {
                     .orElse(new HoaDon());  // Nếu không tìm thấy hóa đơn, tạo mới hóa đơn
 
             // Nếu hóa đơn mới, thêm thông tin nhân viên vào hóa đơn
-
-                hoaDon.setNhanVien(nhanVienOptional.get());  // Thêm nhân viên vào hóa đơn
-                hoaDonRepository.save(hoaDon);
-
-
-
-            // Lấy hóa đơn hoặc tạo mới
-
+            hoaDon.setNhanVien(nhanVienOptional.get());  // Thêm nhân viên vào hóa đơn
+            hoaDonRepository.save(hoaDon);
 
             // Kiểm tra sản phẩm
             SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepository.findById(spctId)
@@ -386,31 +446,7 @@ public class HoaDonController {
             Optional<HoaDonChiTiet> existingDetail = hoaDonChiTietRepository.findByHoaDonAndSanPhamChiTiet(hoaDon, sanPhamChiTiet);
 
             if (existingDetail.isPresent()) {
-                // Nếu sản phẩm đã có trong hóa đơn, cập nhật số lượng
-                HoaDonChiTiet detail = existingDetail.get();
-                detail.setSoLuong(detail.getSoLuong() + soLuong);
-                hoaDonChiTietRepository.save(detail);
-
-                // Giảm số lượng trong kho
-                sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - soLuong);
-                sanPhamChiTietRepository.save(sanPhamChiTiet);
-
-                // Cập nhật tổng giá hóa đơn
-                double newTotal = (hoaDon.getTongGia() != null ? hoaDon.getTongGia() : 0)
-                        + sanPhamChiTiet.getDonGia() * soLuong;
-                hoaDon.setTongGia(newTotal);
-                hoaDonRepository.save(hoaDon);
-
-                return ResponseEntity.ok(Map.of(
-                        "id", sanPhamChiTiet.getId(),
-                        "productName", sanPhamChiTiet.getSanPham().getTen(),
-                        "quantity", detail.getSoLuong(),
-                        "price", sanPhamChiTiet.getDonGia(),
-                        "totalAmount", newTotal,
-                        "remainingQuantity", sanPhamChiTiet.getSoLuong(),
-                        "isUpdated", true, // Bản ghi được cập nhật
-                        "message", "Số lượng sản phẩm đã được cập nhật trong hóa đơn."
-                ));
+                return ResponseEntity.ok(Collections.singletonMap("message", "Sản phẩm đã có trong giỏ hàng!"));
             } else {
                 // Nếu sản phẩm chưa có trong hóa đơn, thêm mới
                 HoaDonChiTiet newDetail = new HoaDonChiTiet();
@@ -444,9 +480,6 @@ public class HoaDonController {
         }
         return null;
     }
-
-
-
 
     @PostMapping("/cap-nhat-so-luong")
     @ResponseBody

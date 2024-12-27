@@ -27,10 +27,10 @@
                     <a class="nav-link" href="/khach-hang/san-pham/hien-thi">Sản Phẩm</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/khach-hang/thuong-hieu/hien-thi">Thương Hiệu</a>
+                    <a class="nav-link" href="/khach-hang/bai-viet/hien-thi">Bài Viết</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/khach-hang/khuyen-mai/hien-thi">Khuyến Mãi</a>
+                    <a class="nav-link" href="/khach-hang/lien-he/hien-thi">Liên Hệ</a>
                 </li>
             </ul>
             <div class="d-flex position-relative">
@@ -61,33 +61,26 @@
             <div class="col-md-6 p-3">
                 <div class="preview-pic tab-content">
                     <div class="tab-pane active" id="pic-1">
-                        <img th:src="@{/images/tainghe/{imageName}(imageName=${spct.hinhAnh.ten})}" alt="Hình Ảnh" class="img-fluid rounded-start" />
+                        <img th:src="@{/images/tainghe/{imageName}(imageName=${spct.hinhAnh.ten})}" width="300px" height="300px" alt="Hình Ảnh"
+                             class="img-fluid rounded-start"/>
                     </div>
-                    <!--                        <div class="tab-pane" id="pic-2"><img src="http://placekitten.com/400/252" /></div>-->
-                    <!--                        <div class="tab-pane" id="pic-3"><img src="http://placekitten.com/400/252" /></div>-->
-                    <!--                        <div class="tab-pane" id="pic-4"><img src="http://placekitten.com/400/252" /></div>-->
-                    <!--                        <div class="tab-pane" id="pic-5"><img src="http://placekitten.com/400/252" /></div>-->
                 </div>
-                <!--                    <ul class="preview-thumbnail nav nav-tabs">-->
-                <!--                        <li class="active"><a data-target="#pic-1" data-toggle="tab"><img src="http://placekitten.com/200/126" /></a></li>-->
-                <!--                        <li><a data-target="#pic-2" data-toggle="tab"><img src="http://placekitten.com/200/126" /></a></li>-->
-                <!--                        <li><a data-target="#pic-3" data-toggle="tab"><img src="http://placekitten.com/200/126" /></a></li>-->
-                <!--                        <li><a data-target="#pic-4" data-toggle="tab"><img src="http://placekitten.com/200/126" /></a></li>-->
-                <!--                        <li><a data-target="#pic-5" data-toggle="tab"><img src="http://placekitten.com/200/126" /></a></li>-->
-                <!--                    </ul>-->
-
             </div>
             <div class="col-md-6">
                 <div class="card-body">
                     <h2 class="card-title">Tên sản phẩm: <span th:text="${spct.sanPham.ten}"></span></h2>
-                    <h4 class="text-primary">Giá tiền: <span th:text="${spct.donGia}  + 'đ'"></span></h4>
+                    <h4>Giá tiền: <span th:text="${formattedDonGia}"  style="color: red;"></span></h4>
                     <!--                    <p class="card-text">Giới thiệu sản phẩm: <span th:text="${spct.gioiThieu}"></span></p>-->
                     <h5>Màu sắc: <span th:text="${spct.mauSac.ten}"></span></h5>
                     <h5>Hãng: <span th:text="${spct.hang.ten}"></span></h5>
                     <h5>Trạng thái : <span th:text="${spct.trangThai}"></span></h5>
                     <div class="mt-4">
-                        <button class="btn btn-primary me-3 add-to-cart" ><i class="fas fa-cart-plus me-1"></i>Thêm vào giỏ hàng</button>
-                        <button class="btn btn-success buy-now"><i class="fas fa-shopping-bag me-1"></i>Mua ngay</button>
+                        <button class="btn add-to-cart" th:data-sanpham-id="${spct.id}"
+                                th:data-soLuong="1"><i class="fas fa-cart-plus me-1"></i>Thêm vào
+                            giỏ
+                        </button>
+                        <button class="btn btn-now"><i class="fas fa-shopping-bag me-1"></i>Mua ngay
+                        </button>
                     </div>
                 </div>
             </div>
@@ -122,75 +115,49 @@
     <div class="container mt-5" data-aos="fade-up">
         <h4 class="text-primary fw-bold mb-4">Sản phẩm tương tự</h4>
         <div class="row g-4">
-            <!-- Sản phẩm 1 -->
-            <div class="col-md-2 col-sm-4" data-aos="zoom-in" data-aos-delay="400">
-                <div class="card h-100 product-card">
-                    <img src="/images/sample1.jpg" class="card-img-top product-image" alt="Tai nghe Sony WF-C700N">
-                    <div class="card-body text-center">
-                        <h5 class="card-title text-truncate">Sony WF-C700N</h5>
-                        <p class="text-danger fw-bold">0 đ</p>
-                    </div>
-                </div>
-            </div>
-            <!-- Sản phẩm 2 -->
-            <div class="col-md-2 col-sm-4" data-aos="zoom-in" data-aos-delay="500">
-                <div class="card h-100 product-card">
-                    <img src="/images/sample2.jpg" class="card-img-top product-image" alt="Tai nghe Sony WF-1000XM5">
-                    <div class="card-body text-center">
-                        <h5 class="card-title text-truncate">Tai nghe Sony WF-1000XM5</h5>
-                        <p class="text-danger fw-bold">4.290.000 đ</p>
-                    </div>
-                </div>
-            </div>
-            <!-- Sản phẩm 3 -->
-            <div class="col-md-2 col-sm-4" data-aos="zoom-in" data-aos-delay="600">
-                <div class="card h-100 product-card">
-                    <img src="/images/sample3.jpg" class="card-img-top product-image" alt="Tai nghe Bose QuietComfort">
-                    <div class="card-body text-center">
-                        <h5 class="card-title text-truncate">Tai nghe Bose QuietComfort</h5>
-                        <p class="text-danger fw-bold">4.500.000 đ</p>
-                    </div>
-                </div>
-            </div>
-            <!-- Sản phẩm 4 -->
-            <div class="col-md-2 col-sm-4" data-aos="zoom-in" data-aos-delay="700">
-                <div class="card h-100 product-card">
-                    <img src="/images/sample4.jpg" class="card-img-top product-image" alt="Tai nghe Sony WH-1000XM5">
-                    <div class="card-body text-center">
-                        <h5 class="card-title text-truncate">Tai nghe Sony WH-1000XM5</h5>
-                        <p class="text-danger fw-bold">4.999.000 đ</p>
-                    </div>
-                </div>
-            </div>
-            <!-- Sản phẩm 5 -->
-            <div class="col-md-2 col-sm-4" data-aos="zoom-in" data-aos-delay="800">
-                <div class="card h-100 product-card">
-                    <img src="/images/sample5.jpg" class="card-img-top product-image" alt="Tai nghe Sony ULT WEAR">
-                    <div class="card-body text-center">
-                        <h5 class="card-title text-truncate">Tai nghe Sony ULT WEAR</h5>
-                        <p class="text-danger fw-bold">3.499.000 đ</p>
-                    </div>
-                </div>
-            </div>
-            <!-- Sản phẩm 6 -->
-            <div class="col-md-2 col-sm-4" data-aos="zoom-in" data-aos-delay="900">
-                <div class="card h-100 product-card">
-                    <img src="/images/sample6.jpg" class="card-img-top product-image" alt="Tai nghe Apple AirPods">
-                    <div class="card-body text-center">
-                        <h5 class="card-title text-truncate">Tai nghe Apple AirPods</h5>
-                        <p class="text-danger fw-bold">4.150.000 đ</p>
+            <div th:each="sp : ${sanPhamTuongTu}" class="col-md-3">
+                <div class="card">
+                    <img th:src="@{/images/tainghe/{imageName}(imageName=${sp.hinhAnh.ten})}" class="card-img-top" alt="Hình Ảnh">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${sp.sanPham.ten}">Tên sản phẩm</h5>
+                        <p class="card-text" th:text="${formattedDonGia}" style="color: red;">Giá sản phẩm</p>
+                        <a th:href="@{/khach-hang/san-pham/hien-thi/{id}(id=${sp.id})}" class="btn btn-primary">Xem chi tiết</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
 </div>
 
 <!-- Footer -->
-<footer class="bg-light py-4 mt-5">
-    <div class="container text-center">
-        <p>© 2024 Shopping Site. All Rights Reserved.</p>
+<footer class="footer mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <h5>Triple V</h5>
+                <p>Địa chỉ: 123 Đường ABC, Quận X, Thành phố Y</p>
+            </div>
+            <div class="col-md-4">
+                <h5>Liên Hệ</h5>
+                <ul class="list-unstyled">
+                    <li><a href="#">Facebook</a></li>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">Twitter</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h5>Đăng ký nhận tin</h5>
+                <form>
+                    <div class="mb-3">
+                        <input type="email" class="form-control" placeholder="Email của bạn">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Đăng Ký</button>
+                </form>
+            </div>
+        </div>
+        <div class="text-center mt-3">
+            <p>&copy; 2024 Triple V. All rights reserved.</p>
+        </div>
     </div>
 </footer>
 

@@ -29,6 +29,11 @@
     <div class="bill-form">
         <div class="bill-details text-center">
             <h2>HÓA ĐƠN</h2>
+            <div class="btn-group my-3 w-100">
+                <a class="btn btn-outline-secondary" href="/user/hoa-don">Tất cả</a>
+                <a class="btn btn-outline-secondary" href="/user/hoa-don?trangThai=Chưa thanh toán">Chưa thanh toán</a>
+                <a class="btn btn-outline-secondary" href="/user/hoa-don?trangThai=Đã thanh toán">Đã thanh toán</a>
+            </div>
             <table class="table table-hover table-striped">
                 <thead>
                 <tr>
@@ -37,26 +42,28 @@
                     <th>TT thanh toán</th>
                     <th>Ngày Tao</th>
                     <th colspan="2">Action</th>
-
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="dh : ${listDH}">
-                    <td th:text="${dh.khachHang.ten}"></td>
-                    <td th:text="${dh.tongGia}"></td>
-                    <td th:text="${dh.trangThai}"></td>
-                    <td th:text="${dh.ngayTao}"></td>
+                <tr th:each="hd : ${listHD}">
+                    <td th:text="${hd.khachHang.ten}"></td>
+                    <td th:text="${hd.formattedTongGia}"></td> <!-- Hiển thị giá trị định dạng -->
+                    <td th:text="${hd.trangThai}"></td>
+                    <td th:text="${hd.ngayTao}"></td>
                     <td>
-                        <a th:href="@{/user/ban-hang/{id}(id=${dh.id})}" class="btn btn-primary">
-                            Detail
+                        <a th:switch="${hd.trangThai}">
+                            <!-- Nếu trạng thái là "Đã thanh toán" thì dẫn đến trang hoa-don-detail -->
+                            <a th:case="'Đã thanh toán'" th:href="@{/user/hoa-don-detail/{id}(id=${hd.id})}" class="btn btn-primary">
+                                Detail
+                            </a>
+                            <!-- Nếu trạng thái là "Chưa thanh toán" thì dẫn đến trang ban-hang -->
+                            <a th:case="'Chưa thanh toán'" th:href="@{/user/ban-hang/{id}(id=${hd.id})}" class="btn btn-primary">
+                                Detail
+                            </a>
                         </a>
                     </td>
 
-                    <td>
-                        <a class="btn btn-primary" href="javascript:void(0);" onclick="toggleProductList()">
-                            See more
-                        </a>
-                    </td>
+                </tr>
                 </tbody>
             </table>
         </div>

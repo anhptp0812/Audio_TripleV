@@ -76,10 +76,39 @@ public class TinTucController {
 
 
     @GetMapping("/san-pham/hien-thi/{id}")
-    public String hienThiSanPham(Model model , @PathVariable("id") Integer id ) {
-        model.addAttribute("spct", sanPhamChiTietService.findById(id));
+    public String hienThiSanPham(@AuthenticationPrincipal UserDetails userDetails,
+                                 Model model, @PathVariable("id") Integer id) {
+        KhachHang khachHang = khachHangService.findByTaiKhoan(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("Khách hàng không tồn tại"));
+        model.addAttribute("fullName", khachHang.getTen());
+
+        // Lấy giỏ hàng dựa trên khách hàng, nếu chưa có thì tạo mới
+        GioHang gioHang = gioHangService.findByKhachHang(khachHang)
+                .orElseGet(() -> gioHangService.createGioHang(khachHang));
+
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+
+        // Tính tổng số lượng trong giỏ hàng
+        int totalQuantity = 0; // For cart count
+        if (gioHang.getGioHangChiTietList() != null && !gioHang.getGioHangChiTietList().isEmpty()) {
+            totalQuantity = gioHang.getGioHangChiTietList().stream()
+                    .mapToInt(item -> item.getSoLuong())
+                    .sum();
+        }
+
+        model.addAttribute("cartCount", totalQuantity);
+
+        // Lấy sản phẩm chi tiết
+        SanPhamChiTiet spct = sanPhamChiTietService.findById(id);
+        model.addAttribute("spct", spct);
+
+        // Định dạng giá trước khi đưa vào model
+        model.addAttribute("formattedDonGia", currencyFormat.format(spct.getDonGia()));
+
+        // Lấy danh sách sản phẩm cùng hãng
+        List<SanPhamChiTiet> sanPhamTuongTu = sanPhamChiTietService.findByHangId(spct.getHang().getId());
+        model.addAttribute("sanPhamTuongTu", sanPhamTuongTu);
+
         return "customer/san-pham-chi-tiet-khach-hang";
     }
-
-
 }
