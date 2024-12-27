@@ -1,21 +1,8 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.*;
-import com.example.demo.repository.DonHangChiTietRepository;
 import com.example.demo.repository.DonHangRepository;
-import com.example.demo.repository.HangRepository;
-import com.example.demo.repository.HoaDonChiTietRepository;
-import com.example.demo.repository.HoaDonRepository;
-import com.example.demo.repository.LoaiSanPhamRepository;
-import com.example.demo.repository.MauSacRepository;
-import com.example.demo.repository.NhanVienRepo;
-import com.example.demo.repository.SanPhamChiTietRepository;
-import com.example.demo.repository.SanPhamRepository;
 import com.example.demo.service.DonHangService;
-import com.example.demo.service.HoaDonService;
-import com.example.demo.service.KhachHangService;
-import com.example.demo.service.NhanVienService;
-import com.example.demo.service.SanPhamChiTietService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Controller;
@@ -23,8 +10,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.text.NumberFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 @CrossOrigin(origins = "http://localhost:3000") // Thay đổi URL này theo miền của frontend
 @Controller
@@ -32,47 +21,12 @@ import java.util.List;
 public class DonHangController {
     //    @Autowired
 //    private VNPayConfig vnpayConfig;
-    @Autowired
-    private NhanVienService nhanVienService;
 
     @Autowired
     private DonHangService donHangService;
 
     @Autowired
     private DonHangRepository donHangRepository;
-
-    @Autowired
-    private DonHangChiTietRepository donHangChiTietRepository;
-
-    @Autowired
-    private SanPhamChiTietRepository sanPhamChiTietRepository;
-
-    @Autowired
-    private SanPhamChiTietService sanPhamChiTietService;
-
-    @Autowired
-    private LoaiSanPhamRepository loaiSanPhamRepository;
-
-    @Autowired
-    private SanPhamRepository sanPhamRepository;
-
-    @Autowired
-    private MauSacRepository mauSacRepository;
-
-    @Autowired
-    private HangRepository hangRepository;
-
-    @Autowired
-    private HoaDonRepository hoaDonRepository;
-
-    @Autowired
-    private HoaDonChiTietRepository hoaDonChiTietRepository;
-
-    @Autowired
-    private KhachHangService khachHangService;
-
-    @Autowired
-    private NhanVienRepo nhanVienRepo;
 
     @GetMapping("/don-hang")
     public String index(@RequestParam(value = "trangThai", required = false) String trangThai, Model model) {
@@ -84,6 +38,13 @@ public class DonHangController {
         } else {
             list = donHangRepository.findAll();
         }
+
+        // Định dạng giá tiền thành VND
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        list.forEach(dh -> {
+            String formattedPrice = currencyFormat.format(dh.getTongGia());
+            dh.setFormattedTongGia(formattedPrice); // Đặt thêm thuộc tính để lưu giá định dạng
+        });
 
         // Thông báo nếu không có đơn hàng phù hợp
         if (list.isEmpty()) {
@@ -101,43 +62,61 @@ public class DonHangController {
         return "nhanvien/donhang"; // Trả về file HTML
     }
 
-    @PostMapping("/don-hang/cap-nhat-trang-thai")
-    public String capNhatTrangThai(@ModelAttribute("dh") DonHang dh,
-                                   @RequestParam("id") Integer id,
-                                   @RequestParam("trangThai") String trangThai,
-                                   RedirectAttributes redirectAttributes) {
-        // Tìm đơn hàng theo ID
-        DonHang donHang = donHangRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy đơn hàng với ID: " + id));
-
-        String currentTrangThai = donHang.getTrangThai();
-
-        // Kiểm tra trạng thái hiện tại và trạng thái mới
-        if (currentTrangThai.equals(trangThai)) {
-            redirectAttributes.addFlashAttribute("message", "Trạng thái đơn hàng không thay đổi.");
-            return "redirect:/user/don-hang";
+    @GetMapping("/don-hang/detail/{id}")
+    public String viewOrderDetail(@PathVariable Integer id, Model model) {
+        DonHang donHang = donHangService.findByid(id);
+        if (donHang == null) {
+            model.addAttribute("message", "Không tìm thấy đơn hàng với ID: " + id);
+            return "error/404";
         }
 
-        // Cập nhật ngày khi thay đổi trạng thái
-        if ("Chờ xử lý".equals(currentTrangThai) && "Đã hủy".equals(trangThai)) {
-            donHang.setTrangThaiPayment("Hủy thanh toán");
-            donHang.setNgayCapNhat(new Date());
-        } else if ("Chờ xử lý".equals(currentTrangThai) && "Đã xác nhận".equals(trangThai)) {
-            donHang.setNgayCapNhat(new Date());
-        } else if ("Đã xác nhận".equals(currentTrangThai) && "Đang giao hàng".equals(trangThai)) {
-            donHang.setNgayCapNhat(new Date());
-        } else if ("Đang giao hàng".equals(currentTrangThai) && "Đã giao hàng".equals(trangThai)) {
-            donHang.setTrangThaiPayment("Đã thanh toán");
-            donHang.setNgayGiao(new Date());
-        }
+        // Định dạng tổng giá và các chi tiết đơn hàng
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
 
-        // Cập nhật trạng thái
-        donHang.setTrangThai(trangThai);
-        donHangRepository.save(donHang);
+        // Định dạng tổng giá
+        String formattedTongGia = currencyFormat.format(donHang.getTongGia());
+        donHang.setFormattedTongGia(formattedTongGia);
 
-        // Thêm thông báo thành công
-        redirectAttributes.addFlashAttribute("message", "Cập nhật trạng thái đơn hàng thành công!");
+        // Định dạng các chi tiết đơn hàng
+        donHang.getDonHangChiTietList().forEach(chiTiet -> {
+            // Định dạng đơn giá
+            String formattedDonGia = currencyFormat.format(chiTiet.getDonGia());
+            chiTiet.setFormattedDonGia(formattedDonGia);
 
-        return "redirect:/user/don-hang";  // Quay lại trang danh sách đơn hàng
+            // Tính và định dạng thành tiền
+            double thanhTien = chiTiet.getDonGia() * chiTiet.getSoLuong();
+            String formattedThanhTien = currencyFormat.format(thanhTien);
+            chiTiet.setFormattedThanhTien(formattedThanhTien);
+        });
+
+        model.addAttribute("donHang", donHang);
+        return "nhanvien/detail-donhang";
     }
+
+    @PostMapping("/don-hang/update-status")
+    public String updateOrderStatus(@RequestParam Integer id, @RequestParam String status, RedirectAttributes redirectAttributes) {
+        DonHang donHang = donHangService.findByid(id);
+        if (donHang != null) {
+            // Cập nhật trạng thái
+            donHang.setTrangThai(status);
+
+            // Cập nhật ngày cập nhật trạng thái
+            donHang.setNgayCapNhat(new Date());
+
+            // Nếu trạng thái là 'Đã giao hàng', cập nhật thêm ngày giao
+            if ("Đã giao hàng".equals(status)) {
+                donHang.setNgayGiao(new Date());
+            }
+
+            // Lưu lại thông tin thay đổi
+            donHangService.save(donHang);
+
+            // Thêm thông báo
+            redirectAttributes.addFlashAttribute("successMessage", "Cập nhật trạng thái thành công!");
+        } else {
+            redirectAttributes.addFlashAttribute("errorMessage", "Đơn hàng không tồn tại!");
+        }
+        return "redirect:/user/don-hang/detail/" + id;
+    }
+
 }

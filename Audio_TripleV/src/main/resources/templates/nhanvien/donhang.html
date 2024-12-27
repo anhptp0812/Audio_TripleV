@@ -54,53 +54,17 @@
                 <tr th:each="dh : ${listDH}">
                     <form action="#" th:action="@{/user/don-hang/cap-nhat-trang-thai}" method="post">
                         <td th:text="${dh.khachHang.ten}"></td>
-                        <td th:text="${dh.tongGia}"></td>
-                        <td>
-                            <input type="hidden" th:value="${dh.id}" name="id"/>
-                            <select name="trangThai" required class="form-control">
-                                <!-- Kiểm tra trạng thái hiện tại và chọn các trạng thái hợp lệ -->
-                                <option class="form-control" value="Chờ xử lý"
-                                        th:selected="${dh.trangThai == 'Chờ xử lý'}"
-                                        th:disabled="${dh.trangThai == 'Chờ xử lý' || dh.trangThai != 'Chờ xử lý'}">
-                                    Chờ xử lý
-                                </option>
-
-                                <option class="form-control" value="Đã xác nhận"
-                                        th:selected="${dh.trangThai == 'Đã xác nhận'}"
-                                        th:disabled="${ dh.trangThai == 'Đã xác nhận' || dh.trangThai == 'Đang giao hàng' || dh.trangThai == 'Đã giao hàng' || dh.trangThai == 'Đã hủy'}">
-                                    Đã xác nhận
-                                </option>
-
-                                <option class="form-control" value="Đang giao hàng"
-                                        th:selected="${dh.trangThai == 'Đang giao hàng'}"
-                                        th:disabled="${dh.trangThai == 'Chờ xử lý' || dh.trangThai == 'Đang giao hàng' || dh.trangThai == 'Đã giao hàng' || dh.trangThai == 'Đã hủy'}">
-                                    Đang giao hàng
-                                </option>
-
-                                <option class="form-control" value="Đã giao hàng"
-                                        th:selected="${dh.trangThai == 'Đã giao hàng'}"
-                                        th:disabled="${dh.trangThai == 'Chờ xử lý' || dh.trangThai == 'Đã xác nhận' || dh.trangThai == 'Đã giao hàng' || dh.trangThai == 'Đã hủy'}">
-                                    Đã giao hàng
-                                </option>
-
-                                <option class="form-control" value="Đã hủy"
-                                        th:selected="${dh.trangThai == 'Đã hủy'}"
-                                        th:disabled="${ dh.trangThai == 'Đã xác nhận' || dh.trangThai == 'Đang giao hàng' || dh.trangThai == 'Đã giao hàng' || dh.trangThai == 'Đã hủy'}">
-                                    Đã hủy
-                                </option>
-                            </select>
-                        </td>
-                        <td th:text="${dh.trangThaiPayment ?: ''}"></td>
+                        <td th:text="${dh.formattedTongGia}"></td>
+                        <td th:text="${dh.trangThai}"></td>
+                        <td th:text="${dh.trangThaiPayment}"></td>
                         <td th:text="${dh.ngayTao}"></td>
                         <td th:text="${dh.ngayCapNhat}"></td>
                         <td th:text="${dh.ngayGiao != null ? dh.ngayGiao : ''}"></td>
-
                         <td>
-                            <button class="btn btn-primary" type="submit">Cập nhật trạng thái</button>
+                            <a class="btn btn-info" th:href="@{/user/don-hang/detail/{id}(id=${dh.id})}">Detail</a>
                         </td>
                     </form>
                 </tr>
-
                 </tbody>
             </table>
 

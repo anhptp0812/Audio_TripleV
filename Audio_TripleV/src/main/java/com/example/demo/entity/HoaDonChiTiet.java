@@ -1,6 +1,14 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,4 +46,16 @@ public class HoaDonChiTiet {
 
     @Column(name = "NgayCapNhat")
     private Date ngayCapNhat;
+
+    @Transient
+    public Double getTongGia() {
+        // Tính tổng giá cho chi tiết giỏ hàng
+        return soLuong * donGia;
+    }
+
+    @Transient
+    private String formattedDonGia;
+
+    @Transient
+    private String formattedTongGia;
 }

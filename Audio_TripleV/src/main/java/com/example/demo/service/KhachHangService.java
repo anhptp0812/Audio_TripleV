@@ -3,6 +3,8 @@ package com.example.demo.service;
 import com.example.demo.entity.KhachHang;
 import com.example.demo.repository.KhachHangRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -77,6 +79,15 @@ public class KhachHangService {
         return khachHangRepository.findBySdt(phone);
     }
 
+    // Lấy khách hàng hiện tại từ SecurityContext (Spring Security)
+    public KhachHang getCurrentUser() {
+        // Lấy thông tin người dùng từ SecurityContext
+        String taiKhoan = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+
+        // Tìm khách hàng theo tài khoản
+        return khachHangRepository.findByTaiKhoan(taiKhoan)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy khách hàng"));
+    }
 }
 
 

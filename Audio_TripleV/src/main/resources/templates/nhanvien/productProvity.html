@@ -35,7 +35,7 @@
     <div class="category-container content">
         <div class="product-form">
             <form id="searchForm"
-                  th:action="@{/user/ban-hang/{id}(id=${hoaDon?.id})}"
+                  th:action="@{${hoaDon?.id != null ? '/user/ban-hang/' + hoaDon.id : '/user/ban-hang'}}"
                   method="get">
                 <input type="text" name="tenSanPham" id="tenSanPham" placeholder="Nhập tên sản phẩm"
                        th:value="${param.tenSanPham}" class="form-control">

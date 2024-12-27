@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -51,4 +52,6 @@ public class KhachHang {
     @JsonIgnore
     private GioHang gioHang;
 
+    @OneToMany(mappedBy = "khachHang") // Quan hệ 1-N với bảng comments
+    private List<Comment> comments;
 }

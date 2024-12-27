@@ -34,13 +34,13 @@ public class HoaDon {
     private Voucher voucher;
 
     @Column(name = "TongGia")
-    private Double tongGia;
+    private Double tongGia = 0.0;  // Đảm bảo có giá trị mặc định nếu null
 
     @Column(name = "TienKhachDua")
-    private Double tienKhachDua;
+    private Double tienKhachDua = 0.0; // Giá trị mặc định
 
     @Column(name = "TienThua")
-    private Double tienThua;
+    private Double tienThua = 0.0; // Giá trị mặc định
 
     @Column(name = "TrangThai")
     private String trangThai;
@@ -50,6 +50,12 @@ public class HoaDon {
 
     @Column(name = "NgayCapNhat")
     private Date ngayCapNhat;
+
+    private String formattedTongGia;
+
+    private String formattedTienKhachDua;
+
+    private String formattedTienThua;
 
     @OneToMany(mappedBy = "hoaDon", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<HoaDonChiTiet> hoaDonChiTietList;

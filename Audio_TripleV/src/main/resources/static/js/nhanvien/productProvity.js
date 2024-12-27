@@ -201,7 +201,6 @@ function addProductToOrder(productId, quantity) {
         .then(response => response.json())
         .then(data => {
             if (data.message) {
-                // Nếu sản phẩm đã có trong hóa đơn, hiển thị thông báo và không thêm vào bảng
                 if (data.message === "Sản phẩm đã có trong giỏ hàng!") {
                     alert(data.message);
                 } else {
@@ -217,6 +216,13 @@ function addProductToOrder(productId, quantity) {
         });
 }
 
+// Cập nhật số lượng sản phẩm trong bảng hiển thị
+function updateProductQuantityInTable(productId, remainingQuantity) {
+    const stockCell = document.getElementById(`stock-${productId}`);
+    if (stockCell) {
+        stockCell.textContent = remainingQuantity; // Cập nhật số lượng còn lại
+    }
+}
 
 // Thêm sản phẩm vào bảng chi tiết hóa đơn
 function addProductToOrderTable(productData) {
@@ -259,15 +265,16 @@ function addProductToOrderTable(productData) {
     }
 }
 
-function updateProductQuantityInTable(productId, newQuantity) {
-    const stockCell = document.getElementById(`stock-${productId}`);
-    if (stockCell) {
-        stockCell.textContent = newQuantity;
-    }
-}
-
 // Xóa sản phẩm khỏi hóa đơn
 function removeProductFromOrder(productId) {
+    // Hiển thị hộp thoại xác nhận
+    const confirmation = confirm('Bạn có chắc chắn muốn xóa sản phẩm này khỏi hóa đơn?');
+
+    if (!confirmation) {
+        // Nếu người dùng không đồng ý, dừng thực hiện
+        return;
+    }
+
     fetch(`/user/ban-hang/${hoaDonId}/remove-product/${productId}`, {
         method: 'DELETE'
     })

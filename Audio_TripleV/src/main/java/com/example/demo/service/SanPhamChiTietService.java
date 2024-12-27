@@ -42,7 +42,6 @@ public class SanPhamChiTietService {
 
     // Tìm sản phẩm theo ID
     public SanPhamChiTiet findById(Integer id) {
-// Thanh
         return sanPhamChiTietRepository.findById(id).orElse(null);
 
     }
@@ -52,15 +51,6 @@ public class SanPhamChiTietService {
         sanPhamChiTietRepository.deleteById(id);
     }
 
-    // Phương thức cập nhật sản phẩm chi tiết
-//    public SanPhamChiTiet updateSanPhamChiTiet(SanPhamChiTiet sanPhamChiTiet) {
-//        // Kiểm tra xem sản phẩm chi tiết có tồn tại không
-//        if (sanPhamChiTietRepository.existsById(sanPhamChiTiet.getId())) {
-//            return sanPhamChiTietRepository.save(sanPhamChiTiet);
-//        } else {
-//            throw new RuntimeException("Sản phẩm chi tiết không tồn tại!");
-//        }
-//    }
     public SanPhamChiTiet updateSanPhamChiTiet(SanPhamChiTiet sanPhamChiTiet) {
         // Kiểm tra nếu không có ngày cập nhật được cung cấp từ phía frontend, thì gán ngày hiện tại
         if (sanPhamChiTiet.getNgayCapNhat() == null) {
@@ -70,12 +60,15 @@ public class SanPhamChiTietService {
         // Thực hiện cập nhật sản phẩm chi tiết vào cơ sở dữ liệu
         return sanPhamChiTietRepository.save(sanPhamChiTiet);
     }
-// main
-
 
     // Phương thức thêm sản phẩm chi tiết
     public SanPhamChiTiet addSanPhamChiTiet(SanPhamChiTiet sanPhamChiTiet) {
         // Thêm sản phẩm chi tiết vào cơ sở dữ liệu
         return sanPhamChiTietRepository.save(sanPhamChiTiet);
+    }
+
+    public List<SanPhamChiTiet> findByHangId(Integer hangId) {
+        // Giả sử bạn có một repository để truy vấn sản phẩm theo hãng
+        return sanPhamChiTietRepository.findByHangId(hangId);
     }
 }

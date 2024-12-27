@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi Tiết Đơn Hàng</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.9.1/font/bootstrap-icons.min.css"
+          rel="stylesheet">
+    <link th:href="@{/css/nhanvien/donhang.css}" rel="stylesheet">
+</head>
+
+<body>
+
+<!-- Thông báo toast -->
+<div th:if="${successMessage}" class="toast align-items-center text-bg-success border-0 position-fixed top-0 end-0 p-3"
+     role="alert" aria-live="assertive" aria-atomic="true" style="z-index: 1055;">
+    <div class="d-flex">
+        <div class="toast-body">
+            <span th:text="${successMessage}"></span>
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+</div>
+
+<div th:if="${errorMessage}" class="toast align-items-center text-bg-danger border-0 position-fixed top-0 end-0 p-3"
+     role="alert" aria-live="assertive" aria-atomic="true" style="z-index: 1055;">
+    <div class="d-flex">
+        <div class="toast-body">
+            <span th:text="${errorMessage}"></span>
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+</div>
+
+<th:block th:replace="~{/nhanvien/fragments :: nhan-vien-header}"/>
+
+<div class="main-container">
+    <div class="order-form">
+        <div class="order-details-1">
+            <h2 class="text-center">Chi Tiết Đơn Hàng</h2>
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5>Thông Tin Đơn Hàng</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Mã Đơn Hàng:</strong> <span th:text="${donHang.id}"></span></p>
+                            <p><strong>Khách Hàng:</strong> <span th:text="${donHang.khachHang.ten}"></span></p>
+                            <p><strong>Email:</strong> <span th:text="${donHang.khachHang.email}"></span></p>
+                            <p><strong>Địa Chỉ:</strong> <span th:text="${donHang.khachHang.diaChi}"></span></p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Ngày Tạo:</strong> <span th:text="${donHang.ngayTao}"></span></p>
+                            <p><strong>Ngày Cập Nhật:</strong> <span th:text="${donHang.ngayCapNhat}"></span></p>
+                            <p><strong>Ngày Giao:</strong> <span th:text="${donHang.ngayGiao}"></span></p>
+                            <p><strong>Trạng Thái:</strong> <span th:text="${donHang.trangThai}"></span></p>
+                            <p><strong>Tổng Giá:</strong> <span th:text="${donHang.formattedTongGia}"></span></p>
+                        </div>
+                        <div class="text-center">
+                            <form th:action="@{/user/don-hang/update-status}" method="post">
+                                <input type="hidden" name="id" th:value="${donHang.id}"/>
+                                <button type="submit" name="status" value="Đã xác nhận"
+                                        th:if="${donHang.trangThai == 'Chờ xử lý'}" class="btn btn-primary">Đã Xác Nhận
+                                </button>
+                                <button type="submit" name="status" value="Đã hủy"
+                                        th:if="${donHang.trangThai == 'Chờ xử lý'}" class="btn btn-danger">Đã Hủy
+                                </button>
+                                <button type="submit" name="status" value="Đang giao hàng"
+                                        th:if="${donHang.trangThai == 'Đã xác nhận'}" class="btn btn-success">Đang Giao
+                                    Hàng
+                                </button>
+                                <button type="submit" name="status" value="Đã giao hàng"
+                                        th:if="${donHang.trangThai == 'Đang giao hàng'}" class="btn btn-success">Đã Giao
+                                    Hàng
+                                </button>
+                                <button type="submit" name="status" value="Chờ xử lý"
+                                        th:if="${donHang.trangThai == 'Đã hủy'}" class="btn btn-warning">Chờ Xử Lý
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5>Danh Sách Sản Phẩm</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th>Tên Sản Phẩm</th>
+                            <th>Số Lượng</th>
+                            <th>Đơn Giá</th>
+                            <th>Thành Tiền</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="chiTiet : ${donHang.donHangChiTietList}">
+                            <td th:text="${chiTiet.sanPhamChiTiet.sanPham.ten}"></td>
+                            <td th:text="${chiTiet.soLuong}"></td>
+                            <td th:text="${chiTiet.formattedDonGia}"></td>
+                            <td th:text="${chiTiet.formattedThanhTien}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <a class="btn btn-secondary" th:href="@{/user/don-hang}">Quay Lại</a>
+            </div>
+        </div>
+    </div>
+    <th:block th:replace="~{/nhanvien/fragments :: nhan-vien-footer}"/>
+</div>
+</body>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const toastElements = document.querySelectorAll('.toast');
+        toastElements.forEach(toastEl => {
+            const toast = new bootstrap.Toast(toastEl);
+            toast.show();
+        });
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/nhanvien/donhang.js}"></script>
+
+</html>
