@@ -72,7 +72,13 @@ public class SecurityConfig {
                         .successHandler(customAuthenticationSuccessHandler())  // Xử lý khi đăng nhập thành công
                         .failureUrl("/login?error=true")  // Xử lý khi đăng nhập thất bại
                         .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout") // URL logout
+                        .logoutSuccessUrl("/khach-hang/trang-chu/hien-thi") // Chuyển hướng về trang chủ sau khi logout
+                        .permitAll() // Cho phép tất cả truy cập vào trang logout
                 );
+
 
         return http.build();
     }
