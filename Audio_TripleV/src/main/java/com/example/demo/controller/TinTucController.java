@@ -7,7 +7,9 @@ import com.example.demo.service.GioHangService;
 import com.example.demo.service.KhachHangService;
 import com.example.demo.service.SanPhamChiTietService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -35,22 +37,29 @@ public class TinTucController {
 
     @GetMapping("/trang-chu/hien-thi")
     public String showTop4SanPhamMoiAndSanPhamXemNhieuNhat(@AuthenticationPrincipal UserDetails userDetails, Model model) {
-        KhachHang khachHang = khachHangService.findByTaiKhoan(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("Khách hàng không tồn tại"));
-        model.addAttribute("fullName", khachHang.getTen());
+        // Kiểm tra nếu người dùng đã đăng nhập
+        if (userDetails != null) {
+            KhachHang khachHang = khachHangService.findByTaiKhoan(userDetails.getUsername())
+                    .orElseThrow(() -> new RuntimeException("Khách hàng không tồn tại"));
+            model.addAttribute("fullName", khachHang.getTen());
 
-        // Lấy giỏ hàng dựa trên khách hàng, nếu chưa có thì tạo mới
-        GioHang gioHang = gioHangService.findByKhachHang(khachHang)
-                .orElseGet(() -> gioHangService.createGioHang(khachHang));
+            // Lấy giỏ hàng dựa trên khách hàng, nếu chưa có thì tạo mới
+            GioHang gioHang = gioHangService.findByKhachHang(khachHang)
+                    .orElseGet(() -> gioHangService.createGioHang(khachHang));
 
-        // Tính tổng số lượng trong giỏ hàng
-        int totalQuantity = 0; // For cart count
-        if (gioHang.getGioHangChiTietList() != null && !gioHang.getGioHangChiTietList().isEmpty()) {
-            totalQuantity = gioHang.getGioHangChiTietList().stream()
-                    .mapToInt(item -> item.getSoLuong())
-                    .sum();
+            // Tính tổng số lượng trong giỏ hàng
+            int totalQuantity = 0;
+            if (gioHang.getGioHangChiTietList() != null && !gioHang.getGioHangChiTietList().isEmpty()) {
+                totalQuantity = gioHang.getGioHangChiTietList().stream()
+                        .mapToInt(item -> item.getSoLuong())
+                        .sum();
+            }
+            model.addAttribute("cartCount", totalQuantity);
+        } else {
+            // Nếu không đăng nhập, gán giá trị mặc định
+            model.addAttribute("fullName", "Khách");
+            model.addAttribute("cartCount", 0);
         }
-        model.addAttribute("cartCount", totalQuantity);
 
         // Lấy các sản phẩm mới nhất
         List<SanPhamChiTiet> newestProducts = sanPhamChiTietService.getTop4NewestProducts();
@@ -75,34 +84,47 @@ public class TinTucController {
     }
 
 
+
+
+
     @GetMapping("/san-pham/hien-thi/{id}")
     public String hienThiSanPham(@AuthenticationPrincipal UserDetails userDetails,
                                  Model model, @PathVariable("id") Integer id) {
-        KhachHang khachHang = khachHangService.findByTaiKhoan(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("Khách hàng không tồn tại"));
-        model.addAttribute("fullName", khachHang.getTen());
+        // Kiểm tra xem người dùng đã đăng nhập hay chưa
+        if (userDetails != null) {
+            // Người dùng đã đăng nhập, lấy thông tin khách hàng
+            KhachHang khachHang = khachHangService.findByTaiKhoan(userDetails.getUsername())
+                    .orElseThrow(() -> new RuntimeException("Khách hàng không tồn tại"));
+            model.addAttribute("fullName", khachHang.getTen());
 
-        // Lấy giỏ hàng dựa trên khách hàng, nếu chưa có thì tạo mới
-        GioHang gioHang = gioHangService.findByKhachHang(khachHang)
-                .orElseGet(() -> gioHangService.createGioHang(khachHang));
+            // Lấy giỏ hàng dựa trên khách hàng, nếu chưa có thì tạo mới
+            GioHang gioHang = gioHangService.findByKhachHang(khachHang)
+                    .orElseGet(() -> gioHangService.createGioHang(khachHang));
 
-        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
-
-        // Tính tổng số lượng trong giỏ hàng
-        int totalQuantity = 0; // For cart count
-        if (gioHang.getGioHangChiTietList() != null && !gioHang.getGioHangChiTietList().isEmpty()) {
-            totalQuantity = gioHang.getGioHangChiTietList().stream()
-                    .mapToInt(item -> item.getSoLuong())
-                    .sum();
+            // Tính tổng số lượng trong giỏ hàng
+            int totalQuantity = 0;
+            if (gioHang.getGioHangChiTietList() != null && !gioHang.getGioHangChiTietList().isEmpty()) {
+                totalQuantity = gioHang.getGioHangChiTietList().stream()
+                        .mapToInt(item -> item.getSoLuong())
+                        .sum();
+            }
+            model.addAttribute("cartCount", totalQuantity);
+        } else {
+            // Nếu người dùng chưa đăng nhập, gán giá trị mặc định
+            model.addAttribute("fullName", "Khách");
+            model.addAttribute("cartCount", 0);  // Giỏ hàng không có sản phẩm
         }
 
-        model.addAttribute("cartCount", totalQuantity);
-
-        // Lấy sản phẩm chi tiết
+        // Lấy sản phẩm chi tiết theo id
         SanPhamChiTiet spct = sanPhamChiTietService.findById(id);
+        if (spct == null) {
+            throw new RuntimeException("Sản phẩm không tồn tại");
+        }
+
         model.addAttribute("spct", spct);
 
-        // Định dạng giá trước khi đưa vào model
+        // Định dạng giá thành trước khi đưa vào model
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         model.addAttribute("formattedDonGia", currencyFormat.format(spct.getDonGia()));
 
         // Lấy danh sách sản phẩm cùng hãng
@@ -111,4 +133,5 @@ public class TinTucController {
 
         return "customer/san-pham-chi-tiet-khach-hang";
     }
+
 }

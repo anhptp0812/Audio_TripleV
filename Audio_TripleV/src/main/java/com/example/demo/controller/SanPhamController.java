@@ -39,18 +39,27 @@ public class SanPhamController {
                                     @RequestParam(defaultValue = "0") int page,
                                     @RequestParam(defaultValue = "12") int size,
                                     Model model) {
-        // Lấy thông tin khách hàng
-        KhachHang khachHang = khachHangService.findByTaiKhoan(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("Khách hàng không tồn tại"));
-        model.addAttribute("fullName", khachHang.getTen());
+        // Kiểm tra nếu người dùng đã đăng nhập
+        if (userDetails != null) {
+            // Lấy thông tin khách hàng
+            KhachHang khachHang = khachHangService.findByTaiKhoan(userDetails.getUsername())
+                    .orElseThrow(() -> new RuntimeException("Khách hàng không tồn tại"));
+            model.addAttribute("fullName", khachHang.getTen());
 
-        // Lấy giỏ hàng
-        GioHang gioHang = gioHangService.findByKhachHang(khachHang)
-                .orElseGet(() -> gioHangService.createGioHang(khachHang));
-        int totalQuantity = gioHang.getGioHangChiTietList().stream()
-                .mapToInt(item -> item.getSoLuong())
-                .sum();
-        model.addAttribute("cartCount", totalQuantity);
+            // Lấy giỏ hàng
+            GioHang gioHang = gioHangService.findByKhachHang(khachHang)
+                    .orElseGet(() -> gioHangService.createGioHang(khachHang));
+
+            // Tính tổng số lượng trong giỏ hàng
+            int totalQuantity = gioHang.getGioHangChiTietList().stream()
+                    .mapToInt(item -> item.getSoLuong())
+                    .sum();
+            model.addAttribute("cartCount", totalQuantity);
+        } else {
+            // Nếu người dùng chưa đăng nhập, gán giá trị mặc định
+            model.addAttribute("fullName", "Khách");
+            model.addAttribute("cartCount", 0);  // Giỏ hàng không có sản phẩm
+        }
 
         // Lấy danh sách sản phẩm với phân trang
         Page<SanPhamChiTiet> pageResult = sanPhamChiTietService.getSanPhamChiTietWithPagination(page, size);
@@ -67,6 +76,7 @@ public class SanPhamController {
         model.addAttribute("currentPage", page);
         return "customer/san-pham";
     }
+
 
     @GetMapping("/san-pham/loai/{idLoaiSP}")
     public String getSanPhamByLoai(@PathVariable int idLoaiSP, Model model) {

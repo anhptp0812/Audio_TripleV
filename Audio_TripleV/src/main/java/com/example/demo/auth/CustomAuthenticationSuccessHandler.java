@@ -1,7 +1,6 @@
 package com.example.demo.auth;
 
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
@@ -18,17 +17,23 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
                                         Authentication authentication) throws IOException, ServletException {
         // Lấy danh sách quyền (roles) của người dùng
         var authorities = authentication.getAuthorities();
+        System.out.println("User roles: " + authorities); // Log quyền để kiểm tra
 
-        // Kiểm tra role và chuyển hướng tương ứng
-        if (authorities.contains(new SimpleGrantedAuthority("ADMIN"))) {
-            response.sendRedirect("/admin/home");
-        } else if (authorities.contains(new SimpleGrantedAuthority("USER"))) {
-            response.sendRedirect("/user/ban-hang");
-        } else if (authorities.contains(new SimpleGrantedAuthority("KHACHHANG"))) {
-            response.sendRedirect("/khach-hang/trang-chu/hien-thi");
-        } else {
-            // Chuyển hướng mặc định nếu không tìm thấy role phù hợp
-            response.sendRedirect("/default");
+        try {
+            // Kiểm tra role và chuyển hướng tương ứng
+            if (authorities.contains(new SimpleGrantedAuthority("ADMIN"))) {
+                response.sendRedirect("/admin/home");
+            } else if (authorities.contains(new SimpleGrantedAuthority("USER"))) {
+                response.sendRedirect("/user/ban-hang");
+            } else if (authorities.contains(new SimpleGrantedAuthority("KHACHHANG"))) {
+                response.sendRedirect("/khach-hang/trang-chu/hien-thi");
+            } else {
+                // Chuyển hướng mặc định nếu không tìm thấy role phù hợp
+                response.sendRedirect("/default");
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // Ghi log lỗi nếu có
+            response.sendRedirect("/error"); // Trang lỗi tùy chọn
         }
     }
 }
