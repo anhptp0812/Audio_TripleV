@@ -56,7 +56,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authz -> authz
                         // Các URL public
                         .requestMatchers( "/static/**", "/css/**", "/js/**", "/images/**").permitAll()
-                        .requestMatchers("/khach-hang/trang-chu/hien-thi", "/khach-hang/san-pham/hien-thi/**",
+                        .requestMatchers("/khach-hang/trang-chu/hien-thi", "/khach-hang/san-pham/**",
                                 "/khach-hang/bai-viet/**", "khach-hang/lien-he/**").permitAll()
                         // Các URL cần quyền cụ thể
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")
