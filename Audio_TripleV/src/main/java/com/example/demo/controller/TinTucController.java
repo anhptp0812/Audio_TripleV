@@ -83,10 +83,6 @@ public class TinTucController {
         return "customer/tin-tuc";
     }
 
-
-
-
-
     @GetMapping("/san-pham/hien-thi/{id}")
     public String hienThiSanPham(@AuthenticationPrincipal UserDetails userDetails,
                                  Model model, @PathVariable("id") Integer id) {

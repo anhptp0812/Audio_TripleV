@@ -16,16 +16,20 @@ import java.util.Optional;
  //main
 
 @Service
-public class SanPhamChiTietService {
+public class    SanPhamChiTietService {
     @Autowired
     private SanPhamChiTietRepository sanPhamChiTietRepository;
+
 
     public List<SanPhamChiTiet> getAllSanPhamChiTiet() {
         return sanPhamChiTietRepository.findAll();
     }
-    public List<SanPhamChiTiet> findByLoaiSanPham(int idLoaiSP) {
-        return sanPhamChiTietRepository.findByLoaiSanPham_Id(idLoaiSP);
+    public Page<SanPhamChiTiet> findByLoaiSanPham(int idLoaiSP, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size); // Tạo Pageable với trang và kích thước
+        return sanPhamChiTietRepository.findByLoaiSanPham_Id(idLoaiSP, pageable);
     }
+
+
     // Lấy danh sách sản phẩm chi tiết với phân trang
     public Page<SanPhamChiTiet> getSanPhamChiTietWithPagination(int page, int size) {
         Pageable pageable = PageRequest.of(page, size); // page bắt đầu từ 0

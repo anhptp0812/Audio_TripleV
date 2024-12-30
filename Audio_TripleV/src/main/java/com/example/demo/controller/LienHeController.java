@@ -31,17 +31,28 @@ public class LienHeController {
     public String getLienHe(@AuthenticationPrincipal UserDetails userDetails,
                                     Model model) {
         // Lấy thông tin khách hàng
-        KhachHang khachHang = khachHangService.findByTaiKhoan(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("Khách hàng không tồn tại"));
-        model.addAttribute("fullName", khachHang.getTen());
+        if (userDetails != null) {
+            KhachHang khachHang = khachHangService.findByTaiKhoan(userDetails.getUsername())
+                    .orElseThrow(() -> new RuntimeException("Khách hàng không tồn tại"));
+            // Lấy tên khách hàng
+            model.addAttribute("fullName", khachHang.getTen());
 
-        // Lấy giỏ hàng
-        GioHang gioHang = gioHangService.findByKhachHang(khachHang)
-                .orElseGet(() -> gioHangService.createGioHang(khachHang));
-        int totalQuantity = gioHang.getGioHangChiTietList().stream()
-                .mapToInt(item -> item.getSoLuong())
-                .sum();
-        model.addAttribute("cartCount", totalQuantity);
+
+            // Lấy giỏ hàng, nếu đã đăng nhập sẽ tìm theo khách hàng, nếu chưa thì tạo giỏ hàng trống
+            GioHang gioHang = (khachHang != null) ? gioHangService.findByKhachHang(khachHang)
+                    .orElseGet(() -> new GioHang()) : new GioHang(); // Tạo giỏ hàng trống nếu không có khách hàng
+
+            // Tính tổng số lượng sản phẩm trong giỏ hàng
+            int totalQuantity = gioHang.getGioHangChiTietList().stream()
+                    .mapToInt(item -> item.getSoLuong())
+                    .sum();
+            model.addAttribute("cartCount", totalQuantity);
+
+        }else {
+            // Nếu không đăng nhập, gán giá trị mặc định
+            model.addAttribute("fullName", "Khách");
+            model.addAttribute("cartCount", 0);
+        }
 
         return "customer/lien-he";
     }
