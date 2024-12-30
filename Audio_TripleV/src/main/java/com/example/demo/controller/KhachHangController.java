@@ -11,6 +11,7 @@ import com.example.demo.vnconfig.PaymentInfoDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.UnsupportedEncodingException;
@@ -48,29 +50,6 @@ public class KhachHangController {
     @Autowired
     private VNPayService vnPayService;
 
-    @GetMapping("hien-thi")
-    public List<KhachHang> hienThiKhachHang() {
-
-        return khachHangRepository.findAll();
-    }
-
-    @GetMapping("/api/khach-hang/search")
-    @ResponseBody
-    public List<KhachHang> searchKhachHang(@RequestParam(required = false) String name,
-                                           @RequestParam(required = false) String phone) {
-        // Nếu cả hai đều null, trả về danh sách rỗng
-        if (name == null && phone == null) {
-            return Collections.emptyList();
-        }
-        return khachHangService.searchByNameAndPhone(name, phone); // Tìm kiếm khách hàng theo tên hoặc số điện thoại
-    }
-
-    @PostMapping("/api/khach-hang/save")
-    public ResponseEntity<KhachHang> saveKh(@RequestBody KhachHang khachHang) {
-        KhachHang savedKhachHang = khachHangRepository.save(khachHang);
-        return ResponseEntity.ok(savedKhachHang);
-    }
-
     @Autowired
     private GioHangService gioHangService;
 
@@ -79,6 +58,47 @@ public class KhachHangController {
 
     @Autowired
     private SanPhamChiTietService sanPhamChiTietService;
+
+    @GetMapping("/khach-hang/hien-thi")
+    public String hienThiDanhSachKhachHang(Model model) {
+        List<KhachHang> listKh = khachHangRepository.findAll(); // Lấy danh sách khách hàng
+        model.addAttribute("listKh", listKh);
+        return "customer/khach-hang";
+    }
+
+    // Tìm kiếm khách hàng theo tên và số điện thoại
+    @GetMapping("/api/khach-hang/search")
+    @ResponseBody
+    public List<KhachHang> searchKhachHang(@RequestParam(required = false) String name,
+                                           @RequestParam(required = false) String phone) {
+        try {
+            if ((name == null || name.isEmpty()) && (phone == null || phone.isEmpty())) {
+                return Collections.emptyList(); // Trả về danh sách rỗng nếu không có điều kiện tìm kiếm
+            }
+            return khachHangService.searchByNameAndPhone(name, phone); // Tìm khách hàng
+        } catch (Exception e) {
+            // log.error("Error in searchKhachHang: ", e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Lỗi tìm kiếm khách hàng");
+        }
+    }
+
+    // Lưu khách hàng mới hoặc cập nhật khách hàng
+    @PostMapping("/api/khach-hang/save")
+    public ResponseEntity<KhachHang> saveKh(@RequestBody KhachHang khachHang) {
+        try {
+            // Kiểm tra dữ liệu hợp lệ trước khi lưu
+            if (khachHang.getTen() == null || khachHang.getSdt() == null) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tên và số điện thoại không thể để trống");
+            }
+            KhachHang savedKhachHang = khachHangRepository.save(khachHang); // Lưu khách hàng
+            return ResponseEntity.ok(savedKhachHang);
+        } catch (Exception e) {
+            // log.error("Error saving KhachHang: ", e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Lỗi khi lưu khách hàng");
+        }
+    }
+
+
 
     @GetMapping("/khach-hang/don-hang/danh-sach")
     public String danhSachDonHang(@AuthenticationPrincipal UserDetails userDetails, Model model) {
