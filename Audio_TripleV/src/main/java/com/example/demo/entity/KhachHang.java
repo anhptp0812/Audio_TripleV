@@ -52,6 +52,6 @@ public class KhachHang {
     @JsonIgnore
     private GioHang gioHang;
 
-    @OneToMany(mappedBy = "khachHang") // Quan hệ 1-N với bảng comments
-    private List<Comment> comments;
+//    @OneToMany(mappedBy = "khachHang") // Quan hệ 1-N với bảng comments
+//    private List<Comment> comments;
 }

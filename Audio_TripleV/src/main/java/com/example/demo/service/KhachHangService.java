@@ -42,14 +42,15 @@ public class KhachHangService {
 
     // Tìm kiếm khách hàng theo tên và số điện thoại
     public List<KhachHang> searchByNameAndPhone(String name, String phone) {
+        if (name == null && phone == null) {
+            return List.of(); // Nếu cả tên và số điện thoại đều null, trả về danh sách rỗng
+        }
         if (name != null && phone != null) {
             return khachHangRepository.findByTenContainingAndSdtContaining(name, phone);
         } else if (name != null) {
             return khachHangRepository.findByTenContaining(name);
-        } else if (phone != null) {
-            return khachHangRepository.findBySdtContaining(phone);
         } else {
-            return List.of(); // Nếu không có điều kiện tìm kiếm nào, trả về danh sách rỗng
+            return khachHangRepository.findBySdtContaining(phone);
         }
     }
 
@@ -75,6 +76,7 @@ public class KhachHangService {
         return khachHangRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Khách hàng không tồn tại"));
     }
+
     public Optional<KhachHang> findCustomerByPhone(String phone) {
         return khachHangRepository.findBySdt(phone);
     }
@@ -89,5 +91,3 @@ public class KhachHangService {
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy khách hàng"));
     }
 }
-
-
