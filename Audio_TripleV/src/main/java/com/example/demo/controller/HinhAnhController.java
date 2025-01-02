@@ -22,7 +22,7 @@ import java.nio.file.Paths;
 import java.util.Date;
 
 @Controller
-@RequestMapping("/hinh-anh")
+@RequestMapping("/admin/hinh-anh")
 public class HinhAnhController {
 
     @Autowired

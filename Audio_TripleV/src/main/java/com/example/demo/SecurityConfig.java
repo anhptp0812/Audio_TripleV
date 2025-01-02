@@ -51,24 +51,37 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())  // Tắt CSRF (nếu cần)
+                .csrf(csrf -> csrf.disable())  // Tắt CSRF nếu không cần
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/static/**", "/css/**", "/js/**", "/images/**").permitAll()
-//                        .requestMatchers("/trang-chu/hien-thi/**", "/san-pham/hien-thi/**").permitAll()
-                        .requestMatchers("/admin/**").hasAuthority("ADMIN")  // Chỉ ADMIN truy cập
+                        // Các URL public
+                        .requestMatchers( "/static/**", "/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers("/khach-hang/trang-chu/hien-thi", "/khach-hang/san-pham/**",
+                                "/khach-hang/bai-viet/**", "khach-hang/lien-he/**").permitAll()
+                        // Các URL cần quyền cụ thể
+                        .requestMatchers("/admin/**").hasAuthority("ADMIN")
                         .requestMatchers("/user/**").hasAuthority("USER")
                         .requestMatchers("/khach-hang/**").hasAuthority("KHACHHANG")
+
+                        // Tất cả các yêu cầu khác cần xác thực
                         .anyRequest().authenticated()
                 )
                 .formLogin(login -> login
-                        .loginPage("/login")  // Đảm bảo URL đăng nhập hợp lệ
-                        .successHandler(customAuthenticationSuccessHandler()) // Chỉ định trang thành công sau khi đăng nhập
-                        .failureUrl("/login?error=true")  // Đường dẫn nếu đăng nhập thất bại
-                        .permitAll()  // Cho phép tất cả truy cập vào trang đăng nhập
+                        .loginPage("/login")  // Đường dẫn trang đăng nhập
+                        .successHandler(customAuthenticationSuccessHandler())  // Xử lý khi đăng nhập thành công
+                        .failureUrl("/login?error=true")  // Xử lý khi đăng nhập thất bại
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout") // URL logout
+                        .logoutSuccessUrl("/khach-hang/trang-chu/hien-thi") // Chuyển hướng về trang chủ sau khi logout
+                        .permitAll() // Cho phép tất cả truy cập vào trang logout
                 );
 
+
         return http.build();
+    }
+
 
     }
-}
+
 
