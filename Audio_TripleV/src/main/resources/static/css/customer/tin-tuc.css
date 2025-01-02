@@ -513,3 +513,36 @@ h2 {
 .no-underline {
     text-decoration: none;
 }
+
+/* Đổi màu chữ và bỏ gạch chân cho tiêu đề BÀI VIẾT */
+.article-link {
+    color: #333;
+    text-decoration: none;
+}
+
+.article-link:hover {
+    color: #0d6efd;
+    text-decoration: underline;
+}
+
+/* Đặt viền và thêm khoảng cách giữa các bài viết */
+.article-border {
+    border: 1px solid #ddd; /* Màu viền */
+    border-radius: 5px; /* Bo góc */
+    padding: 15px; /* Khoảng cách bên trong */
+    margin-bottom: 20px; /* Khoảng cách giữa các bài viết */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Hiệu ứng bóng mờ */
+    background-color: #fff; /* Nền trắng */
+}
+
+/* Đảm bảo hình ảnh co dãn đúng */
+.post img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Hover cho bài viết */
+.article-border:hover {
+    border-color: #007bff; /* Đổi màu viền khi hover */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Tăng hiệu ứng bóng mờ */
+}

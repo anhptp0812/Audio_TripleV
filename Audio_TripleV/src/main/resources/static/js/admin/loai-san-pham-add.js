@@ -6,9 +6,6 @@ function addLoaiSP() {
         type: 'POST',
         contentType: 'application/json', // Đặt type content là JSON
         data: JSON.stringify({ kieuDang: kieuDang }), // Chuyển đổi dữ liệu thành chuỗi JSON
-        beforeSend: function() {
-            $('body').append('<div class="loading">Đang xử lý...</div>');
-        },
         success: function(response) {
             alert('Thêm loại sản phẩm thành công!');
             window.location.href = '/loai-san-pham/hien-thi'; // Chuyển hướng về trang danh sách màu sắc

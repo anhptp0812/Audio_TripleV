@@ -139,12 +139,16 @@
                 <p style="padding-right: 10px">Xin chào, <span th:text="${fullName}">Tên người dùng</span>!</p>
                 <a href="#" class="me-3"><i class="fas fa-search"></i></a>
 
-                <a href="#" class="me-3" id="user-icon"><i class="fas fa-user"></i></a>
-                <!-- Dropdown menu -->
-                <div id="user-dropdown" class="dropdown-menu">
-                    <a href="/khach-hang/thong-tin" class="dropdown-item">Thông tin tài khoản</a>
-                    <a href="/khach-hang/don-hang/danh-sach" class="dropdown-item">Đơn hàng của tôi</a>
-                    <a href="/logout" class="dropdown-item">Đăng xuất</a>
+                <!-- Dropdown tài khoản -->
+                <div class="dropdown">
+                    <a href="#" class="me-3 text-light" id="user-icon" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user"></i>
+                    </a>
+                    <ul id="user-dropdown" class="dropdown-menu">
+                        <li><a href="/khach-hang/thong-tin" class="dropdown-item">Thông tin tài khoản</a></li>
+                        <li><a href="/khach-hang/don-hang/danh-sach" class="dropdown-item">Đơn hàng của tôi</a></li>
+                        <li><a href="/logout" class="dropdown-item text-danger" onclick="return confirm('Bạn có chắc muốn đăng xuất không?')">Đăng xuất</a></li>
+                    </ul>
                 </div>
 
                 <a id="cart-icon" class="cart-icon" href="/khach-hang/gio-hang/hien-thi">

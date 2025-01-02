@@ -18,6 +18,30 @@ public class KhachHangService {
     @Autowired
     private KhachHangRepository khachHangRepository;
 
+    // Phương thức lấy danh sách tất cả khách hàng
+    public List<KhachHang> layTatCaKhachHang() {
+        return khachHangRepository.findAll();
+    }
+    // Thêm khách hàng
+    public void themKhachHang(KhachHang khachHang) {
+        khachHangRepository.save(khachHang);
+    }
+
+    // Lấy khách hàng theo ID
+    public KhachHang layKhachHangTheoId(Integer id) {
+        Optional<KhachHang> khachHang = khachHangRepository.findById(id);
+        return khachHang.orElse(null);
+    }
+
+    // Sửa khách hàng
+    public void suaKhachHang(KhachHang khachHang) {
+        khachHangRepository.save(khachHang);
+    }
+
+    public List<String> getAllRoles() {
+        List<String> roles = khachHangRepository.findAllRoles(); // Truy vấn tất cả vai trò từ bảng
+        return roles;
+    }
     // Lưu hoặc cập nhật thông tin khách hàng
     @Transactional
     public KhachHang save(KhachHang khachHang) {

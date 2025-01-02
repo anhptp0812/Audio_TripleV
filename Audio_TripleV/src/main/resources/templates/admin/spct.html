@@ -10,7 +10,6 @@
           rel="stylesheet">
     <link th:href="@{/css/admin/spct.css}" rel="stylesheet">
 </head>
-
 <body>
 
 <th:block th:replace="~{/nhanvien/fragments :: nhan-vien-header}"/>
@@ -22,13 +21,22 @@
         <button class="btn btn-outline-light me-2" type="button" onclick="toggleSearchInput()">
             <i class="bi bi-search"></i>
         </button>
-        <a class="btn btn-outline-light" href="#">
-            <i class="bi bi-person-circle"></i>
-        </a>
+        <!-- Dropdown tài khoản -->
+        <div class="dropdown">
+            <a class="btn btn-outline-light me-3" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown"
+               aria-expanded="false">
+                <i class="bi bi-person-circle"></i>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="accountDropdown">
+                <li><a class="dropdown-item" href="/user/thong-tin">Thông tin tài khoản</a></li>
+                <li><a class="dropdown-item text-danger" href="/logout"
+                       onclick="return confirm('Bạn có chắc muốn đăng xuất không?')">Đăng xuất</a></li>
+            </ul>
+        </div>
     </div>
     <div class="spct-form">
         <div class="spct-details text-center">
-            <h5 id="tableTitle">Danh sách sản phẩm</h5>
+            <h2 id="tableTitle">Danh sách sản phẩm</h2>
             <a id="nutThem" href="/spct/form-add" class="btn btn-success w-100">
                 <i class="bi bi-plus-circle"></i>
             </a>
@@ -43,7 +51,7 @@
                     <th>Đơn Giá</th>
                     <th>Số Lượng</th>
                     <th>Trạng Thái</th>
-<!--                    <th>Mô tả</th>-->
+                    <th>Mô tả</th>
                     <th>Ngày Tạo</th>
                     <th>Ngày Cập Nhật</th>
                     <th>Hành Động</th>
@@ -60,7 +68,7 @@
                     <td th:text="${spct.formattedDonGia + ' đ'}"></td>
                     <td th:text="${spct.soLuong}"></td>
                     <td th:text="${spct.trangThai}"></td>
-<!--                    <td th:text="${spct.moTa}"></td>-->
+                    <td th:text="${spct.moTa}"></td>
                     <td th:text="${#dates.format(spct.ngayTao, 'yyyy-MM-dd')}"></td>
                     <td th:text="${#dates.format(spct.ngayCapNhat, 'yyyy-MM-dd')}"></td>
                     <td>

@@ -29,6 +29,36 @@ public class NhanVienService implements UserDetailsService{
     @Autowired
     private final KhachHangRepository khachHangRepository;
 
+    // Lấy danh sách tất cả nhân viên
+    public List<NhanVien> getAllNhanViens() {
+        return nhanVienRepo.findAll(); // Trả về danh sách tất cả nhân viên
+    }
+    public void saveNhanVien(NhanVien nhanVien) {
+        nhanVienRepo.save(nhanVien); // Lưu nhân viên vào cơ sở dữ liệu
+    }
+
+    // Phương thức lấy thông tin nhân viên theo id
+    public NhanVien layNhanVienTheoId(Integer id) {
+        return nhanVienRepo.findById(id).orElse(null);
+    }
+
+    // Phương thức cập nhật thông tin nhân viên
+    public void suaNhanVien(NhanVien nhanVien) {
+        nhanVienRepo.save(nhanVien); // Lưu thông tin nhân viên đã sửa
+    }
+    public List<String> getAllRoles() {
+        List<String> roles = nhanVienRepo.findAllRoles(); // Truy vấn tất cả vai trò từ bảng
+        return roles;
+    }
+    // Xóa nhân viên theo ID
+    public void xoaNhanVien(Integer id) {
+        // Kiểm tra nếu nhân viên tồn tại
+        Optional<NhanVien> nhanVienOptional = nhanVienRepo.findById(id);
+        if (nhanVienOptional.isPresent()) {
+            nhanVienRepo.deleteById(id); // Xóa nhân viên
+        }
+    }
+
     public NhanVienService(NhanVienRepo nhanVienRepo, KhachHangRepository khachHangRepository) {
         this.nhanVienRepo = nhanVienRepo;
         this.khachHangRepository = khachHangRepository;
@@ -95,8 +125,6 @@ public class NhanVienService implements UserDetailsService{
             return null;
     }
 
-
-
     public List<NhanVien> layTatCaNhanVien() {
         return nhanVienRepo.findAll(); // Lấy tất cả nhân viên từ cơ sở dữ liệu
     }
@@ -106,5 +134,9 @@ public class NhanVienService implements UserDetailsService{
 
     public Optional<NhanVien> findByTaiKhoan(String username) {
         return nhanVienRepo.findByUsername(username);
+    }
+
+    public void save(NhanVien nhanVien) {
+        nhanVienRepo.save(nhanVien);
     }
 }
