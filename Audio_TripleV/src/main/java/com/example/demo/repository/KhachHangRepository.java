@@ -28,10 +28,10 @@ public interface KhachHangRepository extends JpaRepository<KhachHang, Integer> {
     Optional<Object> findByTen(String ten);
     @Query("SELECT DISTINCT k.role FROM KhachHang k")
     List<String> findAllRoles();  // Truy vấn tất cả các vai trò
-
-
-    // Tìm khách hàng theo tên (chính xác)
-    Optional<KhachHang> findByTen(String ten);
+//
+//
+//    // Tìm khách hàng theo tên (chính xác)
+//    Optional<KhachHang> findByTen(String ten);
 
 }
 
