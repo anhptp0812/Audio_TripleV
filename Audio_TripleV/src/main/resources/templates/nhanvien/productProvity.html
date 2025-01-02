@@ -21,17 +21,19 @@
         <button class="btn btn-outline-light me-2" type="button" onclick="toggleSearchInput()">
             <i class="bi bi-search"></i>
         </button>
-        <a class="btn btn-outline-light"  id="user-icon" href="#">
+        <!-- Dropdown tài khoản -->
+        <div class="dropdown">
+            <a class="btn btn-outline-light me-3" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown"
+               aria-expanded="false">
                 <i class="bi bi-person-circle"></i>
-            <div id="user-dropdown" class="dropdown-menu btn btn-outline-light">
-                <a href="/user/thong-tin" class="dropdown-item">Thông tin tài khoản</a>
-                <a href="/logout" class="dropdown-item">Đăng xuất</a>
-            </div>
-        </a>
-
-
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="accountDropdown">
+                <li><a class="dropdown-item" href="/user/thong-tin">Thông tin tài khoản</a></li>
+                <li><a class="dropdown-item text-danger" href="/logout"
+                       onclick="return confirm('Bạn có chắc muốn đăng xuất không?')">Đăng xuất</a></li>
+            </ul>
+        </div>
     </div>
-
     <div class="category-container content">
         <div class="product-form">
             <form id="searchForm"

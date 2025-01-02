@@ -6,9 +6,6 @@ function addHang() {
         type: 'POST',
         contentType: 'application/json', // Đặt type content là JSON
         data: JSON.stringify({ ten: tenHang }), // Chuyển đổi dữ liệu thành chuỗi JSON
-        beforeSend: function() {
-            $('body').append('<div class="loading">Đang xử lý...</div>');
-        },
         success: function(response) {
             alert('Thêm hãng thành công!');
             window.location.href = '/hang/hien-thi';

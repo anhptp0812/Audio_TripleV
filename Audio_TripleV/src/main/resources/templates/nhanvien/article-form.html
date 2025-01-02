@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Thêm/Sửa Bài Viết</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.9.1/font/bootstrap-icons.min.css">
+    <!--    <link rel="stylesheet" href="/src/main/resources/static/css/admin/donHang.css">-->
+    <link th:href="@{/css/nhanvien/article.css}" rel="stylesheet">
+</head>
+<body>
+
+<th:block th:replace="~{/nhanvien/fragments :: nhan-vien-header}"/>
+
+<div class="main-container">
+    <div class="header d-flex align-items-center">
+        <input type="text" id="searchInput" class="form-control search-input me-2" placeholder="Tìm kiếm..."
+               style="display: none;">
+        <button class="btn btn-outline-light me-2" type="button" onclick="toggleSearchInput()">
+            <i class="bi bi-search"></i>
+        </button>
+        <!-- Dropdown tài khoản -->
+        <div class="dropdown">
+            <a class="btn btn-outline-light me-3" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown"
+               aria-expanded="false">
+                <i class="bi bi-person-circle"></i>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="accountDropdown">
+                <li><a class="dropdown-item" href="/user/thong-tin">Thông tin tài khoản</a></li>
+                <li><a class="dropdown-item text-danger" href="/logout"
+                       onclick="return confirm('Bạn có chắc muốn đăng xuất không?')">Đăng xuất</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="article-form">
+        <div class="article-details">
+            <div class="text-center">
+                <h1 th:text="${article.id == null ? 'Thêm Bài Viết' : 'Sửa Bài Viết'}"></h1>
+            </div>
+            <form th:action="${article.id == null ? '/user/bai-viet/add' : '/user/bai-viet/update'}"
+                  th:object="${article}"
+                  method="post">
+                <div class="form-group mb-3">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id" th:field="*{id}" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="title" class="form-label">Tiêu Đề</label>
+                    <input type="text" class="form-control" id="title" th:field="*{title}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="imageFile" class="form-label">Chọn Ảnh</label>
+                    <input type="file" class="form-control" id="imageFile" name="imageFile" accept="image/*" required>
+                </div>
+                <div class="mb-3">
+                    <label for="content" class="form-label">Nội Dung</label>
+                    <textarea class="form-control" id="content" rows="5" th:field="*{content}" required></textarea>
+                </div>
+<!--                <div class="form-group">-->
+<!--                    <label for="createdAt" class="form-label">Ngày Tạo:</label>-->
+<!--                    <input type="datetime-local" class="form-control" id="createdAt" name="createdAt" th:field="*{createdAt}" readonly>-->
+<!--                </div>-->
+<!--                <div class="form-group">-->
+<!--                    <label for="updatedAt" class="form-label">Ngày Cập Nhật:</label>-->
+<!--                    <input type="datetime-local" class="form-control" id="updatedAt" name="updatedAt" th:field="*{updatedAt}" readonly>-->
+<!--                </div>-->
+                <div class="text-center mb-3">
+                    <button type="submit" class="btn btn-primary">Lưu</button>
+                    <a href="/user/bai-viet" class="btn btn-secondary">Quay lại</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    <th:block th:replace="~{/nhanvien/fragments :: nhan-vien-footer}"/>
+</div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/nhanvien/hoa-don.js}"></script>
+</html>

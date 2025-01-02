@@ -170,8 +170,7 @@ public class HoaDonController {
         }
         return "redirect:/user/hoa-don"; // Nếu không tìm thấy hóa đơn, quay lại danh sách hóa đơn
     }
-
-
+    
     @GetMapping("/ban-hang")
     public String banHang(@RequestParam(required = false) Integer idLoaiSP,
                           @RequestParam(required = false) Integer idSanPham,
@@ -242,6 +241,7 @@ public class HoaDonController {
 
         return "nhanvien/productProvity";
     }
+
     @GetMapping("/ban-hang/{hoaDonId}")
     public String donHang(@RequestParam(required = false) Integer idLoaiSP,
                           @RequestParam(required = false) Integer idSanPham,

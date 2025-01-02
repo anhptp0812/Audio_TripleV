@@ -22,13 +22,22 @@
         <button class="btn btn-outline-light me-2" type="button" onclick="toggleSearchInput()">
             <i class="bi bi-search"></i>
         </button>
-        <a class="btn btn-outline-light" href="#">
-            <i class="bi bi-person-circle"></i>
-        </a>
+        <!-- Dropdown tài khoản -->
+        <div class="dropdown">
+            <a class="btn btn-outline-light me-3" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown"
+               aria-expanded="false">
+                <i class="bi bi-person-circle"></i>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="accountDropdown">
+                <li><a class="dropdown-item" href="/user/thong-tin">Thông tin tài khoản</a></li>
+                <li><a class="dropdown-item text-danger" href="/logout"
+                       onclick="return confirm('Bạn có chắc muốn đăng xuất không?')">Đăng xuất</a></li>
+            </ul>
+        </div>
     </div>
     <div class="hinhanh-form">
         <div class="hinhanh-details text-center">
-            <h5 id="tableTitle">Hình Ảnh</h5>
+            <h2 id="tableTitle">Hình Ảnh</h2>
             <a id="nutThemHinhAnh" href="/hinh-anh/form-add" class="btn btn-success w-100">
                 <i class="bi bi-plus-circle"></i>
             </a>

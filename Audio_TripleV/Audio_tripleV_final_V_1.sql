@@ -243,6 +243,7 @@ CREATE TABLE SanPhamChiTiet_KhuyenMai (
                                           FOREIGN KEY (ID_Khuyen_Mai) REFERENCES KhuyenMai(ID)
 
 );
+
 CREATE TABLE articles (
                           id INT IDENTITY(1,1) PRIMARY KEY,  -- Mã bài viết
                           title NVARCHAR(255) NOT NULL,      -- Tiêu đề bài viết
@@ -262,47 +263,6 @@ CREATE TABLE comments (
                           FOREIGN KEY (article_id) REFERENCES articles(id),  -- Liên kết với bảng bài viết
                           FOREIGN KEY (ID_Khach_Hang) REFERENCES KhachHang(ID)  -- Liên kết với bảng khách hàng
 );
-
--- Bài viết 1: Tai nghe không dây (True Wireless)
-INSERT INTO articles (title, imageUrl, content)
-VALUES (N'Tai Nghe Không Dây – Trải Nghiệm Âm Thanh Tự Do', 'tainghekhongday.jpg', N'Tai nghe không dây đang ngày càng trở thành lựa chọn hàng đầu của người dùng yêu thích sự tiện lợi và không bị ràng buộc. Với thiết kế nhỏ gọn, không dây, bạn có thể dễ dàng di chuyển, tập thể dục hay tham gia các hoạt động thể thao mà không bị vướng víu. Những mẫu tai nghe này cung cấp chất lượng âm thanh tuyệt vời và khả năng kết nối nhanh chóng với các thiết bị di động, laptop. Dù không có dây nối, tai nghe không dây vẫn giữ được sự ổn định và chất lượng âm thanh cao, mang đến những trải nghiệm âm nhạc tuyệt vời và giúp bạn tập trung hơn vào công việc hoặc sở thích cá nhân.');
-
--- Bài viết 2: Tai nghe over-ear – Âm thanh sống động, thoải mái
-INSERT INTO articles (title, imageUrl, content)
-VALUES (N'Tai Nghe Over-Ear – Trải Nghiệm Âm Thanh Sống Động', 'taingheonear.jpg', N'Tai nghe over-ear (tai nghe ôm trọn tai) mang đến một trải nghiệm âm thanh vượt trội với chất lượng âm thanh chi tiết và sâu lắng. Với thiết kế bao phủ toàn bộ tai, loại tai nghe này giúp giảm thiểu tiếng ồn bên ngoài, cho phép người dùng đắm chìm vào không gian âm nhạc riêng biệt. Bên cạnh đó, với lớp đệm mút dày dặn, tai nghe over-ear rất thoải mái khi sử dụng trong thời gian dài, phù hợp cho những người làm việc lâu giờ hoặc đam mê âm nhạc.');
-
--- Bài viết 3: Tai nghe in-ear – Đặc điểm và ưu điểm nổi bật
-INSERT INTO articles (title, imageUrl, content)
-VALUES (N'Tai Nghe In-Ear – Nhỏ Gọn và Tiện Lợi', 'taingheinaer.jpg', N'Tai nghe inear có thiết kế nhỏ gọn, dễ dàng mang theo và sử dụng trong mọi hoàn cảnh. Với khả năng cách âm tốt, tai nghe in-ear giúp bạn thưởng thức âm nhạc chất lượng cao, ngay cả khi di chuyển trong môi trường ồn ào như xe buýt hay tàu điện. Hầu hết các mẫu tai nghe in-ear hiện nay được trang bị công nghệ chống ồn, giúp giảm thiểu sự phiền toái từ các yếu tố xung quanh. Điều này khiến tai nghe in-ear trở thành lựa chọn lý tưởng cho những ai ưa thích sự tiện lợi và âm thanh chất lượng.');
-
--- Bài viết 4: Tai nghe gaming – Lựa chọn cho game thủ đích thực
-INSERT INTO articles (title, imageUrl, content)
-VALUES (N'Tai Nghe Gaming – Trải Nghiệm Âm Thanh Tối Ưu Cho Game Thủ', 'tainghegameminh.jpg', N'Tai nghe gaming là một phần không thể thiếu đối với các game thủ chuyên nghiệp. Với chất lượng âm thanh vòm 7.1, các tai nghe này mang đến những trải nghiệm game sống động, chân thật, giúp người chơi nhận diện tốt hơn các âm thanh xung quanh như bước chân của đối thủ hay tiếng súng trong game. Tai nghe gaming còn được trang bị mic chống ồn, giúp giao tiếp rõ ràng và hiệu quả trong các trận đấu. Đặc biệt, với thiết kế đặc biệt và đệm tai êm ái, tai nghe gaming không chỉ mang lại sự thoải mái mà còn giúp bạn chơi game lâu mà không bị mỏi tai.');
-
--- Bài viết 5: Cách chọn tai nghe phù hợp với nhu cầu sử dụng
-INSERT INTO articles (title, imageUrl, content)
-VALUES (N'Cách Chọn Tai Nghe Phù Hợp Với Nhu Cầu Của Bạn', 'tuychon.jpg', N'Việc lựa chọn một chiếc tai nghe phù hợp với nhu cầu của mình không phải là điều dễ dàng. Đầu tiên, bạn cần xác định mục đích sử dụng: nghe nhạc, chơi game, tập thể thao hay làm việc. Với mỗi nhu cầu, có những đặc điểm và tính năng khác nhau. Tai nghe không dây phù hợp cho những ai yêu thích sự tiện lợi và di động, trong khi tai nghe over-ear lại thích hợp cho những ai tìm kiếm chất lượng âm thanh cao và trải nghiệm âm thanh sống động. Ngoài ra, bạn cũng cần chú ý đến các yếu tố như khả năng chống ồn, thời gian sử dụng, và độ bền của tai nghe để lựa chọn sản phẩm tốt nhất.');
-
--- Bình luận 1
-INSERT INTO comments (article_id, ID_Khach_Hang, content)
-VALUES (1, 1, N'Bài viết rất hay! Cảm ơn tác giả.');
-
--- Bình luận 2
-INSERT INTO comments (article_id, ID_Khach_Hang, content)
-VALUES (2, 2, N'Tai nghe không dây đúng là một lựa chọn tuyệt vời cho người hay di chuyển, mình đã mua một chiếc và rất hài lòng.');
-
--- Bình luận 3
-INSERT INTO comments (article_id, ID_Khach_Hang, content)
-VALUES (3, 3, N'Tai nghe over-ear rất thích hợp để nghe nhạc chất lượng cao, mình đã thử và cảm thấy âm thanh rất chi tiết.');
-
--- Bình luận 4
-INSERT INTO comments (article_id, ID_Khach_Hang, content)
-VALUES (4, 4, N'Tai nghe inear tiện lợi, nhưng nếu dùng lâu sẽ hơi đau tai. Tuy nhiên, chất lượng âm thanh khá ổn.');
-
--- Bình luận 5
-INSERT INTO comments (article_id, ID_Khach_Hang, content)
-VALUES (5, 5, N'Mình là game thủ, tai nghe gaming thực sự nâng cao trải nghiệm của mình trong các trận đấu, rất khuyến khích mọi người thử!');
-
 
 INSERT INTO LoaiSanPham (KieuDang, NgayTao, NgayCapNhat)
 VALUES
@@ -676,7 +636,7 @@ VALUES
 (21, 2, 8, 32, 4, 9000000 , 50,  N'Còn hàng', GETDATE(), GETDATE()), -- Audio Technica ATH-SQ1TW2
 (22, 25, 13, 25, 4, 9000000 ,  50,  N'Còn hàng', GETDATE(), GETDATE()), -- AG Final Audio Cotsubu MK2
 (23, 10, 12, 29, 4,9000000 ,  50,  N'Còn hàng', GETDATE(), GETDATE()), -- FiiO FH19
-(24, 9, 15, 28, 4,9000000 ,  50,  N'Hết hàng', GETDATE(), GETDATE()),-- Wiwu T22
+(24, 9, 15, 28, 4,9000000 ,  50,  N'Còn hàng', GETDATE(), GETDATE()),-- Wiwu T22
 -----inear
 (14, 7, 11, 14, 4,  9000000 , 50,  N'Còn hàng', GETDATE(), GETDATE()), -- Noble Fokus Tri-umph
 (15, 8, 11, 15, 4,  9000000 , 50,  N'Còn hàng', GETDATE(), GETDATE()), -- Noble XM1 SO
@@ -688,7 +648,7 @@ VALUES
 (21, 2, 8, 32, 4, 9000000 , 50,  N'Còn hàng', GETDATE(), GETDATE()), -- Audio Technica ATH-SQ1TW2
 (27, 20, 13, 25, 4, 9000000 ,  50,  N'Còn hàng', GETDATE(), GETDATE()), -- AG Final Audio Cotsubu ASMR 3D
 (23, 11, 12, 29, 4,9000000 ,  50,  N'Còn hàng', GETDATE(), GETDATE()), -- FiiO FH19
-(24, 9, 15, 28, 4,9000000 ,  50,  N'Hết hàng', GETDATE(), GETDATE()),-- Wiwu T22
+(24, 9, 15, 28, 4,9000000 ,  50,  N'Còn hàng', GETDATE(), GETDATE()),-- Wiwu T22
 (25, 6, 33, 27, 4, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- kinera celest wyvern abyss
 (26, 6, 14, 26, 4, 9000000 ,  50,  N'Còn hàng', GETDATE(), GETDATE()), -- AG Final Audio Cotsubu ASMR MK2
 (28, 8, 4, 21, 4, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Earfun Air Pro 4
@@ -697,55 +657,55 @@ VALUES
 (31, 8, 2, 23, 4, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Sennheiser Momentum Sport Bluetooth
 (32, 8, 17, 20, 4, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Cambridge Audio Melomania 100
 -----onear
-(33, 10, 18, 45, 3, 9000000 ,  50, N'Hết hàng', GETDATE(), GETDATE()), -- JBL Everest 310
-(34, 3, 19, 44, 3,  9000000 ,  50, N'Hết hàng', GETDATE(), GETDATE()), -- Pioneer SE-S3BT
-(35, 8, 8, 43, 3,  9000000 ,  50, N'Hết hàng', GETDATE(), GETDATE()), -- Technica ATH-S200BT
+(33, 10, 18, 45, 3, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- JBL Everest 310
+(34, 3, 19, 44, 3,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Pioneer SE-S3BT
+(35, 8, 8, 43, 3,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Technica ATH-S200BT
 (36, 10, 21, 42, 3,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Earldom ET-BH52
 (37, 8, 22, 41, 3,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Marshall Major IV
 (38, 8, 23, 40, 3,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Skullcandy Riff Wireless 2
-(39, 8, 24, 39, 3,  9000000 ,  50, N'Hết hàng', GETDATE(), GETDATE()), -- Philips TAH420
-(40, 8, 1, 38, 3,  9000000 ,  50, N'Hết hàng', GETDATE(), GETDATE()), -- Sony WH-CH520
-(41, 8, 18, 37, 3,  9000000 ,  50, N'Hết hàng', GETDATE(), GETDATE()), -- JBL Tune 520BT
+(39, 8, 24, 39, 3,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Philips TAH420
+(40, 8, 1, 38, 3,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Sony WH-CH520
+(41, 8, 18, 37, 3,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- JBL Tune 520BT
 (42, 3, 25, 36, 3,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Beats Solo 4
 (43, 8, 22, 35, 3,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Marshall Major V
 -----taingheday
 (44, 8, 26, 47, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Koss Porta Pro
-(45, 10, 12, 48, 2,  9000000 ,  50, N'Hết hàng', GETDATE(), GETDATE()), -- Fiio FA19
-(46, 8, 2, 50, 2,  9000000 ,  50, N'Hết hàng', GETDATE(), GETDATE()), -- Sennheiser HD 490 Pro
+(45, 10, 12, 48, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Fiio FA19
+(46, 8, 2, 50, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Sennheiser HD 490 Pro
 (47, 8, 18, 51, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- JBL Tune 310C
 (48, 8, 11, 52, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Noble Audio XM1
-(49, 8, 11, 53, 2,  9000000 ,  50, N'Hết hàng', GETDATE(), GETDATE()), -- Noble Audio Stage 3
-(50, 22, 27, 54, 2,  9000000 ,  50, N'Hết hàng', GETDATE(), GETDATE()), -- Audeze MM-50
+(49, 8, 11, 53, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Noble Audio Stage 3
+(50, 22, 27, 54, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Audeze MM-50
 (51, 22, 28, 55, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Moondrop U2
 (52, 8, 12, 56, 2, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Fiio JD1
-(53, 22, 12, 57, 2, 9000000 ,  50, N'Hết hàng', GETDATE(), GETDATE()), -- Fiio FD11
+(53, 22, 12, 57, 2, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Fiio FD11
 (54, 8, 26, 58, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Koss KS C35
-(55, 22, 12, 59, 2,  9000000 ,  50, N'Hết hàng', GETDATE(), GETDATE()), -- Fiio JD15
+(55, 22, 12, 59, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Fiio JD15
 (56, 10, 12, 61, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Fiio fh19
 (57, 13	, 15, 63, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Wiwu ktd 01
 (58, 7	, 12, 65, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Fiio ft1
-(59, 9, 29, 66, 2,  9000000 ,  50, N'Hết hàng', GETDATE(), GETDATE()), -- Apple Earpods
+(59, 9, 29, 66, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Apple Earpods
 (60, 13, 5, 67, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Razer Kraken Kitty v2
 (61, 8, 26, 68, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Koss UR20
-(62, 8, 15, 69, 2, 9000000 ,  50, N'Hết hàng', GETDATE(), GETDATE()), -- wiwu eb314
+(62, 8, 15, 69, 2, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- wiwu eb314
 (63, 8, 30, 70, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Ultrasone Signature
-(64, 8, 1, 71, 2, 9000000 ,  50, N'Hết hàng', GETDATE(), GETDATE()), -- Sony MDR-M1
+(64, 8, 1, 71, 2, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Sony MDR-M1
 (65, 22, 30, 72, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Ultrasone Edition 1
 -----true wireless
 (66, 8, 3, 92, 1,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Bowers & Wilkins PI5
 (67, 10, 3, 91, 1,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Bowers & Wilkins PI5 S2
-(68, 21, 2, 90, 1,  9000000 ,  50, N'Hết hàng', GETDATE(), GETDATE()), -- Sennheiser Momentum True Wireless 4
+(68, 21, 2, 90, 1,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Sennheiser Momentum True Wireless 4
 (69, 8, 31, 89, 1,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Bose QuietComfort Earbuds
 (70, 1, 25, 88, 1,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Beats Solo Buds
 (71, 25, 14, 87, 1,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- AG Final Audio
-(72, 8, 4, 85, 1, 9000000 ,  50, N'Hết hàng', GETDATE(), GETDATE()), -- Earfun Air Pro 4
+(72, 8, 4, 85, 1, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Earfun Air Pro 4
 (73, 8, 9, 84, 1,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Soundpeats Air 5
-(74, 3, 11, 82, 1,  9000000 ,  50, N'Hết hàng', GETDATE(), GETDATE()), -- Noble Fokus
+(74, 3, 11, 82, 1,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Noble Fokus
 (75, 4, 1, 81, 1,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- sony WF-C510
 (76, 8, 3, 80, 1, 9000000 ,  50,  N'Còn hàng', GETDATE(), GETDATE()), -- Bowers & Wilkins PI6
 (77, 8, 3, 79, 1, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Bowers & Wilkins PI8
 (78, 9, 29, 78, 1, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Apple AirPods 4
-(79, 8, 15, 76, 1, 9000000 ,  50, N'Hết hàng', GETDATE(), GETDATE()), -- Wiwu T28
+(79, 8, 15, 76, 1, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Wiwu T28
 (80, 8, 32, 75, 1, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Cleer Arc 3 Sport
 (81, 8, 17, 73, 1, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Cambridge Audio Melomania 100
 (82, 8, 32, 74, 1, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()); -- Cleer Arc 3
@@ -756,6 +716,25 @@ VALUES
 (N'Giảm 20% cho đơn hàng trên 30 triệu', 20.00, 'percent', '2024-12-15 00:00:00', '2025-01-15 23:59:59', GETDATE(), GETDATE()),
 (N'Giảm 10% cho đơn hàng trên 500k', 10.00, 'amount', '2024-12-01 00:00:00', '2024-12-31 23:59:59', GETDATE(), GETDATE()),
 (N'Giảm 50k cho đơn hàng trên 300k', 50000.00, 'amount', '2024-12-15 00:00:00', '2025-01-15 23:59:59', GETDATE(), GETDATE());
+
+
+-- Bài viết
+INSERT INTO articles (title, imageUrl, content)
+VALUES 
+(N'Tai Nghe Không Dây – Trải Nghiệm Âm Thanh Tự Do', 'tainghekhongday.jpg', N'Tai nghe không dây đang ngày càng trở thành lựa chọn hàng đầu của người dùng yêu thích sự tiện lợi và không bị ràng buộc. Với thiết kế nhỏ gọn, không dây, bạn có thể dễ dàng di chuyển, tập thể dục hay tham gia các hoạt động thể thao mà không bị vướng víu. Những mẫu tai nghe này cung cấp chất lượng âm thanh tuyệt vời và khả năng kết nối nhanh chóng với các thiết bị di động, laptop. Dù không có dây nối, tai nghe không dây vẫn giữ được sự ổn định và chất lượng âm thanh cao, mang đến những trải nghiệm âm nhạc tuyệt vời và giúp bạn tập trung hơn vào công việc hoặc sở thích cá nhân.'),
+(N'Tai Nghe Over-Ear – Trải Nghiệm Âm Thanh Sống Động', 'taingheonear.jpg', N'Tai nghe over-ear (tai nghe ôm trọn tai) mang đến một trải nghiệm âm thanh vượt trội với chất lượng âm thanh chi tiết và sâu lắng. Với thiết kế bao phủ toàn bộ tai, loại tai nghe này giúp giảm thiểu tiếng ồn bên ngoài, cho phép người dùng đắm chìm vào không gian âm nhạc riêng biệt. Bên cạnh đó, với lớp đệm mút dày dặn, tai nghe over-ear rất thoải mái khi sử dụng trong thời gian dài, phù hợp cho những người làm việc lâu giờ hoặc đam mê âm nhạc.'),
+(N'Tai Nghe In-Ear – Nhỏ Gọn và Tiện Lợi', 'taingheinaer.jpg', N'Tai nghe inear có thiết kế nhỏ gọn, dễ dàng mang theo và sử dụng trong mọi hoàn cảnh. Với khả năng cách âm tốt, tai nghe in-ear giúp bạn thưởng thức âm nhạc chất lượng cao, ngay cả khi di chuyển trong môi trường ồn ào như xe buýt hay tàu điện. Hầu hết các mẫu tai nghe in-ear hiện nay được trang bị công nghệ chống ồn, giúp giảm thiểu sự phiền toái từ các yếu tố xung quanh. Điều này khiến tai nghe in-ear trở thành lựa chọn lý tưởng cho những ai ưa thích sự tiện lợi và âm thanh chất lượng.'),
+(N'Tai Nghe Gaming – Trải Nghiệm Âm Thanh Tối Ưu Cho Game Thủ', 'tainghegameminh.jpg', N'Tai nghe gaming là một phần không thể thiếu đối với các game thủ chuyên nghiệp. Với chất lượng âm thanh vòm 7.1, các tai nghe này mang đến những trải nghiệm game sống động, chân thật, giúp người chơi nhận diện tốt hơn các âm thanh xung quanh như bước chân của đối thủ hay tiếng súng trong game. Tai nghe gaming còn được trang bị mic chống ồn, giúp giao tiếp rõ ràng và hiệu quả trong các trận đấu. Đặc biệt, với thiết kế đặc biệt và đệm tai êm ái, tai nghe gaming không chỉ mang lại sự thoải mái mà còn giúp bạn chơi game lâu mà không bị mỏi tai.'),
+(N'Cách Chọn Tai Nghe Phù Hợp Với Nhu Cầu Của Bạn', 'tuychon.jpg', N'Việc lựa chọn một chiếc tai nghe phù hợp với nhu cầu của mình không phải là điều dễ dàng. Đầu tiên, bạn cần xác định mục đích sử dụng: nghe nhạc, chơi game, tập thể thao hay làm việc. Với mỗi nhu cầu, có những đặc điểm và tính năng khác nhau. Tai nghe không dây phù hợp cho những ai yêu thích sự tiện lợi và di động, trong khi tai nghe over-ear lại thích hợp cho những ai tìm kiếm chất lượng âm thanh cao và trải nghiệm âm thanh sống động. Ngoài ra, bạn cũng cần chú ý đến các yếu tố như khả năng chống ồn, thời gian sử dụng, và độ bền của tai nghe để lựa chọn sản phẩm tốt nhất.');
+
+-- Bình luận
+INSERT INTO comments (article_id, ID_Khach_Hang, content)
+VALUES 
+(1, 1, N'Bài viết rất hay! Cảm ơn tác giả.'),
+(2, 2, N'Tai nghe không dây đúng là một lựa chọn tuyệt vời cho người hay di chuyển, mình đã mua một chiếc và rất hài lòng.'),
+(3, 3, N'Tai nghe over-ear rất thích hợp để nghe nhạc chất lượng cao, mình đã thử và cảm thấy âm thanh rất chi tiết.'),
+(4, 4, N'Tai nghe inear tiện lợi, nhưng nếu dùng lâu sẽ hơi đau tai. Tuy nhiên, chất lượng âm thanh khá ổn.'),
+(5, 5, N'Mình là game thủ, tai nghe gaming thực sự nâng cao trải nghiệm của mình trong các trận đấu, rất khuyến khích mọi người thử!');
 
 
 select * from SanPham

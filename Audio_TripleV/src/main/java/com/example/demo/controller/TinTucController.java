@@ -1,8 +1,10 @@
 package com.example.demo.controller;
 
+import com.example.demo.entity.Article;
 import com.example.demo.entity.GioHang;
 import com.example.demo.entity.KhachHang;
 import com.example.demo.entity.SanPhamChiTiet;
+import com.example.demo.service.ArticleService;
 import com.example.demo.service.GioHangService;
 import com.example.demo.service.KhachHangService;
 import com.example.demo.service.SanPhamChiTietService;
@@ -32,6 +34,10 @@ public class TinTucController {
 
     @Autowired
     GioHangService gioHangService;
+
+    @Autowired
+    private ArticleService articleService;
+
 
     @GetMapping("/trang-chu/hien-thi")
     public String showTop4SanPhamMoiAndSanPhamXemNhieuNhat(@AuthenticationPrincipal UserDetails userDetails, Model model) {
@@ -68,7 +74,8 @@ public class TinTucController {
         for (SanPhamChiTiet product : sanPhamChiTietList) {
             product.setFormattedDonGia(currencyFormat.format(product.getDonGia()));
         }
-
+        List<Article> articles = articleService.findTop2NewestProducts();
+        model.addAttribute("articles", articles);
         model.addAttribute("sanPhamChiTietList1", sanPhamChiTietList);
 
         return "customer/tin-tuc";

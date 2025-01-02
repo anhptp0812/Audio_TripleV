@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tin Tức</title>
-    <!-- Link to Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link th:href="@{/css/customer/tin-tuc.css}" rel="stylesheet">
 </head>
 <body>
@@ -40,12 +39,16 @@
                 <p style="padding-right: 10px">Xin chào, <span th:text="${fullName}">Tên người dùng</span>!</p>
                 <a href="#" class="me-3"><i class="fas fa-search"></i></a>
 
-                <a href="#" class="me-3" id="user-icon"><i class="fas fa-user"></i></a>
-                <!-- Dropdown menu -->
-                <div id="user-dropdown" class="dropdown-menu">
-                    <a href="/khach-hang/thong-tin" class="dropdown-item">Thông tin tài khoản</a>
-                    <a href="/khach-hang/don-hang/danh-sach" class="dropdown-item">Đơn hàng của tôi</a>
-                    <a href="/logout" class="dropdown-item">Đăng xuất</a>
+                <!-- Dropdown tài khoản -->
+                <div class="dropdown">
+                    <a href="#" class="me-3 text-light" id="user-icon" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user"></i>
+                    </a>
+                    <ul id="user-dropdown" class="dropdown-menu">
+                        <li><a href="/khach-hang/thong-tin" class="dropdown-item">Thông tin tài khoản</a></li>
+                        <li><a href="/khach-hang/don-hang/danh-sach" class="dropdown-item">Đơn hàng của tôi</a></li>
+                        <li><a href="/logout" class="dropdown-item text-danger" onclick="return confirm('Bạn có chắc muốn đăng xuất không?')">Đăng xuất</a></li>
+                    </ul>
                 </div>
 
                 <a id="cart-icon" class="cart-icon" href="/khach-hang/gio-hang/hien-thi">
@@ -236,48 +239,23 @@
 
 <div class="container">
     <div class="main-title">
-        <h2>TIN TỨC</h2>
+        <h2><a href="/khach-hang/bai-viet/hien-thi" class="article-link">BÀI VIẾT</a></h2>
     </div>
     <div class="row">
-        <div class="col-lg-6">
-            <div class="box">
-                <div class="img defer lazied"
-                     data-style="background-image: url(https://3kshop.vn/wp-content/uploads/fly-images/59162/8434472_3-d-500x309-c.jpg)"
-                     style="background-image: url(https://3kshop.vn/wp-content/uploads/fly-images/59162/8434472_3-d-500x309-c.jpg)">
-                    <a href="https://3kshop.vn/sony-ra-mat-wf-c510-true-wireless-gia-re-chi-59/">
-                    </a>
-                </div>
-                <div class="box-content">
-                    <h5 class="title">
-                        <a href="https://3kshop.vn/sony-ra-mat-wf-c510-true-wireless-gia-re-chi-59/">
-                            Sony ra mắt WF-C510, true wireless giá rẻ chỉ $59 </a>
-                    </h5>
-                    <p class="description">
-                        Đây là&nbsp;true wireless&nbsp;mới nhất của&nbsp;Sony&nbsp;với 4 màu sắc: đen, xanh, trắng,
-                        vàng. Sản phẩm sở... </p>
-                    <a class="btn-a" href="https://3kshop.vn/sony-ra-mat-wf-c510-true-wireless-gia-re-chi-59/">Xem
-                        thêm</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-6">
-            <div class="box">
-                <div class="img defer lazied"
-                     data-style="background-image: url(https://3kshop.vn/wp-content/uploads/fly-images/59083/Beyerdynamic-MMX-300-Pro-500x309-c.jpg)"
-                     style="background-image: url(https://3kshop.vn/wp-content/uploads/fly-images/59083/Beyerdynamic-MMX-300-Pro-500x309-c.jpg)">
-                    <a href="https://3kshop.vn/beyerdynamic-mmx-300-pro-tai-nghe-chuyen-dung-cho-gaming-gia-300/">
-                    </a>
-                </div>
-                <div class="box-content">
-                    <h5 class="title">
-                        <a href="https://3kshop.vn/beyerdynamic-mmx-300-pro-tai-nghe-chuyen-dung-cho-gaming-gia-300/">
-                            Beyerdynamic MMX 300 Pro – tai nghe chuyên dùng cho gaming, giá $300 </a>
-                    </h5>
-                    <p class="description">
-                        Beyerdynamic cho biết MMX 300 Pro X mang chất lượng âm thanh studio đến tới... </p>
-                    <a class="btn-a"
-                       href="https://3kshop.vn/beyerdynamic-mmx-300-pro-tai-nghe-chuyen-dung-cho-gaming-gia-300/">Xem
-                        thêm</a>
+        <div th:each="article : ${articles}" class="col-md-6">
+            <div class="post article-border">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img th:src="'/images/tainghe/' + ${article.imageUrl}" alt="Article Image" class="img-fluid"/>
+                    </div>
+                    <div class="col-md-8">
+                        <h2>
+                            <a th:href="@{/khach-hang/bai-viet/{id}(id=${article.id})}" th:text="${article.title}"></a>
+                        </h2>
+                        <p class="post-meta" th:text="${article.createdAt}"></p>
+                        <p th:text="${article.content.substring(0, 100) + '...'}"></p>
+                        <a th:href="@{/khach-hang/bai-viet/{id}(id=${article.id})}" class="btn btn-primary">Xem chi tiết</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -316,7 +294,7 @@
     </div>
 </footer>
 <script th:src="@{/js/customer/tin-tuc.js}"></script>
-<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </body>
 </html>

@@ -15,4 +15,6 @@ public interface NhanVienRepo extends JpaRepository<NhanVien, Integer> {
     Optional<NhanVien> findByUsername(String username);
     List<NhanVien> findByTenContaining(String name);
 
+    @Query("SELECT DISTINCT nv.role FROM NhanVien nv")
+    List<String> findAllRoles();  // Truy vấn tất cả các vai trò
 }

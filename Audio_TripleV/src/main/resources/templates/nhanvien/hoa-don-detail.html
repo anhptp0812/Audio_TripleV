@@ -16,6 +16,25 @@
 <th:block th:replace="~{/nhanvien/fragments :: nhan-vien-header}"/>
 
 <div class="main-container">
+    <div class="header d-flex align-items-center">
+        <input type="text" id="searchInput" class="form-control search-input me-2" placeholder="Tìm kiếm..."
+               style="display: none;">
+        <button class="btn btn-outline-light me-2" type="button" onclick="toggleSearchInput()">
+            <i class="bi bi-search"></i>
+        </button>
+        <!-- Dropdown tài khoản -->
+        <div class="dropdown">
+            <a class="btn btn-outline-light me-3" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown"
+               aria-expanded="false">
+                <i class="bi bi-person-circle"></i>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="accountDropdown">
+                <li><a class="dropdown-item" href="/user/thong-tin">Thông tin tài khoản</a></li>
+                <li><a class="dropdown-item text-danger" href="/logout"
+                       onclick="return confirm('Bạn có chắc muốn đăng xuất không?')">Đăng xuất</a></li>
+            </ul>
+        </div>
+    </div>
     <div class="bill-form">
         <div class="bill-details-1">
             <h2 class="text-center">Chi Tiết Hóa Đơn</h2>

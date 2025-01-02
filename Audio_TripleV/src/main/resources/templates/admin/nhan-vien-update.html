@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sửa Nhân Viên</title>
+    <!-- Thêm link tới Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.9.1/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link th:href="@{/css/admin/nhan-vien.css}" rel="stylesheet">
+</head>
+<body>
+<!-- Header Section -->
+<th:block th:replace="~{/nhanvien/fragments :: nhan-vien-header}"/>
+
+<div class="main-container">
+    <div class="header d-flex align-items-center">
+        <input type="text" id="searchInput" class="form-control search-input me-2" placeholder="Tìm kiếm..."
+               style="display: none;">
+        <button class="btn btn-outline-light me-2" type="button" onclick="toggleSearchInput()">
+            <i class="bi bi-search"></i>
+        </button>
+        <!-- Dropdown tài khoản -->
+        <div class="dropdown">
+            <a class="btn btn-outline-light me-3" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown"
+               aria-expanded="false">
+                <i class="bi bi-person-circle"></i>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="accountDropdown">
+                <li><a class="dropdown-item" href="/user/thong-tin">Thông tin tài khoản</a></li>
+                <li><a class="dropdown-item text-danger" href="/logout"
+                       onclick="return confirm('Bạn có chắc muốn đăng xuất không?')">Đăng xuất</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="staff-form">
+        <div class="staff-details">
+            <div class="text-center">
+                <h1>Sửa Nhân Viên</h1>
+            </div>
+
+            <!-- Form gửi dữ liệu đến phương thức POST của controller -->
+            <form th:action="@{/user/nhan-vien/sua}" method="post">
+                <!-- Hidden input chứa id nhân viên -->
+                <input type="hidden" th:value="${nhanVien.id}" name="id"/>
+
+                <div class="form-group mb-3">
+                    <label for="ten">Tên:</label>
+                    <input type="text" id="ten" name="ten" class="form-control" th:value="${nhanVien.ten}"
+                           required="required"/>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="ngaySinh">Ngày Sinh:</label>
+                    <input type="date" id="ngaySinh" name="ngaySinh" class="form-control"
+                           th:value="${nhanVien.ngaySinh}" required="required"/>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="gioiTinh">Giới Tính:</label>
+                    <select id="gioiTinh" name="gioiTinh" class="form-control" th:value="${nhanVien.gioiTinh}" required="required">
+                        <option value="" disabled selected>Chọn giới tính</option>
+                        <option value="Nam" th:selected="${nhanVien.gioiTinh == 'Nam'}">Nam</option>
+                        <option value="Nữ" th:selected="${nhanVien.gioiTinh == 'Nữ'}">Nữ</option>
+                        <option value="Khác" th:selected="${nhanVien.gioiTinh == 'Khác'}">Khác</option>
+                    </select>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="diaChi">Địa Chỉ:</label>
+                    <input type="text" id="diaChi" name="diaChi" class="form-control" th:value="${nhanVien.diaChi}"
+                           required="required"/>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" class="form-control" th:value="${nhanVien.email}"
+                           required="required"/>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="sdt">Số Điện Thoại:</label>
+                    <input type="text" id="sdt" name="sdt" class="form-control" th:value="${nhanVien.sdt}"
+                           required="required"/>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="role">Vai Trò:</label>
+                    <select class="form-control" id="role" name="role" required>
+                        <option th:each="role : ${roles}"
+                                th:value="${role}"
+                                th:text="${role}"
+                                th:selected="${role == nhanVien.role}"></option>
+                    </select>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="username">Tài Khoản:</label>
+                    <input type="text" id="username" name="username" class="form-control"
+                           th:value="${nhanVien.username}" required="required"/>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="password">Mật Khẩu:</label>
+                    <div class="input-group">
+                        <input type="password" id="password" name="password" class="form-control"
+                               th:value="${nhanVien.password}" required="required"/>
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary toggle-password" type="button" data-target="password">
+                                <i class="fa fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mb-4">
+                    <button type="submit" class="btn btn-primary">Cập Nhật Nhân Viên</button>
+                    <a class="btn btn-secondary" th:href="@{/user/nhan-vien}">Quay Lại</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    <th:block th:replace="~{/nhanvien/fragments :: nhan-vien-footer}"/>
+</div>
+
+<!-- Footer Section -->
+
+<script th:src="@{/js/nhanvien/hoa-don.js}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

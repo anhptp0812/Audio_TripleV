@@ -32,3 +32,22 @@ document.getElementById('manageMenuToggle').addEventListener('click', function (
         this.classList.add('active');
     }
 });
+
+document.querySelectorAll('.toggle-password').forEach(button => {
+    button.addEventListener('click', function () {
+        const targetId = this.getAttribute('data-target'); // Lấy giá trị của thuộc tính data-target
+        const inputField = document.getElementById(targetId); // Tìm input tương ứng
+        const toggleIcon = this.querySelector('i'); // Tìm icon bên trong button
+
+        // Thay đổi trạng thái hiển thị mật khẩu
+        if (inputField.type === 'password') {
+            inputField.type = 'text'; // Hiển thị mật khẩu
+            toggleIcon.classList.remove('fa-eye'); // Đổi icon
+            toggleIcon.classList.add('fa-eye-slash');
+        } else {
+            inputField.type = 'password'; // Ẩn mật khẩu
+            toggleIcon.classList.remove('fa-eye-slash'); // Đổi icon
+            toggleIcon.classList.add('fa-eye');
+        }
+    });
+});

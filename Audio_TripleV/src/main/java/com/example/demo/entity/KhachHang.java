@@ -46,12 +46,18 @@ public class KhachHang {
     private Boolean isRegistered;
 
     @Column(name = "NgayDangKy")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date ngayDangKy;
+
+    @PrePersist
+    public void setNgayDangKy() {
+        this.ngayDangKy = new Date(); // Gán ngày giờ hiện tại khi tạo khách hàng
+    }
 
     @OneToOne(mappedBy = "khachHang", cascade = CascadeType.ALL)
     @JsonIgnore
     private GioHang gioHang;
 
-    @OneToMany(mappedBy = "khachHang") // Quan hệ 1-N với bảng comments
-    private List<Comment> comments;
+//    @OneToMany(mappedBy = "khachHang",cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true) // Quan hệ 1-N với bảng comments
+//    private List<Comment> comments;
 }

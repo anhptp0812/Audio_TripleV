@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.Date;
+
 @Controller
 @RequestMapping("/khach-hang")
 public class CommentController {
@@ -27,7 +29,7 @@ public class CommentController {
 
     // Xử lý gửi bình luận
     @PostMapping("/bai-viet/{id}/comment")
-    public String addComment(@PathVariable("id") Long articleId, String content) {
+    public String addComment(@PathVariable("id") Integer articleId, String content) {
         Article article = articleService.getArticleById(articleId);
         KhachHang khachHang = khachHangService.getCurrentUser(); // Giả sử có hàm này để lấy người dùng hiện tại
 
@@ -35,6 +37,7 @@ public class CommentController {
         comment.setArticle(article);
         comment.setKhachHang(khachHang);
         comment.setContent(content);
+        comment.setCreatedAt(new Date());
         commentService.saveComment(comment);
 
         return "redirect:/khach-hang/bai-viet/{id}";

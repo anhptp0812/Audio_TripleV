@@ -2,7 +2,6 @@ package com.example.demo.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -14,7 +13,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -37,7 +35,10 @@ public class Comment {
     @JoinColumn(name = "ID_Khach_Hang")
     private KhachHang khachHang; // Khách hàng (tác giả bình luận)
 
+    @Column(name = "content", columnDefinition = "NVARCHAR(MAX)")
     private String content; // Nội dung bình luận
+
+    @Column(name = "created_at")
     private Date createdAt;  // Ngày giờ tạo bình luận
 
 }
