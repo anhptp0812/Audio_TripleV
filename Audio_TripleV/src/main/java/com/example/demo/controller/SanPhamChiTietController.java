@@ -38,7 +38,7 @@ import java.util.Map;
 
 
 @Controller
-@RequestMapping("/admin/spct")
+@RequestMapping("/spct")
 public class SanPhamChiTietController {
 
     @Autowired

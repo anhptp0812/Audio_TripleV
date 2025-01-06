@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.Date;
 
 @Controller
-@RequestMapping("/admin/mau-sac")
+@RequestMapping("/mau-sac")
 public class MauSacController {
 
     @Autowired

@@ -69,6 +69,7 @@ public class GioHangController {
 
         // Truyền thông tin giỏ hàng và tổng tiền vào model
         model.addAttribute("gioHang", gioHang);
+
         model.addAttribute("totalPrice", formattedTotalPrice);
 
         // Định dạng các giá trị đơn giá và tổng giá của các sản phẩm trong giỏ hàng

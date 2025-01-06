@@ -83,6 +83,10 @@
                             <td th:text="${item.soLuong}"></td>
                             <td th:text="${item.sanPhamChiTiet.formattedDonGia} + ' đ'"></td>
                             <td th:text="${item.sanPhamChiTiet.formattedDonGia * item.soLuong} + ' đ'"></td>
+<!--                            <td th:text="${#numbers.formatDecimal(item.sanPhamChiTiet.formattedDonGia * item.soLuong, 0, 'COMMA', 'DOT')} + ' đ'"></td>-->
+
+
+
                             <!-- Gửi tất cả sản phẩm vào form -->
                             <input type="hidden" name="selectedItems" th:value="${item.sanPhamChiTiet.id}" />
                         </tr>

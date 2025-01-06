@@ -18,7 +18,7 @@ import java.util.Date;
 
 
 @Controller
-@RequestMapping("/admin/hang")
+@RequestMapping("/hang")
 public class HangController {
 
     @Autowired
