@@ -19,7 +19,7 @@ import java.util.Date;
 
 
 @Controller
-@RequestMapping("/admin/loai-san-pham")
+@RequestMapping("/loai-san-pham")
 public class LoaiSanPhamController {
 
     @Autowired

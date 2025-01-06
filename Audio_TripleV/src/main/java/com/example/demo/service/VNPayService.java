@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
@@ -17,12 +18,37 @@ public class VNPayService {
         String vnp_TxnRef = VNPayConfig.getRandomNumber(8);
         String vnp_IpAddr = request.getRemoteAddr();
         String vnp_TmnCode = VNPayConfig.vnp_TmnCode;
+        System.out.println("price before  " + total);
+
+//        BigDecimal totalAmount = BigDecimal.ZERO;
+//        try {
+//            totalAmount = new BigDecimal(total);
+//        } catch (NumberFormatException e) {
+//            System.err.println("Invalid total amount: " + e.getMessage());
+//            // Handle error (e.g., throw an exception or set default value)
+//        }
+//
+//        // Convert to smallest currency unit (multiply by 100 for VNPAY)
+//        BigDecimal vnpAmount = totalAmount.multiply(BigDecimal.valueOf(100));
+//
+//        System.out.println("Price before: " + totalAmount);
+
+
+        // Convert total to smallest currency unit (VNPAY expects amount in VND * 100)
+        long vnpAmount = (long) total * 100;
+
+        System.out.println("Price before: " + total);
+
 
         Map<String, String> vnp_Params = new HashMap<>();
         vnp_Params.put("vnp_Version", VNPayConfig.vnp_Version);
         vnp_Params.put("vnp_Command", VNPayConfig.vnp_Command);
         vnp_Params.put("vnp_TmnCode", vnp_TmnCode);
-        vnp_Params.put("vnp_Amount", String.valueOf(total * 100));
+//        vnp_Params.put("vnp_Amount", Double.toString(12345.67));
+//        vnp_Params.put("vnp_Amount", vnpAmount.toBigInteger().toString());
+
+        vnp_Params.put("vnp_Amount", String.valueOf(vnpAmount));  // Format as string
+
         vnp_Params.put("vnp_CurrCode", "VND");
 //        vnp_Params.put("vnp_BankCode", "NCB");
         vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
@@ -31,7 +57,7 @@ public class VNPayService {
         vnp_Params.put("vnp_Locale", "vn");
         vnp_Params.put("vnp_ReturnUrl", VNPayConfig.vnp_Returnurl);
         vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
-        vnp_Params.put("selectedItems", URLEncoder.encode(selectedItems, StandardCharsets.US_ASCII.toString()));
+//        vnp_Params.put("selectedItems", URLEncoder.encode(selectedItems, StandardCharsets.US_ASCII.toString()));
 
 
         Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
