@@ -55,8 +55,11 @@
                         </div>
                         <div class="col-md-6">
                             <p><strong>Tổng Giá:</strong> <span th:text="${hoaDon.formattedTongGia}"></span></p>
-                            <p><strong>Tiền Khách Đưa:</strong> <span th:text="${hoaDon.formattedTienKhachDua}"></span>
+                            <p><strong>Voucher:</strong>
+                                <span th:text="${hoaDon.vouCher != null ? hoaDon.vouCher.giaTriTien != null ? hoaDon.vouCher.formattedGiaTriTien : hoaDon.vouCher.formattedGiaTriPhanTram : 'Không có Voucher'}"></span>
                             </p>
+                            <p><strong>Số Tiền Phải Trả:</strong> <span th:text="${hoaDon.formattedSoTienPhaiTra}"></span></p>
+                            <p><strong>Tiền Khách Đưa:</strong> <span th:text="${hoaDon.formattedTienKhachDua}"></span></p>
                             <p><strong>Tiền Thừa:</strong> <span th:text="${hoaDon.formattedTienThua}"></span></p>
                             <p><strong>Trạng Thái:</strong> <span th:text="${hoaDon.trangThai}"></span></p>
                         </div>

@@ -44,10 +44,19 @@
                     <a href="#" class="me-3 text-light" id="user-icon" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fas fa-user"></i>
                     </a>
-                    <ul id="user-dropdown" class="dropdown-menu">
-                        <li><a href="/khach-hang/thong-tin" class="dropdown-item">Thông tin tài khoản</a></li>
-                        <li><a href="/khach-hang/don-hang/danh-sach" class="dropdown-item">Đơn hàng của tôi</a></li>
-                        <li><a href="/logout" class="dropdown-item text-danger" onclick="return confirm('Bạn có chắc muốn đăng xuất không?')">Đăng xuất</a></li>
+                    <ul id="user-dropdown" class="dropdown-menu dropdown-menu-end">
+                        <li th:if="${fullName != 'Khách'}">
+                            <a href="/khach-hang/thong-tin" class="dropdown-item">Thông tin tài khoản</a>
+                        </li>
+                        <li th:if="${fullName != 'Khách'}">
+                            <a href="/khach-hang/don-hang/danh-sach" class="dropdown-item">Đơn hàng của tôi</a>
+                        </li>
+                        <li th:if="${fullName != 'Khách'}">
+                            <a href="/logout" class="dropdown-item text-danger" onclick="return confirm('Bạn có chắc muốn đăng xuất không?')">Đăng xuất</a>
+                        </li>
+                        <li th:if="${fullName == 'Khách'}">
+                            <a href="/login" class="dropdown-item text-primary">Đăng nhập</a>
+                        </li>
                     </ul>
                 </div>
 
@@ -253,7 +262,7 @@
                             <a th:href="@{/khach-hang/bai-viet/{id}(id=${article.id})}" th:text="${article.title}"></a>
                         </h2>
                         <p class="post-meta" th:text="${article.createdAt}"></p>
-                        <p th:text="${article.content.substring(0, 100) + '...'}"></p>
+                        <p th:text="${article.content.length() > 100 ? #strings.concat(#strings.substring(article.content, 0, 100), '...') : article.content}"></p>
                         <a th:href="@{/khach-hang/bai-viet/{id}(id=${article.id})}" class="btn btn-primary">Xem chi tiết</a>
                     </div>
                 </div>

@@ -78,7 +78,6 @@ public class SanPhamController {
         return "customer/san-pham";
     }
 
-
     @GetMapping("/san-pham/loai/{idLoaiSP}")
     public String getSanPhamByLoai(
             @PathVariable int idLoaiSP,
@@ -102,10 +101,6 @@ public class SanPhamController {
 
         return "customer/san-pham"; // Trả về tên view
     }
-
-
-
-
 
     @GetMapping("nhan-vien/hien-thi")
     public String getSanPhamChiTiet1(Model model) {

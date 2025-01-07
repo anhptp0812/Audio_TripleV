@@ -1,9 +1,12 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.CapNhatSoLuongRequest;
+import com.example.demo.entity.DonHang;
 import com.example.demo.entity.GioHang;
 import com.example.demo.entity.KhachHang;
+import com.example.demo.entity.QuickBuyRequest;
 import com.example.demo.entity.SanPhamChiTiet;
+import com.example.demo.service.DonHangService;
 import com.example.demo.service.GioHangChiTietService;
 import com.example.demo.service.GioHangService;
 import com.example.demo.service.KhachHangService;
@@ -24,6 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.text.NumberFormat;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -40,10 +44,11 @@ public class GioHangController {
     private KhachHangService khachHangService;
 
     @Autowired
-    SanPhamChiTietService sanPhamChiTietService;
+    private SanPhamChiTietService sanPhamChiTietService;
 
     @Autowired
-    private GioHangChiTietService gioHangChiTietService;
+    private DonHangService donHangService;
+
 
     @GetMapping("/hien-thi")
     public String hienThiGioHang(Model model, @AuthenticationPrincipal UserDetails userDetails) {
