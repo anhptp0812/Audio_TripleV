@@ -31,8 +31,11 @@ import java.io.UnsupportedEncodingException;
 import java.text.NumberFormat;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 @Controller
 public class KhachHangController {
@@ -55,6 +58,9 @@ public class KhachHangController {
     private SanPhamChiTietService sanPhamChiTietService;
 
     private Double totalPrice = 0.0;
+
+    private String savedSelectedItems;
+
 
     @GetMapping("/khach-hang/hien-thi")
     public String hienThiDanhSachKhachHang(Model model) {
@@ -196,6 +202,10 @@ public class KhachHangController {
     public String hienThiThanhToan(Model model,
                                    @RequestParam(required = false) String selectedItems,
                                    @AuthenticationPrincipal UserDetails userDetails) {
+        if (selectedItems != null) {
+            savedSelectedItems = selectedItems;
+        }
+
         // Lấy thông tin khách hàng từ tài khoản đăng nhập
         KhachHang khachHang = khachHangService.findByTaiKhoan(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("Khách hàng không tồn tại"));
@@ -334,7 +344,7 @@ public class KhachHangController {
         }
 
         // Thêm tham số selectedItems nếu cần
-        processThanhToan(userDetail[0], userDetail[1], userDetail[2], userDetail[3], userDetail[4], selectedItems);
+        processThanhToan(userDetail[0], userDetail[1], userDetail[2], userDetail[3], userDetail[4], savedSelectedItems);
 
         return "redirect:/khach-hang/don-hang/danh-sach";
     }
@@ -343,8 +353,12 @@ public class KhachHangController {
         // Kiểm tra nếu selectedItems là null hoặc rỗng
         if (selectedItems == null || selectedItems.isEmpty()) {
             throw new RuntimeException("Không có sản phẩm nào được chọn.");
+
         }
 
+        else {
+            System.out.println("list not empty ");
+        }
         // Lấy khách hàng hiện tại
         KhachHang khachHang = khachHangService.findByTaiKhoan(username)
                 .orElseThrow(() -> new RuntimeException("Khách hàng không tồn tại"));
@@ -365,9 +379,17 @@ public class KhachHangController {
                 .orElseThrow(() -> new RuntimeException("Giỏ hàng không tồn tại"));
 
         // Lọc sản phẩm được chọn
-        List<Integer> selectedProductIds = Arrays.stream(selectedItems.split(","))
-                .map(Integer::parseInt)
+//        List<Integer> selectedProductIds = Arrays.stream(selectedItems.split(","))
+//                .map(Integer::parseInt)
+//                .collect(Collectors.toList());
+
+        JSONArray jsonArray = new JSONArray(selectedItems);
+
+        // Extract only the IDs using a stream
+        List<Integer> selectedProductIds = IntStream.range(0, jsonArray.length())
+                .mapToObj(i -> jsonArray.getJSONObject(i).getInt("id"))
                 .collect(Collectors.toList());
+
 
         List<GioHangChiTiet> selectedItemsList = gioHang.getGioHangChiTietList().stream()
                 .filter(item -> selectedProductIds.contains(item.getSanPhamChiTiet().getId()))
