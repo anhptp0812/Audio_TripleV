@@ -38,8 +38,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -291,10 +296,20 @@ public class NhanVienController {
 
     // Xử lý thêm bài viết
     @PostMapping("/user/bai-viet/add")
-    public String addArticle(@ModelAttribute("article") Article article) {
-        article.setCreatedAt(new Date());
-        articleService.saveArticle(article);
-        return "redirect:/user/bai-viet";
+    public String addArticle(@ModelAttribute("article") Article article, @RequestParam("imageFile") MultipartFile imageFile) {
+        try {
+            // Xử lý file hình ảnh
+            String imageFileName = saveImage(imageFile);
+
+            // Gắn tên hình ảnh vào đối tượng bài viết
+            article.setImageUrl(imageFileName);
+            article.setCreatedAt(new Date());
+            articleService.saveArticle(article);
+            return "redirect:/user/bai-viet";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "redirect:/user/bai-viet/add?error"; // Hiển thị lỗi nếu có
+        }
     }
 
     // Hiển thị form sửa bài viết
@@ -306,20 +321,43 @@ public class NhanVienController {
 
     // Xử lý cập nhật bài viết
     @PostMapping("/user/bai-viet/update")
-    public String updateArticle(@ModelAttribute("article") Article article) {
-        article.setUpdatedAt(new Date());
+    public String updateArticle(@ModelAttribute("article") Article article, @RequestParam("imageFile") MultipartFile imageFile) {
+        try {
+            // Kiểm tra và xử lý file hình ảnh nếu có thay đổi
+            if (!imageFile.isEmpty()) {
+                String imageFileName = saveImage(imageFile);
+                article.setImageUrl(imageFileName);
+            }
 
-        // Kiểm tra và đảm bảo rằng comments không phải là null
-        if (article.getComments() == null) {
-            article.setComments(new ArrayList<>()); // Khởi tạo danh sách rỗng nếu null
+            article.setUpdatedAt(new Date());
+
+            // Kiểm tra và đảm bảo rằng comments không phải là null
+            if (article.getComments() == null) {
+                article.setComments(new ArrayList<>()); // Khởi tạo danh sách rỗng nếu null
+            }
+
+            Article existingArticle = articleService.getArticleById(article.getId());
+            article.setCreatedAt(existingArticle.getCreatedAt());
+
+            // Cập nhật bài viết
+            articleService.updateArticle(article);
+            return "redirect:/user/bai-viet";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "redirect:/user/bai-viet/edit/" + article.getId() + "?error"; // Hiển thị lỗi nếu có
         }
+    }
 
-        Article existingArticle = articleService.getArticleById(article.getId());
-        article.setCreatedAt(existingArticle.getCreatedAt());
+    private String saveImage(MultipartFile imageFile) throws IOException {
+        // Kiểm tra và tạo thư mục nếu chưa tồn tại
+        Path path = Paths.get(uploadDir, imageFile.getOriginalFilename());
+        Files.createDirectories(path.getParent());
 
-        // Cập nhật Article
-        articleService.updateArticle(article);
-        return "redirect:/user/bai-viet";
+        // Lưu hình ảnh vào thư mục
+        Files.write(path, imageFile.getBytes());
+
+        // Trả về tên file để lưu vào cơ sở dữ liệu
+        return imageFile.getOriginalFilename();
     }
 
     // Xóa bài viết

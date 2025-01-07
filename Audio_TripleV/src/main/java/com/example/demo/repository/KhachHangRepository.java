@@ -30,8 +30,5 @@ public interface KhachHangRepository extends JpaRepository<KhachHang, Integer> {
     List<String> findAllRoles();  // Truy vấn tất cả các vai trò
 
 
-    // Tìm khách hàng theo tên (chính xác)
-    Optional<KhachHang> findByTen(String ten);
-
 }
 

@@ -56,4 +56,8 @@ public class Voucher {
 
     @Column(name = "NgayCapNhat")
     private Date ngayCapNhat;
+
+    private String formattedGiaTriTien;
+    private String formattedGiaTriPhanTram;
+    private String formattedGiaTriHoaDonToiThieu;
 }

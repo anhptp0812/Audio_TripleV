@@ -430,59 +430,71 @@ addProductButtons.forEach(button => {
 // Cập nhật tổng giá
 function updateTotalAmount(amount) {
     const totalAmountElement = document.getElementById('totalAmount');
+    const finalAmountElement = document.getElementById('finalAmount');
+    const voucherAmountElement = document.getElementById('voucherAmount');
+    const tongGiaInput = document.getElementById('tongGia');
+    const soTienPhaiTraInput = document.getElementById('soTienPhaiTra');
+
     if (totalAmountElement) {
         totalAmountElement.textContent = formatCurrency(amount);
     }
 
-    // Cập nhật input tổng giá
-    const tongGiaInput = document.getElementById('tongGia');
     if (tongGiaInput) {
-        // Loại bỏ ký tự "₫" khi gán giá trị vào input
-        tongGiaInput.value = amount.toLocaleString('vi-VN');  // Định dạng số theo kiểu Việt Nam
+        tongGiaInput.value = amount.toLocaleString('vi-VN'); // Định dạng số
+    }
+
+    if (soTienPhaiTraInput) {
+        soTienPhaiTraInput.value = amount.toLocaleString('vi-VN'); // Định dạng số
+    }
+
+    // Nếu chưa áp dụng voucher, finalAmount = totalAmount
+    if (voucherAmountElement && voucherAmountElement.textContent === "0") {
+        if (finalAmountElement) {
+            finalAmountElement.textContent = formatCurrency(amount);
+        }
     }
 
     validatePaymentAmount();
 }
 
+
 // Hàm validatePaymentAmount để kiểm tra số tiền khách đưa và tính số tiền trả lại
 function validatePaymentAmount() {
-    // Lấy giá trị từ giao diện
     const customerPaymentInput = document.getElementById("customerPayment");
-    const totalAmountElement = document.getElementById("totalAmount");
+    const finalAmountElement = document.getElementById("finalAmount");
     const changeAmountElement = document.getElementById("changeAmount");
     const paymentErrorElement = document.getElementById("paymentError");
     const paymentButton = document.getElementById("paymentButton");
-    const paymentVnPayButton = document.getElementById("paymentVnPayButton");
 
-    // Xử lý giá trị tiền khách đưa và tổng tiền
-    const customerPayment = parseFloat(customerPaymentInput.value.replace(/\D/g, "")) || 0;
-    const totalAmount = parseFloat(totalAmountElement.textContent.replace(/\D/g, "")) || 0;
+    if (!customerPaymentInput || !finalAmountElement || !changeAmountElement || !paymentErrorElement || !paymentButton) {
+        console.error("Missing required elements in DOM.");
+        return;
+    }
 
-    // Kiểm tra giá trị hợp lệ
-    if (isNaN(totalAmount) || totalAmount <= 0) {
-        paymentErrorElement.style.display = "block";
-        paymentErrorElement.textContent = "Vui lòng nhập số tiền hợp lệ!";
-        paymentButton.disabled = true;
-        paymentVnPayButton.disabled = true;
-        changeAmountElement.textContent = formatCurrency(0);
-    } else if (customerPayment < totalAmount) {
-        paymentErrorElement.style.display = "block";
+    const finalAmount = parseCurrency(finalAmountElement.textContent) || 0;
+    const customerPayment = parseCurrency(customerPaymentInput.value) || 0;
+
+    if (customerPayment < finalAmount) {
         paymentErrorElement.textContent = "Số tiền khách đưa không đủ!";
+        paymentErrorElement.style.display = "block";
         paymentButton.disabled = true;
-        paymentVnPayButton.disabled = true;
         changeAmountElement.textContent = formatCurrency(0);
     } else {
-        const changeAmount = (customerPayment - totalAmount).toFixed(2);
-        changeAmountElement.textContent = formatCurrency(parseFloat(changeAmount));
+        const changeAmount = customerPayment - finalAmount;
         paymentErrorElement.style.display = "none";
         paymentButton.disabled = false;
-        paymentVnPayButton.disabled = false;
+        changeAmountElement.textContent = formatCurrency(changeAmount);
     }
 }
 
-// Hàm formatCurrency để hiển thị số tiền theo định dạng Việt Nam
+
+// Hàm để định dạng tiền tệ
 function formatCurrency(amount) {
-    return amount.toLocaleString('vi-VN', {style: 'currency', currency: 'VND'});
+    return amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+}
+
+function parseCurrency(value) {
+    return parseFloat(value.replace(/\D/g, "")) || 0; // Loại bỏ các ký tự không phải số
 }
 
 function confirmPayment(event) {

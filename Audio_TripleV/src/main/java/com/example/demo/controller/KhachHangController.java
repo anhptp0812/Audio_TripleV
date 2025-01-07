@@ -6,6 +6,8 @@ import com.example.demo.entity.GioHang;
 import com.example.demo.entity.GioHangChiTiet;
 import com.example.demo.entity.KhachHang;
 import com.example.demo.entity.SanPhamChiTiet;
+import com.example.demo.repository.DonHangRepository;
+import com.example.demo.repository.SanPhamChiTietRepository;
 import com.example.demo.service.*;
 import com.example.demo.repository.KhachHangRepository;
 import com.example.demo.vnconfig.PaymentInfoDTO;
@@ -20,6 +22,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -36,8 +39,10 @@ import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -59,6 +64,17 @@ public class KhachHangController {
 
     @Autowired
     private SanPhamChiTietService sanPhamChiTietService;
+
+    @GetMapping("/khach-hang/check-login")
+    public ResponseEntity<Map<String, Object>> checkLogin(@AuthenticationPrincipal UserDetails userDetails) {
+        Map<String, Object> response = new HashMap<>();
+        if (userDetails == null) {
+            response.put("loggedIn", false);  // Nếu người dùng chưa đăng nhập
+        } else {
+            response.put("loggedIn", true);  // Nếu người dùng đã đăng nhập
+        }
+        return ResponseEntity.ok(response);
+    }
 
     @GetMapping("/khach-hang/hien-thi")
     public String hienThiDanhSachKhachHang(Model model) {
@@ -99,8 +115,6 @@ public class KhachHangController {
         }
     }
 
-
-
     @GetMapping("/khach-hang/don-hang/danh-sach")
     public String danhSachDonHang(@AuthenticationPrincipal UserDetails userDetails, Model model) {
         // Lấy khách hàng hiện tại
@@ -114,21 +128,32 @@ public class KhachHangController {
         // Định dạng tổng giá của đơn hàng
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         donHangList.forEach(donHang -> {
-            // Định dạng tổng giá của đơn hàng
-            String formattedTongGia = currencyFormat.format(donHang.getTongGia());
-            donHang.setFormattedTongGia(formattedTongGia);
+            if (donHang.getTongGia() != null) {
+                String formattedTongGia = currencyFormat.format(donHang.getTongGia());
+                donHang.setFormattedTongGia(formattedTongGia);
+            } else {
+                donHang.setFormattedTongGia("Không có giá"); // Giá trị mặc định khi giá trị là null
+            }
 
-            // Định dạng các chi tiết đơn hàng
             donHang.getDonHangChiTietList().forEach(chiTiet -> {
-                String formattedDonGia = currencyFormat.format(chiTiet.getDonGia());
-                chiTiet.setFormattedDonGia(formattedDonGia);
+                if (chiTiet.getDonGia() != null) {
+                    String formattedDonGia = currencyFormat.format(chiTiet.getDonGia());
+                    chiTiet.setFormattedDonGia(formattedDonGia);
+                } else {
+                    chiTiet.setFormattedDonGia("Không có giá"); // Giá trị mặc định khi giá trị là null
+                }
 
-                // Tính và định dạng thành tiền
-                double thanhTien = chiTiet.getDonGia() * chiTiet.getSoLuong();
-                String formattedThanhTien = currencyFormat.format(thanhTien);
-                chiTiet.setFormattedThanhTien(formattedThanhTien);
+                // Tính và định dạng 'thanhTien'
+                if (chiTiet.getDonGia() != null && chiTiet.getSoLuong() > 0) {
+                    double thanhTien = chiTiet.getDonGia() * chiTiet.getSoLuong();
+                    String formattedThanhTien = currencyFormat.format(thanhTien);
+                    chiTiet.setFormattedThanhTien(formattedThanhTien);
+                } else {
+                    chiTiet.setFormattedThanhTien("Không có thành tiền"); // Giá trị mặc định cho trường hợp tính toán không hợp lệ
+                }
             });
         });
+
 
         model.addAttribute("donHangList", donHangList);
 
@@ -183,15 +208,16 @@ public class KhachHangController {
 
         // Định dạng từng sản phẩm trong giỏ hàng
         gioHang.getGioHangChiTietList().forEach(item -> {
-            String formattedDonGia = item.getSanPhamChiTiet().getFormattedDonGia();
-            item.getSanPhamChiTiet().setFormattedDonGia(formattedDonGia);
+            item.setFormattedDonGia(currencyFormat.format(item.getSanPhamChiTiet().getDonGia()));
+            item.setFormattedTongGia(currencyFormat.format(item.getTongGia()));
         });
 
         // Thêm dữ liệu vào model
         model.addAttribute("cartCount", totalQuantity);
         model.addAttribute("khachHang", khachHang);
         model.addAttribute("gioHang", gioHang);
-        model.addAttribute("totalPrice", formattedTotalPrice);  // Truyền tổng tiền đã định dạng
+        model.addAttribute("formattedTotalPrice", formattedTotalPrice);  // Truyền tổng tiền đã định dạng
+        model.addAttribute("totalPrice", totalPrice);
 
         return "customer/thanh-toan"; // Tên file HTML trong thư mục template
     }
@@ -212,13 +238,6 @@ public class KhachHangController {
             return "redirect:/login"; // Chuyển hướng đến trang đăng nhập nếu người dùng chưa đăng nhập
         }
 
-//        if (paymentMethod.equals("card")) {
-//            KhachHang khachHang = khachHangService.findByTaiKhoan(userDetails.getUsername()).get();
-//            GioHang gioHang = gioHangService.findByKhachHang(khachHang).get();
-//
-//            String url = vnPayService.createOrder(gioHang.getTongGia().intValue(), userDetails.getUsername(), fullName, email, phone, address, request);
-//            return "redirect:" + url;
-//        }
         if (paymentMethod.equals("card")) {
             KhachHang khachHang = khachHangService.findByTaiKhoan(userDetails.getUsername()).get();
             GioHang gioHang = gioHangService.findByKhachHang(khachHang).get();
@@ -227,7 +246,6 @@ public class KhachHangController {
             String url = vnPayService.createOrder(gioHang.getTongGia().intValue(), userDetails.getUsername(), fullName, email, phone, address, request, selectedItems);
             return "redirect:" + url;
         }
-
 
         processThanhToan(userDetails.getUsername(), fullName, email, phone, address, selectedItems);
         return "redirect:/khach-hang/don-hang/danh-sach";
@@ -410,4 +428,5 @@ public class KhachHangController {
         donHangService.huyDonHang(id); // Giả sử bạn có service xử lý hủy đơn hàng
         return "redirect:/khach-hang/don-hang/danh-sach"; // Quay lại danh sách đơn hàng
     }
+
 }

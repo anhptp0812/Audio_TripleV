@@ -22,6 +22,7 @@ import com.example.demo.repository.MauSacRepository;
 import com.example.demo.repository.NhanVienRepo;
 import com.example.demo.repository.SanPhamChiTietRepository;
 import com.example.demo.repository.SanPhamRepository;
+import com.example.demo.repository.VoucherRepository;
 import com.example.demo.service.DonHangService;
 import com.example.demo.service.HoaDonService;
 import com.example.demo.service.KhachHangService;
@@ -83,6 +84,9 @@ public class HoaDonController {
     private HoaDonChiTietRepository hoaDonChiTietRepository;
 
     @Autowired
+    private VoucherRepository voucherRepository;
+
+    @Autowired
     private SanPhamChiTietService sanPhamChiTietService;
 
     @Autowired
@@ -124,6 +128,12 @@ public class HoaDonController {
                 hoaDon.setFormattedTongGia(currencyFormat.format(0.0)); // Thay thế với giá trị mặc định nếu null
             }
 
+            if (hoaDon.getSoTienPhaiTra() != null) {
+                hoaDon.setFormattedSoTienPhaiTra(currencyFormat.format(hoaDon.getSoTienPhaiTra()));
+            } else {
+                hoaDon.setFormattedSoTienPhaiTra(currencyFormat.format(0.0)); // Thay thế với giá trị mặc định nếu null
+            }
+
             // Làm tương tự với các trường khác nếu cần
             if (hoaDon.getTienKhachDua() != null) {
                 hoaDon.setFormattedTienKhachDua(currencyFormat.format(hoaDon.getTienKhachDua()));
@@ -146,7 +156,8 @@ public class HoaDonController {
     public String viewHoaDonDetail(@PathVariable Integer id, Model model) {
         HoaDon hoaDon = hoaDonService.findById(id);
         if (hoaDon != null) {
-            System.out.println("Hoa Don Found: " + hoaDon.getId());  // Kiểm tra thông tin của hoaDon
+            System.out.println("Hoa Don Found: " + hoaDon.getId());
+
             // Định dạng giá trị tiền tệ
             NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
 
@@ -155,22 +166,36 @@ public class HoaDonController {
             hoaDon.setFormattedTienKhachDua(currencyFormat.format(hoaDon.getTienKhachDua()));
             hoaDon.setFormattedTienThua(currencyFormat.format(hoaDon.getTienThua()));
 
+            // Tính toán số tiền phải trả với voucher
+            if (hoaDon.getVouCher() != null) {
+                double voucherAmount = 0.0;
+                // Kiểm tra nếu voucher là giá trị tiền hoặc phần trăm
+                if (hoaDon.getVouCher().getLoai().equals("GiamTien") && hoaDon.getVouCher().getGiaTriTien() != null) {
+                    voucherAmount = hoaDon.getVouCher().getGiaTriTien(); // Giá trị tiền
+                    hoaDon.getVouCher().setFormattedGiaTriTien(currencyFormat.format(voucherAmount));
+                } else if (hoaDon.getVouCher().getLoai().equals("GiamPhanTram") && hoaDon.getVouCher().getGiaTriPhanTram() != null) {
+                    voucherAmount = hoaDon.getTongGia() * hoaDon.getVouCher().getGiaTriPhanTram() / 100; // Giá trị phần trăm
+                    hoaDon.getVouCher().setFormattedGiaTriPhanTram(String.format("%d%%", hoaDon.getVouCher().getGiaTriPhanTram().intValue()));
+                }
+                hoaDon.setSoTienPhaiTra(hoaDon.getTongGia() - voucherAmount);
+            } else {
+                hoaDon.setSoTienPhaiTra(hoaDon.getTongGia());
+            }
+
+            hoaDon.setFormattedSoTienPhaiTra(currencyFormat.format(hoaDon.getSoTienPhaiTra()));
+
             // Định dạng giá trị cho từng chi tiết hóa đơn
             for (HoaDonChiTiet hdct : hoaDon.getHoaDonChiTietList()) {
                 hdct.setFormattedDonGia(currencyFormat.format(hdct.getDonGia()));
                 hdct.setFormattedTongGia(currencyFormat.format(hdct.getTongGia()));
             }
 
-            // Lấy danh sách hóa đơn từ repository
-            List<HoaDon> list = hoaDonRepository.findAll();
-
             model.addAttribute("hoaDon", hoaDon);
-            model.addAttribute("hoaDonList", list); // Truyền danh sách hóa đơn vào model nếu cần
             return "nhanvien/hoa-don-detail"; // Trả về trang chi tiết hóa đơn
         }
         return "redirect:/user/hoa-don"; // Nếu không tìm thấy hóa đơn, quay lại danh sách hóa đơn
     }
-    
+
     @GetMapping("/ban-hang")
     public String banHang(@RequestParam(required = false) Integer idLoaiSP,
                           @RequestParam(required = false) Integer idSanPham,
@@ -650,15 +675,16 @@ public class HoaDonController {
             }
 
             // Kiểm tra số tiền khách đưa
-            if (customerPayment < hoaDon.getTongGia()) {
+            if (customerPayment < hoaDon.getSoTienPhaiTra()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body(Map.of("message", "Số tiền khách đưa không đủ để thanh toán!"));
             }
 
             // Tính số tiền thừa
-            Double tienThua = customerPayment - hoaDon.getTongGia();
+            Double tienThua = customerPayment - hoaDon.getSoTienPhaiTra();
 
             // Cập nhật thông tin hóa đơn
+            hoaDon.setNgayCapNhat(new Date());
             hoaDon.setTienKhachDua(customerPayment);
             hoaDon.setTienThua(tienThua);
             hoaDon.setTrangThai("Đã thanh toán");

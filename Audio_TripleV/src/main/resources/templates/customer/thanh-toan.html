@@ -38,13 +38,24 @@
 
                 <!-- Dropdown tài khoản -->
                 <div class="dropdown">
-                    <a href="#" class="me-3 text-light" id="user-icon" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a href="#" class="me-3 text-light" id="user-icon" role="button" data-bs-toggle="dropdown"
+                       aria-expanded="false">
                         <i class="fas fa-user"></i>
                     </a>
-                    <ul id="user-dropdown" class="dropdown-menu">
-                        <li><a href="/khach-hang/thong-tin" class="dropdown-item">Thông tin tài khoản</a></li>
-                        <li><a href="/khach-hang/don-hang/danh-sach" class="dropdown-item">Đơn hàng của tôi</a></li>
-                        <li><a href="/logout" class="dropdown-item text-danger" onclick="return confirm('Bạn có chắc muốn đăng xuất không?')">Đăng xuất</a></li>
+                    <ul id="user-dropdown" class="dropdown-menu dropdown-menu-end">
+                        <li th:if="${fullName != 'Khách'}">
+                            <a href="/khach-hang/thong-tin" class="dropdown-item">Thông tin tài khoản</a>
+                        </li>
+                        <li th:if="${fullName != 'Khách'}">
+                            <a href="/khach-hang/don-hang/danh-sach" class="dropdown-item">Đơn hàng của tôi</a>
+                        </li>
+                        <li th:if="${fullName != 'Khách'}">
+                            <a href="/logout" class="dropdown-item text-danger"
+                               onclick="return confirm('Bạn có chắc muốn đăng xuất không?')">Đăng xuất</a>
+                        </li>
+                        <li th:if="${fullName == 'Khách'}">
+                            <a href="/login" class="dropdown-item text-primary">Đăng nhập</a>
+                        </li>
                     </ul>
                 </div>
 
@@ -81,10 +92,10 @@
                             <td th:text="${stat.index + 1}"></td>
                             <td th:text="${item.sanPhamChiTiet.sanPham.ten}"></td>
                             <td th:text="${item.soLuong}"></td>
-                            <td th:text="${item.sanPhamChiTiet.formattedDonGia} + ' đ'"></td>
-                            <td th:text="${item.sanPhamChiTiet.formattedDonGia * item.soLuong} + ' đ'"></td>
+                            <td th:text="${item.formattedDonGia}"></td>
+                            <td th:text="${item.formattedTongGia}"></td>
                             <!-- Gửi tất cả sản phẩm vào form -->
-                            <input type="hidden" name="selectedItems" th:value="${item.sanPhamChiTiet.id}" />
+                            <input type="hidden" name="selectedItems" th:value="${item.sanPhamChiTiet.id}"/>
                         </tr>
                         </tbody>
                     </table>
@@ -121,7 +132,7 @@
                 <div class="border p-3">
                     <!-- Tổng tiền -->
                     <div class="mb-3">
-                        <h5>Tổng tiền: <span th:text="${totalPrice}">0</span></h5>
+                        <h5>Tổng tiền: <span th:text="${formattedTotalPrice}">0</span></h5>
                     </div>
                     <!-- Phương thức thanh toán -->
                     <div class="mb-3">
@@ -138,13 +149,13 @@
                         </div>
                     </div>
                     <!-- Nút đặt hàng -->
-                    <button type="submit" class="btn btn-danger w-100 mt-3">Đặt Hàng</button>
+                    <button type="submit" class="btn btn-danger w-100 mt-3"
+                            th:disabled="${totalPrice == 0}">Đặt Hàng</button>
                 </div>
             </div>
         </div>
     </form>
 </div>
-
 
 
 <!-- Footer -->

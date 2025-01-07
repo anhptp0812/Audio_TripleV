@@ -9,19 +9,50 @@ document.querySelectorAll('.add-to-cart').forEach(button => {
             return;
         }
 
-        // Gửi yêu cầu POST với cả sanPhamChiTietId và soLuong
-        fetch('/khach-hang/gio-hang/them-san-pham', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: `sanPhamChiTietId=${sanPhamChiTietId}&soLuong=${soLuong}`  // Thêm soLuong vào body
+        // Kiểm tra xem khách hàng đã đăng nhập chưa
+        fetch('/khach-hang/check-login', {  // Tạo một yêu cầu GET để kiểm tra trạng thái đăng nhập
+            method: 'GET',
         })
-            .then(response => response.json())  // Đảm bảo nhận dữ liệu dưới dạng JSON
-            .then(data => {
-                alert(data.message);  // Hiển thị thông báo
-                // Cập nhật số lượng giỏ hàng trên giao diện mà không cần tải lại trang
-                document.querySelector('#cart-count').textContent = data.cartCount;
+            .then(response => response.text())  // Đọc phản hồi dưới dạng text thay vì JSON
+            .then(text => {
+                if (text.includes("<!DOCTYPE html>")) {  // Kiểm tra nếu phản hồi là HTML
+                    const confirmLogin = confirm("Bạn chưa đăng nhập. Bạn có muốn đăng nhập không?");
+                    if (confirmLogin) {
+                        window.location.href = '/login';  // Chuyển hướng đến trang đăng nhập
+                    }
+                    return;
+                }
+
+                try {
+                    const data = JSON.parse(text);  // Thử parse thành JSON nếu phản hồi không phải HTML
+                    if (!data.loggedIn) {  // Nếu khách hàng chưa đăng nhập
+                        const confirmLogin = confirm("Bạn chưa đăng nhập. Bạn có muốn đăng nhập không?");
+                        if (confirmLogin) {
+                            window.location.href = '/login';  // Chuyển hướng đến trang đăng nhập
+                        }
+                        return;
+                    }
+
+                    // Gửi yêu cầu POST nếu đã đăng nhập
+                    fetch('/khach-hang/gio-hang/them-san-pham', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                        body: `sanPhamChiTietId=${sanPhamChiTietId}&soLuong=${soLuong}`
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            alert(data.message);
+                            document.querySelector('#cart-count').textContent = data.cartCount;
+                        })
+                        .catch(error => console.error('Error:', error));
+                } catch (error) {
+                    console.error('Error parsing JSON:', error);
+                }
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => {
+                console.error('Error checking login:', error);
+                alert("Đã có lỗi xảy ra khi kiểm tra đăng nhập.");
+            });
     });
 });
 

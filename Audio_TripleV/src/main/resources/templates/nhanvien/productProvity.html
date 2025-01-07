@@ -34,17 +34,6 @@
                        onclick="return confirm('Bạn có chắc muốn đăng xuất không?')">Đăng xuất</a></li>
             </ul>
         </div>
-
-        <a class="btn btn-outline-light" id="user-icon" href="#">
-            <i class="bi bi-person-circle"></i>
-            <div id="user-dropdown" class="dropdown-menu btn btn-outline-light">
-                <a href="/user/thong-tin" class="dropdown-item">Thông tin tài khoản</a>
-                <a href="/logout" class="dropdown-item">Đăng xuất</a>
-            </div>
-        </a>
-
-
-
     </div>
     <div class="category-container content">
         <div class="product-form">
@@ -200,203 +189,76 @@
                         <input type="hidden" id="khachHangId" name="idKhachHang" th:field="*{khachHang.id}">
                     </div>
                     <div class="mb-3">
-                        <label for="tongGia" class="form-label">Tổng Giá</label>
+                        <label for="tongGia" class="form-label">Tổng Tiền</label>
                         <input type="text" id="tongGia" class="form-control" th:field="*{tongGia}"
                                disabled>
                     </div>
-
-                        <div class="mb-3">
-                            <label for="voucher" class="form-label">Voucher</label>
-                            <input type="text" id="voucher" class="form-control" th:field="*{vouCher.ten}"
-                                   disabled>
-                            <input type="hidden" id="vouChers" name="vouCher" th:field="*{vouCher.id}">
-
-
-                        </div>
-
-
+                    <div class="mb-3">
+                        <label for="voucher" class="form-label">Voucher</label>
+                        <input type="text" id="voucher" class="form-control" th:field="*{vouCher.ten}"
+                               disabled>
+                        <input type="hidden" id="vouChers" name="vouCher" th:field="*{vouCher.id}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="soTienPhaiTra" class="form-label">Số Tiền Phải Trả</label>
+                        <input type="text" id="soTienPhaiTra" class="form-control" th:field="*{soTienPhaiTra}"
+                               disabled>
+                    </div>
                     <div class="mb-3">
                         <label for="trangThai" class="form-label">Trạng Thái</label>
                         <input type="text" id="trangThai" class="form-control" placeholder="Trạng thái"
                                th:field="*{trangThai}" disabled>
                     </div>
-
                     <div class="mb-3">
                         <label for="ngayTaoId" class="form-label">Ngày Tạo</label>
                         <input type="datetime-local" class="form-control" th:field="*{ngayTao}" id="ngayTaoId"
                                min="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" disabled>
                     </div>
-
                     <div class="button-group">
-                        <button type="button" class="btn-primary" onclick="openVoucherForm()">
-                            <i class="bi bi-person-plus"></i> Add Voucher
+                        <button type="button" class="btn btn-primary" onclick="openVoucherForm()">
+                            <i class="bi bi-ticket-fill"></i> Add Voucher
                         </button>
                     </div>
-
-
                 </form>
-
-
-                <div class="order-summary">
-                    <!-- Button group for Add Khách Hàng, New Bill, and Reload -->
-
-                    <!-- Form chọn khách hàng -->
-                    <!--                    <div id="overlay" class="overlay" onclick="closeForm()"></div>-->
-                    <div id="voucherForm" class="customer-form">
-                        <div class="form-container p-3">
-                            <div class="d-flex justify-content-end pe-2">
-                                <button class="btn btn-danger" onclick="closeForm()">✖</button>
-                            </div>
-                            <div>
-                                <label>Nhập tên:</label>
-                                <input type="text" placeholder="Nhập tên" class="form-control" id="voucherName">
-
-                            </div>
-
-                            <div>
-                                <label>loại Voucher:</label>
-                                <select></select>
-
-                            </div>
-
-                            <div class="pt-3">
-                                <button class="btn btn-primary" type="button" onclick="searchVoucher()">
-                                    <i class="bi bi-search"></i> Tìm kiếm
-                                </button>
-                            </div>
+                <div id="voucherForm" class="voucher-form">
+                    <div class="form-container p-3">
+                        <div class="d-flex justify-content-end pe-2">
+                            <button class="btn btn-danger" onclick="closeForm()">✖</button>
                         </div>
-                        <table class="table table-striped table-hover">
-                            <thead>
-                            <tr>
-                                <th>Tên Voucher</th>
-                                <th>Loại Voucher</th>
-                                <th>Gía trị tiền</th>
-                                <th>Gía trị phần trăm</th>
-                                <th>Gía trị hóa đơn tối thiểu</th>
-                                <th>Trạng thái</th>
-                                <th>Ngày bắt đầu</th>
-                                <th>Ngày kết thúc</th>
-
-                                <th>Action</th>
-                            </tr>
-                            </thead>
-                            <tbody id="voucher-list">
-                            <!-- Dữ liệu sẽ được thêm bởi JavaScript -->
-                            </tbody>
-                        </table>
+                        <div>
+                            <label>Nhập tên:</label>
+                            <input type="text" placeholder="Nhập tên" class="form-control" id="voucherName">
+                        </div>
+                        <div>
+                            <label>loại Voucher:</label>
+                            <select></select>
+                        </div>
+                        <div class="pt-3">
+                            <button class="btn btn-primary" type="button" onclick="searchVoucher()">
+                                <i class="bi bi-search"></i> Tìm kiếm
+                            </button>
+                        </div>
                     </div>
+                    <table class="table table-striped table-hover">
+                        <thead>
+                        <tr>
+                            <th>Tên Voucher</th>
+                            <th>Loại Voucher</th>
+                            <th>Gía trị tiền</th>
+                            <th>Gía trị phần trăm</th>
+                            <th>Gía trị hóa đơn tối thiểu</th>
+                            <th>Trạng thái</th>
+                            <th>Ngày bắt đầu</th>
+                            <th>Ngày kết thúc</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody id="voucher-list">
+                        <!-- Dữ liệu sẽ được thêm bởi JavaScript -->
+                        </tbody>
+                    </table>
                 </div>
 
-                <script>
-                    // URL của API
-                    const apiUrl = "/api/vouchers";
-
-                    // Lấy danh sách Voucher và hiển thị trong bảng
-                    function fetchVouchers() {
-                        fetch(apiUrl)
-                            .then(response => {
-                                if (!response.ok) {
-                                    throw new Error("Không thể tải danh sách Voucher!");
-                                }
-                                return response.json();
-                            })
-                            .then(data => {
-                                renderVoucherList(data);
-                            })
-                            .catch(error => {
-                                console.error("Lỗi:", error);
-                            });
-                    }
-
-                    // Hiển thị danh sách Voucher trong bảng
-                    function renderVoucherList(vouchers) {
-                        const voucherList = document.getElementById("voucher-list");
-                        voucherList.innerHTML = ""; // Xóa dữ liệu cũ
-
-                        vouchers.forEach(voucher => {
-                            const row = document.createElement("tr");
-
-                            row.innerHTML = `
-            <td>${voucher.ten}</td>
-            <td>${voucher.loai}</td>
-            <td>${voucher.giaTriTien}</td>
-            <td>${voucher.giaTriPhanTram}</td>
-            <td>${voucher.giaTriHoaDonToiThieu}</td>
-            <td>${voucher.trangThai}</td>
-            <td>${voucher.ngayBatDau}</td>
-            <td>${voucher.ngayKetThuc}</td>
-
-            <td>
-
-                <button onclick="applyVoucher(${hoaDonId}, ${voucher.id})">Chọn 2</button>
-</td>
-
-            </td>
-        `;
-
-                            voucherList.appendChild(row);
-                        });
-                    }
-
-                    document.addEventListener("DOMContentLoaded", fetchVouchers);
-
-                    function selectVoucher(id, ten) {
-                        // Gán giá trị vào trường input
-                        document.getElementById("voucher").value = ten; // Hiển thị tên Voucher
-                        document.querySelector("input[name='vouCher']").value = id; // Gán ID của Voucher vào hidden field
-                    }
-
-                    // Hàm để lấy và hiển thị voucher được chọn
-                    function applyVoucher(hoaDonId, voucherId) {
-                        // Lấy thông tin voucher từ server bằng voucherId
-                        fetch(`/api/vouchers/${voucherId}`)
-                            .then(response => response.json())
-                            .then(data => {
-                                // Cập nhật voucher vào form
-                                document.getElementById("voucher").value = data.ten;  // Hiển thị tên voucher vào input
-                                document.getElementById("vouChers").value = data.id;  // Gán id voucher vào hidden field
-
-                                // Lấy tổng giá hóa đơn hiện tại từ server hoặc từ form
-                                const tongGia = parseFloat(document.getElementById("tongGia").value.replace(" VND", ""));
-
-                                // Tính toán tổng giá sau khi áp dụng voucher
-                                let discountedPrice = tongGia;
-                                if (data.loai === "GiamTien" && data.giaTriTien) {
-                                    discountedPrice -= data.giaTriTien;  // Giảm tiền
-                                } else if (data.loai === "GiamPhanTram" && data.giaTriPhanTram) {
-                                    discountedPrice -= (tongGia * data.giaTriPhanTram) / 100;  // Giảm theo phần trăm
-                                }
-
-                                // Đảm bảo giá trị không âm
-                                discountedPrice = Math.max(discountedPrice, 0);
-
-                                // Cập nhật tổng giá vào form
-                                document.getElementById("tongGia").value = `${discountedPrice} VND`;
-
-                                // Cập nhật tổng giá vào database (gửi yêu cầu API để cập nhật)
-                                fetch(`/api/vouchers/apply-voucher?hoaDonId=${hoaDonId}&voucherId=${voucherId}`, {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                    }
-                                })
-                                    .then(response => response.json())
-                                    .then(data => {
-                                        console.log("Đã cập nhật thành công tổng giá và voucher vào hóa đơn.");
-                                        // Cập nhật lại tổng giá và voucher nếu cần thiết
-                                    })
-                                    .catch(error => {
-                                        console.error("Lỗi khi áp dụng voucher:", error);
-                                    });
-                            })
-                            .catch(error => {
-                                console.error("Lỗi khi lấy thông tin voucher:", error);
-                            });
-                    }
-
-
-
-                </script>
                 <div id="billDetailsForm" class="form-hdct" th:if="${hoaDon.id != null}">
                     <h3 class="mb-4">Chi Tiết Hóa Đơn</h3>
                     <table class="table table-striped table-hover">
@@ -417,18 +279,25 @@
                     <form method="post" th:action="@{/user/ban-hang/{id}/thanh-toan(id=${hoaDon.id})}">
                         <div class="totals mb-4">
                             <div class="d-flex justify-content-between mb-2">
-                                <label class="fw-bold">Tổng:</label>
+                                <label class="fw-bold">Tổng Tiền:</label>
                                 <span id="totalAmount">0</span>
                             </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <label class="fw-bold">Voucher:</label>
+                                <span id="voucherAmount">0</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <label class="fw-bold">Số Tiền Phải Trả:</label>
+                                <span id="finalAmount">0</span>
+                            </div>
+
                             <div class="d-flex justify-content-between mb-2">
                                 <label class="fw-bold">Nhập số tiền khách đưa:</label>
                                 <input type="text" id="customerPayment" name="customerPayment" class="form-control w-50"
                                        oninput="this.value = this.value.replace(/[^0-9]/g, ''); validatePaymentAmount()"
                                        style="text-align: right" placeholder="Nhập số tiền" required>
                             </div>
-                            <div id="paymentError" class="text-end" style="color: red; display: none;">Vui lòng nhập số
-                                tiền hợplệ.
-                            </div>
+                            <div id="paymentError" class="text-end" style="color: red; display: none;">Vui lòng nhập số tiền hợp lệ.</div>
                             <div class="d-flex justify-content-between">
                                 <label class="fw-bold">Số tiền trả lại:</label>
                                 <span id="changeAmount">0</span>
@@ -470,6 +339,163 @@
     <th:block th:replace="~{/nhanvien/fragments :: nhan-vien-footer}"/>
 </div>
 </body>
+
+<script>
+    // URL của API
+    const apiUrl = "/api/vouchers";
+
+    // Lấy danh sách Voucher và hiển thị trong bảng
+    function fetchVouchers() {
+        fetch(apiUrl)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Không thể tải danh sách Voucher!");
+                }
+                return response.json();
+            })
+            .then(data => {
+                renderVoucherList(data);
+            })
+            .catch(error => {
+                console.error("Lỗi:", error);
+            });
+    }
+
+    // Hiển thị danh sách Voucher trong bảng
+    function renderVoucherList(vouchers) {
+        const voucherList = document.getElementById("voucher-list");
+        voucherList.innerHTML = "";
+
+        vouchers.forEach(voucher => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+            <td>${voucher.ten || ''}</td>
+            <td>${voucher.loai || ''}</td>
+            <td>${formatCurrency(voucher.giaTriTien || 0)}</td>
+            <td>${voucher.giaTriPhanTram ? voucher.giaTriPhanTram + '%' : '0%'}</td>
+            <td>${formatCurrency(voucher.giaTriHoaDonToiThieu || 0)}</td>
+            <td>${voucher.trangThai || ''}</td>
+            <td>${formatDate(voucher.ngayBatDau)}</td>
+            <td>${formatDate(voucher.ngayKetThuc)}</td>
+            <td>
+                <button class="btn btn-success"
+                        onclick="applyVoucher(${hoaDonId}, ${voucher.id})"
+                        ${isVoucherValid(voucher) ? '' : 'disabled'}>
+                    Chọn
+                </button>
+            </td>
+        `;
+            voucherList.appendChild(row);
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", fetchVouchers);
+
+    function selectVoucher(id, ten) {
+        // Gán giá trị vào trường input
+        document.getElementById("voucher").value = ten; // Hiển thị tên Voucher
+        document.querySelector("input[name='vouCher']").value = id; // Gán ID của Voucher vào hidden field
+    }
+
+    // Hàm để lấy và hiển thị voucher được chọn
+    function applyVoucher(hoaDonId, voucherId) {
+        closeForm();
+
+        // Gọi API để lấy thông tin chi tiết voucher
+        fetch(`/api/vouchers/${voucherId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Không thể lấy thông tin voucher.");
+                }
+                return response.json();
+            })
+            .then(voucher => {
+                // Cập nhật UI với thông tin voucher
+                document.getElementById('voucher').value = voucher.ten;
+                document.getElementById('vouChers').value = voucher.id;
+
+                const tongGiaInput = document.getElementById('tongGia');
+                const totalAmount = parseCurrency(tongGiaInput.value);
+                let discountedPrice = totalAmount;
+                let discountAmount = 0;
+
+                // Tính toán giảm giá
+                if (voucher.loai === "GiamTien" && voucher.giaTriTien) {
+                    discountAmount = voucher.giaTriTien;
+                    discountedPrice -= discountAmount;
+                } else if (voucher.loai === "GiamPhanTram" && voucher.giaTriPhanTram) {
+                    discountAmount = (totalAmount * voucher.giaTriPhanTram) / 100;
+                    discountedPrice -= discountAmount;
+                }
+
+                discountedPrice = Math.max(discountedPrice, 0);
+
+                // Cập nhật UI với các giá trị mới
+                document.getElementById('voucherAmount').textContent = formatCurrency(discountAmount);
+                document.getElementById('finalAmount').textContent = formatCurrency(discountedPrice);
+                document.getElementById('soTienPhaiTra').value = formatCurrency(discountedPrice);
+
+                // Lưu thay đổi lên server
+                return fetch('/api/vouchers/apply-voucher', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `hoaDonId=${hoaDonId}&voucherId=${voucherId}`
+                });
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Lỗi khi áp dụng voucher.");
+                }
+                return response.json();
+            })
+            .then(result => {
+                // Hiển thị thông báo thành công nếu cần
+                console.log("Áp dụng voucher thành công:", result);
+            })
+            .catch(error => {
+                console.error("Có lỗi xảy ra:", error);
+                // Hiển thị thông báo lỗi cho người dùng nếu cần
+                alert("Có lỗi xảy ra khi áp dụng voucher. Vui lòng thử lại.");
+            });
+    }
+
+    function isVoucherValid(voucher) {
+        const now = new Date();
+        const startDate = new Date(voucher.ngayBatDau);
+        const endDate = new Date(voucher.ngayKetThuc);
+        return now >= startDate && now <= endDate && voucher.trangThai === 'Active';
+    }
+
+    // Hàm định dạng ngày tháng
+    function formatDate(dateString) {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        return date.toLocaleDateString('vi-VN', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        });
+    }
+
+    // Hàm định dạng tiền tệ
+    function formatCurrency(amount) {
+        return new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+        }).format(amount);
+    }
+
+    // Hàm chuyển đổi chuỗi tiền tệ thành số
+    function parseCurrency(value) {
+        if (typeof value === 'string') {
+            return parseFloat(value.replace(/[^\d.-]/g, '')) || 0;
+        }
+        return value || 0;
+    }
+
+</script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
