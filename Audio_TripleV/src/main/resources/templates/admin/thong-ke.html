@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -31,6 +31,7 @@
 </head>
 
 <body>
+<th:block th:replace="~{/nhanvien/fragments :: nhan-vien-header}"/>
 <div class="container">
     <h1 class="text-center mb-4">Thống Kê</h1>
 
@@ -54,39 +55,52 @@
 <script>
     const ctx = document.getElementById('statisticsChart').getContext('2d');
     let chart;
-    let currentData = [];
 
-    // Load data based on the selected time frame
+    // Hàm tải dữ liệu từ API dựa trên thời gian
     function loadData(timeFrame) {
-        // Mock data for demonstration
-        const mockData = {
-            day: [12, 19, 3, 5, 2, 3],
-            month: [50, 30, 70, 20, 60, 90],
-            year: [120, 190, 300, 500, 200, 300]
-        };
-
-        currentData = mockData[timeFrame] || [];
-        renderChart('bar'); // Default chart type
+        let url;
+        let date;
+        if (timeFrame === 'day') {
+            date = prompt("Nhập ngày (YYYY-MM-DD):");
+            if (!date || !isValidDate(date)) {
+                alert('Ngày không hợp lệ. Vui lòng nhập lại.');
+                return;
+            }
+            url = `/api/thong-ke/ngay?date=${date}`;
+        }
+        // Các phần còn lại vẫn giữ nguyên
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                const labels = Array.isArray(data) ? data.map(item => item.label) : [date];
+                const revenueData = Array.isArray(data) ? data.map(item => item.value) : [data];
+                renderChart('bar', labels, revenueData); // Vẽ biểu đồ cột
+                alert(`Tổng doanh thu: ${data}`);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Đã xảy ra lỗi khi tải dữ liệu.');
+            });
     }
 
-    // Render the chart
-    function renderChart(type) {
+
+    // Hàm vẽ biểu đồ
+    function renderChart(type, labels, data) {
         if (chart) {
-            chart.destroy();
+            chart.destroy(); // Xóa biểu đồ cũ nếu tồn tại
         }
 
         chart = new Chart(ctx, {
             type: type,
             data: {
-                labels: ['A', 'B', 'C', 'D', 'E', 'F'], // Mock labels
+                labels: labels, // Gán nhãn từ dữ liệu API
                 datasets: [{
-                    label: 'Thống Kê',
-                    data: currentData,
+                    label: 'Tổng Doanh Thu',
+                    data: data, // Gán dữ liệu từ API
                     backgroundColor: [
                         'rgba(75, 192, 192, 0.2)',
                         'rgba(54, 162, 235, 0.2)',
                         'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
                         'rgba(153, 102, 255, 0.2)',
                         'rgba(255, 159, 64, 0.2)'
                     ],
@@ -94,7 +108,6 @@
                         'rgba(75, 192, 192, 1)',
                         'rgba(54, 162, 235, 1)',
                         'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
                         'rgba(153, 102, 255, 1)',
                         'rgba(255, 159, 64, 1)'
                     ],
@@ -109,15 +122,22 @@
                     },
                     title: {
                         display: true,
-                        text: 'Biểu Đồ Thống Kê'
+                        text: `Biểu Đồ Thống Kê Theo ${type === 'bar' ? 'Cột' : type === 'pie' ? 'Tròn' : 'Miền'}`
                     }
                 }
             }
         });
     }
 
-    // Initialize with default data
+    // Hàm kiểm tra định dạng ngày hợp lệ
+    function isValidDate(date) {
+        const regex = /^\d{4}-\d{2}-\d{2}$/;
+        return regex.test(date); // Kiểm tra định dạng YYYY-MM-DD
+    }
+
+    // Mặc định tải dữ liệu ngày
     loadData('day');
+
 </script>
 </body>
 
