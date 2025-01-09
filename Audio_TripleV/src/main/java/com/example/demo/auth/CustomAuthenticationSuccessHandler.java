@@ -22,7 +22,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         try {
             // Kiểm tra role và chuyển hướng tương ứng
             if (authorities.contains(new SimpleGrantedAuthority("ADMIN"))) {
-                response.sendRedirect("/admin/home");
+                response.sendRedirect("/user/ban-hang");
             } else if (authorities.contains(new SimpleGrantedAuthority("USER"))) {
                 response.sendRedirect("/user/ban-hang");
             } else if (authorities.contains(new SimpleGrantedAuthority("KHACHHANG"))) {
