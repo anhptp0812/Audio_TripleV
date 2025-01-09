@@ -83,7 +83,11 @@
                                 th:data-soLuong="1"><i class="fas fa-cart-plus me-1"></i>Thêm vào
                             giỏ
                         </button>
-                        <button class="btn btn-now"><i class="fas fa-shopping-bag me-1"></i>Mua ngay
+                        <button class="btn btn-now"
+                                th:data-sanpham-id="${sanPhamChiTiet.id}"
+                                th:data-soLuong="1"
+                                onclick="muaNgay(this)">
+                            <i class="fas fa-shopping-bag me-1"></i>Mua ngay
                         </button>
                     </div>
                 </div>
@@ -165,6 +169,19 @@
     </div>
 </footer>
 
+<script>
+    function muaNgay(button) {
+        // Get product ID and quantity from the button's data attributes
+        const sanPhamId = button.getAttribute('data-sanpham-id');
+        const soLuong = button.getAttribute('data-soLuong');
+
+        // Create the selected item as a JSON string
+        const selectedItems = JSON.stringify([{ id: sanPhamId, quantity: parseInt(soLuong) }]);
+
+        // Redirect to the checkout page with selected items as a query parameter
+        window.location.href = `/khach-hang/thanh-toan/hien-thi?selectedItems=${encodeURIComponent(selectedItems)}&muaNgay=true`;
+    }
+</script>
 <!-- JavaScript Libraries -->
 <script th:src="@{/js/customer/san-pham-chi-tiet-khach-hang.js}"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
