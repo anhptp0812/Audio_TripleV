@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -66,6 +67,7 @@ public class KhachHangController {
 
     private Boolean globalMuaNgay = false;
 
+    private Double globalShippingFee = 0.0;
     @GetMapping("/khach-hang/hien-thi")
     public String hienThiDanhSachKhachHang(Model model) {
         List<KhachHang> listKh = khachHangRepository.findAll(); // Lấy danh sách khách hàng
@@ -371,6 +373,7 @@ public class KhachHangController {
                           @RequestParam String phone,
                           @RequestParam String address,
                           @RequestParam String paymentMethod,
+                          @RequestParam(required = false) String shippingFee, // Added shippingFee parameter
                           @RequestParam(required = false) String selectedItems,
                           HttpServletRequest request) throws UnsupportedEncodingException {
 
@@ -379,6 +382,12 @@ public class KhachHangController {
         if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser")) {
             return "redirect:/login"; // Chuyển hướng đến trang đăng nhập nếu người dùng chưa đăng nhập
         }
+
+        globalShippingFee = (shippingFee != null) ? Double.parseDouble(shippingFee) : 0.0;
+
+        // Log or use the shippingFeeValue as needed
+        System.out.println("Shipping Fee: " + globalShippingFee);
+
 
 //        if (paymentMethod.equals("card")) {
 //            KhachHang khachHang = khachHangService.findByTaiKhoan(userDetails.getUsername()).get();
@@ -392,30 +401,41 @@ public class KhachHangController {
             GioHang gioHang = gioHangService.findByKhachHang(khachHang).get();
 
             // Truyền danh sách sản phẩm đã chọn vào VNPay
-            String url = vnPayService.createOrder(totalPrice.intValue(), userDetails.getUsername(), fullName, email, phone, address, request, selectedItems);
+            String url = vnPayService.createOrder(totalPrice.intValue() + globalShippingFee.intValue(), userDetails.getUsername(), fullName, email, phone, address, request, selectedItems);
             return "redirect:" + url;
         }
 
 
-        processThanhToan(userDetails.getUsername(), fullName, email, phone, address, selectedItems);
+        processThanhToan(userDetails.getUsername(), fullName, email, phone, address, savedSelectedItems);
         return "redirect:/khach-hang/don-hang/danh-sach";
     }
 
     @GetMapping("/khach-hang/thanh-toan/vnpay_return")
-    public String vnpayReturn(HttpServletResponse response,@RequestParam(required = false) String selectedItems, @ModelAttribute PaymentInfoDTO paymentInfoDTO) {
-        if (paymentInfoDTO.getVnp_OrderInfo() == null || paymentInfoDTO.getVnp_OrderInfo().isEmpty()) {
-            throw new RuntimeException("Thông tin thanh toán không hợp lệ");
+    public String vnpayReturn(HttpServletResponse response, @RequestParam(required = false) String selectedItems, @ModelAttribute PaymentInfoDTO paymentInfoDTO, HttpServletRequest request) {
+        int status = vnPayService.orderReturn(request);
+        if(status == 0) {
+
+            // failure
+            return "redirect:/khach-hang/don-hang/danh-sach";
+        }
+         else {
+             // sucess
+            if (paymentInfoDTO.getVnp_OrderInfo() == null || paymentInfoDTO.getVnp_OrderInfo().isEmpty()) {
+                throw new RuntimeException("Thông tin thanh toán không hợp lệ");
+            }
+
+
+            String[] userDetail = paymentInfoDTO.getVnp_OrderInfo().split(", ");
+            if (userDetail.length < 5) {
+                throw new RuntimeException("Dữ liệu không đủ để xử lý thanh toán");
+            }
+
+            // Thêm tham số selectedItems nếu cần
+            processThanhToan(userDetail[0], userDetail[1], userDetail[2], userDetail[3], userDetail[4], savedSelectedItems);
+
+            return "redirect:/khach-hang/don-hang/danh-sach";
         }
 
-        String[] userDetail = paymentInfoDTO.getVnp_OrderInfo().split(", ");
-        if (userDetail.length < 5) {
-            throw new RuntimeException("Dữ liệu không đủ để xử lý thanh toán");
-        }
-
-        // Thêm tham số selectedItems nếu cần
-        processThanhToan(userDetail[0], userDetail[1], userDetail[2], userDetail[3], userDetail[4], savedSelectedItems);
-
-        return "redirect:/khach-hang/don-hang/danh-sach";
     }
 
     void processThanhToan(String username, String fullName, String email, String phone, String address, String selectedItems) {
@@ -488,7 +508,7 @@ public class KhachHangController {
         donHang.setKhachHang(khachHang);
         donHang.setTongGia(selectedItemsList.stream()
                 .mapToDouble(item -> item.getSoLuong() * item.getSanPhamChiTiet().getDonGia())
-                .sum());
+                .sum() +  globalShippingFee);
         donHang.setTrangThai("Chờ xử lý");
         donHang.setNgayTao(new Date());
 
