@@ -67,6 +67,7 @@ public class KhachHangController {
 
     private Boolean globalMuaNgay = false;
 
+    private Double globalShippingFee = 0.0;
     @GetMapping("/khach-hang/hien-thi")
     public String hienThiDanhSachKhachHang(Model model) {
         List<KhachHang> listKh = khachHangRepository.findAll(); // Lấy danh sách khách hàng
@@ -372,6 +373,7 @@ public class KhachHangController {
                           @RequestParam String phone,
                           @RequestParam String address,
                           @RequestParam String paymentMethod,
+                          @RequestParam(required = false) String shippingFee, // Added shippingFee parameter
                           @RequestParam(required = false) String selectedItems,
                           HttpServletRequest request) throws UnsupportedEncodingException {
 
@@ -380,6 +382,12 @@ public class KhachHangController {
         if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser")) {
             return "redirect:/login"; // Chuyển hướng đến trang đăng nhập nếu người dùng chưa đăng nhập
         }
+
+        globalShippingFee = (shippingFee != null) ? Double.parseDouble(shippingFee) : 0.0;
+
+        // Log or use the shippingFeeValue as needed
+        System.out.println("Shipping Fee: " + globalShippingFee);
+
 
 //        if (paymentMethod.equals("card")) {
 //            KhachHang khachHang = khachHangService.findByTaiKhoan(userDetails.getUsername()).get();
@@ -393,7 +401,7 @@ public class KhachHangController {
             GioHang gioHang = gioHangService.findByKhachHang(khachHang).get();
 
             // Truyền danh sách sản phẩm đã chọn vào VNPay
-            String url = vnPayService.createOrder(totalPrice.intValue(), userDetails.getUsername(), fullName, email, phone, address, request, selectedItems);
+            String url = vnPayService.createOrder(totalPrice.intValue() + globalShippingFee.intValue(), userDetails.getUsername(), fullName, email, phone, address, request, selectedItems);
             return "redirect:" + url;
         }
 
@@ -500,7 +508,7 @@ public class KhachHangController {
         donHang.setKhachHang(khachHang);
         donHang.setTongGia(selectedItemsList.stream()
                 .mapToDouble(item -> item.getSoLuong() * item.getSanPhamChiTiet().getDonGia())
-                .sum());
+                .sum() +  globalShippingFee);
         donHang.setTrangThai("Chờ xử lý");
         donHang.setNgayTao(new Date());
 
