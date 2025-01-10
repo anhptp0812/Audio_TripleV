@@ -4,6 +4,7 @@ import com.example.demo.entity.*;
 import com.example.demo.service.*;
 import com.example.demo.repository.KhachHangRepository;
 import com.example.demo.vnconfig.PaymentInfoDTO;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -61,6 +62,9 @@ public class KhachHangController {
 
     private String savedSelectedItems;
 
+    private GioHang muaNgayGioHang;
+
+    private Boolean globalMuaNgay = false;
 
     @GetMapping("/khach-hang/hien-thi")
     public String hienThiDanhSachKhachHang(Model model) {
@@ -201,7 +205,8 @@ public class KhachHangController {
     @GetMapping("/khach-hang/thanh-toan/hien-thi")
     public String hienThiThanhToan(Model model,
                                    @RequestParam(required = false) String selectedItems,
-                                   @AuthenticationPrincipal UserDetails userDetails) {
+                                   @RequestParam(required = false) Boolean muaNgay,
+                                   @AuthenticationPrincipal UserDetails userDetails) throws JsonProcessingException {
         if (selectedItems != null) {
             savedSelectedItems = selectedItems;
         }
@@ -284,16 +289,80 @@ public class KhachHangController {
             String formattedDonGia = item.getSanPhamChiTiet().getFormattedDonGia();
             item.getSanPhamChiTiet().setFormattedDonGia(formattedDonGia);
         });
+//
+//        if (muaNgay != null && muaNgay) {
+//            // Handle "Mua ngay" case separately, e.g., skip loading full cart
+//          gioHang.setGioHangChiTietList(updatedItems);
+//        }
+
+        model.addAttribute("gioHang", gioHang);
 
         // Thêm dữ liệu vào model
         model.addAttribute("cartCount", totalQuantity);
-        model.addAttribute("khachHang", khachHang);
-        model.addAttribute("gioHang", gioHang);
         model.addAttribute("totalPrice", formattedTotalPrice);  // Truyền tổng tiền đã định dạng
+
+
+
+        if (Boolean.TRUE.equals(muaNgay)) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<ItemDTO> selectedItemList = objectMapper.readValue(selectedItems, new TypeReference<List<ItemDTO>>() {});
+
+            // Lọc giỏ hàng theo danh sách sản phẩm được chọn và cập nhật số lượng
+            Map<Integer, Integer> selectedItemMap = selectedItemList.stream()
+                    .collect(Collectors.toMap(ItemDTO::getId, ItemDTO::getQuantity));
+
+
+            // "Mua ngay" case: create a temporary cart with only the selected item
+            List<GioHangChiTiet> temporaryItems = selectedItemList.stream()
+                    .map(item -> createGioHangChiTiet(item, selectedItemMap.get(item.getId())))
+                    .collect(Collectors.toList());
+            gioHang.setGioHangChiTietList(temporaryItems);
+
+
+            model.addAttribute("gioHang", gioHang);
+            totalPrice = gioHang.getGioHangChiTietList().stream()
+                    .mapToDouble(item -> item.getSoLuong() * item.getSanPhamChiTiet().getDonGia())
+                    .sum();
+
+            totalQuantity = gioHang.getGioHangChiTietList().stream()
+                    .mapToInt(GioHangChiTiet::getSoLuong)
+                    .sum();
+
+            // Format total price as Vietnamese currency
+            currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+            formattedTotalPrice = currencyFormat.format(totalPrice);
+
+            muaNgayGioHang = gioHang;
+            globalMuaNgay = true;
+
+            // Add the cart details and the formatted total price to the model
+            model.addAttribute("gioHang", gioHang);
+            model.addAttribute("cartCount", totalQuantity);
+            model.addAttribute("totalPrice", formattedTotalPrice);  // Truyền tổng tiền đã định dạng
+
+        }
+
+        model.addAttribute("khachHang", khachHang);
 
         return "customer/thanh-toan"; // Tên file HTML trong thư mục template
     }
 
+    public GioHangChiTiet createGioHangChiTiet(ItemDTO itemDTO, Integer quantity) {
+        // Create a new GioHangChiTiet object for each item in the selected list
+        GioHangChiTiet gioHangChiTiet = new GioHangChiTiet();
+
+        // Find SanPhamChiTiet using the item ID
+        SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietService.findSanPhamChiTietById(itemDTO.getId());
+
+        // Set the product details and quantity
+        gioHangChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
+        gioHangChiTiet.setSoLuong(quantity);
+
+        // Optionally, you can associate the GioHangChiTiet with a cart if needed
+        // gioHangChiTiet.setGioHang(gioHang);
+
+        return gioHangChiTiet;
+    }
 
     @PostMapping("/khach-hang/thanh-toan/dat-hang")
     public String datHang(@AuthenticationPrincipal UserDetails userDetails,
@@ -374,14 +443,6 @@ public class KhachHangController {
         // Lưu lại thông tin khách hàng đã cập nhật
         khachHangService.save(khachHang);
 
-        // Lấy giỏ hàng của khách hàng
-        GioHang gioHang = gioHangService.findByKhachHang(khachHang)
-                .orElseThrow(() -> new RuntimeException("Giỏ hàng không tồn tại"));
-
-        // Lọc sản phẩm được chọn
-//        List<Integer> selectedProductIds = Arrays.stream(selectedItems.split(","))
-//                .map(Integer::parseInt)
-//                .collect(Collectors.toList());
 
         JSONArray jsonArray = new JSONArray(selectedItems);
 
@@ -390,11 +451,38 @@ public class KhachHangController {
                 .mapToObj(i -> jsonArray.getJSONObject(i).getInt("id"))
                 .collect(Collectors.toList());
 
+        List<GioHangChiTiet> selectedItemsList = null; GioHang gioHang = null;
 
-        List<GioHangChiTiet> selectedItemsList = gioHang.getGioHangChiTietList().stream()
-                .filter(item -> selectedProductIds.contains(item.getSanPhamChiTiet().getId()))
-                .collect(Collectors.toList());
+        if (!globalMuaNgay) {
+            // Lấy giỏ hàng của khách hàng
+            gioHang = gioHangService.findByKhachHang(khachHang)
+                    .orElseThrow(() -> new RuntimeException("Giỏ hàng không tồn tại"));
 
+            // Lọc sản phẩm được chọn
+//        List<Integer> selectedProductIds = Arrays.stream(selectedItems.split(","))
+//                .map(Integer::parseInt)
+//                .collect(Collectors.toList());
+//
+//            JSONArray jsonArray = new JSONArray(selectedItems);
+//
+//            // Extract only the IDs using a stream
+//            List<Integer> selectedProductIds = IntStream.range(0, jsonArray.length())
+//                    .mapToObj(i -> jsonArray.getJSONObject(i).getInt("id"))
+//                    .collect(Collectors.toList());
+
+
+            selectedItemsList = gioHang.getGioHangChiTietList().stream()
+                    .filter(item -> selectedProductIds.contains(item.getSanPhamChiTiet().getId()))
+                    .collect(Collectors.toList());
+
+        } else {
+
+            // mua ngay true
+            selectedItemsList = muaNgayGioHang.getGioHangChiTietList().stream()
+                    .filter(item -> selectedProductIds.contains(item.getSanPhamChiTiet().getId()))
+                    .collect(Collectors.toList());
+
+        }
         // Tạo đơn hàng mới
         DonHang donHang = new DonHang();
         donHang.setKhachHang(khachHang);
@@ -436,10 +524,14 @@ public class KhachHangController {
         donHangService.save(donHang);
 
         // Xóa các sản phẩm đã chọn khỏi giỏ hàng
-        gioHang.setGioHangChiTietList(gioHang.getGioHangChiTietList().stream()
-                .filter(item -> !selectedProductIds.contains(item.getSanPhamChiTiet().getId()))
-                .collect(Collectors.toList()));
-        gioHangService.save(gioHang);
+       if(!globalMuaNgay) {
+           gioHang.setGioHangChiTietList(gioHang.getGioHangChiTietList().stream()
+                   .filter(item -> !selectedProductIds.contains(item.getSanPhamChiTiet().getId()))
+                   .collect(Collectors.toList()));
+           gioHangService.save(gioHang);
+       }
+
+       if(globalMuaNgay) globalMuaNgay = false;
     }
 
     @GetMapping("/khach-hang/thong-tin")
