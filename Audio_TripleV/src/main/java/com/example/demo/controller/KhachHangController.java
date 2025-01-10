@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -402,20 +403,31 @@ public class KhachHangController {
     }
 
     @GetMapping("/khach-hang/thanh-toan/vnpay_return")
-    public String vnpayReturn(HttpServletResponse response,@RequestParam(required = false) String selectedItems, @ModelAttribute PaymentInfoDTO paymentInfoDTO) {
-        if (paymentInfoDTO.getVnp_OrderInfo() == null || paymentInfoDTO.getVnp_OrderInfo().isEmpty()) {
-            throw new RuntimeException("Thông tin thanh toán không hợp lệ");
+    public String vnpayReturn(HttpServletResponse response, @RequestParam(required = false) String selectedItems, @ModelAttribute PaymentInfoDTO paymentInfoDTO, HttpServletRequest request) {
+        int status = vnPayService.orderReturn(request);
+        if(status == 0) {
+
+            // failure
+            return "redirect:/khach-hang/don-hang/danh-sach";
+        }
+         else {
+             // sucess
+            if (paymentInfoDTO.getVnp_OrderInfo() == null || paymentInfoDTO.getVnp_OrderInfo().isEmpty()) {
+                throw new RuntimeException("Thông tin thanh toán không hợp lệ");
+            }
+
+
+            String[] userDetail = paymentInfoDTO.getVnp_OrderInfo().split(", ");
+            if (userDetail.length < 5) {
+                throw new RuntimeException("Dữ liệu không đủ để xử lý thanh toán");
+            }
+
+            // Thêm tham số selectedItems nếu cần
+            processThanhToan(userDetail[0], userDetail[1], userDetail[2], userDetail[3], userDetail[4], savedSelectedItems);
+
+            return "redirect:/khach-hang/don-hang/danh-sach";
         }
 
-        String[] userDetail = paymentInfoDTO.getVnp_OrderInfo().split(", ");
-        if (userDetail.length < 5) {
-            throw new RuntimeException("Dữ liệu không đủ để xử lý thanh toán");
-        }
-
-        // Thêm tham số selectedItems nếu cần
-        processThanhToan(userDetail[0], userDetail[1], userDetail[2], userDetail[3], userDetail[4], savedSelectedItems);
-
-        return "redirect:/khach-hang/don-hang/danh-sach";
     }
 
     void processThanhToan(String username, String fullName, String email, String phone, String address, String selectedItems) {
