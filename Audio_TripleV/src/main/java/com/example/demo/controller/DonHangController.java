@@ -110,6 +110,10 @@ public class DonHangController {
                 donHang.setNgayGiao(new Date());
             }
 
+            // Nếu trạng thái là 'Đã giao hàng', cập nhật trạng thái Payment
+            if ("Đã giao hàng".equals(status)) {
+                donHang.setTrangThaiPayment("Đã Thanh Toán");
+            }
             // Lưu lại thông tin thay đổi
             donHangService.save(donHang);
 

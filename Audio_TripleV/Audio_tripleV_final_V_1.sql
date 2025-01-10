@@ -61,7 +61,7 @@ CREATE TABLE SanPhamChiTiet  (
                                  NgayTao datetime,
                                  NgayCapNhat datetime
                                      foreign key(ID_San_Pham)
-                                         References SanPham (ID) ,
+                                     References SanPham (ID) ,
                                  foreign key(ID_MauSac)
                                      References MauSac (ID) ,
                                  foreign key(ID_Hang)
@@ -470,91 +470,91 @@ VALUES
 
 
 Select * from SanPham
-INSERT INTO SanPham
+    INSERT INTO SanPham
 VALUES ('Sony WH-1000XM4', GETDATE(), GETDATE()),
-       ('Sennheiser Momentum 4', GETDATE(), GETDATE()),
-       ('Bowers & Wilkins PX5', GETDATE(), GETDATE()),
-       ('Bowers & Wilkins PX7', GETDATE(), GETDATE()),
-       ('Bowers & Wilkins PX7 s2', GETDATE(), GETDATE()),
-       ('EarFun Wave Pro', GETDATE(), GETDATE()),
-       ('Razer BlackShark V2 Pro Gen 2', GETDATE(), GETDATE()),
-       ('Beyerdynamic DT 770 Pro X', GETDATE(), GETDATE()),
-       ('Beyerdynamic MMX 200 Wireless', GETDATE(), GETDATE()),
-       ('V-Moda Crossfade 3 Wireless', GETDATE(), GETDATE()),
-       ('Audiotechnica ATH-M50x', GETDATE(), GETDATE()),
-       ('Soundpeats Space Ceramic', GETDATE(), GETDATE()),
-       ('Bang & Olufsen Beoplay H95', GETDATE(), GETDATE()),
-       ('Noble Fokus Tri-umph', GETDATE(), GETDATE()),
-       ('Noble XM1 SO', GETDATE(), GETDATE()),
-       ('Noble Stage 3', GETDATE(), GETDATE()),
-       ('Noble Onyx', GETDATE(), GETDATE()),
-       ('FiiO JD1 Black Type-C SO', GETDATE(), GETDATE()),
-       ('Astell & Kern AK UW100 MKII', GETDATE(), GETDATE()),
-       ('AG Final Audio Cotsubu Black-S', GETDATE(), GETDATE()),
-       ('Audio Technica ATH-SQ1TW2', GETDATE(), GETDATE()),
-       ('AG Final Audio Cotsubu MK2', GETDATE(), GETDATE()),
-       ('FiiO FH19', GETDATE(), GETDATE()),
-       ('Wiwu T22', GETDATE(), GETDATE()),
-       ('kinera celest wyvern abyss', GETDATE(), GETDATE()),
-       ('AG Final Audio Cotsubu ASMR MK2', GETDATE(), GETDATE()),
-       ('AG Final Audio Cotsubu ASMR 3D', GETDATE(), GETDATE()),
-       ('Earfun Air Pro 4', GETDATE(), GETDATE()),
-       ('Soundpeats Capsule 3 Pro Plus', GETDATE(), GETDATE()),
-       ('Sennheiser Momentum True Wireless', GETDATE(), GETDATE()),
-       ('Sennheiser Momentum Sport Bluetooth', GETDATE(), GETDATE()),
-       ('Cambridge Audio Melomania 100', GETDATE(), GETDATE()),
-       ('JBL Everest 310', GETDATE(), GETDATE()),
-       ('Pioneer SE-S3BT', GETDATE(), GETDATE()),
-       ('Technica ATH-S200BT', GETDATE(), GETDATE()),
-       ('Earldom ET-BH52', GETDATE(), GETDATE()),
-       ('Marshall Major IV', GETDATE(), GETDATE()),
-       ('Skullcandy Riff Wireless 2', GETDATE(), GETDATE()),
-       ('Philips TAH420', GETDATE(), GETDATE()),
-       ('Sony WH-CH520', GETDATE(), GETDATE()),
-       ('JBL Tune 520BT', GETDATE(), GETDATE()),
-       ('Beats Solo 4', GETDATE(), GETDATE()),
-       ('Marshall Major V', GETDATE(), GETDATE()),
+    ('Sennheiser Momentum 4', GETDATE(), GETDATE()),
+    ('Bowers & Wilkins PX5', GETDATE(), GETDATE()),
+    ('Bowers & Wilkins PX7', GETDATE(), GETDATE()),
+    ('Bowers & Wilkins PX7 s2', GETDATE(), GETDATE()),
+    ('EarFun Wave Pro', GETDATE(), GETDATE()),
+    ('Razer BlackShark V2 Pro Gen 2', GETDATE(), GETDATE()),
+    ('Beyerdynamic DT 770 Pro X', GETDATE(), GETDATE()),
+    ('Beyerdynamic MMX 200 Wireless', GETDATE(), GETDATE()),
+    ('V-Moda Crossfade 3 Wireless', GETDATE(), GETDATE()),
+    ('Audiotechnica ATH-M50x', GETDATE(), GETDATE()),
+    ('Soundpeats Space Ceramic', GETDATE(), GETDATE()),
+    ('Bang & Olufsen Beoplay H95', GETDATE(), GETDATE()),
+    ('Noble Fokus Tri-umph', GETDATE(), GETDATE()),
+    ('Noble XM1 SO', GETDATE(), GETDATE()),
+    ('Noble Stage 3', GETDATE(), GETDATE()),
+    ('Noble Onyx', GETDATE(), GETDATE()),
+    ('FiiO JD1 Black Type-C SO', GETDATE(), GETDATE()),
+    ('Astell & Kern AK UW100 MKII', GETDATE(), GETDATE()),
+    ('AG Final Audio Cotsubu Black-S', GETDATE(), GETDATE()),
+    ('Audio Technica ATH-SQ1TW2', GETDATE(), GETDATE()),
+    ('AG Final Audio Cotsubu MK2', GETDATE(), GETDATE()),
+    ('FiiO FH19', GETDATE(), GETDATE()),
+    ('Wiwu T22', GETDATE(), GETDATE()),
+    ('kinera celest wyvern abyss', GETDATE(), GETDATE()),
+    ('AG Final Audio Cotsubu ASMR MK2', GETDATE(), GETDATE()),
+    ('AG Final Audio Cotsubu ASMR 3D', GETDATE(), GETDATE()),
+    ('Earfun Air Pro 4', GETDATE(), GETDATE()),
+    ('Soundpeats Capsule 3 Pro Plus', GETDATE(), GETDATE()),
+    ('Sennheiser Momentum True Wireless', GETDATE(), GETDATE()),
+    ('Sennheiser Momentum Sport Bluetooth', GETDATE(), GETDATE()),
+    ('Cambridge Audio Melomania 100', GETDATE(), GETDATE()),
+    ('JBL Everest 310', GETDATE(), GETDATE()),
+    ('Pioneer SE-S3BT', GETDATE(), GETDATE()),
+    ('Technica ATH-S200BT', GETDATE(), GETDATE()),
+    ('Earldom ET-BH52', GETDATE(), GETDATE()),
+    ('Marshall Major IV', GETDATE(), GETDATE()),
+    ('Skullcandy Riff Wireless 2', GETDATE(), GETDATE()),
+    ('Philips TAH420', GETDATE(), GETDATE()),
+    ('Sony WH-CH520', GETDATE(), GETDATE()),
+    ('JBL Tune 520BT', GETDATE(), GETDATE()),
+    ('Beats Solo 4', GETDATE(), GETDATE()),
+    ('Marshall Major V', GETDATE(), GETDATE()),
 
-       ('Koss Porta Pro', GETDATE(), GETDATE()),
-       ('Fiio FA19', GETDATE(), GETDATE()),
-       ('Sennheiser HD 490 Pro', GETDATE(), GETDATE()),
-       ('JBL Tune 310C', GETDATE(), GETDATE()),
-       ('Noble Audio XM1', GETDATE(), GETDATE()),
-       ('Noble Audio Stage 3', GETDATE(), GETDATE()),
-       ('Audeze MM-50', GETDATE(), GETDATE()),
-       ('Moondrop U2', GETDATE(), GETDATE()),
-       ('Fiio JD1', GETDATE(), GETDATE()),
-       ('Fiio FD11', GETDATE(), GETDATE()),
-       ('Koss KS C35', GETDATE(), GETDATE()),
-       ('Fiio JD15', GETDATE(), GETDATE()),
-       ('Fiio fh19', GETDATE(), GETDATE()),
-       ('Wiwu ktd 01', GETDATE(), GETDATE()),
-       ('Apple Earpods', GETDATE(), GETDATE()),
-       ('Fiio FT1', GETDATE(), GETDATE()),
-       ('Razer Kraken Kitty v2', GETDATE(), GETDATE()),
-       ('Koss UR20', GETDATE(), GETDATE()),
-       ('wiwu eb314', GETDATE(), GETDATE()),
-       ('Ultrasone Signature', GETDATE(), GETDATE()),
-       ('Sony MDR-M1', GETDATE(), GETDATE()),
-       ('Ultrasone Edition 1', GETDATE(), GETDATE()),
+    ('Koss Porta Pro', GETDATE(), GETDATE()),
+    ('Fiio FA19', GETDATE(), GETDATE()),
+    ('Sennheiser HD 490 Pro', GETDATE(), GETDATE()),
+    ('JBL Tune 310C', GETDATE(), GETDATE()),
+    ('Noble Audio XM1', GETDATE(), GETDATE()),
+    ('Noble Audio Stage 3', GETDATE(), GETDATE()),
+    ('Audeze MM-50', GETDATE(), GETDATE()),
+    ('Moondrop U2', GETDATE(), GETDATE()),
+    ('Fiio JD1', GETDATE(), GETDATE()),
+    ('Fiio FD11', GETDATE(), GETDATE()),
+    ('Koss KS C35', GETDATE(), GETDATE()),
+    ('Fiio JD15', GETDATE(), GETDATE()),
+    ('Fiio fh19', GETDATE(), GETDATE()),
+    ('Wiwu ktd 01', GETDATE(), GETDATE()),
+    ('Apple Earpods', GETDATE(), GETDATE()),
+    ('Fiio FT1', GETDATE(), GETDATE()),
+    ('Razer Kraken Kitty v2', GETDATE(), GETDATE()),
+    ('Koss UR20', GETDATE(), GETDATE()),
+    ('wiwu eb314', GETDATE(), GETDATE()),
+    ('Ultrasone Signature', GETDATE(), GETDATE()),
+    ('Sony MDR-M1', GETDATE(), GETDATE()),
+    ('Ultrasone Edition 1', GETDATE(), GETDATE()),
 
-       ('Bowers & Wilkins PI5', GETDATE(), GETDATE()),
-       ('Bowers & Wilkins PI5 S2', GETDATE(), GETDATE()),
-       ('Sennheiser Momentum True Wireless 4', GETDATE(), GETDATE()),
-       ('Bose QuietComfort Earbuds', GETDATE(), GETDATE()),
-       ('Beats Solo Buds', GETDATE(), GETDATE()),
-       ('AG Final Audio', GETDATE(), GETDATE()),
-       ('Earfun Air Pro 4', GETDATE(), GETDATE()),
-       ('Soundpeats Air 5', GETDATE(), GETDATE()),
-       ('Noble Fokus', GETDATE(), GETDATE()),
-       ('WF-C510', GETDATE(), GETDATE()),
-       ('Bowers & Wilkins PI6', GETDATE(), GETDATE()),
-       ('Bowers & Wilkins PI8', GETDATE(), GETDATE()),
-       ('Apple AirPods 4', GETDATE(), GETDATE()),
-       ('Wiwu T28', GETDATE(), GETDATE()),
-       ('Cleer Arc 3 Sport', GETDATE(), GETDATE()),
-       ('Cambridge Audio Melomania 100', GETDATE(), GETDATE()),
-       ('Cleer Arc 3', GETDATE(), GETDATE());
+    ('Bowers & Wilkins PI5', GETDATE(), GETDATE()),
+    ('Bowers & Wilkins PI5 S2', GETDATE(), GETDATE()),
+    ('Sennheiser Momentum True Wireless 4', GETDATE(), GETDATE()),
+    ('Bose QuietComfort Earbuds', GETDATE(), GETDATE()),
+    ('Beats Solo Buds', GETDATE(), GETDATE()),
+    ('AG Final Audio', GETDATE(), GETDATE()),
+    ('Earfun Air Pro 4', GETDATE(), GETDATE()),
+    ('Soundpeats Air 5', GETDATE(), GETDATE()),
+    ('Noble Fokus', GETDATE(), GETDATE()),
+    ('WF-C510', GETDATE(), GETDATE()),
+    ('Bowers & Wilkins PI6', GETDATE(), GETDATE()),
+    ('Bowers & Wilkins PI8', GETDATE(), GETDATE()),
+    ('Apple AirPods 4', GETDATE(), GETDATE()),
+    ('Wiwu T28', GETDATE(), GETDATE()),
+    ('Cleer Arc 3 Sport', GETDATE(), GETDATE()),
+    ('Cambridge Audio Melomania 100', GETDATE(), GETDATE()),
+    ('Cleer Arc 3', GETDATE(), GETDATE());
 
 
 
@@ -564,106 +564,106 @@ VALUES ('Sony WH-1000XM4', GETDATE(), GETDATE()),
 --DELETE Hang
 
 select * from SanPhamChiTiet
-INSERT INTO SanPhamChiTiet (ID_San_Pham, ID_MauSac, ID_Hang, ID_HinhAnh, ID_LoaiSanPham, DonGia , SoLuong, TrangThai, NgayTao, NgayCapNhat)
+    INSERT INTO SanPhamChiTiet (ID_San_Pham, ID_MauSac, ID_Hang, ID_HinhAnh, ID_LoaiSanPham, DonGia , SoLuong, TrangThai, NgayTao, NgayCapNhat)
 VALUES
 -----headphone
-(1, 9, 1, 1, 5, 5000000, 50, N'Còn hàng', GETDATE(), GETDATE()), -- Sony WH-1000XM4
-(2, 9, 2, 3, 5, 6000000, 50, N'Còn hàng', GETDATE(), GETDATE()), -- Sennheiser Momentum 4
-(3, 11, 3, 3, 5, 8000000, 50, N'Còn hàng', GETDATE(), GETDATE()), -- Bowers & Wilkins PX5
-(4, 9, 3, 4, 5, 9000000, 50, N'Còn hàng', GETDATE(), GETDATE()), -- Bowers & Wilkins PX7
-(5, 9, 3, 5, 5, 8000000, 50, N'Còn hàng', GETDATE(), GETDATE()), -- Bowers & Wilkins PX7 s2
-(6, 9, 4, 6, 5, 7000000 , 50, N'Còn hàng', GETDATE(), GETDATE()), -- EarFun Wave Pro
-(7, 9, 5, 7, 5, 6000000 , 50, N'Còn hàng', GETDATE(), GETDATE()), -- Razer BlackShark V2 Pro Gen 2
-(8, 11, 6, 8, 5, 5000000 , 0, N'Hết hàng', GETDATE(), GETDATE()), -- Beyerdynamic DT 770 Pro X
-(9, 9, 6, 9, 5, 4000000 , 50, N'Còn hàng', GETDATE(), GETDATE()), -- Beyerdynamic MMX 200 Wireless
-(10, 9, 7, 10, 5, 9000000 , 50, N'Còn hàng', GETDATE(), GETDATE()), -- V-Moda Crossfade 3 Wireless
-(11, 3, 8, 11, 5, 9000000 , 50,  N'Còn hàng', GETDATE(), GETDATE()), -- Audiotechnica ATH-M50x
-(12, 7, 9, 12, 5, 9000000 , 50,  N'Còn hàng', GETDATE(), GETDATE()), -- Soundpeats Space Ceramic
-(13, 20, 10, 13, 5, 9000000 , 50,  N'Còn hàng', GETDATE(), GETDATE()), -- Bang & Olufsen Beoplay H95
+    (1, 9, 1, 1, 5, 5000000, 50, N'Còn hàng', GETDATE(), GETDATE()), -- Sony WH-1000XM4
+    (2, 9, 2, 3, 5, 6000000, 50, N'Còn hàng', GETDATE(), GETDATE()), -- Sennheiser Momentum 4
+    (3, 11, 3, 3, 5, 8000000, 50, N'Còn hàng', GETDATE(), GETDATE()), -- Bowers & Wilkins PX5
+    (4, 9, 3, 4, 5, 9000000, 50, N'Còn hàng', GETDATE(), GETDATE()), -- Bowers & Wilkins PX7
+    (5, 9, 3, 5, 5, 8000000, 50, N'Còn hàng', GETDATE(), GETDATE()), -- Bowers & Wilkins PX7 s2
+    (6, 9, 4, 6, 5, 7000000 , 50, N'Còn hàng', GETDATE(), GETDATE()), -- EarFun Wave Pro
+    (7, 9, 5, 7, 5, 6000000 , 50, N'Còn hàng', GETDATE(), GETDATE()), -- Razer BlackShark V2 Pro Gen 2
+    (8, 11, 6, 8, 5, 5000000 , 0, N'Hết hàng', GETDATE(), GETDATE()), -- Beyerdynamic DT 770 Pro X
+    (9, 9, 6, 9, 5, 4000000 , 50, N'Còn hàng', GETDATE(), GETDATE()), -- Beyerdynamic MMX 200 Wireless
+    (10, 9, 7, 10, 5, 9000000 , 50, N'Còn hàng', GETDATE(), GETDATE()), -- V-Moda Crossfade 3 Wireless
+    (11, 3, 8, 11, 5, 9000000 , 50,  N'Còn hàng', GETDATE(), GETDATE()), -- Audiotechnica ATH-M50x
+    (12, 7, 9, 12, 5, 9000000 , 50,  N'Còn hàng', GETDATE(), GETDATE()), -- Soundpeats Space Ceramic
+    (13, 20, 10, 13, 5, 9000000 , 50,  N'Còn hàng', GETDATE(), GETDATE()), -- Bang & Olufsen Beoplay H95
 -----inear
-(14, 7, 11, 14, 4,  9000000 , 50,  N'Còn hàng', GETDATE(), GETDATE()), -- Noble Fokus Tri-umph
-(15, 8, 11, 15, 4,  9000000 , 50,  N'Còn hàng', GETDATE(), GETDATE()), -- Noble XM1 SO
-(16, 8, 11, 16, 4,  9000000 , 50,  N'Còn hàng', GETDATE(), GETDATE()), -- Noble Stage 3
-(17, 8, 11, 17, 4, 9000000 ,  50,  N'Còn hàng', GETDATE(), GETDATE()), -- Noble Onyx
-(18, 8, 12, 19, 4, 9000000 , 50,  N'Còn hàng', GETDATE(), GETDATE()), -- FiiO JD1 Black Type-C SO
-(19, 11, 13, 18, 4, 9000000 , 50,  N'Còn hàng', GETDATE(), GETDATE()), -- Astell & Kern AK UW100 MKII
-(20, 8, 14, 33, 4, 9000000 , 50,  N'Còn hàng', GETDATE(), GETDATE()), -- AG Final Audio Cotsubu Black-S
-(21, 2, 8, 32, 4, 9000000 , 50,  N'Còn hàng', GETDATE(), GETDATE()), -- Audio Technica ATH-SQ1TW2
-(22, 25, 13, 25, 4, 9000000 ,  50,  N'Còn hàng', GETDATE(), GETDATE()), -- AG Final Audio Cotsubu MK2
-(23, 10, 12, 29, 4,9000000 ,  50,  N'Còn hàng', GETDATE(), GETDATE()), -- FiiO FH19
-(24, 9, 15, 28, 4,9000000 ,  50,  N'Còn hàng', GETDATE(), GETDATE()),-- Wiwu T22
+    (14, 7, 11, 14, 4,  9000000 , 50,  N'Còn hàng', GETDATE(), GETDATE()), -- Noble Fokus Tri-umph
+    (15, 8, 11, 15, 4,  9000000 , 50,  N'Còn hàng', GETDATE(), GETDATE()), -- Noble XM1 SO
+    (16, 8, 11, 16, 4,  9000000 , 50,  N'Còn hàng', GETDATE(), GETDATE()), -- Noble Stage 3
+    (17, 8, 11, 17, 4, 9000000 ,  50,  N'Còn hàng', GETDATE(), GETDATE()), -- Noble Onyx
+    (18, 8, 12, 19, 4, 9000000 , 50,  N'Còn hàng', GETDATE(), GETDATE()), -- FiiO JD1 Black Type-C SO
+    (19, 11, 13, 18, 4, 9000000 , 50,  N'Còn hàng', GETDATE(), GETDATE()), -- Astell & Kern AK UW100 MKII
+    (20, 8, 14, 33, 4, 9000000 , 50,  N'Còn hàng', GETDATE(), GETDATE()), -- AG Final Audio Cotsubu Black-S
+    (21, 2, 8, 32, 4, 9000000 , 50,  N'Còn hàng', GETDATE(), GETDATE()), -- Audio Technica ATH-SQ1TW2
+    (22, 25, 13, 25, 4, 9000000 ,  50,  N'Còn hàng', GETDATE(), GETDATE()), -- AG Final Audio Cotsubu MK2
+    (23, 10, 12, 29, 4,9000000 ,  50,  N'Còn hàng', GETDATE(), GETDATE()), -- FiiO FH19
+    (24, 9, 15, 28, 4,9000000 ,  50,  N'Còn hàng', GETDATE(), GETDATE()),-- Wiwu T22
 -----inear
-(14, 7, 11, 14, 4,  9000000 , 50,  N'Còn hàng', GETDATE(), GETDATE()), -- Noble Fokus Tri-umph
-(15, 8, 11, 15, 4,  9000000 , 50,  N'Còn hàng', GETDATE(), GETDATE()), -- Noble XM1 SO
-(16, 8, 11, 16, 4,  9000000 , 50,  N'Còn hàng', GETDATE(), GETDATE()), -- Noble Stage 3
-(17, 8, 11, 17, 4, 9000000 ,  50,  N'Còn hàng', GETDATE(), GETDATE()), -- Noble Onyx
-(18, 8, 12, 19, 4, 9000000 , 50,  N'Còn hàng', GETDATE(), GETDATE()), -- FiiO JD1 Black Type-C SO
-(19, 11, 13, 18, 4, 9000000 , 50,  N'Còn hàng', GETDATE(), GETDATE()), -- Astell & Kern AK UW100 MKII
-(20, 8, 14, 33, 4, 9000000 , 50,  N'Còn hàng', GETDATE(), GETDATE()), -- AG Final Audio Cotsubu Black-S
-(21, 2, 8, 32, 4, 9000000 , 50,  N'Còn hàng', GETDATE(), GETDATE()), -- Audio Technica ATH-SQ1TW2
-(27, 20, 13, 25, 4, 9000000 ,  50,  N'Còn hàng', GETDATE(), GETDATE()), -- AG Final Audio Cotsubu ASMR 3D
-(23, 11, 12, 29, 4,9000000 ,  50,  N'Còn hàng', GETDATE(), GETDATE()), -- FiiO FH19
-(24, 9, 15, 28, 4,9000000 ,  50,  N'Còn hàng', GETDATE(), GETDATE()),-- Wiwu T22
-(25, 6, 33, 27, 4, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- kinera celest wyvern abyss
-(26, 6, 14, 26, 4, 9000000 ,  50,  N'Còn hàng', GETDATE(), GETDATE()), -- AG Final Audio Cotsubu ASMR MK2
-(28, 8, 4, 21, 4, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Earfun Air Pro 4
-(29, 8, 9, 24, 4, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Soundpeats Capsule 3 Pro Plus
-(30, 8, 2, 34, 4, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Sennheiser Momentum True Wireless
-(31, 8, 2, 23, 4, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Sennheiser Momentum Sport Bluetooth
-(32, 8, 17, 20, 4, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Cambridge Audio Melomania 100
+    (14, 7, 11, 14, 4,  9000000 , 50,  N'Còn hàng', GETDATE(), GETDATE()), -- Noble Fokus Tri-umph
+    (15, 8, 11, 15, 4,  9000000 , 50,  N'Còn hàng', GETDATE(), GETDATE()), -- Noble XM1 SO
+    (16, 8, 11, 16, 4,  9000000 , 50,  N'Còn hàng', GETDATE(), GETDATE()), -- Noble Stage 3
+    (17, 8, 11, 17, 4, 9000000 ,  50,  N'Còn hàng', GETDATE(), GETDATE()), -- Noble Onyx
+    (18, 8, 12, 19, 4, 9000000 , 50,  N'Còn hàng', GETDATE(), GETDATE()), -- FiiO JD1 Black Type-C SO
+    (19, 11, 13, 18, 4, 9000000 , 50,  N'Còn hàng', GETDATE(), GETDATE()), -- Astell & Kern AK UW100 MKII
+    (20, 8, 14, 33, 4, 9000000 , 50,  N'Còn hàng', GETDATE(), GETDATE()), -- AG Final Audio Cotsubu Black-S
+    (21, 2, 8, 32, 4, 9000000 , 50,  N'Còn hàng', GETDATE(), GETDATE()), -- Audio Technica ATH-SQ1TW2
+    (27, 20, 13, 25, 4, 9000000 ,  50,  N'Còn hàng', GETDATE(), GETDATE()), -- AG Final Audio Cotsubu ASMR 3D
+    (23, 11, 12, 29, 4,9000000 ,  50,  N'Còn hàng', GETDATE(), GETDATE()), -- FiiO FH19
+    (24, 9, 15, 28, 4,9000000 ,  50,  N'Còn hàng', GETDATE(), GETDATE()),-- Wiwu T22
+    (25, 6, 33, 27, 4, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- kinera celest wyvern abyss
+    (26, 6, 14, 26, 4, 9000000 ,  50,  N'Còn hàng', GETDATE(), GETDATE()), -- AG Final Audio Cotsubu ASMR MK2
+    (28, 8, 4, 21, 4, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Earfun Air Pro 4
+    (29, 8, 9, 24, 4, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Soundpeats Capsule 3 Pro Plus
+    (30, 8, 2, 34, 4, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Sennheiser Momentum True Wireless
+    (31, 8, 2, 23, 4, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Sennheiser Momentum Sport Bluetooth
+    (32, 8, 17, 20, 4, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Cambridge Audio Melomania 100
 -----onear
-(33, 10, 18, 45, 3, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- JBL Everest 310
-(34, 3, 19, 44, 3,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Pioneer SE-S3BT
-(35, 8, 8, 43, 3,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Technica ATH-S200BT
-(36, 10, 21, 42, 3,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Earldom ET-BH52
-(37, 8, 22, 41, 3,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Marshall Major IV
-(38, 8, 23, 40, 3,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Skullcandy Riff Wireless 2
-(39, 8, 24, 39, 3,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Philips TAH420
-(40, 8, 1, 38, 3,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Sony WH-CH520
-(41, 8, 18, 37, 3,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- JBL Tune 520BT
-(42, 3, 25, 36, 3,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Beats Solo 4
-(43, 8, 22, 35, 3,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Marshall Major V
+    (33, 10, 18, 45, 3, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- JBL Everest 310
+    (34, 3, 19, 44, 3,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Pioneer SE-S3BT
+    (35, 8, 8, 43, 3,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Technica ATH-S200BT
+    (36, 10, 21, 42, 3,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Earldom ET-BH52
+    (37, 8, 22, 41, 3,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Marshall Major IV
+    (38, 8, 23, 40, 3,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Skullcandy Riff Wireless 2
+    (39, 8, 24, 39, 3,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Philips TAH420
+    (40, 8, 1, 38, 3,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Sony WH-CH520
+    (41, 8, 18, 37, 3,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- JBL Tune 520BT
+    (42, 3, 25, 36, 3,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Beats Solo 4
+    (43, 8, 22, 35, 3,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Marshall Major V
 -----taingheday
-(44, 8, 26, 47, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Koss Porta Pro
-(45, 10, 12, 48, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Fiio FA19
-(46, 8, 2, 50, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Sennheiser HD 490 Pro
-(47, 8, 18, 51, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- JBL Tune 310C
-(48, 8, 11, 52, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Noble Audio XM1
-(49, 8, 11, 53, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Noble Audio Stage 3
-(50, 22, 27, 54, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Audeze MM-50
-(51, 22, 28, 55, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Moondrop U2
-(52, 8, 12, 56, 2, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Fiio JD1
-(53, 22, 12, 57, 2, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Fiio FD11
-(54, 8, 26, 58, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Koss KS C35
-(55, 22, 12, 59, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Fiio JD15
-(56, 10, 12, 61, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Fiio fh19
-(57, 13	, 15, 63, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Wiwu ktd 01
-(58, 7	, 12, 65, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Fiio ft1
-(59, 9, 29, 66, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Apple Earpods
-(60, 13, 5, 67, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Razer Kraken Kitty v2
-(61, 8, 26, 68, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Koss UR20
-(62, 8, 15, 69, 2, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- wiwu eb314
-(63, 8, 30, 70, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Ultrasone Signature
-(64, 8, 1, 71, 2, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Sony MDR-M1
-(65, 22, 30, 72, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Ultrasone Edition 1
+    (44, 8, 26, 47, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Koss Porta Pro
+    (45, 10, 12, 48, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Fiio FA19
+    (46, 8, 2, 50, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Sennheiser HD 490 Pro
+    (47, 8, 18, 51, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- JBL Tune 310C
+    (48, 8, 11, 52, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Noble Audio XM1
+    (49, 8, 11, 53, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Noble Audio Stage 3
+    (50, 22, 27, 54, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Audeze MM-50
+    (51, 22, 28, 55, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Moondrop U2
+    (52, 8, 12, 56, 2, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Fiio JD1
+    (53, 22, 12, 57, 2, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Fiio FD11
+    (54, 8, 26, 58, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Koss KS C35
+    (55, 22, 12, 59, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Fiio JD15
+    (56, 10, 12, 61, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Fiio fh19
+    (57, 13	, 15, 63, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Wiwu ktd 01
+    (58, 7	, 12, 65, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Fiio ft1
+    (59, 9, 29, 66, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Apple Earpods
+    (60, 13, 5, 67, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Razer Kraken Kitty v2
+    (61, 8, 26, 68, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Koss UR20
+    (62, 8, 15, 69, 2, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- wiwu eb314
+    (63, 8, 30, 70, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Ultrasone Signature
+    (64, 8, 1, 71, 2, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Sony MDR-M1
+    (65, 22, 30, 72, 2,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Ultrasone Edition 1
 -----true wireless
-(66, 8, 3, 92, 1,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Bowers & Wilkins PI5
-(67, 10, 3, 91, 1,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Bowers & Wilkins PI5 S2
-(68, 21, 2, 90, 1,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Sennheiser Momentum True Wireless 4
-(69, 8, 31, 89, 1,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Bose QuietComfort Earbuds
-(70, 1, 25, 88, 1,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Beats Solo Buds
-(71, 25, 14, 87, 1,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- AG Final Audio
-(72, 8, 4, 85, 1, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Earfun Air Pro 4
-(73, 8, 9, 84, 1,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Soundpeats Air 5
-(74, 3, 11, 82, 1,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Noble Fokus
-(75, 4, 1, 81, 1,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- sony WF-C510
-(76, 8, 3, 80, 1, 9000000 ,  50,  N'Còn hàng', GETDATE(), GETDATE()), -- Bowers & Wilkins PI6
-(77, 8, 3, 79, 1, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Bowers & Wilkins PI8
-(78, 9, 29, 78, 1, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Apple AirPods 4
-(79, 8, 15, 76, 1, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Wiwu T28
-(80, 8, 32, 75, 1, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Cleer Arc 3 Sport
-(81, 8, 17, 73, 1, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Cambridge Audio Melomania 100
-(82, 8, 32, 74, 1, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()); -- Cleer Arc 3
+    (66, 8, 3, 92, 1,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Bowers & Wilkins PI5
+    (67, 10, 3, 91, 1,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Bowers & Wilkins PI5 S2
+    (68, 21, 2, 90, 1,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Sennheiser Momentum True Wireless 4
+    (69, 8, 31, 89, 1,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Bose QuietComfort Earbuds
+    (70, 1, 25, 88, 1,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Beats Solo Buds
+    (71, 25, 14, 87, 1,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- AG Final Audio
+    (72, 8, 4, 85, 1, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Earfun Air Pro 4
+    (73, 8, 9, 84, 1,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Soundpeats Air 5
+    (74, 3, 11, 82, 1,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Noble Fokus
+    (75, 4, 1, 81, 1,  9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- sony WF-C510
+    (76, 8, 3, 80, 1, 9000000 ,  50,  N'Còn hàng', GETDATE(), GETDATE()), -- Bowers & Wilkins PI6
+    (77, 8, 3, 79, 1, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Bowers & Wilkins PI8
+    (78, 9, 29, 78, 1, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Apple AirPods 4
+    (79, 8, 15, 76, 1, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Wiwu T28
+    (80, 8, 32, 75, 1, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Cleer Arc 3 Sport
+    (81, 8, 17, 73, 1, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()), -- Cambridge Audio Melomania 100
+    (82, 8, 32, 74, 1, 9000000 ,  50, N'Còn hàng', GETDATE(), GETDATE()); -- Cleer Arc 3
 
 -- Voucher 1: Giảm 10% cho hóa đơn trên 5 triệu
 INSERT INTO Voucher (Ten, Loai, GiaTriPhanTram, GiaTriHoaDonToiThieu, NgayBatDau, NgayKetThuc, TrangThai)

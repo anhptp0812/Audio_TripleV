@@ -75,4 +75,10 @@ public class    SanPhamChiTietService {
         // Giả sử bạn có một repository để truy vấn sản phẩm theo hãng
         return sanPhamChiTietRepository.findByHangId(hangId);
     }
+
+    public SanPhamChiTiet findSanPhamChiTietById(Integer id) {
+        // Assume you have a service or repository to fetch the product details by ID
+        // Replace this with your actual repository call or logic to fetch the product
+        return sanPhamChiTietRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
+    }
 }

@@ -3,10 +3,12 @@ package com.example.demo.service;
 import com.example.demo.entity.Article;
 import com.example.demo.entity.Comment;
 import com.example.demo.repository.CommentRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CommentService {
@@ -29,7 +31,12 @@ public class CommentService {
     }
 
     public void deleteCommentById(Integer id) {
-        commentRepository.deleteById(id);
+        Optional<Comment> commentOptional = commentRepository.findById(id);
+        if (commentOptional.isPresent()) {
+            commentRepository.delete(commentOptional.get());
+        } else {
+            throw new EntityNotFoundException("Bình luận không tồn tại");
+        }
     }
 
 }

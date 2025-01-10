@@ -212,13 +212,13 @@ public class NhanVienController {
         return "redirect:/user/khach-hang"; // Quay lại trang danh sách sau khi sửa khách hàng
     }
 
-    @GetMapping("/user/nhan-vien")
+    @GetMapping("/admin/nhan-vien")
     public String listNhanVien(Model model) {
         List<NhanVien> nhanViens = nhanVienService.getAllNhanViens(); // Lấy danh sách nhân viên từ service
         model.addAttribute("nhanViens", nhanViens); // Truyền danh sách nhân viên vào model
         return "admin/nhan-vien"; // Chuyển tới trang hiển thị danh sách
     }
-    @GetMapping("/user/nhan-vien/save")
+    @GetMapping("/admin/nhan-vien/save")
     public String showAddForm(Model model) {
         List<String> roles = nhanVienService.getAllRoles();
         model.addAttribute("roles", roles);
@@ -227,23 +227,23 @@ public class NhanVienController {
     }
 
     // Xử lý Thêm Mới Nhân Viên
-    @PostMapping("/user/nhan-vien/save")
+    @PostMapping("/admin/nhan-vien/save")
     public String saveNhanVien(@ModelAttribute NhanVien nhanVien) {
         // Mã hóa mật khẩu trước khi lưu
         String encodedPassword = passwordEncoder.encode(nhanVien.getPassword());
         nhanVien.setPassword(encodedPassword);
 
         nhanVienService.saveNhanVien(nhanVien); // Lưu nhân viên vào cơ sở dữ liệu
-        return "redirect:/user/nhan-vien"; // Sau khi lưu, chuyển hướng về trang danh sách nhân viên
+        return "redirect:/admin/nhan-vien"; // Sau khi lưu, chuyển hướng về trang danh sách nhân viên
     }
 
     // Phương thức GET để hiển thị form cập nhật thông tin nhân viên
-    @GetMapping("/user/nhan-vien/sua/{id}")
+    @GetMapping("/admin/nhan-vien/sua/{id}")
     public String suaNhanVien(@PathVariable Integer id, Model model) {
         NhanVien nhanVien = nhanVienService.layNhanVienTheoId(id); // Lấy thông tin nhân viên theo id
         if (nhanVien == null) {
             // Nếu không tìm thấy nhân viên, quay lại trang danh sách nhân viên
-            return "redirect:/user/nhan-vien";
+            return "redirect:/admin/nhan-vien";
         }
         List<String> roles = nhanVienService.getAllRoles();
         model.addAttribute("roles", roles);
@@ -252,7 +252,7 @@ public class NhanVienController {
     }
 
     // Phương thức POST để xử lý cập nhật thông tin nhân viên
-    @PostMapping("/user/nhan-vien/sua")
+    @PostMapping("/admin/nhan-vien/sua")
     public String suaNhanVien(@ModelAttribute NhanVien nhanVien) {
         // Kiểm tra nếu người dùng nhập mật khẩu mới, thì mã hóa mật khẩu mới
         if (nhanVien.getPassword() != null && !nhanVien.getPassword().isEmpty()) {
@@ -261,16 +261,16 @@ public class NhanVienController {
         }
 
         nhanVienService.suaNhanVien(nhanVien); // Gọi service để lưu thay đổi vào cơ sở dữ liệu
-        return "redirect:/user/nhan-vien"; // Quay lại trang danh sách nhân viên sau khi sửa
+        return "redirect:/admin/nhan-vien"; // Quay lại trang danh sách nhân viên sau khi sửa
     }
 
     // Xử lý xóa nhân viên
-    @GetMapping("/user/nhan-vien/xoa/{id}")
+    @GetMapping("/admin/nhan-vien/xoa/{id}")
     public String xoaNhanVien(@PathVariable("id") Integer id) {
         // Gọi service để xóa nhân viên theo id
         nhanVienService.xoaNhanVien(id);
         // Quay lại danh sách nhân viên
-        return "redirect:/user/nhan-vien"; // Điều hướng về trang danh sách nhân viên
+        return "redirect:/admin/nhan-vien"; // Điều hướng về trang danh sách nhân viên
     }
 
 
@@ -375,27 +375,34 @@ public class NhanVienController {
     @Autowired
     private CommentService commentService;
 
-    @GetMapping("/user/binh-luan/{articleId}")
+    @GetMapping("/user/bai-viet/{articleId}/binh-luan")
     public String showComments(@PathVariable Integer articleId, Model model) {
-        // Lấy bài viết theo ID
-        Article article = articleService.getArticleById(articleId);
+        try {
+            Article article = articleService.getArticleById(articleId);
+            List<Comment> comments = commentService.getCommentsByArticle(article);
 
-        // Lấy danh sách bình luận của bài viết
-        List<Comment> comments = commentService.getCommentsByArticle(article);
+            model.addAttribute("article", article);
+            model.addAttribute("comments", comments);
 
-        // Thêm bài viết và danh sách bình luận vào model
-        model.addAttribute("article", article);
-        model.addAttribute("comments", comments);
-
-        // Chuyển hướng tới trang bình luận
-        return "nhanvien/comment-list";  // Tạo trang comment-list.html
+            return "nhanvien/comment-list";
+        } catch (EntityNotFoundException ex) {
+            model.addAttribute("errorMessage", ex.getMessage());
+            return "error/404";  // Trang lỗi 404
+        }
     }
 
-    @GetMapping("/user/binh-luan/delete/{id}")
-    public String deleteComment(@PathVariable Integer id) {
-        // Tìm bình luận và xóa
-        commentService.deleteCommentById(id);
-        return "redirect:/user/binh-luan/" + id; // Chuyển về trang bình luận của bài viết sau khi xóa
+    @GetMapping("/user/bai-viet/{articleId}/binh-luan/delete/{id}")
+    public String deleteComment(@PathVariable Integer articleId, @PathVariable Integer id, Model model) {
+        try {
+            // Xóa bình luận theo ID
+            commentService.deleteCommentById(id);
+
+            // Chuyển hướng về danh sách bình luận của bài viết
+            return "redirect:/user/bai-viet/" + articleId + "/binh-luan";
+        } catch (EntityNotFoundException ex) {
+            model.addAttribute("errorMessage", ex.getMessage());
+            return "error/404"; // Trang lỗi 404
+        }
     }
 
 }

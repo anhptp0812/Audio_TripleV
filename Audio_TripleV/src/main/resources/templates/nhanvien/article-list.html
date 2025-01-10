@@ -60,7 +60,7 @@
                     <td th:text="${#dates.format(article.createdAt, 'dd/MM/yyyy')}"></td>
                     <td th:text="${#dates.format(article.updatedAt, 'dd/MM/yyyy')}"></td>
                     <td>
-                        <a th:href="@{/user/binh-luan/{articleId}(articleId=${article.id})}" class="btn btn-info btn-sm">
+                        <a th:href="@{/user/bai-viet/{articleId}/binh-luan(articleId=${article.id})}" class="btn btn-info btn-sm">
                             <i class="fas fa-comments"></i>
                         </a>
                         <a th:href="@{/user/bai-viet/edit/{id}(id=${article.id})}"

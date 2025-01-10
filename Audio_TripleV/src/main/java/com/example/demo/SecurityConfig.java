@@ -59,7 +59,7 @@ public class SecurityConfig {
                                 "/khach-hang/bai-viet/**", "khach-hang/lien-he/**").permitAll()
                         // Các URL cần quyền cụ thể
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")
-                        .requestMatchers("/user/**").hasAuthority("USER")
+                        .requestMatchers("/user/**").hasAnyAuthority("USER", "ADMIN")
                         .requestMatchers("/khach-hang/**").hasAuthority("KHACHHANG")
 
                         // Tất cả các yêu cầu khác cần xác thực

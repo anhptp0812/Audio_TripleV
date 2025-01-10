@@ -29,6 +29,5 @@ public interface KhachHangRepository extends JpaRepository<KhachHang, Integer> {
     @Query("SELECT DISTINCT k.role FROM KhachHang k")
     List<String> findAllRoles();  // Truy vấn tất cả các vai trò
 
-
 }
 
