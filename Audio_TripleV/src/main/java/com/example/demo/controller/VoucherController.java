@@ -117,6 +117,11 @@ public class VoucherController {
         HoaDon hoaDon = hoaDonOptional.get();
         Voucher voucher = voucherOptional.get();
 
+        // Kiểm tra nếu tổng tiền nhỏ hơn giá trị tối thiểu của voucher
+        if (hoaDon.getTongGia() < voucher.getGiaTriHoaDonToiThieu()) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Tổng tiền không đủ để áp dụng voucher"));
+        }
+
         // Tính toán giá trị giảm giá
         double totalPrice = hoaDon.getTongGia();
         double discountedPrice = totalPrice;

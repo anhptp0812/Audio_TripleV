@@ -184,6 +184,8 @@ function validateCustomerForm() {
 
 const hoaDonId = document.getElementById('hoaDonId') ? document.getElementById('hoaDonId').value : null;
 
+const voucherId = document.getElementById('voucherId') ? document.getElementById('voucherId').value : null;
+
 // Xử lý thêm sản phẩm vào hóa đơn
 function addProductToOrder(productId, quantity) {
     if (!hoaDonId) {
@@ -204,9 +206,18 @@ function addProductToOrder(productId, quantity) {
                 if (data.message === "Sản phẩm đã có trong giỏ hàng!") {
                     alert(data.message);
                 } else {
-                    updateProductQuantityInTable(productId, data.remainingQuantity); // Cập nhật số lượng trong kho
-                    addProductToOrderTable(data); // Cập nhật bảng chi tiết hóa đơn
-                    updateTotalAmount(data.totalAmount); // Cập nhật tổng giá
+                    updateProductQuantityInTable(productId, data.remainingQuantity);
+                    addProductToOrderTable(data);
+                    updateTotalAmount(data.totalAmount);
+
+                    // Cập nhật finalAmount = totalAmount nếu chưa có voucher
+                    const voucherAmount = parseCurrency(document.getElementById('voucherAmount').textContent);
+                    if (voucherAmount === 0) {
+                        document.getElementById('finalAmount').textContent = formatCurrency(data.totalAmount);
+                        document.getElementById('soTienPhaiTra').value = formatCurrency(data.totalAmount);
+                    }
+
+                    validatePaymentAmount();
                 }
             }
         })
@@ -267,11 +278,9 @@ function addProductToOrderTable(productData) {
 
 // Xóa sản phẩm khỏi hóa đơn
 function removeProductFromOrder(productId) {
-    // Hiển thị hộp thoại xác nhận
     const confirmation = confirm('Bạn có chắc chắn muốn xóa sản phẩm này khỏi hóa đơn?');
 
     if (!confirmation) {
-        // Nếu người dùng không đồng ý, dừng thực hiện
         return;
     }
 
@@ -280,17 +289,23 @@ function removeProductFromOrder(productId) {
     })
         .then(response => response.json())
         .then(data => {
-            // Xóa dòng sản phẩm khỏi bảng
             const rowToRemove = document.querySelector(`input[data-product-id="${productId}"]`).closest('tr');
             if (rowToRemove) {
                 rowToRemove.remove();
             }
 
-            // Cập nhật số lượng sản phẩm trong kho
-            updateProductQuantityInTable(productId, data.remainingQuantity);
-
-            // Cập nhật tổng giá
+            // Cập nhật tổng giá và voucher nếu cần
             updateTotalAmount(data.totalAmount);
+
+            if (!data.voucherApplied) {
+                document.getElementById("voucher").value = '';
+                document.getElementById("voucherId").value = '';
+                document.getElementById('voucherAmount').textContent = '0 đ';
+                document.getElementById('finalAmount').textContent = formatCurrency(data.totalAmount);
+                document.getElementById('soTienPhaiTra').value = formatCurrency(data.totalAmount);
+            }
+
+            validatePaymentAmount();
         })
         .catch(error => {
             console.error('Lỗi:', error);
@@ -346,7 +361,6 @@ function updateProductQuantity(inputElement) {
         });
 }
 
-
 function loadOrderDetails() {
     if (!hoaDonId) return;
 
@@ -386,6 +400,7 @@ function loadOrderDetails() {
 
             // Cập nhật tổng giá
             updateTotalAmount(totalAmount);
+            validatePaymentAmount();
         })
         .catch(error => {
             console.error('Lỗi:', error);
@@ -440,23 +455,23 @@ function updateTotalAmount(amount) {
     }
 
     if (tongGiaInput) {
-        tongGiaInput.value = amount.toLocaleString('vi-VN'); // Định dạng số
+        tongGiaInput.value = formatCurrency(amount);
     }
 
-    if (soTienPhaiTraInput) {
-        soTienPhaiTraInput.value = amount.toLocaleString('vi-VN'); // Định dạng số
-    }
-
-    // Nếu chưa áp dụng voucher, finalAmount = totalAmount
-    if (voucherAmountElement && voucherAmountElement.textContent === "0") {
+    // Cập nhật finalAmount và soTienPhaiTra chỉ khi chưa có voucher
+    const voucherAmount = parseCurrency(voucherAmountElement?.textContent || '0');
+    if (voucherAmount === 0) {
         if (finalAmountElement) {
             finalAmountElement.textContent = formatCurrency(amount);
+        }
+        if (soTienPhaiTraInput) {
+            soTienPhaiTraInput.value = formatCurrency(amount);
         }
     }
 
     validatePaymentAmount();
+    updateAddVoucherButton();
 }
-
 
 // Hàm validatePaymentAmount để kiểm tra số tiền khách đưa và tính số tiền trả lại
 function validatePaymentAmount() {
@@ -487,10 +502,9 @@ function validatePaymentAmount() {
     }
 }
 
-
 // Hàm để định dạng tiền tệ
 function formatCurrency(amount) {
-    return amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+    return amount.toLocaleString('vi-VN', {style: 'currency', currency: 'VND'});
 }
 
 function parseCurrency(value) {
@@ -523,7 +537,7 @@ function confirmPayment(event) {
                         window.location.href = "/user/ban-hang/in-hoa-don/" + hoaDonId;
 
                         // Sau khi tải xong file, quay lại trang bán hàng
-                        setTimeout(function() {
+                        setTimeout(function () {
                             window.location.href = "/user/ban-hang";
                         }, 2000); // Sau 2 giây (hoặc tùy theo thời gian tải)
                     } else {
@@ -543,6 +557,16 @@ function confirmPayment(event) {
 document.addEventListener("DOMContentLoaded", function () {
     loadOrderDetails();
     searchCustomer();
+
+    if (voucherId) {
+        const voucherAmount = localStorage.getItem('voucherAmount') || 0;
+        const finalAmount = localStorage.getItem('finalAmount') || 0;
+        const soTienPhaiTra = localStorage.getItem('soTienPhaiTra') || 0;
+
+        document.getElementById('voucherAmount').textContent = formatCurrency(voucherAmount);
+        document.getElementById('finalAmount').textContent = formatCurrency(finalAmount);
+        document.getElementById('soTienPhaiTra').value = formatCurrency(soTienPhaiTra);
+    }
 });
 
 document.getElementById('user-icon').addEventListener('click', function (event) {

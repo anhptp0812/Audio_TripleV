@@ -94,7 +94,6 @@
                             <td th:text="${item.soLuong}"></td>
                             <td th:text="${item.formattedDonGia}"></td>
                             <td th:text="${item.formattedTongGia}"></td>
-                            <!-- Gửi tất cả sản phẩm vào form -->
                             <input type="hidden" name="selectedItems" th:value="${item.sanPhamChiTiet.id}"/>
                         </tr>
                         </tbody>
@@ -148,9 +147,11 @@
                             <label class="form-check-label" for="paymentCard">Thanh toán bằng ví VnPay</label>
                         </div>
                     </div>
+
                     <!-- Nút đặt hàng -->
                     <button type="submit" class="btn btn-danger w-100 mt-3"
-                            th:disabled="${totalPrice == 0}">Đặt Hàng</button>
+                            th:disabled="${totalPrice == 0}">Đặt Hàng
+                    </button>
                 </div>
             </div>
         </div>

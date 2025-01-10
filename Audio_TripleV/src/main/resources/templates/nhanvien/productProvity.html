@@ -197,7 +197,7 @@
                         <label for="voucher" class="form-label">Voucher</label>
                         <input type="text" id="voucher" class="form-control" th:field="*{vouCher.ten}"
                                disabled>
-                        <input type="hidden" id="vouChers" name="vouCher" th:field="*{vouCher.id}">
+                        <input type="hidden" id="voucherId" name="voucherId" th:field="*{vouCher.id}">
                     </div>
                     <div class="mb-3">
                         <label for="soTienPhaiTra" class="form-label">Số Tiền Phải Trả</label>
@@ -215,7 +215,7 @@
                                min="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" disabled>
                     </div>
                     <div class="button-group">
-                        <button type="button" class="btn btn-primary" onclick="openVoucherForm()">
+                        <button type="button" class="btn btn-primary" id="addvoucher-btn" onclick="openVoucherForm()" disabled>
                             <i class="bi bi-ticket-fill"></i> Add Voucher
                         </button>
                     </div>
@@ -410,16 +410,24 @@
                 return response.json();
             })
             .then(voucher => {
-                // Cập nhật UI với thông tin voucher
-                document.getElementById('voucher').value = voucher.ten;
-                document.getElementById('vouChers').value = voucher.id;
-
+                // Kiểm tra nếu tổng tiền hóa đơn nhỏ hơn giá trị tối thiểu của voucher
                 const tongGiaInput = document.getElementById('tongGia');
                 const totalAmount = parseCurrency(tongGiaInput.value);
-                let discountedPrice = totalAmount;
-                let discountAmount = 0;
+
+                // Nếu tổng tiền hóa đơn nhỏ hơn giá trị tối thiểu của voucher, không thể chọn voucher
+                if (totalAmount < voucher.giaTriHoaDonToiThieu) {
+                    alert("Tổng tiền hóa đơn không đủ điều kiện để sử dụng voucher.");
+                    return;
+                }
+
+                document.getElementById("voucher").value = voucher.ten;
+                document.getElementById("voucherId").value = voucher.id;
 
                 // Tính toán giảm giá
+                let discountedPrice = totalAmount;
+                document.getElementById('tongGia').value = formatCurrency(discountedPrice);
+                let discountAmount = 0;
+
                 if (voucher.loai === "GiamTien" && voucher.giaTriTien) {
                     discountAmount = voucher.giaTriTien;
                     discountedPrice -= discountAmount;
@@ -434,6 +442,12 @@
                 document.getElementById('voucherAmount').textContent = formatCurrency(discountAmount);
                 document.getElementById('finalAmount').textContent = formatCurrency(discountedPrice);
                 document.getElementById('soTienPhaiTra').value = formatCurrency(discountedPrice);
+                // Lưu giá trị vào localStorage
+                localStorage.setItem('voucherAmount', formatCurrency(discountAmount));
+                localStorage.setItem('finalAmount', formatCurrency(discountedPrice));
+                localStorage.setItem('soTienPhaiTra', formatCurrency(discountedPrice));
+
+                validatePaymentAmount();
 
                 // Lưu thay đổi lên server
                 return fetch('/api/vouchers/apply-voucher', {
@@ -456,10 +470,24 @@
             })
             .catch(error => {
                 console.error("Có lỗi xảy ra:", error);
-                // Hiển thị thông báo lỗi cho người dùng nếu cần
-                alert("Có lỗi xảy ra khi áp dụng voucher. Vui lòng thử lại.");
+                // alert("Có lỗi xảy ra khi áp dụng voucher. Vui lòng thử lại.");
             });
     }
+
+    // Vô hiệu hóa nút "Add Voucher" nếu tổng tiền = 0
+    function updateAddVoucherButton() {
+        const tongGiaInput = document.getElementById('tongGia');
+        const totalAmount = parseCurrency(tongGiaInput.value);
+        const addVoucherButton = document.getElementById("addvoucher-btn");
+
+        if (totalAmount === 0 || totalAmount === 0.0) {
+            addVoucherButton.disabled = true;
+        } else {
+            addVoucherButton.disabled = false;
+        }
+    }
+
+    document.getElementById('tongGia').addEventListener('input', updateAddVoucherButton);
 
     function isVoucherValid(voucher) {
         const now = new Date();
