@@ -398,7 +398,7 @@ public class KhachHangController {
         }
 
 
-        processThanhToan(userDetails.getUsername(), fullName, email, phone, address, selectedItems);
+        processThanhToan(userDetails.getUsername(), fullName, email, phone, address, savedSelectedItems);
         return "redirect:/khach-hang/don-hang/danh-sach";
     }
 
