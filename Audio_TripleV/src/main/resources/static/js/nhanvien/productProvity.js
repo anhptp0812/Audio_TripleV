@@ -297,10 +297,10 @@ function removeProductFromOrder(productId) {
             // Cập nhật tổng giá và voucher nếu cần
             updateTotalAmount(data.totalAmount);
 
-            if (!data.voucherApplied) {
+            if (!voucherId) {
                 document.getElementById("voucher").value = '';
                 document.getElementById("voucherId").value = '';
-                document.getElementById('voucherAmount').textContent = '0 đ';
+                document.getElementById('voucherAmount').textContent = '0 ₫';
                 document.getElementById('finalAmount').textContent = formatCurrency(data.totalAmount);
                 document.getElementById('soTienPhaiTra').value = formatCurrency(data.totalAmount);
             }
@@ -459,7 +459,7 @@ function updateTotalAmount(amount) {
     }
 
     // Cập nhật finalAmount và soTienPhaiTra chỉ khi chưa có voucher
-    const voucherAmount = parseCurrency(voucherAmountElement?.textContent || '0');
+    const voucherAmount = parseCurrency(voucherAmountElement?.textContent || '0 ₫');
     if (voucherAmount === 0) {
         if (finalAmountElement) {
             finalAmountElement.textContent = formatCurrency(amount);

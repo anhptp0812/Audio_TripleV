@@ -478,6 +478,9 @@ public class HoaDonController {
                 newDetail.setSoLuong(soLuong);
                 newDetail.setDonGia(sanPhamChiTiet.getDonGia());
                 hoaDonChiTietRepository.save(newDetail);
+                if(hoaDon.getVouCher() != null){
+                    hoaDon.setVouCher(null);
+                }
 
                 // Giảm số lượng trong kho
                 sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - soLuong);
