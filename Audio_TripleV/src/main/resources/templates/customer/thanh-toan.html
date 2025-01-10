@@ -112,11 +112,7 @@
                         <input type="tel" class="form-control" id="phone" name="phone"
                                th:value="${khachHang != null ? khachHang.sdt : ''}" required>
                     </div>
-                    <div class="mb-3">
-                        <label for="address" class="form-label">Địa chỉ giao hàng</label>
-                        <textarea class="form-control" id="address" name="address" rows="3"
-                                  th:text="${khachHang != null ? khachHang.diaChi : ''}" required></textarea>
-                    </div>
+
                     <div class="mb-3">
                         <label class="col-form-label">Chọn
                             Tỉnh/Thành Phố:</label>
@@ -149,6 +145,12 @@
                         </select>
                         <span class="check-loi" id="checkLoiPhuongXaAdd"
                               style="display: none;color: red"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Địa chỉ chi tiết</label>
+                        <textarea class="form-control" id="address" name="address" rows="3"
+                                  th:text="${khachHang != null ? khachHang.diaChi : ''}" required></textarea>
                     </div>
 
 <!--                    <div class="mb-3">-->
