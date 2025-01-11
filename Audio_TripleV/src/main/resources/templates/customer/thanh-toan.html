@@ -162,16 +162,18 @@
                     </div>
 
 
-<!--                    <div class="mb-3">-->
-<!--                        <label class="col-form-label">-->
-<!--                            Địa chỉ cụ thể:-->
-<!--                        </label>-->
-<!--                        <input type="text" class="form-control"-->
-<!--                               id="diaChi" name="diaChi"-->
-<!--                               th:field="*{diaChi}">-->
-<!--                        <span class="check-loi" id="checkLoiDCUTpdate"-->
-<!--                              style="display: none;color: red"></span>-->
-<!--                    </div>-->
+                   <div class="mb-3">
+                        <label for="address" class="form-label">Địa chỉ chi tiết (chi tiết địa chỉ giao )</label>
+                        <textarea
+                                class="form-control"
+                                id="address"
+                                name="address"
+                                rows="3"
+                                placeholder="Vui lòng nhập đúng thông tin địa chỉ như số nhà, hẻm, ngõ, phường, quận, thành phố"
+                                th:text="${khachHang != null ? khachHang.diaChi : ''}"
+                                required>
+    </textarea>
+                    </div>
 
                 </div>
             </div>
