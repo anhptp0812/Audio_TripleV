@@ -54,7 +54,8 @@
                     <td th:text="${comment.content}"></td>
                     <td>
                         <!-- Nút Xóa với xác nhận -->
-                        <a th:href="@{/user/binh-luan/delete/{id}(id=${comment.id})}" class="btn btn-danger btn-sm"
+                        <a th:href="@{/user/bai-viet/{articleId}/binh-luan/delete/{id}(articleId=${article.id}, id=${comment.id})}"
+                           class="btn btn-danger btn-sm"
                            onclick="return confirm('Bạn có chắc chắn muốn xóa bình luận này?')">
                             <i class="bi bi-trash"></i>
                         </a>

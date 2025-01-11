@@ -37,7 +37,7 @@
             <div class="text-center">
                 <h3>Thêm Mới Nhân Viên</h3>
             </div>
-            <form th:action="@{/user/nhan-vien/save}" method="post">
+            <form th:action="@{/admin/nhan-vien/save}" method="post">
                 <div class="form-group mb-3">
                     <label for="ten">Tên:</label>
                     <input type="text" id="ten" name="ten" class="form-control" required="required"/>
@@ -101,7 +101,7 @@
 
                 <div class="text-center mt-4">
                     <button type="submit" class="btn btn-primary">Thêm Nhân Viên</button>
-                    <a class="btn btn-secondary" th:href="@{/user/nhan-vien}">Quay Lại</a>
+                    <a class="btn btn-secondary" th:href="@{/admin/nhan-vien}">Quay Lại</a>
                 </div>
             </form>
         </div>

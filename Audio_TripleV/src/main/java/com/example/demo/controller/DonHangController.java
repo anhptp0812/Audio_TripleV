@@ -2,10 +2,12 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.*;
 import com.example.demo.repository.DonHangRepository;
+import com.example.demo.repository.SanPhamChiTietRepository;
 import com.example.demo.service.DonHangService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -108,6 +110,10 @@ public class DonHangController {
                 donHang.setNgayGiao(new Date());
             }
 
+            // Nếu trạng thái là 'Đã giao hàng', cập nhật trạng thái Payment
+            if ("Đã giao hàng".equals(status)) {
+                donHang.setTrangThaiPayment("Đã Thanh Toán");
+            }
             // Lưu lại thông tin thay đổi
             donHangService.save(donHang);
 
@@ -118,5 +124,6 @@ public class DonHangController {
         }
         return "redirect:/user/don-hang/detail/" + id;
     }
+
 
 }

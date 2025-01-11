@@ -42,8 +42,6 @@ public class ArticleController {
     // Hiển thị tất cả các bài viết và bình luận tương ứng
     @GetMapping("/bai-viet/hien-thi")
     public String showArticles(@AuthenticationPrincipal UserDetails userDetails, Model model) {
-        // Mặc định là "Khách" nếu chưa đăng nhập
-
 
         // Nếu người dùng đã đăng nhập, lấy thông tin khách hàng
         if (userDetails != null) {
@@ -79,6 +77,31 @@ public class ArticleController {
     public String showArticleDetail(@AuthenticationPrincipal UserDetails userDetails,
 
                                     @PathVariable("id") Integer articleId, Model model) {
+
+        // Nếu người dùng đã đăng nhập, lấy thông tin khách hàng
+        if (userDetails != null) {
+            KhachHang khachHang = khachHangService.findByTaiKhoan(userDetails.getUsername())
+                    .orElseThrow(() -> new RuntimeException("Khách hàng không tồn tại"));
+            // Lấy tên khách hàng
+            model.addAttribute("fullName", khachHang.getTen());
+
+
+            // Lấy giỏ hàng, nếu đã đăng nhập sẽ tìm theo khách hàng, nếu chưa thì tạo giỏ hàng trống
+            GioHang gioHang = (khachHang != null) ? gioHangService.findByKhachHang(khachHang)
+                    .orElseGet(() -> new GioHang()) : new GioHang(); // Tạo giỏ hàng trống nếu không có khách hàng
+
+            // Tính tổng số lượng sản phẩm trong giỏ hàng
+            int totalQuantity = gioHang.getGioHangChiTietList().stream()
+                    .mapToInt(item -> item.getSoLuong())
+                    .sum();
+            model.addAttribute("cartCount", totalQuantity);
+
+        }else {
+            // Nếu không đăng nhập, gán giá trị mặc định
+            model.addAttribute("fullName", "Khách");
+            model.addAttribute("cartCount", 0);
+        }
+
         // Lấy thông tin khách hàng
         KhachHang khachHang = khachHangService.findByTaiKhoan(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("Khách hàng không tồn tại"));

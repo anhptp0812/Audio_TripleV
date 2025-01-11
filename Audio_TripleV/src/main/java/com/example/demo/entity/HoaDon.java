@@ -36,6 +36,9 @@ public class HoaDon {
     @Column(name = "TongGia")
     private Double tongGia = 0.0;  // Đảm bảo có giá trị mặc định nếu null
 
+    @Column(name = "SoTienPhaiTra")
+    private Double soTienPhaiTra = 0.0; // Giá trị mặc định
+
     @Column(name = "TienKhachDua")
     private Double tienKhachDua = 0.0; // Giá trị mặc định
 
@@ -52,9 +55,8 @@ public class HoaDon {
     private Date ngayCapNhat;
 
     private String formattedTongGia;
-
+    private String formattedSoTienPhaiTra;
     private String formattedTienKhachDua;
-
     private String formattedTienThua;
 
     @OneToMany(mappedBy = "hoaDon", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)

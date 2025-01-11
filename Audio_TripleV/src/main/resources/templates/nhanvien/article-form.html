@@ -39,8 +39,7 @@
                 <h1 th:text="${article.id == null ? 'Thêm Bài Viết' : 'Sửa Bài Viết'}"></h1>
             </div>
             <form th:action="${article.id == null ? '/user/bai-viet/add' : '/user/bai-viet/update'}"
-                  th:object="${article}"
-                  method="post">
+                  th:object="${article}" method="post" enctype="multipart/form-data">
                 <div class="form-group mb-3">
                     <label for="id">ID</label>
                     <input type="text" class="form-control" id="id" name="id" th:field="*{id}" readonly>
@@ -51,20 +50,21 @@
                 </div>
                 <div class="mb-3">
                     <label for="imageFile" class="form-label">Chọn Ảnh</label>
-                    <input type="file" class="form-control" id="imageFile" name="imageFile" accept="image/*" required>
+                    <input type="file" class="form-control" id="imageFile" name="imageFile" accept="image/*" required
+                           onchange="previewImage()">
                 </div>
+
+                <!-- Thẻ img để hiển thị ảnh đã chọn -->
+                <div class="mb-3">
+                    <label for="previewImage" class="form-label">Ảnh Xem Trước</label>
+                    <img id="previewImage" src="" alt="Preview"
+                         style="max-width: 100%; max-height: 300px; display: none;">
+                </div>
+
                 <div class="mb-3">
                     <label for="content" class="form-label">Nội Dung</label>
                     <textarea class="form-control" id="content" rows="5" th:field="*{content}" required></textarea>
                 </div>
-<!--                <div class="form-group">-->
-<!--                    <label for="createdAt" class="form-label">Ngày Tạo:</label>-->
-<!--                    <input type="datetime-local" class="form-control" id="createdAt" name="createdAt" th:field="*{createdAt}" readonly>-->
-<!--                </div>-->
-<!--                <div class="form-group">-->
-<!--                    <label for="updatedAt" class="form-label">Ngày Cập Nhật:</label>-->
-<!--                    <input type="datetime-local" class="form-control" id="updatedAt" name="updatedAt" th:field="*{updatedAt}" readonly>-->
-<!--                </div>-->
                 <div class="text-center mb-3">
                     <button type="submit" class="btn btn-primary">Lưu</button>
                     <a href="/user/bai-viet" class="btn btn-secondary">Quay lại</a>
@@ -79,4 +79,25 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script th:src="@{/js/nhanvien/hoa-don.js}"></script>
+<script>
+    function previewImage() {
+        var file = document.getElementById("imageFile").files[0];
+        var reader = new FileReader();
+
+        reader.onloadend = function () {
+            var img = document.getElementById("previewImage");
+            img.src = reader.result; // Gán đường dẫn ảnh đã đọc vào thuộc tính src của thẻ img
+            img.style.display = "block"; // Hiển thị ảnh
+        }
+
+        if (file) {
+            reader.readAsDataURL(file); // Đọc ảnh dưới dạng URL
+        } else {
+            var img = document.getElementById("previewImage");
+            img.src = ""; // Xóa ảnh nếu không có tệp
+            img.style.display = "none"; // Ẩn ảnh
+        }
+    }
+</script>
+
 </html>

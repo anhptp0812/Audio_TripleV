@@ -184,6 +184,8 @@ function validateCustomerForm() {
 
 const hoaDonId = document.getElementById('hoaDonId') ? document.getElementById('hoaDonId').value : null;
 
+const voucherId = document.getElementById('voucherId') ? document.getElementById('voucherId').value : null;
+
 // Xử lý thêm sản phẩm vào hóa đơn
 function addProductToOrder(productId, quantity) {
     if (!hoaDonId) {
@@ -204,9 +206,18 @@ function addProductToOrder(productId, quantity) {
                 if (data.message === "Sản phẩm đã có trong giỏ hàng!") {
                     alert(data.message);
                 } else {
-                    updateProductQuantityInTable(productId, data.remainingQuantity); // Cập nhật số lượng trong kho
-                    addProductToOrderTable(data); // Cập nhật bảng chi tiết hóa đơn
-                    updateTotalAmount(data.totalAmount); // Cập nhật tổng giá
+                    updateProductQuantityInTable(productId, data.remainingQuantity);
+                    addProductToOrderTable(data);
+                    updateTotalAmount(data.totalAmount);
+
+                    // Cập nhật finalAmount = totalAmount nếu chưa có voucher
+                    const voucherAmount = parseCurrency(document.getElementById('voucherAmount').textContent);
+                    if (voucherAmount === 0) {
+                        document.getElementById('finalAmount').textContent = formatCurrency(data.totalAmount);
+                        document.getElementById('soTienPhaiTra').value = formatCurrency(data.totalAmount);
+                    }
+
+                    validatePaymentAmount();
                 }
             }
         })
@@ -267,11 +278,9 @@ function addProductToOrderTable(productData) {
 
 // Xóa sản phẩm khỏi hóa đơn
 function removeProductFromOrder(productId) {
-    // Hiển thị hộp thoại xác nhận
     const confirmation = confirm('Bạn có chắc chắn muốn xóa sản phẩm này khỏi hóa đơn?');
 
     if (!confirmation) {
-        // Nếu người dùng không đồng ý, dừng thực hiện
         return;
     }
 
@@ -280,17 +289,23 @@ function removeProductFromOrder(productId) {
     })
         .then(response => response.json())
         .then(data => {
-            // Xóa dòng sản phẩm khỏi bảng
             const rowToRemove = document.querySelector(`input[data-product-id="${productId}"]`).closest('tr');
             if (rowToRemove) {
                 rowToRemove.remove();
             }
 
-            // Cập nhật số lượng sản phẩm trong kho
-            updateProductQuantityInTable(productId, data.remainingQuantity);
-
-            // Cập nhật tổng giá
+            // Cập nhật tổng giá và voucher nếu cần
             updateTotalAmount(data.totalAmount);
+
+            if (!voucherId) {
+                document.getElementById("voucher").value = '';
+                document.getElementById("voucherId").value = '';
+                document.getElementById('voucherAmount').textContent = '0 ₫';
+                document.getElementById('finalAmount').textContent = formatCurrency(data.totalAmount);
+                document.getElementById('soTienPhaiTra').value = formatCurrency(data.totalAmount);
+            }
+
+            validatePaymentAmount();
         })
         .catch(error => {
             console.error('Lỗi:', error);
@@ -346,7 +361,6 @@ function updateProductQuantity(inputElement) {
         });
 }
 
-
 function loadOrderDetails() {
     if (!hoaDonId) return;
 
@@ -386,6 +400,7 @@ function loadOrderDetails() {
 
             // Cập nhật tổng giá
             updateTotalAmount(totalAmount);
+            validatePaymentAmount();
         })
         .catch(error => {
             console.error('Lỗi:', error);
@@ -430,59 +445,70 @@ addProductButtons.forEach(button => {
 // Cập nhật tổng giá
 function updateTotalAmount(amount) {
     const totalAmountElement = document.getElementById('totalAmount');
+    const finalAmountElement = document.getElementById('finalAmount');
+    const voucherAmountElement = document.getElementById('voucherAmount');
+    const tongGiaInput = document.getElementById('tongGia');
+    const soTienPhaiTraInput = document.getElementById('soTienPhaiTra');
+
     if (totalAmountElement) {
         totalAmountElement.textContent = formatCurrency(amount);
     }
 
-    // Cập nhật input tổng giá
-    const tongGiaInput = document.getElementById('tongGia');
     if (tongGiaInput) {
-        // Loại bỏ ký tự "₫" khi gán giá trị vào input
-        tongGiaInput.value = amount.toLocaleString('vi-VN');  // Định dạng số theo kiểu Việt Nam
+        tongGiaInput.value = formatCurrency(amount);
+    }
+
+    // Cập nhật finalAmount và soTienPhaiTra chỉ khi chưa có voucher
+    const voucherAmount = parseCurrency(voucherAmountElement?.textContent || '0 ₫');
+    if (voucherAmount === 0) {
+        if (finalAmountElement) {
+            finalAmountElement.textContent = formatCurrency(amount);
+        }
+        if (soTienPhaiTraInput) {
+            soTienPhaiTraInput.value = formatCurrency(amount);
+        }
     }
 
     validatePaymentAmount();
+    updateAddVoucherButton();
 }
 
 // Hàm validatePaymentAmount để kiểm tra số tiền khách đưa và tính số tiền trả lại
 function validatePaymentAmount() {
-    // Lấy giá trị từ giao diện
     const customerPaymentInput = document.getElementById("customerPayment");
-    const totalAmountElement = document.getElementById("totalAmount");
+    const finalAmountElement = document.getElementById("finalAmount");
     const changeAmountElement = document.getElementById("changeAmount");
     const paymentErrorElement = document.getElementById("paymentError");
     const paymentButton = document.getElementById("paymentButton");
-    const paymentVnPayButton = document.getElementById("paymentVnPayButton");
 
-    // Xử lý giá trị tiền khách đưa và tổng tiền
-    const customerPayment = parseFloat(customerPaymentInput.value.replace(/\D/g, "")) || 0;
-    const totalAmount = parseFloat(totalAmountElement.textContent.replace(/\D/g, "")) || 0;
+    if (!customerPaymentInput || !finalAmountElement || !changeAmountElement || !paymentErrorElement || !paymentButton) {
+        console.error("Missing required elements in DOM.");
+        return;
+    }
 
-    // Kiểm tra giá trị hợp lệ
-    if (isNaN(totalAmount) || totalAmount <= 0) {
-        paymentErrorElement.style.display = "block";
-        paymentErrorElement.textContent = "Vui lòng nhập số tiền hợp lệ!";
-        paymentButton.disabled = true;
-        paymentVnPayButton.disabled = true;
-        changeAmountElement.textContent = formatCurrency(0);
-    } else if (customerPayment < totalAmount) {
-        paymentErrorElement.style.display = "block";
+    const finalAmount = parseCurrency(finalAmountElement.textContent) || 0;
+    const customerPayment = parseCurrency(customerPaymentInput.value) || 0;
+
+    if (customerPayment < finalAmount) {
         paymentErrorElement.textContent = "Số tiền khách đưa không đủ!";
+        paymentErrorElement.style.display = "block";
         paymentButton.disabled = true;
-        paymentVnPayButton.disabled = true;
         changeAmountElement.textContent = formatCurrency(0);
     } else {
-        const changeAmount = (customerPayment - totalAmount).toFixed(2);
-        changeAmountElement.textContent = formatCurrency(parseFloat(changeAmount));
+        const changeAmount = customerPayment - finalAmount;
         paymentErrorElement.style.display = "none";
         paymentButton.disabled = false;
-        paymentVnPayButton.disabled = false;
+        changeAmountElement.textContent = formatCurrency(changeAmount);
     }
 }
 
-// Hàm formatCurrency để hiển thị số tiền theo định dạng Việt Nam
+// Hàm để định dạng tiền tệ
 function formatCurrency(amount) {
     return amount.toLocaleString('vi-VN', {style: 'currency', currency: 'VND'});
+}
+
+function parseCurrency(value) {
+    return parseFloat(value.replace(/\D/g, "")) || 0; // Loại bỏ các ký tự không phải số
 }
 
 function confirmPayment(event) {
@@ -511,7 +537,7 @@ function confirmPayment(event) {
                         window.location.href = "/user/ban-hang/in-hoa-don/" + hoaDonId;
 
                         // Sau khi tải xong file, quay lại trang bán hàng
-                        setTimeout(function() {
+                        setTimeout(function () {
                             window.location.href = "/user/ban-hang";
                         }, 2000); // Sau 2 giây (hoặc tùy theo thời gian tải)
                     } else {
@@ -531,6 +557,16 @@ function confirmPayment(event) {
 document.addEventListener("DOMContentLoaded", function () {
     loadOrderDetails();
     searchCustomer();
+
+    if (voucherId) {
+        const voucherAmount = localStorage.getItem('voucherAmount') || 0;
+        const finalAmount = localStorage.getItem('finalAmount') || 0;
+        const soTienPhaiTra = localStorage.getItem('soTienPhaiTra') || 0;
+
+        document.getElementById('voucherAmount').textContent = formatCurrency(voucherAmount);
+        document.getElementById('finalAmount').textContent = formatCurrency(finalAmount);
+        document.getElementById('soTienPhaiTra').value = formatCurrency(soTienPhaiTra);
+    }
 });
 
 document.getElementById('user-icon').addEventListener('click', function (event) {

@@ -43,10 +43,19 @@
                     <a href="#" class="me-3 text-light" id="user-icon" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fas fa-user"></i>
                     </a>
-                    <ul id="user-dropdown" class="dropdown-menu">
-                        <li><a href="/khach-hang/thong-tin" class="dropdown-item">Thông tin tài khoản</a></li>
-                        <li><a href="/khach-hang/don-hang/danh-sach" class="dropdown-item">Đơn hàng của tôi</a></li>
-                        <li><a href="/logout" class="dropdown-item text-danger" onclick="return confirm('Bạn có chắc muốn đăng xuất không?')">Đăng xuất</a></li>
+                    <ul id="user-dropdown" class="dropdown-menu dropdown-menu-end">
+                        <li th:if="${fullName != 'Khách'}">
+                            <a href="/khach-hang/thong-tin" class="dropdown-item">Thông tin tài khoản</a>
+                        </li>
+                        <li th:if="${fullName != 'Khách'}">
+                            <a href="/khach-hang/don-hang/danh-sach" class="dropdown-item">Đơn hàng của tôi</a>
+                        </li>
+                        <li th:if="${fullName != 'Khách'}">
+                            <a href="/logout" class="dropdown-item text-danger" onclick="return confirm('Bạn có chắc muốn đăng xuất không?')">Đăng xuất</a>
+                        </li>
+                        <li th:if="${fullName == 'Khách'}">
+                            <a href="/login" class="dropdown-item text-primary">Đăng nhập</a>
+                        </li>
                     </ul>
                 </div>
 
@@ -86,6 +95,7 @@
 <div class="container">
     <div class="category">
         <div class="category-buttons">
+            <!-- Các nút phân loại sản phẩm -->
             <a href="/khach-hang/san-pham/hien-thi" class="btn btn-outline-dark">Tất Cả</a>
             <a href="/khach-hang/san-pham/loai/1" class="btn btn-outline-dark">Tai nghe true wireless</a>
             <a href="/khach-hang/san-pham/loai/2" class="btn btn-outline-dark">Tai nghe dây</a>
@@ -111,7 +121,6 @@
                 <button class="btn add-to-cart" th:data-sanpham-id="${sanPhamChiTiet.id}"
                         th:data-soLuong="1"><i class="fas fa-cart-plus me-1"></i>Thêm vào giỏ
                 </button>
-<!--                <button class="btn btn-now"><i class="fas fa-shopping-bag me-1"></i>Mua ngay</button>-->
                 <button class="btn btn-now"
                         th:data-sanpham-id="${sanPhamChiTiet.id}"
                         th:data-soLuong="1"
@@ -121,7 +130,6 @@
             </div>
         </div>
     </div>
-
 </div>
 
 

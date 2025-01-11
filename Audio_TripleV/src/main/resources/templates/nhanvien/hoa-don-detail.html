@@ -10,7 +10,18 @@
           href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.9.1/font/bootstrap-icons.min.css">
     <link th:href="@{/css/nhanvien/hoa-don.css}" rel="stylesheet">
 </head>
+<style>
+    .btn-outline-secondary {
+        border-color: black;  /* Màu viền của nút */
+        color: white;         /* Màu chữ của nút */
+        background-color: #6c757d; /* Màu nền của nút */
+    }
 
+    .btn-outline-secondary:hover {
+        background-color: #393c3e; /* Màu nền khi hover */
+        color: white;               /* Màu chữ khi hover */
+    }
+</style>
 <body>
 
 <th:block th:replace="~{/nhanvien/fragments :: nhan-vien-header}"/>
@@ -38,6 +49,11 @@
     <div class="bill-form">
         <div class="bill-details-1">
             <h2 class="text-center">Chi Tiết Hóa Đơn</h2>
+            <div style="text-align: right;">
+                <button class="btn btn-outline-secondary me-2" onclick="confirmInHoaDon()">
+                    <i class="bi bi-printer"></i> In Hóa Đơn
+                </button>
+            </div>
             <div class="card mt-3">
                 <div class="card-header">
                     <h5>Thông Tin Hóa Đơn</h5>
@@ -45,7 +61,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6">
-                            <p><strong>Mã Hóa Đơn:</strong> <span th:text="${hoaDon.id}"></span></p>
+                            <p><strong>Mã Hóa Đơn:</strong> <span id="hoaDonId" th:text="${hoaDon.id}"></span></p>
                             <p><strong>Tên Khách Hàng:</strong> <span th:text="${hoaDon.khachHang.ten}"></span></p>
                             <p><strong>Nhân Viên:</strong> <span th:text="${hoaDon.nhanVien.ten}"></span></p>
                             <p><strong>Ngày Tạo:</strong> <span
@@ -55,8 +71,11 @@
                         </div>
                         <div class="col-md-6">
                             <p><strong>Tổng Giá:</strong> <span th:text="${hoaDon.formattedTongGia}"></span></p>
-                            <p><strong>Tiền Khách Đưa:</strong> <span th:text="${hoaDon.formattedTienKhachDua}"></span>
+                            <p><strong>Voucher:</strong>
+                                <span th:text="${hoaDon.vouCher != null ? hoaDon.vouCher.giaTriTien != null ? hoaDon.vouCher.formattedGiaTriTien : hoaDon.vouCher.formattedGiaTriPhanTram : 'Không có Voucher'}"></span>
                             </p>
+                            <p><strong>Số Tiền Phải Trả:</strong> <span th:text="${hoaDon.formattedSoTienPhaiTra}"></span></p>
+                            <p><strong>Tiền Khách Đưa:</strong> <span th:text="${hoaDon.formattedTienKhachDua}"></span></p>
                             <p><strong>Tiền Thừa:</strong> <span th:text="${hoaDon.formattedTienThua}"></span></p>
                             <p><strong>Trạng Thái:</strong> <span th:text="${hoaDon.trangThai}"></span></p>
                         </div>
@@ -96,7 +115,26 @@
     <th:block th:replace="~{/nhanvien/fragments :: nhan-vien-footer}"/>
 </div>
 </body>
+<script>
+    function confirmInHoaDon() {
+        // Hiển thị hộp thoại xác nhận
+        var result = confirm("Bạn có chắc chắn muốn in hóa đơn không?");
 
+        // Nếu người dùng chọn 'OK', thực hiện in hóa đơn
+        if (result) {
+            inHoaDon();
+        }
+    }
+    function inHoaDon() {
+        // Lấy id của hóa đơn từ một phần tử trên trang web
+        var hoaDonId = /* Lấy id của hóa đơn từ một thuộc tính hoặc biến động, ví dụ từ một phần tử HTML */
+            document.getElementById("hoaDonId").textContent;
+
+        // Điều hướng đến URL in hóa đơn với id hóa đơn
+        window.location.href = '/user/ban-hang/in-hoa-don/' + hoaDonId;
+    }
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script th:src="@{/js/nhanvien/hoa-don.js}"></script>

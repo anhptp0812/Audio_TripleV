@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/thong-ke")
+@RequestMapping("/admin/thong-ke")
 public class ThongKeController {
 
     @GetMapping

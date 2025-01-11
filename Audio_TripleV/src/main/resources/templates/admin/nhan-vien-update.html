@@ -41,7 +41,7 @@
             </div>
 
             <!-- Form gửi dữ liệu đến phương thức POST của controller -->
-            <form th:action="@{/user/nhan-vien/sua}" method="post">
+            <form th:action="@{/admin/nhan-vien/sua}" method="post">
                 <!-- Hidden input chứa id nhân viên -->
                 <input type="hidden" th:value="${nhanVien.id}" name="id"/>
 
@@ -116,7 +116,7 @@
 
                 <div class="text-center mb-4">
                     <button type="submit" class="btn btn-primary">Cập Nhật Nhân Viên</button>
-                    <a class="btn btn-secondary" th:href="@{/user/nhan-vien}">Quay Lại</a>
+                    <a class="btn btn-secondary" th:href="@{/admin/nhan-vien}">Quay Lại</a>
                 </div>
             </form>
         </div>

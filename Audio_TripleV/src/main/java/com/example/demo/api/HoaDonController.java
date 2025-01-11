@@ -2,7 +2,6 @@ package com.example.demo.api;
 
 
 import com.example.demo.entity.CapNhatSoLuongRequest;
-import com.example.demo.entity.GioHangChiTiet;
 import com.example.demo.entity.Hang;
 import com.example.demo.entity.HoaDon;
 import com.example.demo.entity.HoaDonChiTiet;
@@ -22,18 +21,22 @@ import com.example.demo.repository.MauSacRepository;
 import com.example.demo.repository.NhanVienRepo;
 import com.example.demo.repository.SanPhamChiTietRepository;
 import com.example.demo.repository.SanPhamRepository;
+import com.example.demo.repository.VoucherRepository;
 import com.example.demo.service.DonHangService;
 import com.example.demo.service.HoaDonService;
-import com.example.demo.service.KhachHangService;
 import com.example.demo.service.NhanVienService;
 import com.example.demo.service.SanPhamChiTietService;
+import com.itextpdf.kernel.font.PdfFont;
+import com.itextpdf.kernel.font.PdfFontFactory;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.properties.TextAlignment;
+import com.itextpdf.layout.properties.UnitValue;
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.apache.poi.xwpf.usermodel.XWPFTable;
-import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,6 +53,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -64,8 +68,6 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/user")
 public class HoaDonController {
-    @Autowired
-    private DonHangService donHangService;
 
     @Autowired
     private NhanVienRepo nhanVienRepo;
@@ -124,6 +126,12 @@ public class HoaDonController {
                 hoaDon.setFormattedTongGia(currencyFormat.format(0.0)); // Thay thế với giá trị mặc định nếu null
             }
 
+            if (hoaDon.getSoTienPhaiTra() != null) {
+                hoaDon.setFormattedSoTienPhaiTra(currencyFormat.format(hoaDon.getSoTienPhaiTra()));
+            } else {
+                hoaDon.setFormattedSoTienPhaiTra(currencyFormat.format(0.0)); // Thay thế với giá trị mặc định nếu null
+            }
+
             // Làm tương tự với các trường khác nếu cần
             if (hoaDon.getTienKhachDua() != null) {
                 hoaDon.setFormattedTienKhachDua(currencyFormat.format(hoaDon.getTienKhachDua()));
@@ -146,7 +154,8 @@ public class HoaDonController {
     public String viewHoaDonDetail(@PathVariable Integer id, Model model) {
         HoaDon hoaDon = hoaDonService.findById(id);
         if (hoaDon != null) {
-            System.out.println("Hoa Don Found: " + hoaDon.getId());  // Kiểm tra thông tin của hoaDon
+            System.out.println("Hoa Don Found: " + hoaDon.getId());
+
             // Định dạng giá trị tiền tệ
             NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
 
@@ -155,22 +164,36 @@ public class HoaDonController {
             hoaDon.setFormattedTienKhachDua(currencyFormat.format(hoaDon.getTienKhachDua()));
             hoaDon.setFormattedTienThua(currencyFormat.format(hoaDon.getTienThua()));
 
+            // Tính toán số tiền phải trả với voucher
+            if (hoaDon.getVouCher() != null) {
+                double voucherAmount = 0.0;
+                // Kiểm tra nếu voucher là giá trị tiền hoặc phần trăm
+                if (hoaDon.getVouCher().getLoai().equals("GiamTien") && hoaDon.getVouCher().getGiaTriTien() != null) {
+                    voucherAmount = hoaDon.getVouCher().getGiaTriTien(); // Giá trị tiền
+                    hoaDon.getVouCher().setFormattedGiaTriTien(currencyFormat.format(voucherAmount));
+                } else if (hoaDon.getVouCher().getLoai().equals("GiamPhanTram") && hoaDon.getVouCher().getGiaTriPhanTram() != null) {
+                    voucherAmount = hoaDon.getTongGia() * hoaDon.getVouCher().getGiaTriPhanTram() / 100; // Giá trị phần trăm
+                    hoaDon.getVouCher().setFormattedGiaTriPhanTram(String.format("%d%%", hoaDon.getVouCher().getGiaTriPhanTram().intValue()));
+                }
+                hoaDon.setSoTienPhaiTra(hoaDon.getTongGia() - voucherAmount);
+            } else {
+                hoaDon.setSoTienPhaiTra(hoaDon.getTongGia());
+            }
+
+            hoaDon.setFormattedSoTienPhaiTra(currencyFormat.format(hoaDon.getSoTienPhaiTra()));
+
             // Định dạng giá trị cho từng chi tiết hóa đơn
             for (HoaDonChiTiet hdct : hoaDon.getHoaDonChiTietList()) {
                 hdct.setFormattedDonGia(currencyFormat.format(hdct.getDonGia()));
                 hdct.setFormattedTongGia(currencyFormat.format(hdct.getTongGia()));
             }
 
-            // Lấy danh sách hóa đơn từ repository
-            List<HoaDon> list = hoaDonRepository.findAll();
-
             model.addAttribute("hoaDon", hoaDon);
-            model.addAttribute("hoaDonList", list); // Truyền danh sách hóa đơn vào model nếu cần
             return "nhanvien/hoa-don-detail"; // Trả về trang chi tiết hóa đơn
         }
         return "redirect:/user/hoa-don"; // Nếu không tìm thấy hóa đơn, quay lại danh sách hóa đơn
     }
-    
+
     @GetMapping("/ban-hang")
     public String banHang(@RequestParam(required = false) Integer idLoaiSP,
                           @RequestParam(required = false) Integer idSanPham,
@@ -455,6 +478,9 @@ public class HoaDonController {
                 newDetail.setSoLuong(soLuong);
                 newDetail.setDonGia(sanPhamChiTiet.getDonGia());
                 hoaDonChiTietRepository.save(newDetail);
+                if(hoaDon.getVouCher() != null){
+                    hoaDon.setVouCher(null);
+                }
 
                 // Giảm số lượng trong kho
                 sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - soLuong);
@@ -464,6 +490,7 @@ public class HoaDonController {
                 double newTotal = (hoaDon.getTongGia() != null ? hoaDon.getTongGia() : 0)
                         + sanPhamChiTiet.getDonGia() * soLuong;
                 hoaDon.setTongGia(newTotal);
+                hoaDon.setSoTienPhaiTra(newTotal);
                 hoaDonRepository.save(hoaDon);
 
                 return ResponseEntity.ok(Map.of(
@@ -554,6 +581,7 @@ public class HoaDonController {
 
             hoaDon.setNhanVien(nhanVienOptional.get());
             hoaDonRepository.save(hoaDon);
+
             // Tìm sản phẩm trong hóa đơn
             List<HoaDonChiTiet> hoaDonChiTietList = hoaDon.getHoaDonChiTietList();
 
@@ -576,10 +604,12 @@ public class HoaDonController {
                     - chiTiet.getDonGia() * chiTiet.getSoLuong();
             hoaDon.setTongGia(Math.max(newTotal, 0)); // Đảm bảo tổng giá trị không âm
 
-            // Nếu không còn sản phẩm nào, có thể cập nhật trạng thái hóa đơn
+            // Nếu không còn sản phẩm nào, có thể cập nhật trạng thái hóa đơn và xóa voucher
             if (hoaDonChiTietList.isEmpty()) {
-                hoaDon.setTrangThai("TRỐNG");
+                hoaDon.setVouCher(null);  // Xóa voucher nếu không còn sản phẩm nào
             }
+
+            hoaDon.setVouCher(null);
 
             // Lưu hóa đơn cập nhật
             hoaDonRepository.save(hoaDon);
@@ -592,8 +622,8 @@ public class HoaDonController {
                     "message", "Đã xóa sản phẩm thành công.",
                     "totalAmount", hoaDon.getTongGia()
             ));
-
         }
+
         return null;
     }
 
@@ -650,22 +680,30 @@ public class HoaDonController {
             }
 
             // Kiểm tra số tiền khách đưa
-            if (customerPayment < hoaDon.getTongGia()) {
+            if (customerPayment < hoaDon.getSoTienPhaiTra()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body(Map.of("message", "Số tiền khách đưa không đủ để thanh toán!"));
             }
 
-            // Tính số tiền thừa
-            Double tienThua = customerPayment - hoaDon.getTongGia();
+            // Định dạng số tiền trả về
+            NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
 
+            Double tienThua;
+
+            if (hoaDon.getVouCher() != null) {
+                // Tính số tiền thừa
+                tienThua = customerPayment - hoaDon.getSoTienPhaiTra();
+            } else {
+                tienThua = customerPayment - hoaDon.getTongGia();
+                hoaDon.setSoTienPhaiTra(hoaDon.getTongGia());
+            }
             // Cập nhật thông tin hóa đơn
+            hoaDon.setNgayCapNhat(new Date());
             hoaDon.setTienKhachDua(customerPayment);
             hoaDon.setTienThua(tienThua);
             hoaDon.setTrangThai("Đã thanh toán");
             hoaDonRepository.save(hoaDon);
 
-            // Định dạng số tiền trả về
-            NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Thanh toán thành công!");
             response.put("customerPayment", currencyFormat.format(customerPayment));
@@ -680,93 +718,75 @@ public class HoaDonController {
     @GetMapping("/ban-hang/in-hoa-don/{id}")
     public void inHoaDon(@PathVariable Integer id, HttpServletResponse response) throws IOException {
         HoaDon hoaDon = hoaDonService.findByid(id);
-
-        // Tạo tài liệu Word
-        XWPFDocument document = new XWPFDocument();
-
-        // Tiêu đề hóa đơn (canh giữa và chữ to, chỉ làm đậm phần tiêu đề)
-        XWPFParagraph titleParagraph = document.createParagraph();
-        titleParagraph.setAlignment(ParagraphAlignment.CENTER); // Canh giữa
-        XWPFRun titleRun = titleParagraph.createRun();
-        titleRun.setText("Hóa đơn thanh toán: " + hoaDon.getId());
-        titleRun.setBold(true); // Làm chữ đậm
-        titleRun.setFontSize(18); // Cỡ chữ lớn hơn
-        titleRun.addBreak();
-
-        // Thông tin khách hàng
-        XWPFParagraph customerParagraph = document.createParagraph();
-        XWPFRun customerRun = customerParagraph.createRun();
-        customerRun.setText("Tên khách hàng: " + hoaDon.getKhachHang().getTen());
-        customerRun.addBreak();
-        customerRun.setText("Số điện thoại: " + hoaDon.getKhachHang().getSdt());
-
-        // Hiển thị ngày tạo bên dưới bảng
-        // Hiển thị ngày tạo bên dưới bảng
-        XWPFParagraph dateParagraph = document.createParagraph();
-        XWPFRun dateRun = dateParagraph.createRun();
-        dateRun.setText("Ngày tạo: " + new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(hoaDon.getNgayTao()));
-        dateRun.addBreak();
-
-        NumberFormat currencyFormat = NumberFormat.getNumberInstance(new Locale("vi", "VN"));
-
-        // Thêm chi tiết sản phẩm dưới dạng bảng
-        XWPFTable table = document.createTable();
-
-        // Tạo header của bảng và làm đậm
-        XWPFTableRow headerRow = table.getRow(0);
-        XWPFRun headerRun0 = headerRow.getCell(0).getParagraphs().get(0).createRun();
-        headerRun0.setText("Tên sản phẩm");
-        headerRun0.setBold(true);
-
-        XWPFRun headerRun1 = headerRow.addNewTableCell().getParagraphs().get(0).createRun();
-        headerRun1.setText("Số lượng");
-        headerRun1.setBold(true);
-
-        XWPFRun headerRun2 = headerRow.addNewTableCell().getParagraphs().get(0).createRun();
-        headerRun2.setText("Đơn giá");
-        headerRun2.setBold(true);
-
-        XWPFRun headerRun3 = headerRow.addNewTableCell().getParagraphs().get(0).createRun();
-        headerRun3.setText("Tổng giá");
-        headerRun3.setBold(true);
-
-        // Đặt chiều rộng cố định cho các cột
-        table.setWidth("100%"); // Cấu hình cho bảng rộng tối đa
-        headerRow.getCell(0).setWidth("4000"); // Cột "Tên sản phẩm" rộng hơn
-        headerRow.getCell(1).setWidth("1000");
-        headerRow.getCell(2).setWidth("1500");
-        headerRow.getCell(3).setWidth("1500");
-
-        // Thêm các chi tiết sản phẩm vào bảng
-        for (HoaDonChiTiet chiTiet : hoaDon.getHoaDonChiTietList()) {
-            XWPFTableRow row = table.createRow();
-            row.getCell(0).setText(chiTiet.getSanPhamChiTiet().getSanPham().getTen());
-            row.getCell(1).setText(String.valueOf(chiTiet.getSoLuong()));
-            row.getCell(2).setText(currencyFormat.format(chiTiet.getDonGia()) + " VNĐ");
-            row.getCell(3).setText(currencyFormat.format(chiTiet.getDonGia() * chiTiet.getSoLuong()) + " VNĐ");
+        if (hoaDon == null) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Không tìm thấy hóa đơn");
+            return;
         }
 
-        // Tổng tiền
-        XWPFParagraph totalParagraph = document.createParagraph();
-        XWPFRun totalRun = totalParagraph.createRun();
-        totalRun.addBreak();
-        totalRun.setText("Tổng tiền: " + currencyFormat.format(hoaDon.getTongGia()) + " VNĐ");
-        totalRun.addBreak();
+        // Cấu hình xuất file PDF
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment; filename=hoa-don-" + hoaDon.getId() + ".pdf");
 
-        // Số tiền khách đưa
-        totalRun.setText("Tiền khách đưa: " + currencyFormat.format(hoaDon.getTienKhachDua()) + " VNĐ");
-        totalRun.addBreak();
+        try (OutputStream out = response.getOutputStream()) {
+            PdfWriter writer = new PdfWriter(out);
+            PdfDocument pdf = new PdfDocument(writer);
+            Document document = new Document(pdf);
 
-        // Số tiền thừa
-        totalRun.setText("Tiền thừa: " + currencyFormat.format(hoaDon.getTienThua()) + " VNĐ");
+            // Cài đặt font hỗ trợ tiếng Việt (ví dụ font Arial Unicode MS)
+            PdfFont font = PdfFontFactory.createFont("c:/windows/fonts/arial.ttf", PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED);
+            document.setFont(font);
 
-        // Cấu hình để tải xuống file
-        response.setContentType("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
-        response.setHeader("Content-Disposition", "attachment; filename=hoa-don-" + hoaDon.getId() + ".docx");
+            // Tiêu đề hóa đơn
+            Paragraph title = new Paragraph("HÓA ĐƠN THANH TOÁN")
+                    .setTextAlignment(TextAlignment.CENTER)
+                    .setBold()
+                    .setFontSize(18);
+            document.add(title);
 
-        // Xuất file Word vào response
-        document.write(response.getOutputStream());
-        document.close();
+            // Thông tin khách hàng
+            document.add(new Paragraph("Mã hóa đơn: " + hoaDon.getId()));
+            document.add(new Paragraph("Tên khách hàng: " + hoaDon.getKhachHang().getTen()));
+            document.add(new Paragraph("Số điện thoại: " + hoaDon.getKhachHang().getSdt()));
+            document.add(new Paragraph("Ngày tạo: " + new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(hoaDon.getNgayTao())));
+            document.add(new Paragraph("\n"));
+
+            // Bảng chi tiết sản phẩm
+            Table table = new Table(new float[]{4, 2, 2, 2});
+            table.setWidth(UnitValue.createPercentValue(100));
+
+            // Header của bảng
+            table.addHeaderCell(new Cell().add(new Paragraph("Tên sản phẩm").setBold()));
+            table.addHeaderCell(new Cell().add(new Paragraph("Số lượng").setBold()));
+            table.addHeaderCell(new Cell().add(new Paragraph("Đơn giá").setBold()));
+            table.addHeaderCell(new Cell().add(new Paragraph("Tổng giá").setBold()));
+
+            // Thêm các chi tiết sản phẩm
+            NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+            for (HoaDonChiTiet chiTiet : hoaDon.getHoaDonChiTietList()) {
+                table.addCell(chiTiet.getSanPhamChiTiet().getSanPham().getTen());
+                table.addCell(String.valueOf(chiTiet.getSoLuong()));
+                table.addCell(currencyFormat.format(chiTiet.getDonGia()));
+                table.addCell(currencyFormat.format(chiTiet.getDonGia() * chiTiet.getSoLuong()));
+            }
+            document.add(table);
+
+            // Tổng tiền, tiền phải trả, tiền khách đưa, tiền thừa
+            document.add(new Paragraph("\nTổng tiền: " + currencyFormat.format(hoaDon.getTongGia())));
+            // Thông tin voucher
+            if (hoaDon.getVouCher() != null) {
+                document.add(new Paragraph("Voucher: " + hoaDon.getVouCher().getTen()));
+                if ("GiamTien".equalsIgnoreCase(hoaDon.getVouCher().getLoai())) {
+                    document.add(new Paragraph("Giảm tiền: " + currencyFormat.format(hoaDon.getVouCher().getGiaTriTien())));
+                } else if ("GiamPhanTram".equalsIgnoreCase(hoaDon.getVouCher().getLoai())) {
+                    document.add(new Paragraph("Giảm phần trăm: " + String.format("%d%%", hoaDon.getVouCher().getGiaTriPhanTram().intValue())));
+                }
+            }
+            document.add(new Paragraph("Tiền phải trả: " + currencyFormat.format(hoaDon.getSoTienPhaiTra())));
+            document.add(new Paragraph("Tiền khách đưa: " + currencyFormat.format(hoaDon.getTienKhachDua())));
+            document.add(new Paragraph("Tiền thừa: " + currencyFormat.format(hoaDon.getTienThua())));
+
+            document.close();
+        }
     }
 
 }

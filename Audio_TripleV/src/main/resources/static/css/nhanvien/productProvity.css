@@ -133,8 +133,25 @@ body {
 }
 
 /* Hiển thị form và overlay khi cần */
-.overlay.show, .customer-form.show {
+.overlay.show, .customer-form.show, .voucher-form.show {
     display: block;
+}
+
+.voucher-form {
+    display: none; /* Ẩn đi khi không cần hiển thị */
+    position: fixed; /* Đặt vị trí cố định trên màn hình */
+    top: 50%; /* Đặt form vào giữa màn hình theo chiều dọc */
+    left: 50%; /* Đặt form vào giữa màn hình theo chiều ngang */
+    transform: translate(-50%, -50%); /* Đưa form vào chính giữa */
+    width: 1000px; /* Chiều rộng cố định */
+    height: 650px; /* Chiều cao cố định */
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow: auto; /* Hiển thị thanh cuộn khi nội dung vượt quá kích thước */
 }
 
 /* Các kiểu dáng khác cho form */

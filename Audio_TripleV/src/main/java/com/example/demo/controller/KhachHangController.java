@@ -4,7 +4,9 @@ import com.example.demo.entity.*;
 import com.example.demo.service.*;
 import com.example.demo.repository.KhachHangRepository;
 import com.example.demo.vnconfig.PaymentInfoDTO;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -63,11 +65,25 @@ public class KhachHangController {
 
     private String savedSelectedItems;
 
+
+    @GetMapping("/khach-hang/check-login")
+    public ResponseEntity<Map<String, Object>> checkLogin(@AuthenticationPrincipal UserDetails userDetails) {
+        Map<String, Object> response = new HashMap<>();
+        if (userDetails == null) {
+            response.put("loggedIn", false);  // Nếu người dùng chưa đăng nhập
+        } else {
+            response.put("loggedIn", true);  // Nếu người dùng đã đăng nhập
+        }
+        return ResponseEntity.ok(response);
+    }
+
+
     private GioHang muaNgayGioHang;
 
     private Boolean globalMuaNgay = false;
 
     private Double globalShippingFee = 0.0;
+
     @GetMapping("/khach-hang/hien-thi")
     public String hienThiDanhSachKhachHang(Model model) {
         List<KhachHang> listKh = khachHangRepository.findAll(); // Lấy danh sách khách hàng
@@ -106,7 +122,6 @@ public class KhachHangController {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Lỗi khi lưu khách hàng");
         }
     }
-
 
 
     @GetMapping("/khach-hang/don-hang/danh-sach")
@@ -156,54 +171,6 @@ public class KhachHangController {
         return "customer/don-hang-cua-toi"; // Trang hiển thị danh sách đơn hàng
     }
 
-//    @GetMapping("/khach-hang/thanh-toan/hien-thi")
-//    public String hienThiThanhToan(Model model, @RequestParam(required = false) String selectedItems, @AuthenticationPrincipal UserDetails userDetails) {
-//        // Lấy thông tin khách hàng từ tài khoản đăng nhập
-//        KhachHang khachHang = khachHangService.findByTaiKhoan(userDetails.getUsername())
-//                .orElseThrow(() -> new RuntimeException("Khách hàng không tồn tại"));
-//
-//        // Lấy giỏ hàng của khách hàng
-//        GioHang gioHang = gioHangService.findByKhachHang(khachHang)
-//                .orElseThrow(() -> new RuntimeException("Giỏ hàng không tồn tại"));
-//
-//        // Nếu có các sản phẩm được chọn, lọc giỏ hàng để chỉ hiển thị sản phẩm được chọn
-//        if (selectedItems != null && !selectedItems.isEmpty()) {
-//            List<Integer> selectedProductIds = Arrays.stream(selectedItems.split(","))
-//                    .map(Integer::parseInt)
-//                    .collect(Collectors.toList());
-//
-//            gioHang.setGioHangChiTietList(gioHang.getGioHangChiTietList().stream()
-//                    .filter(item -> selectedProductIds.contains(item.getSanPhamChiTiet().getId()))
-//                    .collect(Collectors.toList()));
-//        }
-//
-//        // Tính tổng tiền và số lượng trong giỏ hàng
-//        double totalPrice = gioHang.getGioHangChiTietList().stream()
-//                .mapToDouble(item -> item.getSoLuong() * item.getSanPhamChiTiet().getDonGia())
-//                .sum();
-//        int totalQuantity = gioHang.getGioHangChiTietList().stream()
-//                .mapToInt(item -> item.getSoLuong())
-//                .sum();
-//
-//        // Định dạng tổng tiền theo tiền tệ Việt Nam
-//        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
-//        String formattedTotalPrice = currencyFormat.format(totalPrice);
-//
-//        // Định dạng từng sản phẩm trong giỏ hàng
-//        gioHang.getGioHangChiTietList().forEach(item -> {
-//            String formattedDonGia = item.getSanPhamChiTiet().getFormattedDonGia();
-//            item.getSanPhamChiTiet().setFormattedDonGia(formattedDonGia);
-//        });
-//
-//        // Thêm dữ liệu vào model
-//        model.addAttribute("cartCount", totalQuantity);
-//        model.addAttribute("khachHang", khachHang);
-//        model.addAttribute("gioHang", gioHang);
-//        model.addAttribute("totalPrice", formattedTotalPrice);  // Truyền tổng tiền đã định dạng
-//
-//        return "customer/thanh-toan"; // Tên file HTML trong thư mục template
-//    }
-
     @GetMapping("/khach-hang/thanh-toan/hien-thi")
     public String hienThiThanhToan(Model model,
                                    @RequestParam(required = false) String selectedItems,
@@ -220,6 +187,8 @@ public class KhachHangController {
         // Lấy giỏ hàng của khách hàng
         GioHang gioHang = gioHangService.findByKhachHang(khachHang)
                 .orElseThrow(() -> new RuntimeException("Giỏ hàng không tồn tại"));
+
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
 
         // Nếu có các sản phẩm được chọn, lọc giỏ hàng và cập nhật số lượng
         if (selectedItems != null && !selectedItems.trim().isEmpty()) {
@@ -248,7 +217,7 @@ public class KhachHangController {
                         .filter(item -> selectedItemMap.containsKey(item.getSanPhamChiTiet().getId()))
                         .collect(Collectors.toList());
 
-// Now, update the quantities for the filtered items
+                // Now, update the quantities for the filtered items
                 List<GioHangChiTiet> updatedItems = filteredItems.stream()
                         // Update the quantity for the matching items
                         .peek(item -> {
@@ -260,10 +229,10 @@ public class KhachHangController {
                         })
                         .collect(Collectors.toList());
 
-// Assign the updated items back to the cart
+                // Assign the updated items back to the cart
                 gioHang.setGioHangChiTietList(updatedItems);
 
-// Log the updated cart items after processing
+                // Log the updated cart items after processing
                 gioHang.getGioHangChiTietList().forEach(item ->
                         System.out.println("Updated Cart Item ID: " + item.getSanPhamChiTiet().getId() + ", Quantity: " + item.getSoLuong())
                 );
@@ -283,7 +252,6 @@ public class KhachHangController {
                 .sum();
 
         // Định dạng tổng tiền theo tiền tệ Việt Nam
-        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         String formattedTotalPrice = currencyFormat.format(totalPrice);
 
         // Định dạng từng sản phẩm trong giỏ hàng
@@ -331,7 +299,6 @@ public class KhachHangController {
                     .sum();
 
             // Format total price as Vietnamese currency
-            currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
             formattedTotalPrice = currencyFormat.format(totalPrice);
 
             muaNgayGioHang = gioHang;
@@ -343,8 +310,18 @@ public class KhachHangController {
             model.addAttribute("totalPrice", formattedTotalPrice);  // Truyền tổng tiền đã định dạng
 
         }
+        // Định dạng từng sản phẩm trong giỏ hàng
+        gioHang.getGioHangChiTietList().forEach(item -> {
+            item.setFormattedDonGia(currencyFormat.format(item.getSanPhamChiTiet().getDonGia()));
+            item.setFormattedTongGia(currencyFormat.format(item.getTongGia()));
+        });
 
+        // Thêm dữ liệu vào model
+        model.addAttribute("cartCount", totalQuantity);
         model.addAttribute("khachHang", khachHang);
+        model.addAttribute("gioHang", gioHang);
+        model.addAttribute("formattedTotalPrice", formattedTotalPrice);  // Truyền tổng tiền đã định dạng
+        model.addAttribute("totalPrice", totalPrice);
 
         return "customer/thanh-toan"; // Tên file HTML trong thư mục template
     }
@@ -418,8 +395,8 @@ public class KhachHangController {
             // failure
             return "redirect:/khach-hang/don-hang/danh-sach";
         }
-         else {
-             // sucess
+        else {
+            // sucess
             if (paymentInfoDTO.getVnp_OrderInfo() == null || paymentInfoDTO.getVnp_OrderInfo().isEmpty()) {
                 throw new RuntimeException("Thông tin thanh toán không hợp lệ");
             }
@@ -544,15 +521,16 @@ public class KhachHangController {
         donHangService.save(donHang);
 
         // Xóa các sản phẩm đã chọn khỏi giỏ hàng
-       if(!globalMuaNgay) {
-           gioHang.setGioHangChiTietList(gioHang.getGioHangChiTietList().stream()
-                   .filter(item -> !selectedProductIds.contains(item.getSanPhamChiTiet().getId()))
-                   .collect(Collectors.toList()));
-           gioHangService.save(gioHang);
-       }
+        if(!globalMuaNgay) {
+            gioHang.setGioHangChiTietList(gioHang.getGioHangChiTietList().stream()
+                    .filter(item -> !selectedProductIds.contains(item.getSanPhamChiTiet().getId()))
+                    .collect(Collectors.toList()));
+            gioHangService.save(gioHang);
+        }
 
-       if(globalMuaNgay) globalMuaNgay = false;
+        if(globalMuaNgay) globalMuaNgay = false;
     }
+
 
     @GetMapping("/khach-hang/thong-tin")
     public String thongTinTaiKhoan(@AuthenticationPrincipal UserDetails userDetails, Model model) {

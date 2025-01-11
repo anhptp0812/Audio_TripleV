@@ -167,6 +167,16 @@ checkboxes.forEach(checkbox => {
     });
 });
 
+window.addEventListener('load', function() {
+    // Tự động chọn checkbox "Chọn tất cả" khi vào trang Giỏ Hàng
+    const selectAllCheckbox = document.getElementById('selectAll');
+    selectAllCheckbox.checked = false; // Đánh dấu "Chọn tất cả" là đã chọn
+
+    // Cập nhật trạng thái của các checkbox con
+    toggleSelectAll();
+    updateSelectAll(); // Cập nhật trạng thái checkbox "Chọn tất cả" ngay khi trang tải
+});
+
 function removeSelectedItems() {
     const selectedCheckboxes = document.querySelectorAll('input[type="checkbox"]:not(#selectAll):checked');
     const selectedIds = Array.from(selectedCheckboxes).map(checkbox => checkbox.value);

@@ -35,7 +35,7 @@
     <div class="staff-form">
         <div class="staff-details text-center">
             <h1 class="my-4">Danh Sách Nhân Viên</h1>
-            <a href="/user/nhan-vien/save" class="btn btn-success w-100">
+            <a href="/admin/nhan-vien/save" class="btn btn-success w-100">
                 <i class="bi bi-plus-circle"></i>
             </a>
 
@@ -61,10 +61,10 @@
                     <td th:text="${nhanVien.sdt}"></td>
                     <td th:text="${nhanVien.role}"></td>
                     <td>
-                        <a th:href="@{/user/nhan-vien/sua/{id}(id=${nhanVien.id})}" class="btn btn-warning">
+                        <a th:href="@{/admin/nhan-vien/sua/{id}(id=${nhanVien.id})}" class="btn btn-warning">
                             <i class="bi bi-pencil-square"></i>
                         </a>
-                        <a th:href="@{/user/nhan-vien/xoa/{id}(id=${nhanVien.id})}" class="btn btn-danger"
+                        <a th:href="@{/admin/nhan-vien/xoa/{id}(id=${nhanVien.id})}" class="btn btn-danger"
                            onclick="return confirm('Bạn có chắc chắn muốn xóa?')">
                             <i class="bi bi-trash"></i>
                         </a>

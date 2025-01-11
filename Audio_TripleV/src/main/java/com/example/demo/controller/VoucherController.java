@@ -10,8 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.NumberFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
@@ -115,28 +117,37 @@ public class VoucherController {
         HoaDon hoaDon = hoaDonOptional.get();
         Voucher voucher = voucherOptional.get();
 
-        // Tính toán tổng giá sau khi áp dụng voucher
+        // Kiểm tra nếu tổng tiền nhỏ hơn giá trị tối thiểu của voucher
+        if (hoaDon.getTongGia() < voucher.getGiaTriHoaDonToiThieu()) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Tổng tiền không đủ để áp dụng voucher"));
+        }
+
+        // Tính toán giá trị giảm giá
         double totalPrice = hoaDon.getTongGia();
         double discountedPrice = totalPrice;
 
-        if ("GiamTien".equalsIgnoreCase(voucher.getLoai())) {
+        if ("GiamTien".equalsIgnoreCase(voucher.getLoai()) && voucher.getGiaTriTien() > 0) {
             discountedPrice -= voucher.getGiaTriTien();
-        } else if ("GiamPhanTram".equalsIgnoreCase(voucher.getLoai())) {
+        } else if ("GiamPhanTram".equalsIgnoreCase(voucher.getLoai()) && voucher.getGiaTriPhanTram() > 0) {
             discountedPrice -= (totalPrice * voucher.getGiaTriPhanTram()) / 100;
         }
 
         // Đảm bảo giá trị không âm
         discountedPrice = Math.max(discountedPrice, 0);
 
-        // Cập nhật tổng giá của hóa đơn trong cơ sở dữ liệu
-        hoaDon.setTongGia(discountedPrice);
+        // Cập nhật hóa đơn với giá trị mới
+        hoaDon.setSoTienPhaiTra(discountedPrice);
         hoaDon.setVouCher(voucher);
         hoaDonRepository.save(hoaDon);
 
-        return ResponseEntity.ok(Map.of("discountedPrice", discountedPrice));
+        // Định dạng số tiền đã giảm
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        String formattedPrice = currencyFormat.format(discountedPrice);
+
+        return ResponseEntity.ok(Map.of(
+                "discountedPrice", formattedPrice,
+                "message", "Voucher đã áp dụng thành công"
+        ));
     }
-
-
-
 
 }

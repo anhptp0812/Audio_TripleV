@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.entity.Article;
 import com.example.demo.repository.ArticleRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -28,8 +29,10 @@ public class ArticleService {
     }
 
     public Article getArticleById(Integer id) {
-        return articleRepository.findById(id).orElseThrow(() -> new RuntimeException("Article not found"));
+        return articleRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy bài viết với ID: " + id));
     }
+
 
     public List<Article> findTop2NewestProducts() {
         return articleRepository.findTop2NewestProducts(PageRequest.of(0, 2));

@@ -14,7 +14,7 @@ import java.util.*;
 @Service
 public class VNPayService {
 
-    public String createOrder(int total, String username, String fullname, String email, String phone, String address, HttpServletRequest request,String selectedItems) throws UnsupportedEncodingException {
+    public String createOrder(int total, String username, String fullname, String email, String phone, String address, HttpServletRequest request, String selectedItems) throws UnsupportedEncodingException {
         String vnp_TxnRef = VNPayConfig.getRandomNumber(8);
         String vnp_IpAddr = request.getRemoteAddr();
         String vnp_TmnCode = VNPayConfig.vnp_TmnCode;
@@ -100,9 +100,9 @@ public class VNPayService {
         return paymentUrl;
     }
 
-    public int orderReturn(HttpServletRequest request){
+    public int orderReturn(HttpServletRequest request) {
         Map fields = new HashMap();
-        for (Enumeration params = request.getParameterNames(); params.hasMoreElements();) {
+        for (Enumeration params = request.getParameterNames(); params.hasMoreElements(); ) {
             String fieldName = null;
             String fieldValue = null;
             try {
