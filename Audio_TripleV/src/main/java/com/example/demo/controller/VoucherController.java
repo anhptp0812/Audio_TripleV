@@ -39,6 +39,16 @@ public class VoucherController {
         return ResponseEntity.ok(voucherService.getAllVouchers());
     }
 
+    // API tìm kiếm Voucher theo tên
+    @GetMapping("/search")
+    public List<Voucher> searchVoucher(@RequestParam String name) {
+        return voucherService.searchByName(name);
+    }
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> handleInvalidArgument(IllegalArgumentException ex) {
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
     // Lấy Voucher theo ID
     @GetMapping("/{id}")
     public ResponseEntity<Voucher> getVoucherById(@PathVariable Integer id) {

@@ -29,6 +29,10 @@ public class VoucherService {
         return voucherRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy bài viết với ID: " + id));
     }
+    // Tìm kiếm Voucher theo tên
+    public List<Voucher> searchByName(String name) {
+        return voucherRepository.findByTenContainingIgnoreCase(name);
+    }
 
     // Thêm mới hoặc cập nhật Voucher
     public Voucher saveOrUpdateVoucher(Voucher voucher) {

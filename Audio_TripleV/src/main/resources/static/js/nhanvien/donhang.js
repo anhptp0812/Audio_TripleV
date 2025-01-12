@@ -17,3 +17,17 @@ function toggleSearchInput() {
         searchInput.style.display = 'none';
     }
 }
+document.getElementById('manageMenuToggle').addEventListener('click', function (e) {
+    e.preventDefault(); // Ngăn điều hướng mặc định
+    const submenu = document.getElementById('manageSubmenu');
+    const arrow = this.querySelector('.arrow'); // Mũi tên
+
+    // Thay đổi trạng thái hiển thị
+    if (submenu.classList.contains('show')) {
+        submenu.classList.remove('show');
+        this.classList.remove('active');
+    } else {
+        submenu.classList.add('show');
+        this.classList.add('active');
+    }
+});
