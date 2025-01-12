@@ -94,13 +94,6 @@
                             <td th:text="${item.soLuong}"></td>
                             <td th:text="${item.formattedDonGia}"></td>
                             <td th:text="${item.formattedTongGia}"></td>
-<!--                            <input type="hidden" name="selectedItems" th:value="${item.sanPhamChiTiet.id}"/>-->
-<!--                            <td th:text="${item.sanPhamChiTiet.formattedDonGia} + ' đ'"></td>-->
-<!--                            <td th:text="${item.sanPhamChiTiet.formattedDonGia * item.soLuong} + ' đ'"></td>-->
-<!--                            <td th:text="${#numbers.formatDecimal(item.sanPhamChiTiet.formattedDonGia * item.soLuong, 0, 'COMMA', 'DOT')} + ' đ'"></td>-->
-
-
-
                             <!-- Gửi tất cả sản phẩm vào form -->
                             <input type="hidden" name="selectedItems" th:value="${item.sanPhamChiTiet.id}" />
                         </tr>
@@ -166,18 +159,6 @@
                         <textarea class="form-control" id="address" name="address" rows="3"
                                   th:text="${khachHang != null ? khachHang.diaChi : ''}" required></textarea>
                     </div>
-
-<!--                    <div class="mb-3">-->
-<!--                        <label class="col-form-label">-->
-<!--                            Địa chỉ cụ thể:-->
-<!--                        </label>-->
-<!--                        <input type="text" class="form-control"-->
-<!--                               id="diaChi" name="diaChi"-->
-<!--                               th:field="*{diaChi}">-->
-<!--                        <span class="check-loi" id="checkLoiDCUTpdate"-->
-<!--                              style="display: none;color: red"></span>-->
-<!--                    </div>-->
-
                 </div>
             </div>
 

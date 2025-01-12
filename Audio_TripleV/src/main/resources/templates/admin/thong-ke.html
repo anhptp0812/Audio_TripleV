@@ -5,140 +5,89 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thống Kê</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-        }
-
-        .container {
-            margin-top: 50px;
-        }
-
-        .btn-group {
-            margin-bottom: 20px;
-        }
-
-        .chart-container {
-            position: relative;
-            margin: auto;
-            height: 50vh;
-            width: 80vw;
-        }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.9.1/font/bootstrap-icons.min.css"
+          rel="stylesheet">
+    <link th:href="@{/css/admin/thong-ke.css}" rel="stylesheet">
 </head>
 
 <body>
 <th:block th:replace="~{/nhanvien/fragments :: nhan-vien-header}"/>
-<div class="container">
-    <h1 class="text-center mb-4">Thống Kê</h1>
 
-    <div class="btn-group d-flex justify-content-center mb-3" role="group">
-        <button class="btn btn-primary" onclick="loadData('day')">Thống Kê Ngày</button>
-        <button class="btn btn-primary" onclick="loadData('month')">Thống Kê Tháng</button>
-        <button class="btn btn-primary" onclick="loadData('year')">Thống Kê Năm</button>
+<div class="main-container">
+    <div class="header d-flex align-items-center">
+        <input type="text" id="searchInput" class="form-control search-input me-2" placeholder="Tìm kiếm..."
+               style="display: none;">
+        <button class="btn btn-outline-light me-2" type="button" onclick="toggleSearchInput()">
+            <i class="bi bi-search"></i>
+        </button>
+        <!-- Dropdown tài khoản -->
+        <div class="dropdown">
+            <a class="btn btn-outline-light me-3" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown"
+               aria-expanded="false">
+                <i class="bi bi-person-circle"></i>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="accountDropdown">
+                <li><a class="dropdown-item" href="/user/thong-tin">Thông tin tài khoản</a></li>
+                <li><a class="dropdown-item text-danger" href="/logout"
+                       onclick="return confirm('Bạn có chắc muốn đăng xuất không?')">Đăng xuất</a></li>
+            </ul>
+        </div>
     </div>
+    <div class="statistical-form">
+        <div class="statistical-details text-center">
+            <h1 class="text-center mb-4">Thống Kê</h1>
 
-    <div class="btn-group d-flex justify-content-center" role="group">
-        <button class="btn btn-success" onclick="renderChart('bar')">Biểu Đồ Cột</button>
-        <button class="btn btn-success" onclick="renderChart('pie')">Biểu Đồ Tròn</button>
-        <button class="btn btn-success" onclick="renderChart('line')">Biểu Đồ Miền</button>
-    </div>
+            <div class="mb-4">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="dateInput" class="form-label">Thống Kê Ngày:</label>
+                        <input type="date" id="dateInput" class="form-control">
+                        <button class="btn btn-primary mt-2 w-100" onclick="loadData('day')">Thống Kê Ngày</button>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="monthInput" class="form-label">Thống Kê Tháng:</label>
+                        <div class="d-flex">
+                            <input type="number" id="monthInput" class="form-control" placeholder="Nhập tháng (1-12)" min="1" max="12">
+                            <input type="number" id="yearInputMonth" class="form-control ms-2" placeholder="Nhập năm (YYYY)">
+                        </div>
+                        <button class="btn btn-primary mt-2 w-100" onclick="loadData('month')">Thống Kê Tháng</button>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="yearInput" class="form-label">Thống Kê Năm:</label>
+                        <input type="number" id="yearInput" class="form-control" placeholder="Nhập năm (YYYY)">
+                        <button class="btn btn-primary mt-2 w-100" onclick="loadData('year')">Thống Kê Năm</button>
+                    </div>
+                </div>
+            </div>
 
-    <div class="chart-container">
-        <canvas id="statisticsChart"></canvas>
+            <div class="chart-container mt-4 text-center">
+                <canvas id="statisticsChart"></canvas>
+            </div>
+
+            <h3 class="text-center mt-5">Dữ Liệu Chi Tiết</h3>
+            <table class="table table-striped mt-3">
+                <thead>
+                <tr>
+                    <th>Thời Gian</th>
+                    <th>Số Lượng Đơn Hàng</th>
+                    <th>Tổng Doanh Thu</th>
+                    <th>Lợi Nhuận</th>
+                </tr>
+                </thead>
+                <tbody id="statisticsTableBody">
+                <!-- Dữ liệu sẽ được thêm ở đây -->
+                </tbody>
+            </table>
+        </div>
     </div>
+    <th:block th:replace="~{/nhanvien/fragments :: nhan-vien-footer}"/>
 </div>
 
-<script>
-    const ctx = document.getElementById('statisticsChart').getContext('2d');
-    let chart;
-
-    // Hàm tải dữ liệu từ API dựa trên thời gian
-    function loadData(timeFrame) {
-        let url;
-        let date;
-        if (timeFrame === 'day') {
-            date = prompt("Nhập ngày (YYYY-MM-DD):");
-            if (!date || !isValidDate(date)) {
-                alert('Ngày không hợp lệ. Vui lòng nhập lại.');
-                return;
-            }
-            url = `/api/thong-ke/ngay?date=${date}`;
-        }
-        // Các phần còn lại vẫn giữ nguyên
-        fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                const labels = Array.isArray(data) ? data.map(item => item.label) : [date];
-                const revenueData = Array.isArray(data) ? data.map(item => item.value) : [data];
-                renderChart('bar', labels, revenueData); // Vẽ biểu đồ cột
-                alert(`Tổng doanh thu: ${data}`);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Đã xảy ra lỗi khi tải dữ liệu.');
-            });
-    }
-
-
-    // Hàm vẽ biểu đồ
-    function renderChart(type, labels, data) {
-        if (chart) {
-            chart.destroy(); // Xóa biểu đồ cũ nếu tồn tại
-        }
-
-        chart = new Chart(ctx, {
-            type: type,
-            data: {
-                labels: labels, // Gán nhãn từ dữ liệu API
-                datasets: [{
-                    label: 'Tổng Doanh Thu',
-                    data: data, // Gán dữ liệu từ API
-                    backgroundColor: [
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                    },
-                    title: {
-                        display: true,
-                        text: `Biểu Đồ Thống Kê Theo ${type === 'bar' ? 'Cột' : type === 'pie' ? 'Tròn' : 'Miền'}`
-                    }
-                }
-            }
-        });
-    }
-
-    // Hàm kiểm tra định dạng ngày hợp lệ
-    function isValidDate(date) {
-        const regex = /^\d{4}-\d{2}-\d{2}$/;
-        return regex.test(date); // Kiểm tra định dạng YYYY-MM-DD
-    }
-
-    // Mặc định tải dữ liệu ngày
-    loadData('day');
-
-</script>
 </body>
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/admin/thong-ke.js}"></script>
 </html>

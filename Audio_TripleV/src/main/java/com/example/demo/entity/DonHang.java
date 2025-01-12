@@ -36,6 +36,10 @@ public class DonHang {
     @JoinColumn(name = "ID_Khach_Hang")
     private KhachHang khachHang;
 
+    @ManyToOne
+    @JoinColumn(name = "ID_Voucher")
+    private Voucher voucher;
+
     @Column(name = "TongGia")
     private Double tongGia;
 

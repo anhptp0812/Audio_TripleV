@@ -24,6 +24,7 @@ import com.example.demo.service.HoaDonService;
 
 import com.example.demo.service.KhachHangService;
 import com.example.demo.service.NhanVienService;
+import com.example.demo.service.VoucherService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,7 +38,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -45,10 +49,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
 
 @Controller
 //@RestController
@@ -195,6 +202,7 @@ public class NhanVienController {
 
         return "nhanvien/khach-hang-update";
     }
+
     // Xử lý sửa khách hàng
     @PostMapping("/user/khach-hang/sua/{id}")
     public String suaKhachHang(@PathVariable Integer id, @ModelAttribute KhachHang khachHang) {
@@ -218,6 +226,7 @@ public class NhanVienController {
         model.addAttribute("nhanViens", nhanViens); // Truyền danh sách nhân viên vào model
         return "admin/nhan-vien"; // Chuyển tới trang hiển thị danh sách
     }
+
     @GetMapping("/admin/nhan-vien/save")
     public String showAddForm(Model model) {
         List<String> roles = nhanVienService.getAllRoles();
@@ -390,19 +399,108 @@ public class NhanVienController {
             return "error/404";  // Trang lỗi 404
         }
     }
-
+    @Autowired
+    private CommentRepository commentRepository;
     @GetMapping("/user/bai-viet/{articleId}/binh-luan/delete/{id}")
-    public String deleteComment(@PathVariable Integer articleId, @PathVariable Integer id, Model model) {
+    public String deleteComment(@PathVariable Integer articleId,
+                                @PathVariable Integer id,
+                                RedirectAttributes redirectAttributes) {
         try {
-            // Xóa bình luận theo ID
-            commentService.deleteCommentById(id);
+            // Kiểm tra comment có tồn tại không
+            Optional<Comment> comment = commentRepository.findById(id);
 
-            // Chuyển hướng về danh sách bình luận của bài viết
-            return "redirect:/user/bai-viet/" + articleId + "/binh-luan";
-        } catch (EntityNotFoundException ex) {
-            model.addAttribute("errorMessage", ex.getMessage());
-            return "error/404"; // Trang lỗi 404
+            if (comment.isPresent()) {
+                commentRepository.delete(comment.get()); // Xóa trực tiếp entity
+                //commentRepository.flush(); // Đảm bảo thay đổi được áp dụng ngay
+                redirectAttributes.addFlashAttribute("successMessage",
+                        "Đã xóa bình luận ID: " + id);
+            } else {
+                redirectAttributes.addFlashAttribute("errorMessage",
+                        "Không tìm thấy bình luận ID: " + id);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Lỗi khi xóa bình luận: " + e.getMessage());
+        }
+
+        return "redirect:/user/bai-viet/" + articleId + "/binh-luan";
+    }
+    @Autowired
+    private VoucherService voucherService;
+
+    @GetMapping("/admin/voucher/hien-thi")
+    public String hienThi(Model model) {
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+
+        // Add formatted values to each voucher
+        List<Voucher> vouchers = voucherService.findAll();
+        for (Voucher voucher : vouchers) {
+            if (voucher.getGiaTriTien() != null) {
+                voucher.setFormattedGiaTriTien(currencyFormat.format(voucher.getGiaTriTien()));
+            }
+            if (voucher.getGiaTriPhanTram() != null) {
+                voucher.setFormattedGiaTriPhanTram(String.format("%d%%", voucher.getGiaTriPhanTram().intValue()));
+            }
+            if (voucher.getGiaTriHoaDonToiThieu() != null) {
+                voucher.setFormattedGiaTriHoaDonToiThieu(currencyFormat.format(voucher.getGiaTriHoaDonToiThieu()));
+            }
+        }
+
+        model.addAttribute("vouchers", vouchers);
+        return "admin/voucher";
+    }
+
+    // Hiển thị form thêm voucher
+    @GetMapping("/admin/voucher/form-add")
+    public String add() {
+        return "admin/voucher-add";
+    }
+
+    @PostMapping("/admin/voucher/add")
+    @ResponseBody
+    public ResponseEntity<String> addVoucher(@RequestBody Voucher voucher) {
+        try {
+            voucher.setNgayTao(new Date()); // Gán ngày tạo
+            voucher.setNgayCapNhat(new Date()); // Gán ngày cập nhật
+            voucherService.save(voucher);
+            return ResponseEntity.ok("Thêm voucher thành công!");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Có lỗi xảy ra khi thêm voucher.");
         }
     }
 
+    // Xóa voucher
+    @GetMapping("/admin/voucher/delete/{id}")
+    public String deleteVoucher(@PathVariable Integer id) {
+        voucherService.deleteById(id);
+        return "redirect:/admin/voucher/hien-thi"; // Thêm tham số activated
+    }
+
+    @GetMapping("/admin/voucher/form-update/{id}")
+    public String showUpdateForm(@PathVariable Integer id, Model model) {
+        Voucher voucher = voucherService.findById(id);
+        model.addAttribute("voucher", voucher);
+        return "admin/voucher-update";
+    }
+
+    @PutMapping("/admin/voucher/update")
+    @ResponseBody
+    public ResponseEntity<String> updateVoucher(@RequestBody Voucher voucher) {
+        try {
+            // Cập nhật ngày cho
+            voucher.setNgayCapNhat(new Date());
+            Voucher voucher1 = voucherService.getVoucherById1(voucher.getId());
+            voucher.setNgayTao(voucher1.getNgayTao());
+            // Gọi service để cập nhật
+            Voucher updatedVoucher = voucherService.updateVoucher(voucher);
+
+            // Trả về phản hồi thành công
+            return ResponseEntity.ok("Cập nhật voucher thành công!");
+        } catch (Exception e) {
+            // Trả về phản hồi lỗi nếu có ngoại lệ xảy ra
+            return ResponseEntity.status(500).body("Có lỗi xảy ra khi cập nhật voucher: " + e.getMessage());
+        }
+    }
 }

@@ -52,7 +52,7 @@ public class LoaiSanPhamController {
     @GetMapping("/delete/{id}")
     public String deleteLoaiSanPham(@PathVariable Integer id) {
         loaiSanPhamService.deleteById(id);
-        return "redirect:/loai-san-pham/hien-thi";
+        return "redirect:/admin/loai-san-pham/hien-thi";
     }
 
     @GetMapping("/form-update/{id}")

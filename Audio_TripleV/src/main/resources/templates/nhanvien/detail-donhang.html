@@ -10,7 +10,18 @@
           rel="stylesheet">
     <link th:href="@{/css/nhanvien/donhang.css}" rel="stylesheet">
 </head>
+<style>
+    .btn-outline-secondary {
+        border-color: black;  /* Màu viền của nút */
+        color: white;         /* Màu chữ của nút */
+        background-color: #6c757d; /* Màu nền của nút */
+    }
 
+    .btn-outline-secondary:hover {
+        background-color: #393c3e; /* Màu nền khi hover */
+        color: white;               /* Màu chữ khi hover */
+    }
+</style>
 <body>
 
 <!-- Thông báo toast -->
@@ -40,6 +51,11 @@
     <div class="order-form">
         <div class="order-details-1">
             <h2 class="text-center">Chi Tiết Đơn Hàng</h2>
+            <div style="text-align: right;">
+                <button class="btn btn-outline-secondary me-2" onclick="confirmInDonHang()">
+                    <i class="bi bi-printer"></i> In Dơn Hàng
+                </button>
+            </div>
             <div class="card mt-3">
                 <div class="card-header">
                     <h5>Thông Tin Đơn Hàng</h5>
@@ -47,7 +63,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6">
-                            <p><strong>Mã Đơn Hàng:</strong> <span th:text="${donHang.id}"></span></p>
+                            <p><strong>Mã Đơn Hàng:</strong> <span id="donHangId" th:text="${donHang.id}"></span></p>
                             <p><strong>Khách Hàng:</strong> <span th:text="${donHang.khachHang.ten}"></span></p>
                             <p><strong>Email:</strong> <span th:text="${donHang.khachHang.email}"></span></p>
                             <p><strong>Địa Chỉ:</strong> <span th:text="${donHang.khachHang.diaChi}"></span></p>
@@ -127,6 +143,23 @@
             toast.show();
         });
     });
+    function confirmInDonHang() {
+        // Hiển thị hộp thoại xác nhận
+        var result = confirm("Bạn có chắc chắn muốn in đơn hàng không?");
+
+        // Nếu người dùng chọn 'OK', thực hiện in
+        if (result) {
+            inDonHang();
+        }
+    }
+    function inDonHang() {
+        // Lấy id của hóa đơn từ một phần tử trên trang web
+        var donHangId = /* Lấy id của hóa đơn từ một thuộc tính hoặc biến động, ví dụ từ một phần tử HTML */
+            document.getElementById("donHangId").textContent;
+
+        // Điều hướng đến URL in hóa đơn với id hóa đơn
+        window.location.href = '/user/don-hang/in-don-hang/' + donHangId;
+    }
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

@@ -75,11 +75,11 @@ body {
     visibility: visible;
 }
 
-.comment-form {
+.voucher-form {
     padding: 10px;
 }
 
-.comment-details {
+.voucher-details {
     border: 1px solid gray;
     padding: 10px;
     overflow: auto;
@@ -117,26 +117,4 @@ body {
 .submenu.show {
     display: block;
     opacity: 1; /* Hiển thị với hiệu ứng mờ */
-}
-
-footer{
-    margin-top: auto;
-}
-.btn-danger {
-    padding: 5px 10px;
-    border-radius: 4px;
-}
-
-.btn-danger:hover {
-    background-color: #dc3545;
-    border-color: #dc3545;
-    opacity: 0.9;
-}
-
-.alert {
-    margin-bottom: 20px;
-}
-
-.alert-dismissible .btn-close {
-    padding: 0.5rem 1rem;
 }

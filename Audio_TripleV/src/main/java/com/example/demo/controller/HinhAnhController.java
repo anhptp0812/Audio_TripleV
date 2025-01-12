@@ -136,7 +136,7 @@ public class HinhAnhController {
     @GetMapping("/delete/{id}")
     public String deleteHinhAnh(@PathVariable Integer id) {
         hinhAnhService.deleteById(id);
-        return "redirect:/hinh-anh/hien-thi"; // Thêm tham số activated
+        return "redirect:/admin/hinh-anh/hien-thi"; // Thêm tham số activated
     }
 
 }

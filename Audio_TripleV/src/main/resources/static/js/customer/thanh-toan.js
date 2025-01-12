@@ -14,7 +14,6 @@ document.addEventListener('click', function (event) {
         dropdown.style.display = 'none';
     }
 });
-
 document.addEventListener("DOMContentLoaded", function () {
     const form = document.querySelector("form");
 
@@ -27,7 +26,9 @@ document.addEventListener("DOMContentLoaded", function () {
         const email = document.getElementById("email").value.trim();
         const phone = document.getElementById("phone").value.trim();
         const address = document.getElementById("address").value.trim();
-        const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked')?.value;
+        const city = document.getElementById("citySelectAdd").value;
+        const district = document.getElementById("districtSelectAdd").value;
+        const ward = document.getElementById("wardSelectAdd").value;
 
         // Kiểm tra Họ và Tên
         if (fullName === "") {
@@ -55,17 +56,29 @@ document.addEventListener("DOMContentLoaded", function () {
             errors.push("Số điện thoại không hợp lệ.");
         }
 
-        // Kiểm tra Địa chỉ
+        // Kiểm tra Tỉnh/Thành Phố
+        if (city === "") {
+            isValid = false;
+            errors.push("Bạn phải chọn Tỉnh/Thành Phố.");
+        }
+
+        // Kiểm tra Huyện/Quận
+        if (district === "") {
+            isValid = false;
+            errors.push("Bạn phải chọn Huyện/Quận.");
+        }
+
+        // Kiểm tra Xã/Phường
+        if (ward === "") {
+            isValid = false;
+            errors.push("Bạn phải chọn Xã/Phường.");
+        }
+
+        // Kiểm tra Địa chỉ chi tiết
         if (address === "") {
             isValid = false;
             errors.push("Địa chỉ giao hàng không được để trống.");
         }
-
-        // Kiểm tra Phương thức thanh toán
-        // if (paymentMethod === "card") {
-        //     isValid = false;
-        //     errors.push("Phương thức thanh toán bằng ví VnPay hiện chưa hỗ trợ.");
-        // }
 
         // Nếu không hợp lệ, ngăn form submit và hiển thị lỗi
         if (!isValid) {
