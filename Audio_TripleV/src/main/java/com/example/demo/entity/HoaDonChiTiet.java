@@ -14,6 +14,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Getter
@@ -41,6 +42,9 @@ public class HoaDonChiTiet {
     @Column(name = "DonGia")
     private Double donGia;
 
+    @Column(name = "ThoiGianKetThucBH")
+    private LocalDate thoiGianKetThucBH;
+
     @Column(name = "NgayTao")
     private Date ngayTao;
 
@@ -58,4 +62,8 @@ public class HoaDonChiTiet {
 
     @Transient
     private String formattedTongGia;
+
+    @Transient
+    public String formattedNgayKetThucBaoHanh;
+
 }
