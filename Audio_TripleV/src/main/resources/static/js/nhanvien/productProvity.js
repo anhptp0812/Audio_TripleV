@@ -233,6 +233,7 @@ function updateProductQuantityInTable(productId, remainingQuantity) {
     if (stockCell) {
         stockCell.textContent = remainingQuantity; // Cập nhật số lượng còn lại
     }
+    window.location.reload()
 }
 
 // Thêm sản phẩm vào bảng chi tiết hóa đơn
@@ -306,11 +307,13 @@ function removeProductFromOrder(productId) {
             }
 
             validatePaymentAmount();
+            window.location.reload()
         })
         .catch(error => {
             console.error('Lỗi:', error);
             alert('Có lỗi xảy ra khi xóa sản phẩm');
         });
+
 }
 
 // Cập nhật số lượng sản phẩm

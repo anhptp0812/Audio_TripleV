@@ -51,6 +51,7 @@ function addHinhAnh() {
             $('#loadingIndicator').hide();
         }
     });
+    window.location.reload()
 }
 
 function updateNotification(message, type) {
