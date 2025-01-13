@@ -304,8 +304,8 @@ public class HoaDonController {
                           @PathVariable Integer hoaDonId, Model model) {
         HoaDon hoaDon = hoaDonService.findByid(hoaDonId);
         model.addAttribute("hoaDon", hoaDon);
-        
         model.addAttribute("hoaDonChiTiet", new HoaDonChiTiet());
+
         List<SanPhamChiTiet> list;
 
         List<KhachHang> listKh = khachHangRepository.findAll();
