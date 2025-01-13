@@ -67,12 +67,13 @@
                             <p><strong>Khách Hàng:</strong> <span th:text="${donHang.khachHang.ten}"></span></p>
                             <p><strong>Email:</strong> <span th:text="${donHang.khachHang.email}"></span></p>
                             <p><strong>Địa Chỉ:</strong> <span th:text="${donHang.khachHang.diaChi}"></span></p>
+                            <p><strong>Ngày Tạo:</strong> <span th:text="${donHang.ngayTao}"></span></p>
                         </div>
                         <div class="col-md-6">
-                            <p><strong>Ngày Tạo:</strong> <span th:text="${donHang.ngayTao}"></span></p>
                             <p><strong>Ngày Cập Nhật:</strong> <span th:text="${donHang.ngayCapNhat}"></span></p>
                             <p><strong>Ngày Giao:</strong> <span th:text="${donHang.ngayGiao}"></span></p>
                             <p><strong>Trạng Thái:</strong> <span th:text="${donHang.trangThai}"></span></p>
+                            <p><strong>Trạng Thái:</strong> <span th:text="${donHang.trangThaiPayment}"></span></p>
                             <p><strong>Tổng Giá:</strong> <span th:text="${donHang.formattedTongGia}"></span></p>
                         </div>
                         <div class="text-center">
@@ -113,6 +114,8 @@
                             <th>Số Lượng</th>
                             <th>Đơn Giá</th>
                             <th>Thành Tiền</th>
+                            <th>Thời Gian Bảo Hành</th>
+                            <th>Ngày Kết Thúc BH</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -121,6 +124,8 @@
                             <td th:text="${chiTiet.soLuong}"></td>
                             <td th:text="${chiTiet.formattedDonGia}"></td>
                             <td th:text="${chiTiet.formattedThanhTien}"></td>
+                            <td th:text="${chiTiet.sanPhamChiTiet.thoiGianBaoHanh} + ' tháng'"></td>
+                            <td th:text="${chiTiet.formattedNgayKetThucBaoHanh}"></td>
                         </tr>
                         </tbody>
                     </table>

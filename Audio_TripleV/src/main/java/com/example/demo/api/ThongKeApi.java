@@ -27,6 +27,7 @@ public class ThongKeApi {
             // Sử dụng SimpleDateFormat để phân tích cú pháp chuỗi thành java.util.Date
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             Date startDate = dateFormat.parse(date); // chuyển chuỗi thành Date
+            String trangThai = "Đã thanh toán";
 
             // Dùng Calendar để cộng thêm 1 ngày vào startDate để lấy endDate
             Calendar calendar = Calendar.getInstance();
@@ -35,7 +36,7 @@ public class ThongKeApi {
             Date endDate = calendar.getTime();
 
             // Lấy dữ liệu thống kê theo ngày
-            ThongKe thongKe = thongKeService.thongKeTheoNgay(startDate, endDate);
+            ThongKe thongKe = thongKeService.thongKeTheoNgay(startDate, endDate, trangThai);
 
             // Trả về dữ liệu thống kê
             return ResponseEntity.ok(thongKe);
@@ -57,8 +58,9 @@ public class ThongKeApi {
         Date startDate = calendar.getTime();
         calendar.set(year, month - 1, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));  // Đặt ngày cuối của tháng
         Date endDate = calendar.getTime();
+        String trangThai = "Đã thanh toán";
 
-        ThongKe thongKe = thongKeService.thongKeTheoThang(startDate, endDate); // Gửi startDate và endDate
+        ThongKe thongKe = thongKeService.thongKeTheoThang(startDate, endDate, trangThai); // Gửi startDate và endDate
         return ResponseEntity.ok(thongKe);
     }
 
@@ -70,8 +72,9 @@ public class ThongKeApi {
         Date startDate = calendar.getTime();
         calendar.set(year, Calendar.DECEMBER, 31);  // Đặt ngày cuối của năm
         Date endDate = calendar.getTime();
+        String trangThai = "Đã thanh toán";
 
-        ThongKe thongKe = thongKeService.thongKeTheoNam(startDate, endDate);  // Gửi startDate và endDate
+        ThongKe thongKe = thongKeService.thongKeTheoNam(startDate, endDate, trangThai);  // Gửi startDate và endDate
         return ResponseEntity.ok(thongKe);
     }
 

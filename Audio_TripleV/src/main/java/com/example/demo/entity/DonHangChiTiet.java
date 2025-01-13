@@ -8,11 +8,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 @Getter
@@ -40,6 +43,9 @@ public class DonHangChiTiet {
     @Column(name = "DonGia")
     private Double donGia;
 
+    @Column(name = "ThoiGianKetThucBH")
+    private LocalDate thoiGianKetThucBH;
+
     @Column(name = "NgayTao")
     private Date ngayTao;
 
@@ -54,5 +60,17 @@ public class DonHangChiTiet {
     }
     public void setFormattedThanhTien(String formattedThanhTien) {
         this.formattedThanhTien = formattedThanhTien;
+    }
+
+    @Transient
+    public String formattedNgayKetThucBaoHanh;
+
+    @Transient
+    public String getFormattedNgayKetThucBaoHanh() {
+        if (thoiGianKetThucBH != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            return thoiGianKetThucBH.format(formatter);
+        }
+        return "Không xác định";
     }
 }

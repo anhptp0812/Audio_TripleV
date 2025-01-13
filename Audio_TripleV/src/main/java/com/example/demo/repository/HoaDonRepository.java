@@ -15,15 +15,24 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, Integer> {
     List<HoaDon> findByTrangThai(String trangThai);
 
     // Tổng doanh thu theo ngày (tìm trong khoảng ngày)
-    @Query("SELECT COUNT(hd) FROM HoaDon hd WHERE hd.ngayTao BETWEEN :startDate AND :endDate")
-    int countByNgayTaoBetween(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+    @Query("SELECT COUNT(hd) FROM HoaDon hd WHERE hd.ngayTao BETWEEN :startDate AND :endDate AND hd.trangThai = :trangThai")
+    int countByNgayTaoBetweenAndTrangThai(@Param("startDate") Date startDate,
+                                          @Param("endDate") Date endDate,
+                                          @Param("trangThai") String trangThai);
 
-    @Query("SELECT COALESCE(SUM(hd.soTienPhaiTra), 0.0) FROM HoaDon hd WHERE hd.ngayTao BETWEEN :startDate AND :endDate")
-    Double getTongDoanhThuTheoNgay(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+    @Query("SELECT COALESCE(SUM(hd.soTienPhaiTra), 0.0) FROM HoaDon hd WHERE hd.ngayTao BETWEEN :startDate AND :endDate AND hd.trangThai = :trangThai")
+    Double getTongDoanhThuTheoNgayAndTrangThai(@Param("startDate") Date startDate,
+                                               @Param("endDate") Date endDate,
+                                               @Param("trangThai") String trangThai);
 
-    @Query("SELECT SUM(hd.soTienPhaiTra) FROM HoaDon hd WHERE hd.ngayTao BETWEEN :startDate AND :endDate")
-    Double getTongDoanhThuTheoThang(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+    @Query("SELECT COALESCE(SUM(hd.soTienPhaiTra), 0.0) FROM HoaDon hd WHERE hd.ngayTao BETWEEN :startDate AND :endDate AND hd.trangThai = :trangThai")
+    Double getTongDoanhThuTheoThangAndTrangThai(@Param("startDate") Date startDate,
+                                                @Param("endDate") Date endDate,
+                                                @Param("trangThai") String trangThai);
 
-    @Query("SELECT SUM(hd.soTienPhaiTra) FROM HoaDon hd WHERE hd.ngayTao BETWEEN :startDate AND :endDate")
-    Double getTongDoanhThuTheoNam(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+    @Query("SELECT COALESCE(SUM(hd.soTienPhaiTra), 0.0) FROM HoaDon hd WHERE hd.ngayTao BETWEEN :startDate AND :endDate AND hd.trangThai = :trangThai")
+    Double getTongDoanhThuTheoNamAndTrangThai(@Param("startDate") Date startDate,
+                                              @Param("endDate") Date endDate,
+                                              @Param("trangThai") String trangThai);
+
 }

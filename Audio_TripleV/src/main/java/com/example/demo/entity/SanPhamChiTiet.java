@@ -17,6 +17,8 @@ import lombok.ToString;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.Locale;
 
@@ -93,4 +95,12 @@ public class SanPhamChiTiet {
         this.formattedDonGia = formattedDonGia;
 
     }
+
+    public LocalDate calculateNgayKetThucBaoHanh() {
+        if (ngayTao != null && thoiGianBaoHanh > 0) {
+            return ngayTao.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().plusMonths(thoiGianBaoHanh);
+        }
+        return null;
+    }
+
 }

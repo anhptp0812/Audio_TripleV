@@ -27,6 +27,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -104,7 +107,32 @@ public class DonHangController {
             String formattedThanhTien = currencyFormat.format(thanhTien);
             chiTiet.setFormattedThanhTien(formattedThanhTien);
         });
+// Định dạng giá trị cho từng chi tiết hóa đơn
+        for (DonHangChiTiet donHangChiTiet : donHang.getDonHangChiTietList()) {
+            // Lấy ngày tạo hóa đơn từ hoaDon (giả sử ngàyTao là java.sql.Timestamp)
+//                java.sql.Timestamp ngayTaoTimestamp = hoaDon.getNgayTao();  // Nếu là java.sql.Timestamp
+//                LocalDate ngayTao = ngayTaoTimestamp.toLocalDate();  // Chuyển từ Timestamp thành LocalDate (chỉ lấy ngày)
 
+            //   Nếu bạn sử dụng java.util.Date thay cho Timestamp:
+            java.util.Date ngayTaoDate = donHangChiTiet.getNgayTao();
+            LocalDate ngayTao = ngayTaoDate.toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+
+            // Lấy thời gian bảo hành từ chi tiết sản phẩm
+            int thoiGianBaoHanh = donHangChiTiet.getSanPhamChiTiet().getThoiGianBaoHanh();  // Thời gian bảo hành (số tháng)
+
+            // Tính toán ngày kết thúc bảo hành (ngày tạo + số tháng bảo hành)
+            LocalDate ngayKetThucBaoHanh = ngayTao.plusMonths(thoiGianBaoHanh);
+
+            // Thêm ngày kết thúc bảo hành vào chi tiết hóa đơn
+            donHangChiTiet.setThoiGianKetThucBH(ngayKetThucBaoHanh);  // Lưu ngày kết thúc bảo hành vào chi tiết hóa đơn
+
+            // Định dạng ngày kết thúc bảo hành (để hiển thị)
+            String formattedNgayKetThucBaoHanh = DateTimeFormatter.ofPattern("dd/MM/yyyy").format(ngayKetThucBaoHanh);
+            donHangChiTiet.setFormattedNgayKetThucBaoHanh(formattedNgayKetThucBaoHanh);  // Lưu định dạng ngày kết thúc bảo hành
+
+        }
         model.addAttribute("donHang", donHang);
         return "nhanvien/detail-donhang";
     }
@@ -138,6 +166,7 @@ public class DonHangController {
         }
         return "redirect:/user/don-hang/detail/" + id;
     }
+
     @GetMapping("/don-hang/in-don-hang/{id}")
     public void inDonHang(@PathVariable Integer id, HttpServletResponse response) throws IOException {
         DonHang donHang = donHangService.findByid(id);
@@ -175,7 +204,7 @@ public class DonHangController {
             document.add(new Paragraph("\n"));
 
             // Bảng chi tiết sản phẩm
-            Table table = new Table(new float[]{4, 2, 2, 2});
+            Table table = new Table(new float[]{4, 2, 2, 2, 3, 3});
             table.setWidth(UnitValue.createPercentValue(100));
 
             // Header của bảng
@@ -183,6 +212,8 @@ public class DonHangController {
             table.addHeaderCell(new Cell().add(new Paragraph("Số lượng").setBold()));
             table.addHeaderCell(new Cell().add(new Paragraph("Đơn giá").setBold()));
             table.addHeaderCell(new Cell().add(new Paragraph("Tổng giá").setBold()));
+            table.addHeaderCell(new Cell().add(new Paragraph("Thời gian bảo hành").setBold()));
+            table.addHeaderCell(new Cell().add(new Paragraph("Ngày kết thúc BH").setBold()));
 
             // Thêm các chi tiết sản phẩm
             NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
@@ -191,6 +222,14 @@ public class DonHangController {
                 table.addCell(String.valueOf(chiTiet.getSoLuong()));
                 table.addCell(currencyFormat.format(chiTiet.getDonGia()));
                 table.addCell(currencyFormat.format(chiTiet.getDonGia() * chiTiet.getSoLuong()));
+                table.addCell(String.valueOf(chiTiet.getSanPhamChiTiet().getThoiGianBaoHanh()) + " tháng");
+
+                // Ngày kết thúc bảo hành
+                LocalDate ngayKetThuc = chiTiet.getSanPhamChiTiet().calculateNgayKetThucBaoHanh();
+                String ngayKetThucStr = ngayKetThuc != null
+                        ? ngayKetThuc.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+                        : "Không xác định";
+                table.addCell(ngayKetThucStr);
             }
             document.add(table);
 
