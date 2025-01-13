@@ -303,19 +303,8 @@ public class HoaDonController {
                           @RequestParam(required = false) String tenSanPham, // Thêm tham số tên sản phẩm
                           @PathVariable Integer hoaDonId, Model model) {
         HoaDon hoaDon = hoaDonService.findByid(hoaDonId);
-        if (hoaDon.getTongGia() < 0.0){
-            hoaDon.setTongGia(0.0);
-            hoaDon.setSoTienPhaiTra(0.0);
-        }
         model.addAttribute("hoaDon", hoaDon);
-
-        // Kiểm tra trạng thái hóa đơn
-        if ("Đã thanh toán".equals(hoaDon.getTrangThai()) || "Hủy".equals(hoaDon.getTrangThai())) {
-            model.addAttribute("viewOnly", true); // Thêm biến để kiểm soát chế độ chỉ đọc
-        } else {
-            model.addAttribute("viewOnly", false); // Cho phép thực hiện CRUD
-        }
-
+        
         model.addAttribute("hoaDonChiTiet", new HoaDonChiTiet());
         List<SanPhamChiTiet> list;
 
