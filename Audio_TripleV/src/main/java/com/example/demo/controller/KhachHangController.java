@@ -32,6 +32,7 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.UnsupportedEncodingException;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -65,6 +66,10 @@ public class KhachHangController {
 
     private String savedSelectedItems;
 
+    private Integer globalVoucher = 0;
+
+    @Autowired
+    private VoucherService voucherService;
 
     @GetMapping("/khach-hang/check-login")
     public ResponseEntity<Map<String, Object>> checkLogin(@AuthenticationPrincipal UserDetails userDetails) {
@@ -270,7 +275,9 @@ public class KhachHangController {
         // Thêm dữ liệu vào model
         model.addAttribute("cartCount", totalQuantity);
         model.addAttribute("totalPrice", formattedTotalPrice);  // Truyền tổng tiền đã định dạng
-
+        DecimalFormat decimalFormat = new DecimalFormat("#");
+        String priceTo = decimalFormat.format(totalPrice);
+        model.addAttribute("amount", priceTo);
 
 
         if (Boolean.TRUE.equals(muaNgay)) {
@@ -308,6 +315,8 @@ public class KhachHangController {
             model.addAttribute("gioHang", gioHang);
             model.addAttribute("cartCount", totalQuantity);
             model.addAttribute("totalPrice", formattedTotalPrice);  // Truyền tổng tiền đã định dạng
+            model.addAttribute("amount", priceTo);
+
 
         }
         // Định dạng từng sản phẩm trong giỏ hàng
@@ -322,6 +331,15 @@ public class KhachHangController {
         model.addAttribute("gioHang", gioHang);
         model.addAttribute("formattedTotalPrice", formattedTotalPrice);  // Truyền tổng tiền đã định dạng
         model.addAttribute("totalPrice", totalPrice);
+
+        List<Voucher> allVoucher = voucherService.getAllVouchers();
+
+        model.addAttribute("vouchers", allVoucher);
+
+        System.out.println("voucher length  " + allVoucher.size());
+
+        System.out.println(allVoucher);
+
 
         return "customer/thanh-toan"; // Tên file HTML trong thư mục template
     }
@@ -351,6 +369,8 @@ public class KhachHangController {
                           @RequestParam String address,
                           @RequestParam String paymentMethod,
                           @RequestParam(required = false) String shippingFee, // Added shippingFee parameter
+                          @RequestParam(required = false) String voucherPercent, // Added shippingFee parameter
+
                           @RequestParam(required = false) String selectedItems,
                           HttpServletRequest request) throws UnsupportedEncodingException {
 
@@ -360,10 +380,12 @@ public class KhachHangController {
             return "redirect:/login"; // Chuyển hướng đến trang đăng nhập nếu người dùng chưa đăng nhập
         }
 
+        System.out.println("value voucher " + voucherPercent);
         globalShippingFee = (shippingFee != null) ? Double.parseDouble(shippingFee) : 0.0;
 
         // Log or use the shippingFeeValue as needed
         System.out.println("Shipping Fee: " + globalShippingFee);
+        globalVoucher = Integer.valueOf(voucherPercent);
 
 
 //        if (paymentMethod.equals("card")) {
@@ -378,9 +400,12 @@ public class KhachHangController {
             GioHang gioHang = gioHangService.findByKhachHang(khachHang).get();
 
             // Truyền danh sách sản phẩm đã chọn vào VNPay
-            String url = vnPayService.createOrder(totalPrice.intValue() + globalShippingFee.intValue(), userDetails.getUsername(), fullName, email, phone, address, request, selectedItems);
+            String url = vnPayService.createOrder(totalPrice.intValue() + globalShippingFee.intValue() - Integer.valueOf(voucherPercent), userDetails.getUsername(), fullName, email, phone, address, request, selectedItems);
             return "redirect:" + url;
         }
+
+
+        System.out.println("global voucher " + globalVoucher);
 
 
         processThanhToan(userDetails.getUsername(), fullName, email, phone, address, savedSelectedItems);
@@ -480,12 +505,14 @@ public class KhachHangController {
                     .collect(Collectors.toList());
 
         }
+
+        System.out.println("global voucher 1 " + globalVoucher);
         // Tạo đơn hàng mới
         DonHang donHang = new DonHang();
         donHang.setKhachHang(khachHang);
         donHang.setTongGia(selectedItemsList.stream()
                 .mapToDouble(item -> item.getSoLuong() * item.getSanPhamChiTiet().getDonGia())
-                .sum() +  globalShippingFee);
+                .sum() +  globalShippingFee - globalVoucher );
         donHang.setTrangThai("Chờ xử lý");
         donHang.setNgayTao(new Date());
 

@@ -104,7 +104,7 @@
                     <td id="stock-${spct.id}" th:text="${spct.soLuong}"></td>
                     <td th:text="${spct.trangThai}"></td>
                     <td>
-                        <button class="btn btn-success add-product-btn"
+                        <button id="add-product"   class="btn btn-success  add-product add-product-btn"
                                 th:attr="data-id=${spct.id},
                                     data-price=${spct.donGia},
                                     data-max-quantity=${spct.soLuong},
@@ -341,6 +341,7 @@
 </body>
 
 <script>
+
     // URL của API
     const apiUrl = "/api/vouchers";
 
