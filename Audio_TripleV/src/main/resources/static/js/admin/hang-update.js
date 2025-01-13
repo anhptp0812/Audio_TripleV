@@ -13,13 +13,13 @@ function updateHang() {
     }
 
     $.ajax({
-        url: '/hang/update',
+        url: '/admin/hang/update',
         type: 'PUT',
         contentType: 'application/json',
         data: JSON.stringify(formData),
         success: function(response) {
             alert('Cập nhật hãng thành công!');
-            window.location.href = '/hang/hien-thi';
+            window.location.href = '/admin/hang/hien-thi';
         },
         error: function(xhr) {
             alert('Có lỗi xảy ra: ' + xhr.responseText);

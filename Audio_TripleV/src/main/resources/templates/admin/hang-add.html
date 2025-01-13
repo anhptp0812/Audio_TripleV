@@ -35,14 +35,14 @@
     <div class="hang-form">
         <div class="hang-details">
             <h2 class="text-center">Thêm Hãng</h2>
-            <form id="addForm" action="/hang/add" method="post" onsubmit="event.preventDefault(); addHang();">
+            <form id="addForm" action="/admin/hang/add" method="post" onsubmit="event.preventDefault(); addHang();">
                 <div class="form-group">
                     <label for="tenHang">Tên Hãng:</label>
                     <input type="text" class="form-control mb-3" id="tenHang" name="ten" required>
                 </div>
                 <div class="text-center mb-3">
                     <button type="submit" class="btn btn-success">Thêm</button>
-                    <a href="/hang/hien-thi" class="btn btn-secondary">Quay lại</a>
+                    <a href="/admin/hang/hien-thi" class="btn btn-secondary">Quay lại</a>
                 </div>
             </form>
         </div>

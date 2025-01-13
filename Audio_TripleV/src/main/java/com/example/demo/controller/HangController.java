@@ -54,7 +54,7 @@ public class HangController {
     @GetMapping("/delete/{id}")
     public String deleteColor(@PathVariable Integer id) {
         hangService.deleteById(id);
-        return "redirect:/hang/hien-thi"; // Thêm tham số activated
+        return "redirect:/admin/hang/hien-thi"; // Thêm tham số activated
     }
 
     @GetMapping("/form-update/{id}")

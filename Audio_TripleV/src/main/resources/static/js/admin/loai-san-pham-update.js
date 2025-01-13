@@ -14,13 +14,13 @@ function updateLoaiSP() {
     }
 
     $.ajax({
-        url: '/loai-san-pham/update',
+        url: '/admin/loai-san-pham/update',
         type: 'PUT',
         contentType: 'application/json',
         data: JSON.stringify(formData),
         success: function(response) {
             alert('Cập nhật Loại thành công!');
-            window.location.href = '/loai-san-pham/hien-thi';
+            window.location.href = '/admin/loai-san-pham/hien-thi';
         },
         error: function(xhr) {
             alert('Có lỗi xảy ra: ' + xhr.responseText);

@@ -8,7 +8,8 @@ CREATE TABLE SanPham (
                          ID INT PRIMARY KEY identity,
                          TenSP NVARCHAR(255),
                          NgayTao datetime,
-                         NgayCapNhat datetime
+                         NgayCapNhat datetime,
+
 
 );
 
@@ -62,7 +63,7 @@ CREATE TABLE SanPhamChiTiet  (
                                  NgayTao datetime,
                                  NgayCapNhat datetime
                                      foreign key(ID_San_Pham)
-                                     References SanPham (ID) ,
+                                         References SanPham (ID) ,
                                  foreign key(ID_MauSac)
                                      References MauSac (ID) ,
                                  foreign key(ID_Hang)
@@ -180,6 +181,7 @@ CREATE TABLE DonHangChiTiet (
                                 ID_SPCT INT,
                                 SoLuong INT,
                                 DonGia decimal(18, 2),
+                                ThoiGianKetThucBH datetime,
                                 NgayTao datetime,
                                 NgayCapNhat datetime,
                                 foreign key(ID_Don_Hang)
@@ -217,6 +219,7 @@ CREATE TABLE HoaDonChiTiet (
                                ID_Spct INT,
                                DonGia decimal(18, 2),
                                SoLuong INT,
+                               ThoiGianKetThucBH datetime,
                                NgayTao datetime,
                                NgayCapNhat datetime,
                                foreign key(ID_Hoa_Don)
@@ -411,11 +414,11 @@ VALUES
 
 -- Thêm dữ liệu vào bảng KhachHang
 INSERT INTO KhachHang (Ten, SDT, DiaChi, Email, TaiKhoan, MatKhau, role, isRegitered,NgayDangKy) VALUES
-(N'Minh Đức ', '0123456789', N'Ninh Binh', 'minhduc@gmail.com', 'minhduc', '$2y$10$7lr1KdaHUXfboqAlpoYMi.veiBkdmUyJEvlrnDmvgVFXRKG6t8IlG','KHACHHANG', 1, GETDATE()),
-(N'Hoàng Nam', '0123456788', N'Đà Nẵng', 'hoangnam@gmail.com', 'hoangnam', '$2y$10$O2VwsuqS829atSXlQoRwRudI/c9KS4Hl4CoBJlaFcjN/gGKEfYHES', 'KHACHHANG', 1, GETDATE()),
-(N'Khánh Ly', '0123456787', N'Hà Nội', 'khanhly@gmail.com', 'khanhly', '$2y$10$H0kmrNQ5nuwPkgLP9pcEBeiUEjjMC8iBFmV0g46rUCqBfD.J3pswS', 'KHACHHANG', 1, GETDATE()),
-(N'Hoài Thương', '0123456786', N'Thanh Hóa', 'hoaithuong@gmail.com', 'hoaithuong', '$2y$10$H0kmrNQ5nuwPkgLP9pcEBeiUEjjMC8iBFmV0g46rUCqBfD.J3pswS', 'KHACHHANG', 1, GETDATE()),
-(N'Vũ Tuấn', '0123456785', N'Hà Nam', 'vutuan@gmail.com', 'vutuan', '$2y$10$nzL3M/i3JVlcso/QSvKcC.w8JF3WkNYwozG.ZDfEupiM7HG4F82s6', 'KHACHHANG', 1, GETDATE());
+(N'Minh Đức ', '0123456789', N'Xóm 7 Xuân Tiến,Khánh Vân, Yên Khánh,Ninh Binh', 'minhduc@gmail.com', 'minhduc', '$2y$10$7lr1KdaHUXfboqAlpoYMi.veiBkdmUyJEvlrnDmvgVFXRKG6t8IlG','KHACHHANG', 1, GETDATE()),
+(N'Hoàng Nam', '0123456788', N'Số 07,Thị Trấn Si Ma Cai,Si Ma Cai,Lào Cai ', 'hoangnam@gmail.com', 'hoangnam', '$2y$10$O2VwsuqS829atSXlQoRwRudI/c9KS4Hl4CoBJlaFcjN/gGKEfYHES', 'KHACHHANG', 1, GETDATE()),
+(N'Khánh Ly', '0123456787', N'Thôn 8,Tống Trân,Phù Cừ,Hưng Yên', 'khanhly@gmail.com', 'khanhly', '$2y$10$H0kmrNQ5nuwPkgLP9pcEBeiUEjjMC8iBFmV0g46rUCqBfD.J3pswS', 'KHACHHANG', 1, GETDATE()),
+(N'Hoài Thương', '0123456786', N'Số 3 Tân Mỹ,Mĩ Đình 2,Nam Từ Liêm,Hà Nội', 'hoaithuong@gmail.com', 'hoaithuong', '$2y$10$H0kmrNQ5nuwPkgLP9pcEBeiUEjjMC8iBFmV0g46rUCqBfD.J3pswS', 'KHACHHANG', 1, GETDATE()),
+(N'Vũ Tuấn', '0123456785', N'Số 20,An Khánh,Thủ Đức,Hồ Chí Minh', 'vutuan@gmail.com', 'vutuan', '$2y$10$nzL3M/i3JVlcso/QSvKcC.w8JF3WkNYwozG.ZDfEupiM7HG4F82s6', 'KHACHHANG', 1, GETDATE());
 
 
 
@@ -470,99 +473,91 @@ VALUES
 ('Kinera', GETDATE(), GETDATE());
 
 
-Select * from SanPham
-    INSERT INTO SanPham
+INSERT INTO SanPham
 VALUES ('Sony WH-1000XM4', GETDATE(), GETDATE()),
-    ('Sennheiser Momentum 4', GETDATE(), GETDATE()),
-    ('Bowers & Wilkins PX5', GETDATE(), GETDATE()),
-    ('Bowers & Wilkins PX7', GETDATE(), GETDATE()),
-    ('Bowers & Wilkins PX7 s2', GETDATE(), GETDATE()),
-    ('EarFun Wave Pro', GETDATE(), GETDATE()),
-    ('Razer BlackShark V2 Pro Gen 2', GETDATE(), GETDATE()),
-    ('Beyerdynamic DT 770 Pro X', GETDATE(), GETDATE()),
-    ('Beyerdynamic MMX 200 Wireless', GETDATE(), GETDATE()),
-    ('V-Moda Crossfade 3 Wireless', GETDATE(), GETDATE()),
-    ('Audiotechnica ATH-M50x', GETDATE(), GETDATE()),
-    ('Soundpeats Space Ceramic', GETDATE(), GETDATE()),
-    ('Bang & Olufsen Beoplay H95', GETDATE(), GETDATE()),
-    ('Noble Fokus Tri-umph', GETDATE(), GETDATE()),
-    ('Noble XM1 SO', GETDATE(), GETDATE()),
-    ('Noble Stage 3', GETDATE(), GETDATE()),
-    ('Noble Onyx', GETDATE(), GETDATE()),
-    ('FiiO JD1 Black Type-C SO', GETDATE(), GETDATE()),
-    ('Astell & Kern AK UW100 MKII', GETDATE(), GETDATE()),
-    ('AG Final Audio Cotsubu Black-S', GETDATE(), GETDATE()),
-    ('Audio Technica ATH-SQ1TW2', GETDATE(), GETDATE()),
-    ('AG Final Audio Cotsubu MK2', GETDATE(), GETDATE()),
-    ('FiiO FH19', GETDATE(), GETDATE()),
-    ('Wiwu T22', GETDATE(), GETDATE()),
-    ('kinera celest wyvern abyss', GETDATE(), GETDATE()),
-    ('AG Final Audio Cotsubu ASMR MK2', GETDATE(), GETDATE()),
-    ('AG Final Audio Cotsubu ASMR 3D', GETDATE(), GETDATE()),
-    ('Earfun Air Pro 4', GETDATE(), GETDATE()),
-    ('Soundpeats Capsule 3 Pro Plus', GETDATE(), GETDATE()),
-    ('Sennheiser Momentum True Wireless', GETDATE(), GETDATE()),
-    ('Sennheiser Momentum Sport Bluetooth', GETDATE(), GETDATE()),
-    ('Cambridge Audio Melomania 100', GETDATE(), GETDATE()),
-    ('JBL Everest 310', GETDATE(), GETDATE()),
-    ('Pioneer SE-S3BT', GETDATE(), GETDATE()),
-    ('Technica ATH-S200BT', GETDATE(), GETDATE()),
-    ('Earldom ET-BH52', GETDATE(), GETDATE()),
-    ('Marshall Major IV', GETDATE(), GETDATE()),
-    ('Skullcandy Riff Wireless 2', GETDATE(), GETDATE()),
-    ('Philips TAH420', GETDATE(), GETDATE()),
-    ('Sony WH-CH520', GETDATE(), GETDATE()),
-    ('JBL Tune 520BT', GETDATE(), GETDATE()),
-    ('Beats Solo 4', GETDATE(), GETDATE()),
-    ('Marshall Major V', GETDATE(), GETDATE()),
+       ('Sennheiser Momentum 4', GETDATE(), GETDATE()),
+       ('Bowers & Wilkins PX5', GETDATE(), GETDATE()),
+       ('Bowers & Wilkins PX7', GETDATE(), GETDATE()),
+       ('Bowers & Wilkins PX7 s2', GETDATE(), GETDATE()),
+       ('EarFun Wave Pro', GETDATE(), GETDATE()),
+       ('Razer BlackShark V2 Pro Gen 2', GETDATE(), GETDATE()),
+       ('Beyerdynamic DT 770 Pro X', GETDATE(), GETDATE()),
+       ('Beyerdynamic MMX 200 Wireless', GETDATE(), GETDATE()),
+       ('V-Moda Crossfade 3 Wireless', GETDATE(), GETDATE()),
+       ('Audiotechnica ATH-M50x', GETDATE(), GETDATE()),
+       ('Soundpeats Space Ceramic', GETDATE(), GETDATE()),
+       ('Bang & Olufsen Beoplay H95', GETDATE(), GETDATE()),
+       ('Noble Fokus Tri-umph', GETDATE(), GETDATE()),
+       ('Noble XM1 SO', GETDATE(), GETDATE()),
+       ('Noble Stage 3', GETDATE(), GETDATE()),
+       ('Noble Onyx', GETDATE(), GETDATE()),
+       ('FiiO JD1 Black Type-C SO', GETDATE(), GETDATE()),
+       ('Astell & Kern AK UW100 MKII', GETDATE(), GETDATE()),
+       ('AG Final Audio Cotsubu Black-S', GETDATE(), GETDATE()),
+       ('Audio Technica ATH-SQ1TW2', GETDATE(), GETDATE()),
+       ('AG Final Audio Cotsubu MK2', GETDATE(), GETDATE()),
+       ('FiiO FH19', GETDATE(), GETDATE()),
+       ('Wiwu T22', GETDATE(), GETDATE()),
+       ('kinera celest wyvern abyss', GETDATE(), GETDATE()),
+       ('AG Final Audio Cotsubu ASMR MK2', GETDATE(), GETDATE()),
+       ('AG Final Audio Cotsubu ASMR 3D', GETDATE(), GETDATE()),
+       ('Earfun Air Pro 4', GETDATE(), GETDATE()),
+       ('Soundpeats Capsule 3 Pro Plus', GETDATE(), GETDATE()),
+       ('Sennheiser Momentum True Wireless', GETDATE(), GETDATE()),
+       ('Sennheiser Momentum Sport Bluetooth', GETDATE(), GETDATE()),
+       ('Cambridge Audio Melomania 100', GETDATE(), GETDATE()),
+       ('JBL Everest 310', GETDATE(), GETDATE()),
+       ('Pioneer SE-S3BT', GETDATE(), GETDATE()),
+       ('Technica ATH-S200BT', GETDATE(), GETDATE()),
+       ('Earldom ET-BH52', GETDATE(), GETDATE()),
+       ('Marshall Major IV', GETDATE(), GETDATE()),
+       ('Skullcandy Riff Wireless 2', GETDATE(), GETDATE()),
+       ('Philips TAH420', GETDATE(), GETDATE()),
+       ('Sony WH-CH520', GETDATE(), GETDATE()),
+       ('JBL Tune 520BT', GETDATE(), GETDATE()),
+       ('Beats Solo 4', GETDATE(), GETDATE()),
+       ('Marshall Major V', GETDATE(), GETDATE()),
 
-    ('Koss Porta Pro', GETDATE(), GETDATE()),
-    ('Fiio FA19', GETDATE(), GETDATE()),
-    ('Sennheiser HD 490 Pro', GETDATE(), GETDATE()),
-    ('JBL Tune 310C', GETDATE(), GETDATE()),
-    ('Noble Audio XM1', GETDATE(), GETDATE()),
-    ('Noble Audio Stage 3', GETDATE(), GETDATE()),
-    ('Audeze MM-50', GETDATE(), GETDATE()),
-    ('Moondrop U2', GETDATE(), GETDATE()),
-    ('Fiio JD1', GETDATE(), GETDATE()),
-    ('Fiio FD11', GETDATE(), GETDATE()),
-    ('Koss KS C35', GETDATE(), GETDATE()),
-    ('Fiio JD15', GETDATE(), GETDATE()),
-    ('Fiio fh19', GETDATE(), GETDATE()),
-    ('Wiwu ktd 01', GETDATE(), GETDATE()),
-    ('Apple Earpods', GETDATE(), GETDATE()),
-    ('Fiio FT1', GETDATE(), GETDATE()),
-    ('Razer Kraken Kitty v2', GETDATE(), GETDATE()),
-    ('Koss UR20', GETDATE(), GETDATE()),
-    ('wiwu eb314', GETDATE(), GETDATE()),
-    ('Ultrasone Signature', GETDATE(), GETDATE()),
-    ('Sony MDR-M1', GETDATE(), GETDATE()),
-    ('Ultrasone Edition 1', GETDATE(), GETDATE()),
+       ('Koss Porta Pro', GETDATE(), GETDATE()),
+       ('Fiio FA19', GETDATE(), GETDATE()),
+       ('Sennheiser HD 490 Pro', GETDATE(), GETDATE()),
+       ('JBL Tune 310C', GETDATE(), GETDATE()),
+       ('Noble Audio XM1', GETDATE(), GETDATE()),
+       ('Noble Audio Stage 3', GETDATE(), GETDATE()),
+       ('Audeze MM-50', GETDATE(), GETDATE()),
+       ('Moondrop U2', GETDATE(), GETDATE()),
+       ('Fiio JD1', GETDATE(), GETDATE()),
+       ('Fiio FD11', GETDATE(), GETDATE()),
+       ('Koss KS C35', GETDATE(), GETDATE()),
+       ('Fiio JD15', GETDATE(), GETDATE()),
+       ('Fiio fh19', GETDATE(), GETDATE()),
+       ('Wiwu ktd 01', GETDATE(), GETDATE()),
+       ('Apple Earpods', GETDATE(), GETDATE()),
+       ('Fiio FT1', GETDATE(), GETDATE()),
+       ('Razer Kraken Kitty v2', GETDATE(), GETDATE()),
+       ('Koss UR20', GETDATE(), GETDATE()),
+       ('wiwu eb314', GETDATE(), GETDATE()),
+       ('Ultrasone Signature', GETDATE(), GETDATE()),
+       ('Sony MDR-M1', GETDATE(), GETDATE()),
+       ('Ultrasone Edition 1', GETDATE(), GETDATE()),
 
-    ('Bowers & Wilkins PI5', GETDATE(), GETDATE()),
-    ('Bowers & Wilkins PI5 S2', GETDATE(), GETDATE()),
-    ('Sennheiser Momentum True Wireless 4', GETDATE(), GETDATE()),
-    ('Bose QuietComfort Earbuds', GETDATE(), GETDATE()),
-    ('Beats Solo Buds', GETDATE(), GETDATE()),
-    ('AG Final Audio', GETDATE(), GETDATE()),
-    ('Earfun Air Pro 4', GETDATE(), GETDATE()),
-    ('Soundpeats Air 5', GETDATE(), GETDATE()),
-    ('Noble Fokus', GETDATE(), GETDATE()),
-    ('WF-C510', GETDATE(), GETDATE()),
-    ('Bowers & Wilkins PI6', GETDATE(), GETDATE()),
-    ('Bowers & Wilkins PI8', GETDATE(), GETDATE()),
-    ('Apple AirPods 4', GETDATE(), GETDATE()),
-    ('Wiwu T28', GETDATE(), GETDATE()),
-    ('Cleer Arc 3 Sport', GETDATE(), GETDATE()),
-    ('Cambridge Audio Melomania 100', GETDATE(), GETDATE()),
-    ('Cleer Arc 3', GETDATE(), GETDATE());
-
-
-
-
-
---DELETE SanPham
---DELETE Hang
+       ('Bowers & Wilkins PI5', GETDATE(), GETDATE()),
+       ('Bowers & Wilkins PI5 S2', GETDATE(), GETDATE()),
+       ('Sennheiser Momentum True Wireless 4', GETDATE(), GETDATE()),
+       ('Bose QuietComfort Earbuds', GETDATE(), GETDATE()),
+       ('Beats Solo Buds', GETDATE(), GETDATE()),
+       ('AG Final Audio', GETDATE(), GETDATE()),
+       ('Earfun Air Pro 4', GETDATE(), GETDATE()),
+       ('Soundpeats Air 5', GETDATE(), GETDATE()),
+       ('Noble Fokus', GETDATE(), GETDATE()),
+       ('WF-C510', GETDATE(), GETDATE()),
+       ('Bowers & Wilkins PI6', GETDATE(), GETDATE()),
+       ('Bowers & Wilkins PI8', GETDATE(), GETDATE()),
+       ('Apple AirPods 4', GETDATE(), GETDATE()),
+       ('Wiwu T28', GETDATE(), GETDATE()),
+       ('Cleer Arc 3 Sport', GETDATE(), GETDATE()),
+       ('Cambridge Audio Melomania 100', GETDATE(), GETDATE()),
+       ('Cleer Arc 3', GETDATE(), GETDATE());
 
 INSERT INTO SanPhamChiTiet
 (ID_San_Pham, ID_MauSac, ID_Hang, ID_HinhAnh, ID_LoaiSanPham, DonGia, SoLuong, ThoiGianBaoHanh, TrangThai, NgayTao, NgayCapNhat)
@@ -581,19 +576,6 @@ VALUES
 (12, 7, 9, 12, 5, 9000000 , 50, 12, N'Còn hàng', GETDATE(), GETDATE()), -- Soundpeats Space Ceramic (12 tháng bảo hành)
 (13, 20, 10, 13, 5, 9000000 , 50, 6, N'Còn hàng', GETDATE(), GETDATE()), -- Bang & Olufsen Beoplay H95 (6 tháng bảo hành)
 
-
------inear
-(14, 7, 11, 14, 4, 9000000 , 50, 12, N'Còn hàng', GETDATE(), GETDATE()), -- Noble Fokus Tri-umph
-(15, 8, 11, 15, 4, 9000000 , 50, 12, N'Còn hàng', GETDATE(), GETDATE()), -- Noble XM1 SO
-(16, 8, 11, 16, 4, 9000000 , 50, 12, N'Còn hàng', GETDATE(), GETDATE()), -- Noble Stage 3
-(17, 8, 11, 17, 4, 9000000 , 50, 12, N'Còn hàng', GETDATE(), GETDATE()), -- Noble Onyx
-(18, 8, 12, 19, 4, 9000000 , 50, 12, N'Còn hàng', GETDATE(), GETDATE()), -- FiiO JD1 Black Type-C SO
-(19, 11, 13, 18, 4, 9000000 , 50, 12, N'Còn hàng', GETDATE(), GETDATE()), -- Astell & Kern AK UW100 MKII
-(20, 8, 14, 33, 4, 9000000 , 50, 12, N'Còn hàng', GETDATE(), GETDATE()), -- AG Final Audio Cotsubu Black-S
-(21, 2, 8, 32, 4, 9000000 , 50, 12, N'Còn hàng', GETDATE(), GETDATE()), -- Audio Technica ATH-SQ1TW2
-(22, 25, 13, 25, 4, 9000000 , 50, 12, N'Còn hàng', GETDATE(), GETDATE()), -- AG Final Audio Cotsubu MK2
-(23, 10, 12, 29, 4, 9000000 , 50, 12, N'Còn hàng', GETDATE(), GETDATE()), -- FiiO FH19
-(24, 9, 15, 28, 4, 9000000 , 50, 12, N'Còn hàng', GETDATE(), GETDATE()), -- Wiwu T22
 -----inear
 (14, 7, 11, 14, 4,  9000000 , 50, 12,  N'Còn hàng', GETDATE(), GETDATE()), -- Noble Fokus Tri-umph
 (15, 8, 11, 15, 4, 9000000 , 50, 12, N'Còn hàng', GETDATE(), GETDATE()), -- Noble XM1 SO
@@ -667,19 +649,17 @@ VALUES
 (81, 8, 17, 73, 1, 9000000, 50, 12, N'Còn hàng', GETDATE(), GETDATE()), -- Cambridge Audio Melomania 100
 (82, 8, 32, 74, 1, 9000000, 50, 12, N'Còn hàng', GETDATE(), GETDATE()); -- Cleer Arc 3
 
--- Voucher 1: Giảm 10% cho hóa đơn trên 5 triệu
-INSERT INTO Voucher (Ten, Loai, GiaTriPhanTram, GiaTriHoaDonToiThieu, NgayBatDau, NgayKetThuc, TrangThai)
-VALUES (N'Voucher 10% cho đơn hàng trên 15 triệu', 'GiamPhanTram', 10.00, 10000000, GETDATE(), '2025-12-31', N'Active');
+-- Voucher 1: Giảm 10% cho hóa đơn trên 10 triệu
+INSERT INTO Voucher (Ten, Loai, GiaTriPhanTram, GiaTriHoaDonToiThieu, NgayBatDau, NgayKetThuc, NgayTao, NgayCapNhat, TrangThai)
+VALUES (N'Voucher 10% cho đơn hàng trên 10 triệu', 'GiamPhanTram', 10.00, 10000000, GETDATE(), '2025-12-31', GETDATE(), GETDATE(), N'Active');
 
 -- Voucher 2: Giảm 500.000 đồng cho hóa đơn trên 7 triệu
-INSERT INTO Voucher (Ten, Loai, GiaTriTien, GiaTriHoaDonToiThieu, NgayBatDau, NgayKetThuc, TrangThai)
-VALUES (N'Voucher giảm 500K cho đơn hàng trên 10 triệu', 'GiamTien', 500000, 7000000, GETDATE(), '2025-12-31', N'Active');
+INSERT INTO Voucher (Ten, Loai, GiaTriTien, GiaTriHoaDonToiThieu, NgayBatDau, NgayKetThuc, NgayTao, NgayCapNhat, TrangThai)
+VALUES (N'Voucher giảm 500K cho đơn hàng trên 7 triệu', 'GiamTien', 500000, 7000000, GETDATE(), '2025-12-31', GETDATE(), GETDATE(), N'Active');
 
 -- Voucher 3: Giảm 200.000 đồng cho hóa đơn từ 3 triệu đến dưới 5 triệu
-INSERT INTO Voucher (Ten, Loai, GiaTriTien, GiaTriHoaDonToiThieu, NgayBatDau, NgayKetThuc, TrangThai)
-VALUES (N'Voucher giảm 200K cho đơn hàng trên 7 triệu', 'GiamTien', 200000, 3000000, GETDATE(), '2024-12-31', N'InActive');
-
-
+INSERT INTO Voucher (Ten, Loai, GiaTriTien, GiaTriHoaDonToiThieu, NgayBatDau, NgayKetThuc, NgayTao, NgayCapNhat, TrangThai)
+VALUES (N'Voucher giảm 200K cho đơn hàng trên 3 triệu', 'GiamTien', 200000, 3000000, GETDATE(), '2025-12-31', GETDATE(), GETDATE(), N'Active');
 
 -- Bài viết
 INSERT INTO articles (title, imageUrl, content)

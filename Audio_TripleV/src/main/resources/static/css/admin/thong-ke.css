@@ -75,15 +75,15 @@ body {
     visibility: visible;
 }
 
-.comment-form {
+.statistical-form {
     padding: 10px;
 }
 
-.comment-details {
+.statistical-details {
     border: 1px solid gray;
     padding: 10px;
     overflow: auto;
-    height: 800px;
+    height: 692px;
     box-sizing: border-box;
 }
 
@@ -122,21 +122,13 @@ body {
 footer{
     margin-top: auto;
 }
-.btn-danger {
-    padding: 5px 10px;
-    border-radius: 4px;
-}
 
-.btn-danger:hover {
-    background-color: #dc3545;
-    border-color: #dc3545;
-    opacity: 0.9;
-}
-
-.alert {
-    margin-bottom: 20px;
-}
-
-.alert-dismissible .btn-close {
-    padding: 0.5rem 1rem;
+.chart-container {
+    position: relative;
+    margin: auto;
+    height: 50vh;
+    width: 80vw;
+    display: flex; /* Dùng flexbox để căn giữa nội dung */
+    justify-content: center; /* Căn giữa theo chiều ngang */
+    align-items: center; /* Căn giữa theo chiều dọc */
 }

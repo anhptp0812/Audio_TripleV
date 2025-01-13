@@ -68,14 +68,14 @@ function updateHinhAnh() {
     $('#loadingIndicator').show();
 
     $.ajax({
-        url: '/hinh-anh/update',
+        url: '/admin/hinh-anh/update',
         type: 'PUT',
         data: formData,
         processData: false,
         contentType: false,
         success: function () {
             alert('Cập nhật hình ảnh thành công!');
-            window.location.href = '/hinh-anh/hien-thi';
+            window.location.href = '/admin/hinh-anh/hien-thi';
         },
         error: function (xhr) {
             const errorMessage = xhr.responseJSON?.message || 'Có lỗi xảy ra khi cập nhật hình ảnh.';

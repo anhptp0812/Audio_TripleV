@@ -30,7 +30,7 @@ function addHinhAnh() {
     $('#loadingIndicator').show();
 
     $.ajax({
-        url: '/hinh-anh/add', // Đường dẫn đến endpoint để thêm hình ảnh
+        url: '/admin/hinh-anh/add', // Đường dẫn đến endpoint để thêm hình ảnh
         type: 'POST',
         data: formData, // Gửi dữ liệu dưới dạng FormData
         contentType: false, // Không cần định dạng content-type vì FormData tự động xử lý
@@ -39,7 +39,7 @@ function addHinhAnh() {
             alert('Thêm hình ảnh thành công!');
             updateNotification('Thêm hình ảnh thành công!', 'success');
             setTimeout(() => {
-                window.location.href = '/hinh-anh/hien-thi';
+                window.location.href = '/admin/hinh-anh/hien-thi';
             }, 1500);
         },
         error: function (xhr) {

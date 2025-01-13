@@ -37,7 +37,7 @@
     <div class="spct-form">
         <div class="spct-details">
             <h2 class="text-center">Cập Nhật Sản Phẩm Chi Tiết</h2>
-            <form id="updateForm" method="POST" action="/spct/update" enctype="multipart/form-data"
+            <form id="updateForm" method="POST" action="/admin/spct/update" enctype="multipart/form-data"
                   onsubmit="updateSanPhamChiTiet(event);">
                 <input type="hidden" id="id" name="id" th:value="${sanPhamChiTiet.id}">
                 <div class="form-group mb-3">
@@ -133,7 +133,7 @@
                 </div>
                 <div class="text-center mb-3">
                     <button type="submit" class="btn btn-primary">Cập Nhật</button>
-                    <a href="/spct/hien-thi" class="btn btn-secondary">Quay Lại</a>
+                    <a href="/admin/spct/hien-thi" class="btn btn-secondary">Quay Lại</a>
                 </div>
             </form>
         </div>

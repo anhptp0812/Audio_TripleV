@@ -14,13 +14,13 @@ function updateMauSac() {
     }
 
     $.ajax({
-        url: '/mau-sac/update',
+        url: '/admin/mau-sac/update',
         type: 'PUT',
         contentType: 'application/json',
         data: JSON.stringify(formData),
         success: function(response) {
             alert('Cập nhật màu sắc thành công!');
-            window.location.href = '/mau-sac/hien-thi';
+            window.location.href = '/admin/mau-sac/hien-thi';
         },
         error: function(xhr) {
             alert('Có lỗi xảy ra: ' + xhr.responseText);

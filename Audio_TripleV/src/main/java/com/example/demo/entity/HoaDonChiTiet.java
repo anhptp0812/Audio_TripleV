@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 @Getter
@@ -65,5 +66,14 @@ public class HoaDonChiTiet {
 
     @Transient
     public String formattedNgayKetThucBaoHanh;
+
+    @Transient
+    public String getFormattedNgayKetThucBaoHanh() {
+        if (thoiGianKetThucBH != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            return thoiGianKetThucBH.format(formatter);
+        }
+        return "Không xác định";
+    }
 
 }
