@@ -56,6 +56,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -184,8 +187,32 @@ public class HoaDonController {
 
             // Định dạng giá trị cho từng chi tiết hóa đơn
             for (HoaDonChiTiet hdct : hoaDon.getHoaDonChiTietList()) {
-                hdct.setFormattedDonGia(currencyFormat.format(hdct.getDonGia()));
-                hdct.setFormattedTongGia(currencyFormat.format(hdct.getTongGia()));
+                // Lấy ngày tạo hóa đơn từ hoaDon (giả sử ngàyTao là java.sql.Timestamp)
+//                java.sql.Timestamp ngayTaoTimestamp = hoaDon.getNgayTao();  // Nếu là java.sql.Timestamp
+//                LocalDate ngayTao = ngayTaoTimestamp.toLocalDate();  // Chuyển từ Timestamp thành LocalDate (chỉ lấy ngày)
+
+              //   Nếu bạn sử dụng java.util.Date thay cho Timestamp:
+                 java.util.Date ngayTaoDate = hoaDon.getNgayTao();
+                 LocalDate ngayTao = ngayTaoDate.toInstant()
+                     .atZone(ZoneId.systemDefault())
+                     .toLocalDate();
+
+                // Lấy thời gian bảo hành từ chi tiết sản phẩm
+                int thoiGianBaoHanh = hdct.getSanPhamChiTiet().getThoiGianBaoHanh();  // Thời gian bảo hành (số tháng)
+
+                // Tính toán ngày kết thúc bảo hành (ngày tạo + số tháng bảo hành)
+                LocalDate ngayKetThucBaoHanh = ngayTao.plusMonths(thoiGianBaoHanh);
+
+                // Thêm ngày kết thúc bảo hành vào chi tiết hóa đơn
+                hdct.setThoiGianKetThucBH(ngayKetThucBaoHanh);  // Lưu ngày kết thúc bảo hành vào chi tiết hóa đơn
+
+                // Định dạng ngày kết thúc bảo hành (để hiển thị)
+                String formattedNgayKetThucBaoHanh = DateTimeFormatter.ofPattern("dd/MM/yyyy").format(ngayKetThucBaoHanh);
+                hdct.setFormattedNgayKetThucBaoHanh(formattedNgayKetThucBaoHanh);  // Lưu định dạng ngày kết thúc bảo hành
+
+                // Định dạng giá trị cho từng chi tiết hóa đơn
+                hdct.setFormattedDonGia(currencyFormat.format(hdct.getDonGia()));  // Định dạng giá đơn
+                hdct.setFormattedTongGia(currencyFormat.format(hdct.getTongGia()));  // Định dạng tổng giá
             }
 
             model.addAttribute("hoaDon", hoaDon);
@@ -751,7 +778,7 @@ public class HoaDonController {
             document.add(new Paragraph("\n"));
 
             // Bảng chi tiết sản phẩm
-            Table table = new Table(new float[]{4, 2, 2, 2});
+            Table table = new Table(new float[]{4, 2, 2, 2, 3, 3});
             table.setWidth(UnitValue.createPercentValue(100));
 
             // Header của bảng
@@ -759,15 +786,29 @@ public class HoaDonController {
             table.addHeaderCell(new Cell().add(new Paragraph("Số lượng").setBold()));
             table.addHeaderCell(new Cell().add(new Paragraph("Đơn giá").setBold()));
             table.addHeaderCell(new Cell().add(new Paragraph("Tổng giá").setBold()));
+            table.addHeaderCell(new Cell().add(new Paragraph("Thời gian bảo hành").setBold()));
+            table.addHeaderCell(new Cell().add(new Paragraph("Ngày kết thúc BH").setBold()));
 
             // Thêm các chi tiết sản phẩm
             NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+            // Thêm các chi tiết sản phẩm
             for (HoaDonChiTiet chiTiet : hoaDon.getHoaDonChiTietList()) {
                 table.addCell(chiTiet.getSanPhamChiTiet().getSanPham().getTen());
                 table.addCell(String.valueOf(chiTiet.getSoLuong()));
                 table.addCell(currencyFormat.format(chiTiet.getDonGia()));
-                table.addCell(currencyFormat.format(chiTiet.getDonGia() * chiTiet.getSoLuong()));
+                table.addCell(currencyFormat.format(chiTiet.getTongGia()));
+
+                // Thời gian bảo hành
+                table.addCell(String.valueOf(chiTiet.getSanPhamChiTiet().getThoiGianBaoHanh()) + " tháng");
+
+                // Ngày kết thúc bảo hành
+                LocalDate ngayKetThuc = chiTiet.getSanPhamChiTiet().calculateNgayKetThucBaoHanh();
+                String ngayKetThucStr = ngayKetThuc != null
+                        ? ngayKetThuc.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+                        : "Không xác định";
+                table.addCell(ngayKetThucStr);
             }
+
             document.add(table);
 
             // Tổng tiền, tiền phải trả, tiền khách đưa, tiền thừa

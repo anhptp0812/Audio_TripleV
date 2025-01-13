@@ -56,14 +56,14 @@ function addSanPhamChiTiet(event) {
 
         // Gửi AJAX request
         $.ajax({
-            url: '/spct/add', // Thay đổi thành endpoint thực tế của bạn
+            url: '/admin/spct/add', // Thay đổi thành endpoint thực tế của bạn
             type: 'POST', // Sử dụng POST để thêm dữ liệu
             data: formData,
             processData: false, // Không chuyển đổi dữ liệu
             contentType: false, // Trình duyệt tự động thiết lập content-type cho multipart/form-data
             success: function (response) {
                 alert("Thêm sản phẩm thành công!");
-                window.location.href = '/spct/hien-thi'; // Chuyển hướng về trang quản lý sản phẩm
+                window.location.href = '/admin/spct/hien-thi'; // Chuyển hướng về trang quản lý sản phẩm
             },
             error: function (xhr) {
                 let errorMessage = 'Có lỗi xảy ra.';

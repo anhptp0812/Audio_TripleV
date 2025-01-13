@@ -1,10 +1,15 @@
 package com.example.demo.service;
 
+import com.example.demo.entity.ThongKe;
 import com.example.demo.repository.HoaDonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
+import java.util.Calendar;
+import java.util.Date;
 
 @Service
 public class ThongKeService {
@@ -12,15 +17,60 @@ public class ThongKeService {
     @Autowired
     private HoaDonRepository hoaDonRepository;
 
-    public Double tinhTongDoanhThuTheoNgay(LocalDate date) {
-        return hoaDonRepository.getTongDoanhThuTheoNgay(date);
+    public ThongKe thongKeTheoNgay(Date startDate, Date endDate, String trangThai) {
+        ThongKe thongKe = new ThongKe();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        String formattedDate = dateFormat.format(startDate);
+
+        // Gán giá trị đã định dạng cho thuộc tính thoiGian
+        thongKe.setThoiGian(formattedDate);
+
+        // Lấy tổng doanh thu cho ngày cụ thể
+        thongKe.setTongDoanhThu(hoaDonRepository.getTongDoanhThuTheoNgayAndTrangThai(startDate, endDate, trangThai));
+        // Lấy số lượng đơn hàng trong ngày
+        thongKe.setSoLuongDonHang(hoaDonRepository.countByNgayTaoBetweenAndTrangThai(startDate, endDate, trangThai));
+        // Tính lợi nhuận giả định (20% doanh thu)
+        thongKe.setLoiNhuan(tinhLoiNhuan(thongKe.getTongDoanhThu()));
+        return thongKe;
     }
 
-    public Double tinhTongDoanhThuTheoThang(int month, int year) {
-        return hoaDonRepository.getTongDoanhThuTheoThang(month, year);
+    public ThongKe thongKeTheoThang(Date startDate, Date endDate, String trangThai) {
+        ThongKe thongKe = new ThongKe();
+
+        // Sử dụng Calendar để lấy tháng và năm từ startDate
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(startDate);
+
+        // Định dạng thời gian theo kiểu "MM/yyyy"
+        int month = calendar.get(Calendar.MONTH) + 1; // Tháng từ 0-11, cần cộng thêm 1
+        int year = calendar.get(Calendar.YEAR); // Lấy năm
+
+        // Định dạng thoiGian theo "MM/yyyy"
+        thongKe.setThoiGian(String.format("%02d/%d", month, year));  // Đảm bảo tháng có 2 chữ số
+
+        // Lấy tổng doanh thu cho tháng
+        thongKe.setTongDoanhThu(hoaDonRepository.getTongDoanhThuTheoThangAndTrangThai(startDate, endDate, trangThai));
+
+        // Lấy số lượng đơn hàng trong tháng
+        thongKe.setSoLuongDonHang(hoaDonRepository.countByNgayTaoBetweenAndTrangThai(startDate, endDate, trangThai));
+
+        // Tính lợi nhuận giả định (20% doanh thu)
+        thongKe.setLoiNhuan(tinhLoiNhuan(thongKe.getTongDoanhThu()));
+
+        return thongKe;
     }
 
-    public Double tinhTongDoanhThuTheoNam(int year) {
-        return hoaDonRepository.getTongDoanhThuTheoNam(year);
+    public ThongKe thongKeTheoNam(Date startDate, Date endDate, String trangThai) {
+        ThongKe thongKe = new ThongKe();
+        thongKe.setThoiGian(String.valueOf(startDate.getYear() + 1900));  // Năm
+        thongKe.setTongDoanhThu(hoaDonRepository.getTongDoanhThuTheoNamAndTrangThai(startDate, endDate, trangThai));
+        thongKe.setSoLuongDonHang(hoaDonRepository.countByNgayTaoBetweenAndTrangThai(startDate, endDate, trangThai));
+        thongKe.setLoiNhuan(tinhLoiNhuan(thongKe.getTongDoanhThu()));
+        return thongKe;
+    }
+
+    private double tinhLoiNhuan(Double tongDoanhThu) {
+        // Giả định lợi nhuận là 20% tổng doanh thu
+        return tongDoanhThu != null ? tongDoanhThu * 0.2 : 0.0;
     }
 }

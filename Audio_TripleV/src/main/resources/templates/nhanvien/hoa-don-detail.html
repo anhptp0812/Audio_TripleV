@@ -94,6 +94,8 @@
                             <th>Số Lượng</th>
                             <th>Đơn Giá</th>
                             <th>Tổng Giá</th>
+                            <th>Thời Gian Bảo Hành</th>
+                            <th>Ngày Kết Thúc BH</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -102,6 +104,9 @@
                             <td th:text="${hdct.soLuong}"></td>
                             <td th:text="${hdct.formattedDonGia}"></td>
                             <td th:text="${hdct.formattedTongGia}"></td>
+                            <td th:text="${hdct.sanPhamChiTiet.thoiGianBaoHanh} + ' tháng'"></td>
+                            <td th:text="${hdct.formattedNgayKetThucBaoHanh}"></td>
+
                         </tr>
                         </tbody>
                     </table>

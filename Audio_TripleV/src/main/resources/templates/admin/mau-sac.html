@@ -38,7 +38,7 @@
     <div class="mausac-form">
         <div class="mausac-details text-center">
             <h2 id="tableTitle">Màu sắc</h2>
-            <a id="nutThemMauSac" href="/mau-sac/form-add" class="btn btn-success w-100">
+            <a id="nutThemMauSac" href="/admin/mau-sac/form-add" class="btn btn-success w-100">
                 <i class="bi bi-plus-circle"></i>
             </a>
             <table id="colorTable" class="table table-bordered table-hover">
@@ -58,12 +58,12 @@
                     <td th:text="${#dates.format(mauSac.ngayTao, 'yyyy-MM-dd')}"></td>
                     <td th:text="${#dates.format(mauSac.ngayCapNhat, 'yyyy-MM-dd')}"></td>
                     <td>
-                        <a th:href="@{/mau-sac/form-update/{id}(id=${mauSac.id})}"
+                        <a th:href="@{/admin/mau-sac/form-update/{id}(id=${mauSac.id})}"
                            class="btn btn-custom btn-warning">
                             <i class="bi bi-pencil-square"></i>
                         </a>
 
-                        <a th:href="@{/mau-sac/delete/{id}(id=${mauSac.id})}" class="btn btn-danger"
+                        <a th:href="@{/admin/mau-sac/delete/{id}(id=${mauSac.id})}" class="btn btn-danger"
                            onclick="return confirm('Bạn có chắc chắn muốn xóa?')">
                             <i class="bi bi-trash"></i>
                         </a>

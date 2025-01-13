@@ -97,15 +97,8 @@
                             <td th:text="${item.soLuong}"></td>
                             <td th:text="${item.formattedDonGia}"></td>
                             <td th:text="${item.formattedTongGia}"></td>
-<!--                            <input type="hidden" name="selectedItems" th:value="${item.sanPhamChiTiet.id}"/>-->
-<!--                            <td th:text="${item.sanPhamChiTiet.formattedDonGia} + ' đ'"></td>-->
-<!--                            <td th:text="${item.sanPhamChiTiet.formattedDonGia * item.soLuong} + ' đ'"></td>-->
-<!--                            <td th:text="${#numbers.formatDecimal(item.sanPhamChiTiet.formattedDonGia * item.soLuong, 0, 'COMMA', 'DOT')} + ' đ'"></td>-->
-
-
-
                             <!-- Gửi tất cả sản phẩm vào form -->
-                            <input type="hidden" name="selectedItems" th:value="${item.sanPhamChiTiet.id}" />
+                            <input type="hidden" name="selectedItems" th:value="${item.sanPhamChiTiet.id}"/>
                         </tr>
                         </tbody>
                     </table>
@@ -160,12 +153,16 @@
                                 aria-label="Default select example">
                             <option value="">Chọn Xã/Phường</option>
                         </select>
-                        <span class="check-loi" id="checkLoiPhuongXaAdd"hàng
+                        <span class="check-loi" id="checkLoiPhuongXaAdd" hàng
                               style="display: none;color: red"></span>
                     </div>
+                    <!--                    <div class="mb-3">-->
+                    <!--                        <label for="address" class="form-label">Địa chỉ chi tiết</label>-->
+                    <!--                        <textarea class="form-control" id="address" name="address" rows="3"-->
+                    <!--                                  th:text="${khachHang != null ? khachHang.diaChi : ''}" required></textarea>-->
+                    <!--                    </div>-->
 
-
-                   <div class="mb-3">
+                    <div class="mb-3">
                         <label for="address" class="form-label">Địa chỉ chi tiết (chi tiết địa chỉ giao )</label>
                         <textarea
                                 class="form-control"
@@ -175,9 +172,8 @@
                                 placeholder="Vui lòng nhập đúng thông tin địa chỉ như số nhà, hẻm, ngõ, phường, quận, thành phố"
                                 th:text="${khachHang != null ? khachHang.diaChi : ''}"
                                 required>
-    </textarea>
+                        </textarea>
                     </div>
-
                 </div>
             </div>
 
@@ -205,8 +201,10 @@
                     <div class="mb-3">
                         <h5>Số tiền phải trả: <span id="final_price" name="final_price" th:text="${formattedTotalPrice}">0</span></h5>
                     </div>
+
                     <input id="voucherPercent" name="voucherPercent" style="font-weight: bold;" hidden />
                     <input id="shippingFee" name="shippingFee" style="font-weight: bold;" hidden />
+
                     <!-- Phương thức thanh toán -->
                     <div class="mb-3">
                         <h5>Phương thức thanh toán:</h5>
@@ -707,7 +705,6 @@
     }
 
 
-
     function formatNumberWithVND(number) {
         return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
@@ -775,12 +772,14 @@
                 // shippingFeeResult.innerHTML = formatNumberWithVND(ship);
                 var ship_fee = parseInt(document.getElementById('ship_fee').value);
 
+
                 if(ship_fee > 0) {
                     document.getElementById('amount').value = document.getElementById('amount').value - ship_fee;
                 }
                 document.getElementById('ship_fee').value  = ship;
                 var amount = parseInt(document.getElementById('amount').value);
                 amount = amount + ship;
+
 
                 const shippingFeeElement = document.getElementById('shippingFee1');
                 //

@@ -6,6 +6,7 @@ import com.example.demo.repository.CommentRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,13 +31,19 @@ public class CommentService {
         return commentRepository.findByArticle(article);
     }
 
-    public void deleteCommentById(Integer id) {
-        Optional<Comment> commentOptional = commentRepository.findById(id);
-        if (commentOptional.isPresent()) {
-            commentRepository.delete(commentOptional.get());
-        } else {
-            throw new EntityNotFoundException("Bình luận không tồn tại");
+
+    @Transactional
+    public boolean deleteComment(Integer id) {
+        try {
+            Optional<Comment> comment = commentRepository.findById(id);
+            if (comment.isPresent()) {
+                commentRepository.delete(comment.get());
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
     }
-
 }

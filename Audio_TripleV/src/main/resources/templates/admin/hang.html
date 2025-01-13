@@ -38,7 +38,7 @@
     <div class="hang-form">
         <div class="hang-details text-center">
             <h5 id="tableTitle">Hãng</h5>
-            <a id="nutThemHang" href="/hang/form-add" class="btn btn-success w-100">
+            <a id="nutThemHang" href="/admin/hang/form-add" class="btn btn-success w-100">
                 <i class="bi bi-plus-circle"></i>
             </a>
             <table id="brandTable" class="table table-bordered table-hover">
@@ -58,11 +58,11 @@
                     <td th:text="${#dates.format(hang.ngayTao, 'yyyy-MM-dd')}"></td>
                     <td th:text="${#dates.format(hang.ngayCapNhat, 'yyyy-MM-dd')}"></td>
                     <td>
-                        <a th:href="@{/hang/form-update/{id}(id=${hang.id})}" class="btn btn-custom btn-warning">
+                        <a th:href="@{/admin/hang/form-update/{id}(id=${hang.id})}" class="btn btn-custom btn-warning">
                             <i class="bi bi-pencil-square"></i>
                         </a>
 
-                        <a th:href="@{/hang/delete/{id}(id=${hang.id})}" class="btn btn-danger"
+                        <a th:href="@{/admin/hang/delete/{id}(id=${hang.id})}" class="btn btn-danger"
                            onclick="return confirm('Bạn có chắc chắn muốn xóa?')">
                             <i class="bi bi-trash"></i>
                         </a>

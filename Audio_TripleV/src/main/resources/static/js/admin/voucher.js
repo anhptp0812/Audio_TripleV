@@ -17,6 +17,7 @@ function toggleSearchInput() {
         searchInput.style.display = 'none';
     }
 }
+
 document.getElementById('manageMenuToggle').addEventListener('click', function (e) {
     e.preventDefault(); // Ngăn điều hướng mặc định
     const submenu = document.getElementById('manageSubmenu');

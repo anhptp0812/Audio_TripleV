@@ -37,7 +37,7 @@
     <div class="spct-form">
         <div class="spct-details text-center">
             <h2 id="tableTitle">Danh sách sản phẩm</h2>
-            <a id="nutThem" href="/spct/form-add" class="btn btn-success w-100">
+            <a id="nutThem" href="/admin/spct/form-add" class="btn btn-success w-100">
                 <i class="bi bi-plus-circle"></i>
             </a>
             <table id="productTable" class="table table-bordered table-hover">
@@ -67,16 +67,17 @@
                     <td th:text="${spct.loaiSanPham.kieuDang}"></td>
                     <td th:text="${spct.formattedDonGia + ' đ'}"></td>
                     <td th:text="${spct.soLuong}"></td>
+                    <td th:text="${spct.thoiGianBaoHanh} + ' tháng'"></td>
                     <td th:text="${spct.trangThai}"></td>
 <!--                    <td th:text="${spct.moTa}"></td>-->
                     <td th:text="${#dates.format(spct.ngayTao, 'yyyy-MM-dd')}"></td>
                     <td th:text="${#dates.format(spct.ngayCapNhat, 'yyyy-MM-dd')}"></td>
                     <td>
-                        <a th:href="@{/spct/detail/{id}(id=${spct.id})}" class="btn btn-primary">
+                        <a th:href="@{/admin/spct/detail/{id}(id=${spct.id})}" class="btn btn-primary">
                             <i class="bi bi-info-circle"></i> <!-- Icon thông tin -->
                         </a>
 
-                        <a th:href="@{/spct/form-update/{id}(id=${spct.id})}" class="btn btn-warning">
+                        <a th:href="@{/admin/spct/form-update/{id}(id=${spct.id})}" class="btn btn-warning">
                             <i class="bi bi-pencil-square"></i> <!-- Icon chỉnh sửa -->
                         </a>
                     </td>

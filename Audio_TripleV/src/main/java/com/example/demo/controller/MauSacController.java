@@ -79,6 +79,6 @@ public class MauSacController {
     @GetMapping("/delete/{id}")
     public String deleteColor(@PathVariable Integer id) {
         mauSacService.deleteById(id);
-        return "redirect:/mau-sac/hien-thi"; // Thêm tham số activated
+        return "redirect:/admin/mau-sac/hien-thi"; // Thêm tham số activated
     }
 }

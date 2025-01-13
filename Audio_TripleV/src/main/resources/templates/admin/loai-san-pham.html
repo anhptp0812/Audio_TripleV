@@ -38,7 +38,7 @@
     <div class="loaisp-form">
         <div class="loaisp-details text-center">
             <h2 id="tableTitle">Loại Sản Phẩm</h2>
-            <a id="nutThemLoai" href="/loai-san-pham/form-add" class="btn btn-success w-100">
+            <a id="nutThemLoai" href="/admin/loai-san-pham/form-add" class="btn btn-success w-100">
                 <i class="bi bi-plus-circle"></i>
             </a>
             <table id="categoryTable" class="table table-bordered table-hover">
@@ -58,11 +58,11 @@
                     <td th:text="${#dates.format(loaiSanPham.ngayTao, 'yyyy-MM-dd')}"></td>
                     <td th:text="${#dates.format(loaiSanPham.ngayCapNhat, 'yyyy-MM-dd')}"></td>
                     <td>
-                        <a th:href="@{/loai-san-pham/form-update/{id}(id=${loaiSanPham.id})}" class="btn btn-custom btn-warning">
+                        <a th:href="@{/admin/loai-san-pham/form-update/{id}(id=${loaiSanPham.id})}" class="btn btn-custom btn-warning">
                             <i class="bi bi-pencil-square"></i>
                         </a>
 
-                        <a th:href="@{/loai-san-pham/delete/{id}(id=${loaiSanPham.id})}" class="btn btn-danger"
+                        <a th:href="@{/admin/loai-san-pham/delete/{id}(id=${loaiSanPham.id})}" class="btn btn-danger"
                            onclick="return confirm('Bạn có chắc chắn muốn xóa?')">
                             <i class="bi bi-trash"></i>
                         </a>

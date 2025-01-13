@@ -229,10 +229,6 @@
                             <label>Nhập tên:</label>
                             <input type="text" placeholder="Nhập tên" class="form-control" id="voucherName">
                         </div>
-                        <div>
-                            <label>loại Voucher:</label>
-                            <select></select>
-                        </div>
                         <div class="pt-3">
                             <button class="btn btn-primary" type="button" onclick="searchVoucher()">
                                 <i class="bi bi-search"></i> Tìm kiếm
@@ -365,7 +361,7 @@
     // Hiển thị danh sách Voucher trong bảng
     function renderVoucherList(vouchers) {
         const voucherList = document.getElementById("voucher-list");
-        voucherList.innerHTML = "";
+        voucherList.innerHTML = ""; // Xóa bảng hiện tại
 
         vouchers.forEach(voucher => {
             const row = document.createElement("tr");
@@ -522,6 +518,35 @@
             return parseFloat(value.replace(/[^\d.-]/g, '')) || 0;
         }
         return value || 0;
+    }
+
+    function searchVoucher() {
+        const voucherName = document.getElementById('voucherName').value;
+
+        if (!voucherName) {
+            // Khi không có tên voucher, hiển thị lại tất cả voucher
+            fetchVouchers();
+            return;
+        }
+
+        fetch(`/api/vouchers/search?name=${encodeURIComponent(voucherName)}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Có lỗi xảy ra khi tìm kiếm voucher.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.length === 0) {
+                    alert("Không tìm thấy voucher nào!");
+                } else {
+                    renderVoucherList(data); // Hiển thị danh sách voucher tìm được
+                }
+            })
+            .catch(error => {
+                console.error('Lỗi:', error);
+                alert('Có lỗi xảy ra khi tìm kiếm voucher.');
+            });
     }
 
 </script>

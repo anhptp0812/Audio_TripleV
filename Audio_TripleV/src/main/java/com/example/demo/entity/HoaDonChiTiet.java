@@ -14,6 +14,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 @Getter
@@ -41,6 +43,9 @@ public class HoaDonChiTiet {
     @Column(name = "DonGia")
     private Double donGia;
 
+    @Column(name = "ThoiGianKetThucBH")
+    private LocalDate thoiGianKetThucBH;
+
     @Column(name = "NgayTao")
     private Date ngayTao;
 
@@ -58,4 +63,17 @@ public class HoaDonChiTiet {
 
     @Transient
     private String formattedTongGia;
+
+    @Transient
+    public String formattedNgayKetThucBaoHanh;
+
+    @Transient
+    public String getFormattedNgayKetThucBaoHanh() {
+        if (thoiGianKetThucBH != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            return thoiGianKetThucBH.format(formatter);
+        }
+        return "Không xác định";
+    }
+
 }

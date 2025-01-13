@@ -56,14 +56,14 @@ function updateSanPhamChiTiet(event) {
         }
 
         $.ajax({
-            url: '/spct/update',
+            url: '/admin/spct/update',
             type: 'POST',
             data: formData,
             processData: false,
             contentType: false,
             success: function (response) {
                 alert("Cập nhật sản phẩm thành công!");
-                window.location.href = '/spct/hien-thi';
+                window.location.href = '/admin/spct/hien-thi';
             },
             error: function (xhr) {
                 let errorMessage = 'Có lỗi xảy ra.';

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thêm Voucher</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.9.1/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link th:href="@{/css/admin/voucher.css}" rel="stylesheet">
+</head>
+<body>
+<th:block th:replace="~{/nhanvien/fragments :: nhan-vien-header}"/>
+
+<div class="main-container">
+    <div class="header d-flex align-items-center">
+        <input type="text" id="searchInput" class="form-control search-input me-2" placeholder="Tìm kiếm..." style="display: none;">
+        <button class="btn btn-outline-light me-2" type="button" onclick="toggleSearchInput()">
+            <i class="bi bi-search"></i>
+        </button>
+        <!-- Dropdown tài khoản -->
+        <div class="dropdown">
+            <a class="btn btn-outline-light me-3" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-person-circle"></i>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="accountDropdown">
+                <li><a class="dropdown-item" href="/user/thong-tin">Thông tin tài khoản</a></li>
+                <li><a class="dropdown-item text-danger" href="/logout" onclick="return confirm('Bạn có chắc muốn đăng xuất không?')">Đăng xuất</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="voucher-form">
+        <div class="voucher-details">
+            <h2 class="text-center">Thêm Voucher</h2>
+            <form id="addForm" action="/admin/voucher/add" method="post" onsubmit="event.preventDefault(); addVoucher();">
+                <div class="form-group">
+                    <label for="tenVoucher">Tên Voucher:</label>
+                    <input type="text" class="form-control mb-3" id="tenVoucher" name="ten" required>
+                </div>
+                <div class="form-group">
+                    <label for="loaiVoucher">Loại Voucher:</label>
+                    <select class="form-control mb-3" id="loaiVoucher" name="loai" required onchange="toggleVoucherTypeFields()">
+                        <option value="GiamTien">Giảm Tiền</option>
+                        <option value="GiamPhanTram">Giảm Phần Trăm</option>
+                    </select>
+                </div>
+                <!-- Giá trị tiền -->
+                <div class="form-group" id="giaTriTienField" style="display: none;">
+                    <label for="giaTriTien">Giá trị tiền:</label>
+                    <input type="number" min="1" class="form-control mb-3" id="giaTriTien" name="giaTriTien">
+                </div>
+                <!-- Giá trị phần trăm -->
+                <div class="form-group" id="giaTriPhanTramField" style="display: none;">
+                    <label for="giaTriPhanTram">Giá trị phần trăm:</label>
+                    <input type="number" min="1" max="100" class="form-control mb-3" id="giaTriPhanTram" name="giaTriPhanTram">
+                </div>
+                <div class="form-group">
+                    <label for="giaTriHoaDonToiThieu">Giá trị hóa đơn tối thiểu:</label>
+                    <input type="number" class="form-control mb-3" id="giaTriHoaDonToiThieu" name="giaTriHoaDonToiThieu" required>
+                </div>
+                <div class="form-group">
+                    <label for="trangThai">Trạng thái:</label>
+                    <select class="form-control mb-3" id="trangThai" name="trangThai" required>
+                        <option value="Active">Active</option>
+                        <option value="InActive">InActive</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="ngayBatDau">Ngày bắt đầu:</label>
+                    <input type="date" class="form-control mb-3" id="ngayBatDau" name="ngayBatDau" required>
+                </div>
+                <div class="form-group">
+                    <label for="ngayKetThuc">Ngày kết thúc:</label>
+                    <input type="date" class="form-control mb-3" id="ngayKetThuc" name="ngayKetThuc" required>
+                </div>
+                <div class="text-center mb-3">
+                    <button type="submit" class="btn btn-success">Thêm</button>
+                    <a href="/admin/voucher/hien-thi" class="btn btn-secondary">Quay lại</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <th:block th:replace="~{/nhanvien/fragments :: nhan-vien-footer}"/>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/admin/spct.js}"></script>
+<script th:src="@{/js/admin/voucher-add.js}"></script>
+
+</body>
+</html>

@@ -103,7 +103,7 @@ public class SanPhamChiTietController {
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Integer id) {
         sanPhamChiTietService.deleteById(id);
-        return "redirect:/spct/hien-thi";
+        return "redirect:/admin/spct/hien-thi";
     }
 
     @GetMapping("/form-add")
@@ -183,7 +183,7 @@ public class SanPhamChiTietController {
         SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietService.findById(id); // Tìm sản phẩm theo ID
         if (sanPhamChiTiet == null) {
             // Nếu sản phẩm không tồn tại, có thể chuyển hướng đến trang lỗi hoặc trang danh sách
-            return "redirect:/spct/error"; // Thay đổi đường dẫn đến trang lỗi hoặc trang danh sách sản phẩm
+            return "redirect:/admin/spct/error"; // Thay đổi đường dẫn đến trang lỗi hoặc trang danh sách sản phẩm
         }
         model.addAttribute("sanPhamChiTiet", sanPhamChiTiet); // Thêm sản phẩm vào model
         model.addAttribute("sanPhams", sanPhamRepository.findAll());
