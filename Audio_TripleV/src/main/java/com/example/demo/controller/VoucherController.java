@@ -114,11 +114,13 @@ public class VoucherController {
             @RequestParam Integer hoaDonId,
             @RequestParam Integer voucherId) {
 
+        // Tìm hóa đơn
         Optional<HoaDon> hoaDonOptional = hoaDonRepository.findById(hoaDonId);
         if (hoaDonOptional.isEmpty()) {
             return ResponseEntity.badRequest().body(Map.of("message", "Hóa đơn không tồn tại"));
         }
 
+        // Tìm voucher
         Optional<Voucher> voucherOptional = voucherRepository.findById(voucherId);
         if (voucherOptional.isEmpty()) {
             return ResponseEntity.badRequest().body(Map.of("message", "Voucher không hợp lệ"));
@@ -127,7 +129,7 @@ public class VoucherController {
         HoaDon hoaDon = hoaDonOptional.get();
         Voucher voucher = voucherOptional.get();
 
-        // Kiểm tra nếu tổng tiền nhỏ hơn giá trị tối thiểu của voucher
+        // Kiểm tra điều kiện áp dụng voucher
         if (hoaDon.getTongGia() < voucher.getGiaTriHoaDonToiThieu()) {
             return ResponseEntity.badRequest().body(Map.of("message", "Tổng tiền không đủ để áp dụng voucher"));
         }
@@ -137,27 +139,43 @@ public class VoucherController {
         double discountedPrice = totalPrice;
 
         if ("GiamTien".equalsIgnoreCase(voucher.getLoai()) && voucher.getGiaTriTien() > 0) {
-            discountedPrice -= voucher.getGiaTriTien();
+            if (discountedPrice < voucher.getGiaTriTien()){
+                discountedPrice = totalPrice - voucher.getGiaTriTien();
+                if (totalPrice - voucher.getGiaTriTien() < 0){
+                    discountedPrice = 0;
+                }
+            } else {
+                discountedPrice -= voucher.getGiaTriTien();
+            }
         } else if ("GiamPhanTram".equalsIgnoreCase(voucher.getLoai()) && voucher.getGiaTriPhanTram() > 0) {
             discountedPrice -= (totalPrice * voucher.getGiaTriPhanTram()) / 100;
         }
 
-        // Đảm bảo giá trị không âm
-        discountedPrice = Math.max(discountedPrice, 0);
+        double extraAmount = 0; // Số tiền thừa từ voucher (nếu có)
 
-        // Cập nhật hóa đơn với giá trị mới
+
+
+        // Cập nhật thông tin hóa đơn
         hoaDon.setSoTienPhaiTra(discountedPrice);
         hoaDon.setVouCher(voucher);
+
+        // Lưu hóa đơn
         hoaDonRepository.save(hoaDon);
 
-        // Định dạng số tiền đã giảm
+        // Định dạng số tiền
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         String formattedPrice = currencyFormat.format(discountedPrice);
+        String formattedExtraAmount = currencyFormat.format(extraAmount);
 
+        // Trả về kết quả
         return ResponseEntity.ok(Map.of(
                 "discountedPrice", formattedPrice,
-                "message", "Voucher đã áp dụng thành công"
+                "extraAmount", formattedExtraAmount,
+                "message", extraAmount > 0
+                        ? "Voucher đã áp dụng thành công, số tiền thừa: " + formattedExtraAmount
+                        : "Voucher đã áp dụng thành công"
         ));
     }
+
 
 }

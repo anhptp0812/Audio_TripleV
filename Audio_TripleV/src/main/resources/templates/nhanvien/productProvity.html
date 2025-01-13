@@ -216,7 +216,7 @@
                     </div>
                     <div class="button-group">
                         <button type="button" class="btn btn-primary" id="addvoucher-btn" onclick="openVoucherForm()" disabled>
-                            <i class="bi bi-ticket-fill"></i> Add Voucher
+                            <i class="bi bi-ticket-fill"></i> Chọn Voucher
                         </button>
                     </div>
                 </form>
@@ -291,7 +291,7 @@
                                 <label class="fw-bold">Nhập số tiền khách đưa:</label>
                                 <input type="text" id="customerPayment" name="customerPayment" class="form-control w-50"
                                        oninput="this.value = this.value.replace(/[^0-9]/g, ''); validatePaymentAmount()"
-                                       style="text-align: right" placeholder="Nhập số tiền" required>
+                                       style="text-align: right" value="0" required>
                             </div>
                             <div id="paymentError" class="text-end" style="color: red; display: none;">Vui lòng nhập số tiền hợp lệ.</div>
                             <div class="d-flex justify-content-between">
