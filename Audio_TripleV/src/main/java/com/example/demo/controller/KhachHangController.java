@@ -200,7 +200,8 @@ public class KhachHangController {
             try {
                 // Parse selectedItems JSON string into a list of ItemDTO
                 ObjectMapper objectMapper = new ObjectMapper();
-                List<ItemDTO> selectedItemList = objectMapper.readValue(selectedItems, new TypeReference<List<ItemDTO>>() {});
+                List<ItemDTO> selectedItemList = objectMapper.readValue(selectedItems, new TypeReference<List<ItemDTO>>() {
+                });
 
                 // Lọc giỏ hàng theo danh sách sản phẩm được chọn và cập nhật số lượng
                 Map<Integer, Integer> selectedItemMap = selectedItemList.stream()
@@ -210,7 +211,7 @@ public class KhachHangController {
                         System.out.println("Cart Item ID: " + item.getSanPhamChiTiet().getId() + ", Quantity: " + item.getSoLuong())
                 );
 
-                if(gioHang.getGioHangChiTietList().size() > 0) {
+                if (gioHang.getGioHangChiTietList().size() > 0) {
                     System.out.println("length  " + gioHang.getGioHangChiTietList().size());
                 }
 
@@ -282,7 +283,8 @@ public class KhachHangController {
 
         if (Boolean.TRUE.equals(muaNgay)) {
             ObjectMapper objectMapper = new ObjectMapper();
-            List<ItemDTO> selectedItemList = objectMapper.readValue(selectedItems, new TypeReference<List<ItemDTO>>() {});
+            List<ItemDTO> selectedItemList = objectMapper.readValue(selectedItems, new TypeReference<List<ItemDTO>>() {
+            });
 
             // Lọc giỏ hàng theo danh sách sản phẩm được chọn và cập nhật số lượng
             Map<Integer, Integer> selectedItemMap = selectedItemList.stream()
@@ -311,11 +313,12 @@ public class KhachHangController {
             muaNgayGioHang = gioHang;
             globalMuaNgay = true;
 
+            String priceToD = decimalFormat.format(totalPrice);
+            model.addAttribute("amount", priceToD);
             // Add the cart details and the formatted total price to the model
             model.addAttribute("gioHang", gioHang);
             model.addAttribute("cartCount", totalQuantity);
             model.addAttribute("totalPrice", formattedTotalPrice);  // Truyền tổng tiền đã định dạng
-            model.addAttribute("amount", priceTo);
 
 
         }
@@ -324,7 +327,6 @@ public class KhachHangController {
             item.setFormattedDonGia(currencyFormat.format(item.getSanPhamChiTiet().getDonGia()));
             item.setFormattedTongGia(currencyFormat.format(item.getTongGia()));
         });
-
         // Thêm dữ liệu vào model
         model.addAttribute("cartCount", totalQuantity);
         model.addAttribute("khachHang", khachHang);
@@ -335,10 +337,6 @@ public class KhachHangController {
         List<Voucher> allVoucher = voucherService.getAllVouchers();
 
         model.addAttribute("vouchers", allVoucher);
-
-        System.out.println("voucher length  " + allVoucher.size());
-
-        System.out.println(allVoucher);
 
 
         return "customer/thanh-toan"; // Tên file HTML trong thư mục template
@@ -385,14 +383,18 @@ public class KhachHangController {
 
         // Log or use the shippingFeeValue as needed
         System.out.println("Shipping Fee: " + globalShippingFee);
-        globalVoucher = Integer.valueOf(voucherPercent);
+        try {
+            globalVoucher = Integer.parseInt(voucherPercent);
+        } catch (NumberFormatException e) {
+            globalVoucher = 0;
+        }
 
         if (paymentMethod.equals("card")) {
             KhachHang khachHang = khachHangService.findByTaiKhoan(userDetails.getUsername()).get();
             GioHang gioHang = gioHangService.findByKhachHang(khachHang).get();
 
             // Truyền danh sách sản phẩm đã chọn vào VNPay
-            String url = vnPayService.createOrder(totalPrice.intValue() + globalShippingFee.intValue() - Integer.valueOf(voucherPercent), userDetails.getUsername(), fullName, email, phone, address, request, selectedItems);
+            String url = vnPayService.createOrder(totalPrice.intValue() + globalShippingFee.intValue() - globalVoucher, userDetails.getUsername(), fullName, email, phone, address, request, selectedItems);
             return "redirect:" + url;
         }
 
@@ -409,12 +411,11 @@ public class KhachHangController {
     @GetMapping("/khach-hang/thanh-toan/vnpay_return")
     public String vnpayReturn(HttpServletResponse response, @RequestParam(required = false) String selectedItems, @ModelAttribute PaymentInfoDTO paymentInfoDTO, HttpServletRequest request) {
         int status = vnPayService.orderReturn(request);
-        if(status == 0) {
+        if (status == 0) {
 
             // failure
             return "redirect:/khach-hang/don-hang/danh-sach";
-        }
-        else {
+        } else {
             // sucess
             if (paymentInfoDTO.getVnp_OrderInfo() == null || paymentInfoDTO.getVnp_OrderInfo().isEmpty()) {
                 throw new RuntimeException("Thông tin thanh toán không hợp lệ");
@@ -437,8 +438,21 @@ public class KhachHangController {
     void processThanhToan(String username, String fullName, String email, String phone, String address, String selectedItems, String paymentMethod) {
         if (selectedItems == null || selectedItems.isEmpty()) {
             throw new RuntimeException("Không có sản phẩm nào được chọn.");
+<<<<<<< Updated upstream
         }
 
+=======
+<<<<<<< HEAD
+
+        } else {
+            System.out.println("list not empty ");
+        }
+        // Lấy khách hàng hiện tại
+=======
+        }
+
+>>>>>>> 3db7b86facc2e99cf89c4a5ecf0e5f51b5466756
+>>>>>>> Stashed changes
         KhachHang khachHang = khachHangService.findByTaiKhoan(username)
                 .orElseThrow(() -> new RuntimeException("Khách hàng không tồn tại"));
 
@@ -456,7 +470,15 @@ public class KhachHangController {
                 .mapToObj(i -> jsonArray.getJSONObject(i).getInt("id"))
                 .collect(Collectors.toList());
 
+<<<<<<< Updated upstream
         List<GioHangChiTiet> selectedItemsList;
+=======
+<<<<<<< HEAD
+        List<GioHangChiTiet> selectedItemsList = null;
+=======
+        List<GioHangChiTiet> selectedItemsList;
+>>>>>>> 3db7b86facc2e99cf89c4a5ecf0e5f51b5466756
+>>>>>>> Stashed changes
         GioHang gioHang = null;
 
         if (!globalMuaNgay) {
@@ -480,10 +502,20 @@ public class KhachHangController {
         donHang.setKhachHang(khachHang);
         donHang.setTongGia(selectedItemsList.stream()
                 .mapToDouble(item -> item.getSoLuong() * item.getSanPhamChiTiet().getDonGia())
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+                .sum() + globalShippingFee - globalVoucher);
+=======
+>>>>>>> Stashed changes
 
                 .sum() +  globalShippingFee - globalVoucher );
 
 
+<<<<<<< Updated upstream
+=======
+>>>>>>> 3db7b86facc2e99cf89c4a5ecf0e5f51b5466756
+>>>>>>> Stashed changes
         donHang.setTrangThai("Chờ xử lý");
         donHang.setNgayTao(new Date());
 
@@ -521,6 +553,13 @@ public class KhachHangController {
 
         donHangService.save(donHang);
 
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+        // Xóa các sản phẩm đã chọn khỏi giỏ hàng
+=======
+>>>>>>> 3db7b86facc2e99cf89c4a5ecf0e5f51b5466756
+>>>>>>> Stashed changes
         if (!globalMuaNgay) {
             gioHang.setGioHangChiTietList(gioHang.getGioHangChiTietList().stream()
                     .filter(item -> !selectedProductIds.contains(item.getSanPhamChiTiet().getId()))
