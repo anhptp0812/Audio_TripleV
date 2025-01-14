@@ -72,7 +72,7 @@
                         <div class="col-md-6">
                             <p><strong>Tổng Giá:</strong> <span th:text="${hoaDon.formattedTongGia}"></span></p>
                             <p><strong>Voucher:</strong>
-                                <span th:text="${hoaDon.vouCher != null ? hoaDon.vouCher.giaTriTien != null ? hoaDon.vouCher.formattedGiaTriTien : hoaDon.vouCher.formattedGiaTriPhanTram : 'Không có Voucher'}"></span>
+                                <span th:text="${hoaDon.vouCher != null ? hoaDon.tienVoucher != null ? hoaDon.formattedTienVoucher : hoaDon.formattedPhanTramVoucher : 'Không có Voucher'}"></span>
                             </p>
                             <p><strong>Số Tiền Phải Trả:</strong> <span th:text="${hoaDon.formattedSoTienPhaiTra}"></span></p>
                             <p><strong>Tiền Khách Đưa:</strong> <span th:text="${hoaDon.formattedTienKhachDua}"></span></p>
@@ -106,7 +106,6 @@
                             <td th:text="${hdct.formattedTongGia}"></td>
                             <td th:text="${hdct.sanPhamChiTiet.thoiGianBaoHanh} + ' tháng'"></td>
                             <td th:text="${hdct.formattedNgayKetThucBaoHanh}"></td>
-
                         </tr>
                         </tbody>
                     </table>

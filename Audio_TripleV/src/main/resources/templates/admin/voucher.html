@@ -37,11 +37,24 @@
     </div>
     <div class="voucher-form">
         <div class="voucher-details text-center">
-            <h5 id="tableTitle">Voucher</h5>
-            <a id="nutThemVoucher" href="/admin/voucher/form-add" class="btn btn-success w-100">
-                <i class="bi bi-plus-circle"></i>
-            </a>
-            <table id="voucherTable" class="table table-bordered table-hover">
+            <h2 id="tableTitle">Voucher</h2>
+            <div class="search-container d-flex align-items-center">
+                <input type="text" placeholder="Nhập tên" class="form-control me-2 flex-grow-1" id="voucherName">
+                <select id="searchLoai" class="form-select me-2 flex-grow-1">
+                    <option value="">Chọn Loại</option>
+                    <option value="GiamPhanTram">Giảm Phần Trăm</option>
+                    <option value="GiamTien">Giảm Tiền</option>
+                </select>
+                <button class="btn btn-secondary" type="button" onclick="searchVoucher()">
+                    <i class="bi bi-search"></i>
+                </button>
+            </div>
+            <div class="pt-3">
+                <a id="nutThemVoucher" href="/admin/voucher/form-add" class="btn btn-success w-100 mt-3">
+                    <i class="bi bi-plus-circle"></i> Thêm Voucher
+                </a>
+            </div>
+            <table id="voucherTable" class="table table-bordered table-hover mt-3">
                 <thead class="thead-light">
                 <tr>
                     <th>ID Voucher</th>
@@ -50,6 +63,7 @@
                     <th>Giá Trị Tiền</th>
                     <th>Giá Trị Phần Trăm</th>
                     <th>Giá Trị Hóa Đơn Tối Thiểu</th>
+                    <th>Trạng thái</th>
                     <th>Ngày Bắt Đầu</th>
                     <th>Ngày Kết Thúc</th>
                     <th>Ngày Tạo</th>
@@ -65,19 +79,30 @@
                     <td th:text="${voucher.formattedGiaTriTien}"></td>
                     <td th:text="${voucher.formattedGiaTriPhanTram}"></td>
                     <td th:text="${voucher.formattedGiaTriHoaDonToiThieu}"></td>
+                    <td th:text="${voucher.trangThai}"></td>
                     <td th:text="${#dates.format(voucher.ngayBatDau, 'yyyy-MM-dd')}"></td>
                     <td th:text="${#dates.format(voucher.ngayKetThuc, 'yyyy-MM-dd')}"></td>
                     <td th:text="${#dates.format(voucher.ngayTao, 'yyyy-MM-dd')}"></td>
                     <td th:text="${#dates.format(voucher.ngayCapNhat, 'yyyy-MM-dd')}"></td>
                     <td>
-                        <a th:href="@{/admin/voucher/form-update/{id}(id=${voucher.id})}" class="btn btn-custom btn-warning">
-                            <i class="bi bi-pencil-square"></i>
-                        </a>
-
-                        <a th:href="@{/admin/voucher/delete/{id}(id=${voucher.id})}" class="btn btn-danger"
-                           onclick="return confirm('Bạn có chắc chắn muốn xóa?')">
-                            <i class="bi bi-trash"></i>
-                        </a>
+                        <div class="btn-group">
+                            <a th:href="@{/admin/voucher/form-update/{id}(id=${voucher.id})}"
+                               class="btn btn-custom btn-warning">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+                            <a th:href="@{/admin/voucher/update-status/{id}(id=${voucher.id})}"
+                               class="btn btn-warning"
+                               th:onclick="console.log('Trạng thái: ' + ${voucher.trangThai}); return confirm('Bạn có chắc chắn muốn đổi trạng thái voucher này?');">
+                                <i th:class="${voucher.trangThai == 'Active' ? 'bi bi-toggle-on' : 'bi bi-toggle-off'}"></i>
+                            </a>
+                            <!-- Uncomment nếu cần nút xóa -->
+                            <!--
+                            <a th:href="@{/admin/voucher/delete/{id}(id=${voucher.id})}" class="btn btn-danger"
+                               onclick="return confirm('Bạn có chắc chắn muốn xóa?')">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                            -->
+                        </div>
                     </td>
                 </tr>
                 </tbody>
@@ -89,7 +114,33 @@
 </div>
 
 </body>
+<script>
+    function searchVoucher() {
+        var voucherName = document.getElementById('voucherName').value.toLowerCase();
+        var selectedLoai = document.getElementById('searchLoai').value.toLowerCase();
+        var rows = document.querySelectorAll('#voucherTable tbody tr');
 
+        rows.forEach(function (row) {
+            var nameCell = row.cells[1]; // Tên Voucher (là cột thứ 2)
+            var nameText = nameCell.textContent || nameCell.innerText;
+
+            var loaiCell = row.cells[2]; // Loại Voucher (là cột thứ 3, thay đổi nếu cần)
+            var loaiText = loaiCell.textContent || loaiCell.innerText;
+
+            // Kiểm tra điều kiện lọc: tên voucher và loại voucher
+            var nameMatches = nameText.toLowerCase().indexOf(voucherName) > -1;
+            var loaiMatches = selectedLoai === '' || loaiText.toLowerCase() === selectedLoai;
+
+            // Hiển thị dòng nếu tên và loại đều khớp
+            if (nameMatches && loaiMatches) {
+                row.style.display = ''; // Hiển thị dòng nếu tìm thấy
+            } else {
+                row.style.display = 'none'; // Ẩn dòng nếu không tìm thấy
+            }
+        });
+    }
+
+</script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

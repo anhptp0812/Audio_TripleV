@@ -2,15 +2,15 @@
 function updateVoucher() {
     const formData = {
         id: document.getElementById('id').value,
-        ten: document.getElementById('ten').value,
+        ten: document.getElementById('ten').value.trim(),
         loai: document.getElementById('loai').value,
-        giaTriTien: document.getElementById('giaTriTien').value,
-        giaTriPhanTram: document.getElementById('giaTriPhanTram').value,
-        giaTriHoaDonToiThieu: document.getElementById('giaTriHoaDonToiThieu').value,
+        giaTriTien: document.getElementById('giaTriTien').value.trim(),
+        giaTriPhanTram: document.getElementById('giaTriPhanTram').value.trim(),
+        giaTriHoaDonToiThieu: document.getElementById('giaTriHoaDonToiThieu').value.trim(),
         trangThai: document.getElementById('trangThai').value,
         ngayBatDau: document.getElementById('ngayBatDau').value,
         ngayKetThuc: document.getElementById('ngayKetThuc').value,
-        ngayCapNhat: document.getElementById('ngayCapNhat').value || new Date().toISOString().split('T')[0] // Gán ngày hiện tại nếu trường để trống
+        ngayCapNhat: document.getElementById('ngayCapNhat').value || new Date().toISOString().split('T')[0]
     };
 
     // Kiểm tra các trường bắt buộc
@@ -19,19 +19,22 @@ function updateVoucher() {
         return;
     }
 
-    // Kiểm tra xem có ít nhất một giá trị cho loại voucher
-    if (formData.loai === 'GiamTien' && !formData.giaTriTien) {
-        alert('Vui lòng điền giá trị tiền cho voucher.');
-        return;
-    } else if (formData.loai === 'GiamPhanTram' && !formData.giaTriPhanTram) {
-        alert('Vui lòng điền giá trị phần trăm cho voucher.');
+    if (!formData.giaTriHoaDonToiThieu || parseInt(formData.giaTriHoaDonToiThieu) < 1) {
+        alert('Giá trị hóa đơn tối thiểu phải lớn hơn hoặc bằng 1.');
         return;
     }
 
-    // Kiểm tra giá trị hóa đơn tối thiểu
-    if (!formData.giaTriHoaDonToiThieu) {
-        alert('Vui lòng điền giá trị hóa đơn tối thiểu.');
-        return;
+    if (formData.loai === 'GiamTien') {
+        if (!formData.giaTriTien || parseInt(formData.giaTriTien) < 1) {
+            alert('Giá trị tiền phải lớn hơn hoặc bằng 1.');
+            return;
+        }
+    } else if (formData.loai === 'GiamPhanTram') {
+        const giaTriPhanTram = parseInt(formData.giaTriPhanTram);
+        if (!formData.giaTriPhanTram || giaTriPhanTram < 1 || giaTriPhanTram > 100) {
+            alert('Giá trị phần trăm phải từ 1 đến 100.');
+            return;
+        }
     }
 
     $.ajax({
@@ -48,6 +51,7 @@ function updateVoucher() {
         }
     });
 }
+
 
 // Function to toggle fields based on voucher type (updated)
 function toggleVoucherTypeFields() {

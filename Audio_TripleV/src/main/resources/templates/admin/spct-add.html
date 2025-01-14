@@ -93,8 +93,7 @@
                 </div>
                 <div class="form-group mb-3">
                     <label for="soLuong">Số Lượng:</label>
-                    <input type="number" class="form-control" id="soLuong" name="soLuong" required th:min="0"
-                           th:max="50" onchange="updateTrangThai()">
+                    <input type="number" class="form-control" id="soLuong" name="soLuong" required th:min="0" onchange="updateTrangThai()">
                 </div>
                 <div class="form-group mb-3">
                     <label for="trangThai">Trạng Thái:</label>
@@ -102,6 +101,10 @@
                         <option value="Còn Hàng">Còn Hàng</option>
                         <option value="Hết Hàng">Hết Hàng</option>
                     </select>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="donGia">Thời Gian Bảo Hành:</label>
+                    <input type="number" class="form-control" id="thoiGianBaoHanh" name="thoiGianBaoHanh" required th:min="0" th:max="36" onchange="updateTrangThai()">
                 </div>
                 <div class="form-group mb-3">
                     <label for="moTa">Mô tả:</label>
@@ -133,6 +136,7 @@
     function updateTrangThai() {
         const soLuong = document.getElementById('soLuong').value;
         const trangThai = document.getElementById('trangThai');
+        const thoiGianBaoHanh = document.getElementById('thoiGianBaoHanh').value;
 
         if (soLuong === '' || soLuong <= 0) {
             trangThai.value = 'Hết Hàng';
@@ -142,8 +146,8 @@
             trangThai.disabled = true;
         }
 
-        if (soLuong > 50) {
-            $('#soLuong').val(50);
+        if (thoiGianBaoHanh <= 0) {
+            $('#thoiGianBaoHanh').val(1);
         }
     }
 </script>

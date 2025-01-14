@@ -118,3 +118,8 @@ body {
     display: block;
     opacity: 1; /* Hiển thị với hiệu ứng mờ */
 }
+
+.btn-group {
+    display: flex; /* Đặt các nút theo hàng ngang */
+    gap: 8px; /* Khoảng cách giữa các nút */
+}

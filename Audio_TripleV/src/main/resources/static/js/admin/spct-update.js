@@ -17,6 +17,7 @@ function updateSanPhamChiTiet(event) {
         const soLuong = parseInt(document.getElementById('soLuong').value, 10);
         const trangThai = document.getElementById('trangThai').value;
         const moTa = document.getElementById('moTa').value;
+        const thoiGianBaoHanh = document.getElementById('thoiGianBaoHanh').value;
         const ngayTao = new Date().toISOString().split('T')[0];
 
         // Thêm các giá trị vào formData
@@ -29,6 +30,7 @@ function updateSanPhamChiTiet(event) {
         formData.append('soLuong', soLuong);
         formData.append('trangThai', trangThai);
         formData.append('moTa', moTa);
+        formData.append('thoiGianBaoHanh', thoiGianBaoHanh);
         formData.append('ngayTao', ngayTao);
 
         // Kiểm tra các trường bắt buộc

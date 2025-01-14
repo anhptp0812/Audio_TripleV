@@ -55,9 +55,8 @@ public class VoucherService {
     }
 
     // Lấy voucher theo id
-    public Voucher findById(Integer id) {
-        Optional<Voucher> voucher = voucherRepository.findById(id);
-        return voucher.orElse(null);  // Trả về null nếu không tìm thấy
+    public Optional<Voucher> findById(Integer id) {
+        return voucherRepository.findById(id);
     }
 
     // Cập nhật thông tin voucher

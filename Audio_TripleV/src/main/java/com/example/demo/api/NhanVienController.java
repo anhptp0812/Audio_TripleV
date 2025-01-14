@@ -478,9 +478,38 @@ public class NhanVienController {
         return "redirect:/admin/voucher/hien-thi"; // Thêm tham số activated
     }
 
+    @GetMapping("/admin/voucher/update-status/{id}")
+    public String updateVoucherStatus(@PathVariable Integer id) {
+        Voucher voucher = voucherService.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Voucher không tồn tại"));
+
+        Date currentDate = new Date();
+
+        // Đổi trạng thái
+        if ("Active".equalsIgnoreCase(voucher.getTrangThai())) {
+            voucher.setTrangThai("Inactive");
+        } else if ("Inactive".equalsIgnoreCase(voucher.getTrangThai())) {
+            voucher.setTrangThai("Active");
+        } else {
+            throw new IllegalStateException("Trạng thái không hợp lệ!");
+        }
+
+        // Cập nhật ngày kết thúc nếu ngày hiện tại vượt quá ngày kết thúc (kiểm tra null)
+        if (voucher.getNgayKetThuc() != null && voucher.getNgayKetThuc().before(currentDate)) {
+            voucher.setNgayKetThuc(currentDate);
+        }
+
+        // Cập nhật ngày cập nhật
+        voucher.setNgayCapNhat(currentDate);
+
+        voucherService.save(voucher); // Lưu lại thay đổi
+        return "redirect:/admin/voucher/hien-thi";
+    }
+
     @GetMapping("/admin/voucher/form-update/{id}")
     public String showUpdateForm(@PathVariable Integer id, Model model) {
-        Voucher voucher = voucherService.findById(id);
+        Voucher voucher = voucherService.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Voucher không tồn tại"));
         model.addAttribute("voucher", voucher);
         return "admin/voucher-update";
     }

@@ -126,6 +126,7 @@ public class SanPhamChiTietController {
             @RequestParam("trangThai") String trangThai,
             @RequestParam("moTa") String moTa,
             @RequestParam("donGia") Double donGia,
+            @RequestParam("thoiGianBaoHanh") Integer thoiGianBaoHanh,
             @RequestParam("soLuong") Integer soLuong) {
 
         if (donGia == null || donGia <= 1000) {
@@ -164,6 +165,7 @@ public class SanPhamChiTietController {
             sanPhamChiTiet.setDonGia(donGia);
             sanPhamChiTiet.setSoLuong(soLuong);
             sanPhamChiTiet.setTrangThai(trangThai);
+            sanPhamChiTiet.setThoiGianBaoHanh(thoiGianBaoHanh);
             sanPhamChiTiet.setMoTa(moTa);
             sanPhamChiTiet.setNgayTao(new Date());
             sanPhamChiTiet.setNgayCapNhat(new Date());
@@ -205,6 +207,7 @@ public class SanPhamChiTietController {
             @RequestParam("trangThai") String trangThai,
             @RequestParam("moTa") String moTa,
             @RequestParam("donGia") Double donGia,
+            @RequestParam("thoiGianBaoHanh") Integer thoiGianBaoHanh,
             @RequestParam("soLuong") Integer soLuong) {
 
         if (id == null) {
@@ -253,6 +256,7 @@ public class SanPhamChiTietController {
             sanPhamChiTiet.setMoTa(moTa);
             sanPhamChiTiet.setDonGia(donGia);
             sanPhamChiTiet.setSoLuong(soLuong);
+            sanPhamChiTiet.setThoiGianBaoHanh(thoiGianBaoHanh);
             sanPhamChiTiet.setNgayCapNhat(new Date());
 
             // Lưu lại sản phẩm chi tiết đã cập nhật

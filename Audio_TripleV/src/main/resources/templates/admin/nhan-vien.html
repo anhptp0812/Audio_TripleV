@@ -35,10 +35,22 @@
     <div class="staff-form">
         <div class="staff-details text-center">
             <h1 class="my-4">Danh Sách Nhân Viên</h1>
-            <a href="/admin/nhan-vien/save" class="btn btn-success w-100">
+            <!-- Tìm kiếm theo tên, số điện thoại và vai trò -->
+            <div class="search-container d-flex align-items-center">
+                <input type="text" id="searchName" class="form-control me-2 flex-grow-1" placeholder="Tìm kiếm theo tên">
+                <input type="text" id="searchPhone" class="form-control me-2 flex-grow-1" placeholder="Tìm kiếm theo số điện thoại">
+                <select id="searchRole" class="form-select me-2 flex-grow-1">
+                    <option value="">Chọn vai trò</option>
+                    <option value="admin">ADMIN</option>
+                    <option value="user">USER</option>
+                </select>
+                <button class="btn btn-secondary" type="button" onclick="searchStaff()">
+                    <i class="bi bi-search"></i>
+                </button>
+            </div>
+            <a href="/admin/nhan-vien/save" class="btn btn-success w-100 mt-3">
                 <i class="bi bi-plus-circle"></i>
             </a>
-
             <table class="table table-bordered mt-3">
                 <thead>
                 <tr>
@@ -72,13 +84,39 @@
                 </tr>
                 </tbody>
             </table>
-
         </div>
     </div>
 
     <!-- Footer section -->
     <th:block th:replace="~{/nhanvien/fragments :: nhan-vien-footer}"/>
 </div>
+<script>
+    function searchStaff() {
+        // Lấy giá trị từ các ô tìm kiếm
+        var name = document.getElementById("searchName").value.toLowerCase();
+        var phone = document.getElementById("searchPhone").value.toLowerCase();
+        var role = document.getElementById("searchRole").value;
+
+        // Lấy tất cả các hàng trong bảng
+        var rows = document.querySelectorAll("table tbody tr");
+
+        // Duyệt qua tất cả các hàng trong bảng
+        rows.forEach(function(row) {
+            var nameCell = row.cells[1].textContent.toLowerCase(); // Cột tên (index 1)
+            var phoneCell = row.cells[4].textContent.toLowerCase(); // Cột số điện thoại (index 4)
+            var roleCell = row.cells[5].textContent.toLowerCase(); // Cột vai trò (index 5)
+
+            // Kiểm tra nếu tên, số điện thoại và vai trò phù hợp với điều kiện tìm kiếm
+            if ((nameCell.indexOf(name) > -1) &&
+                (phoneCell.indexOf(phone) > -1) &&
+                (roleCell.indexOf(role) > -1 || role === "")) {
+                row.style.display = ""; // Hiển thị hàng nếu khớp
+            } else {
+                row.style.display = "none"; // Ẩn hàng nếu không khớp
+            }
+        });
+    }
+</script>
 
 <script th:src="@{/js/nhanvien/hoa-don.js}"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

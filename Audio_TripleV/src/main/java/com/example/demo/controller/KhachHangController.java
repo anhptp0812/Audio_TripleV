@@ -82,7 +82,6 @@ public class KhachHangController {
         return ResponseEntity.ok(response);
     }
 
-
     private GioHang muaNgayGioHang;
 
     private Boolean globalMuaNgay = false;
@@ -388,8 +387,6 @@ public class KhachHangController {
         } catch (NumberFormatException e) {
             globalVoucher = 0;
         }
-
-
 //        if (paymentMethod.equals("card")) {
 //            KhachHang khachHang = khachHangService.findByTaiKhoan(userDetails.getUsername()).get();
 //            GioHang gioHang = gioHangService.findByKhachHang(khachHang).get();
@@ -406,6 +403,7 @@ public class KhachHangController {
             return "redirect:" + url;
         }
 
+        System.out.println("global voucher " + globalVoucher);
 
         System.out.println("global voucher " + globalVoucher);
 
@@ -434,14 +432,13 @@ public class KhachHangController {
             }
 
             // Thêm tham số selectedItems nếu cần
-            processThanhToan(userDetail[0], userDetail[1], userDetail[2], userDetail[3], userDetail[4], savedSelectedItems);
-
+            processThanhToan(userDetail[0], userDetail[1], userDetail[2], userDetail[3], userDetail[4], savedSelectedItems, "card");
             return "redirect:/khach-hang/don-hang/danh-sach";
         }
 
     }
 
-    void processThanhToan(String username, String fullName, String email, String phone, String address, String selectedItems) {
+    void processThanhToan(String username, String fullName, String email, String phone, String address, String selectedItems, String paymentMethod) {
         // Kiểm tra nếu selectedItems là null hoặc rỗng
         if (selectedItems == null || selectedItems.isEmpty()) {
             throw new RuntimeException("Không có sản phẩm nào được chọn.");
@@ -450,7 +447,6 @@ public class KhachHangController {
             System.out.println("list not empty ");
         }
         // Lấy khách hàng hiện tại
-
         KhachHang khachHang = khachHangService.findByTaiKhoan(username)
                 .orElseThrow(() -> new RuntimeException("Khách hàng không tồn tại"));
 
@@ -473,9 +469,7 @@ public class KhachHangController {
                 .mapToObj(i -> jsonArray.getJSONObject(i).getInt("id"))
                 .collect(Collectors.toList());
 
-
         List<GioHangChiTiet> selectedItemsList = null;
-
         GioHang gioHang = null;
 
         if (!globalMuaNgay) {
@@ -515,12 +509,16 @@ public class KhachHangController {
         donHang.setKhachHang(khachHang);
         donHang.setTongGia(selectedItemsList.stream()
                 .mapToDouble(item -> item.getSoLuong() * item.getSanPhamChiTiet().getDonGia())
-
                 .sum() + globalShippingFee - globalVoucher);
-
-
         donHang.setTrangThai("Chờ xử lý");
         donHang.setNgayTao(new Date());
+
+        // Cập nhật trạng thái thanh toán
+        if ("card".equals(paymentMethod)) {
+            donHang.setTrangThaiPayment("Đã thanh toán");
+        } else {
+            donHang.setTrangThaiPayment("");
+        }
 
         // Chuyển các sản phẩm đã chọn từ giỏ hàng sang chi tiết đơn hàng và cập nhật số lượng
         List<DonHangChiTiet> chiTietList = selectedItemsList.stream()
@@ -553,6 +551,7 @@ public class KhachHangController {
         // Lưu đơn hàng vào cơ sở dữ liệu
         donHangService.save(donHang);
 
+        // Xóa các sản phẩm đã chọn khỏi giỏ hàng
         if (!globalMuaNgay) {
             gioHang.setGioHangChiTietList(gioHang.getGioHangChiTietList().stream()
                     .filter(item -> !selectedProductIds.contains(item.getSanPhamChiTiet().getId()))

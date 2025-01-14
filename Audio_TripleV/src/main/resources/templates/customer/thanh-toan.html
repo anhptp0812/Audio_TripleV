@@ -68,6 +68,7 @@
     </div>
 </nav>
 
+
 <div class="container mt-4">
     <p id="alertmessage" name="alertmessage" style="color: red; font-weight: bold;">
 
@@ -225,17 +226,17 @@
                         <input id="voucherId" name="voucherId" readonly type="hidden"/>
                         <input id="giamGiaDuocApDung" name="tienGiamGia" type="hidden"/>
                     </div>
-<!--                    <button-->
-<!--                            class="btn btn-dark ms-3"-->
-<!--                            data-bs-toggle="modal"-->
-<!--                            id="click-btn"-->
-<!--                            th:data-bs-target="'#voucher'"-->
-<!--                            type="button"-->
-<!--                            style="margin-top: 27px; color: white; border: none;"-->
-<!--                    >-->
-<!--                        Chọn-->
-<!--                    </button>-->
-
+                    <!--                    <button-->
+                    <!--                            class="btn btn-dark ms-3"-->
+                    <!--                            data-bs-toggle="modal"-->
+                    <!--                            id="click-btn"-->
+                    <!--                            th:data-bs-target="'#voucher'"-->
+                    <!--                            type="button"-->
+                    <!--                            style="margin-top: 27px; color: white; border: none;"-->
+                    <!--                    >-->
+                    <!--                        Chọn-->
+                    <!--                    </button>-->
+                  
                     <!-- Button to open modal -->
 
                     <p>Ap dung voucher : </p>
@@ -299,8 +300,7 @@
 
                     </thead>
                     <tbody>
-                    <tr th:each="voucher : ${vouchers}"
-                        >
+                    <tr th:each="voucher : ${vouchers}">
                         <td th:id="${voucher.id}" class="voucherIdColumn" hidden></td>
                         <td th:text="${voucher.ten != null ? voucher.ten : 'Không có tên'}"></td>
                         <td th:text="${voucher.loai != null ? voucher.loai : 'Không xác định'}"></td>
@@ -330,111 +330,13 @@
                         data-bs-dismiss="modal"
                         id="chon-btn" type="button"
                         style="background-color: black;border: none">
-                        Chọn
+                    Chọn
                 </button>
             </div>
         </div>
     </div>
-
 </div>
-
-
-
-
-
-<!--<div aria-hidden="true" aria-labelledby="staticBackdropLabel2"-->
-<!--     class="modal fade" data-bs-backdrop="static"-->
-<!--     data-bs-keyboard="false"-->
-<!--     tabindex="-1"-->
-<!--     th:id="'voucher'">-->
-<!--    <div class="modal-dialog modal-lg" style="width: 1200px">-->
-<!--        <div class="modal-content">-->
-<!--            <div class="modal-header" style="background: black">-->
-<!--                <h1 class="modal-title fs-5" id="staticBackdropLabel2">-->
-<!--                    Chọn Mã Giảm Giá</h1>-->
-<!--                <button-->
-<!--                        aria-label="Close"-->
-<!--                        class="btn-close"-->
-<!--                        data-bs-dismiss="modal"-->
-<!--                        type="button"-->
-<!--                ></button>-->
-<!--            </div>-->
-<!--            <div class="modal-body">-->
-<!--                <table class="table">-->
-<!--                    <thead>-->
-<!--                    <tr>-->
-<!--                        <th>Tên Voucher</th>-->
-<!--                        <th>Loại Voucher</th>-->
-<!--                        <th>Gía trị tiền</th>-->
-<!--                        <th>Gía trị phần trăm</th>-->
-<!--                        <th>Gía trị hóa đơn tối thiểu</th>-->
-<!--                        <th>Trạng thái</th>-->
-<!--                        <th>Ngày bắt đầu</th>-->
-<!--                        <th>Ngày kết thúc</th>-->
-<!--                        <th>Action</th>-->
-<!--                    </tr>-->
-
-<!--                    </thead>-->
-<!--                    &lt;!&ndash;                                <tbody>&ndash;&gt;-->
-<!--                    &lt;!&ndash;                                <tr th:each="voucher, status : ${vouchers}"&ndash;&gt;-->
-<!--                    &lt;!&ndash;                                    th:style="${voucher.soLuong == 0} ? 'color: gray; opacity: 0.5;' : ''">&ndash;&gt;-->
-<!--                    &lt;!&ndash;                                    <th th:id="${voucher.id}" class="voucherIdColumn" hidden></th>&ndash;&gt;-->
-<!--                    &lt;!&ndash;                                    <th th:text="${voucher.ten}"></th>&ndash;&gt;-->
-<!--                    &lt;!&ndash;                                    <td th:text="${voucher.mucGiamGia} + '%'"></td>&ndash;&gt;-->
-<!--                    &lt;!&ndash;                                    <td th:text="${#numbers.formatDecimal(voucher.mucGiamToiDa, 0, 'POINT', 0, 'COMMA')} + ' VND'"></td>&ndash;&gt;-->
-<!--                    &lt;!&ndash;                                    <td th:text="'Từ: ' + ${#numbers.formatDecimal(voucher.giaTriDonHang, 0, 'POINT', 0, 'COMMA')} + ' VND'"></td>&ndash;&gt;-->
-<!--                    &lt;!&ndash;                                    <td th:text="${voucher.soLuong}"></td>&ndash;&gt;-->
-<!--                    &lt;!&ndash;                                    <td>&ndash;&gt;-->
-<!--                    &lt;!&ndash;                                        <input type="radio" name="chonVoucher"&ndash;&gt;-->
-<!--                    &lt;!&ndash;                                               th:disabled="${voucher.soLuong == 0 || voucher.giaTriDonHang > tongTienCheck}">&ndash;&gt;-->
-<!--                    &lt;!&ndash;                                    </td>&ndash;&gt;-->
-<!--                    &lt;!&ndash;                                </tr>&ndash;&gt;-->
-
-<!--                    &lt;!&ndash;                                </tbody>&ndash;&gt;-->
-<!--                    <tbody>-->
-<!--                    <tr th:each="voucher, status : ${vouchers}"-->
-<!--                        th:style="${voucher.soLuong == 0} ? 'color: gray; opacity: 0.5;' : ''">-->
-<!--                        <td th:id="${voucher.id}" class="voucherIdColumn" hidden></td>-->
-<!--                        <td th:text="${voucher.ten}"></td>-->
-<!--                        <td th:text="${voucher.loai}"></td>-->
-<!--                        <td th:text="${#numbers.formatDecimal(voucher.giaTriTien, 0, 'POINT', 0, 'COMMA')} + ' VND'"></td>-->
-<!--                        <td th:text="${voucher.giaTriPhanTram} + '%'"></td>-->
-<!--                        <td th:text="${#numbers.formatDecimal(voucher.giaTriHoaDonToiThieu, 0, 'POINT', 0, 'COMMA')} + ' VND'"></td>-->
-<!--                        <td th:text="${voucher.trangThai}"></td>-->
-<!--                        <td th:text="${#dates.format(voucher.ngayBatDau, 'dd/MM/yyyy')}"></td>-->
-<!--                        <td th:text="${#dates.format(voucher.ngayKetThuc, 'dd/MM/yyyy')}"></td>-->
-<!--                        <td>-->
-<!--                            <input type="radio" name="chonVoucher"-->
-<!--                                   th:disabled="${voucher.soLuong == 0 || voucher.giaTriHoaDonToiThieu > tongTienCheck}">-->
-<!--                        </td>-->
-<!--                    </tr>-->
-<!--                    </tbody>-->
-
-<!--                </table>-->
-<!--            </div>-->
-<!--            <div class="modal-footer">-->
-<!--                <button class="btn btn-outline-danger"-->
-<!--                        data-bs-dismiss="modal"-->
-<!--                        type="button">-->
-<!--                    Đóng-->
-<!--                </button>-->
-
-<!--                <button class="btn btn-outline-primary"-->
-<!--                        data-bs-dismiss="modal"-->
-<!--                        id="chon-btn" type="button"-->
-<!--                        style="background-color: black;border: none"-->
-<!--&lt;!&ndash;                        onchange=" selectVoucher(this);">&ndash;&gt;-->
-<!--                    Chọn-->
-<!--                </button>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
-
-
-
-<!--end voucher handler -->
-
+  
 <!-- Footer -->
 <footer class="footer mt-5">
     <div class="container">
@@ -472,142 +374,7 @@
     console.log(formattedTotalPrice); // Check the output
     /*]]>*/
 </script>
-
 <script>
-
-    // document.addEventListener('DOMContentLoaded', function () {
-    //
-    //     console.log("fetch abc");
-    //     // document.getElementById('giamGiaDuocApDung').value = 0;
-    //
-    //     var idThanhPho = $("input[name='thanhPho']").val();
-    //     var idQuanHuyen = $("input[name='quanHuyen']").val();
-    //     var idPhuongXa = $("input[name='xaPhuong']").val();
-    //
-    //     fetch('https://online-gateway.ghn.vn/shiip/public-api/master-data/province', {
-    //         method: 'GET',
-    //         headers: {
-    //             'token': 'd900c67f-742d-11ee-96dc-de6f804954c9',
-    //             'Content-Type': 'application/json',
-    //         },
-    //     })
-    //         .then(response => response.json())
-    //         .then(data => {
-    //             console.log('in fetch province ');
-    //             // Tìm thành phố trong data.data dựa trên id
-    //             var thanhPho = data.data.find(city => city.ProvinceID == idThanhPho);
-    //             document.getElementById("provinceName").value = thanhPho.ProvinceName;
-    //             document.getElementById("thanhPho").value = thanhPho.ProvinceName;
-    //
-    //         })
-    //         .catch(error => {
-    //             console.error('Lỗi khi tải dữ liệu thành phố:', error);
-    //         });
-    //
-    //     // Hàm để tải và populate quận/huyện
-    //     fetch(`https://online-gateway.ghn.vn/shiip/public-api/master-data/district`, {
-    //         method: 'GET',
-    //         headers: {
-    //             'token': 'd900c67f-742d-11ee-96dc-de6f804954c9',
-    //             'Content-Type': 'application/json',
-    //         },
-    //     })
-    //         .then(response => response.json())
-    //         .then(data => {
-    //             // Tìm thành phố trong data.data dựa trên id
-    //             var quanHuyen = data.data.find(district => district.DistrictID == idQuanHuyen);
-    //             // Đặt tên thành phố vào thẻ có class là quanHuyenColumn trong dòng hiện tại
-    //             document.getElementById("districtName").value = quanHuyen.DistrictName;
-    //             document.getElementById("quanHuyen").value = quanHuyen.DistrictName;
-    //         })
-    //         .catch(error => {
-    //             console.error('Lỗi khi tải dữ liệu quận:', error);
-    //         });
-    //
-    //
-    //     fetch(`https://online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_id=${idQuanHuyen}`, {
-    //         method: 'GET',
-    //         headers: {
-    //             'token': 'd900c67f-742d-11ee-96dc-de6f804954c9',
-    //             'Content-Type': 'application/json',
-    //         },
-    //     })
-    //         .then(response => response.json())
-    //         .then(data => {
-    //             // Tìm thành phố trong data.data dựa trên id
-    //             var phuongXa = data.data.find(ward => ward.WardCode == idPhuongXa);
-    //             console.log(phuongXa)
-    //
-    //             // Đặt tên thành phố vào thẻ có class là phuongXaColumn trong dòng hiện tại
-    //             document.getElementById("wardName").value = phuongXa.WardName;
-    //             document.getElementById("xaPhuong").value = phuongXa.WardName;
-    //
-    //         })
-    //         .catch(error => {
-    //             console.error('Lỗi khi tải dữ liệu xã:', error);
-    //         });
-    //
-    //     const shippingInfo = {
-    //         // weight: parseFloat(weight),
-    //         service_type_id: 2,
-    //         // from_district_id: 3440,
-    //         to_district_id: Number(idQuanHuyen),
-    //         to_ward_code: idPhuongXa,
-    //         height: 30, //cao cm
-    //         length: 30, //chieu dai cm
-    //         weight: 1000, //can nang (g)
-    //         width: 30, //rong cm
-    //         insurance_value: 0,
-    //         coupon: null,
-    //         items: [
-    //             {
-    //                 "name": "TEST1",
-    //                 "quantity": 1,
-    //                 "height": 20,
-    //                 "weight": 1,
-    //                 "length": 20,
-    //                 "width": 20
-    //             }
-    //         ]
-    //     };
-    //     console.log(shippingInfo)
-    //
-    //     fetch('https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee', {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //             'Token': '0c4a5894-7fc8-11ee-96dc-de6f804954c9', // Replace with your GHN API token
-    //             // 'shop_id': 4689281
-    //         },
-    //         body: JSON.stringify(shippingInfo)
-    //     })
-    //         .then(response => response.json())
-    //         .then(data => {
-    //
-    //             const shippingFeeResult = document.getElementById('shippingColumn');
-    //             const tienShip = document.getElementById('shippingFee');
-    //             tienShip.value = `${data.data.total}`
-    //             let ship = data.data.total;
-    //             shippingFeeResult.innerHTML = formatNumberWithVND(ship);
-    //
-    //             // //tổng tiền
-    //             var tongTienHang = parseInt($("#totalAmount").val());
-    //             console.log("tongTienHang: " + tongTienHang)
-    //             var tongTienHangShow = document.getElementById("totalAmountShow");
-    //
-    //             let newTotalAmount = tongTienHang + ship;
-    //             tongTienHangShow.innerText = formatNumberWithVND(newTotalAmount);
-    //             tongTienHang.value = newTotalAmount;
-    //
-    //             console.log(data)
-    //         })
-    //         .catch(error => console.error('Error:', error));
-    // });
-    //
-    // function setPaymentMethod(method) {
-    //     document.getElementById('paymentMethod').value = method;
-    // }
-
     var citySelect = document.getElementById('citySelectAdd');
     var districtSelect = document.getElementById('districtSelectAdd');
     var wardSelect = document.getElementById('wardSelectAdd');
@@ -781,30 +548,27 @@
                 console.log(amount)
                 amount = amount + ship;
 
-
                 const shippingFeeElement = document.getElementById('shippingFee1');
-                //
-                // // Update the content of the <p> tag with the formatted shipping fee
+                
+                //  Update the content of the <p> tag with the formatted shipping fee
                 shippingFeeElement.innerHTML = `${formatNumberWithVND(ship)} VND`;
 
 
                 const final_price = document.getElementById('final_price');
-                //
-                // // Update the content of the <p> tag with the formatted shipping fee
+                
+                // Update the content of the <p> tag with the formatted shipping fee
                 final_price.innerHTML = `${formatNumberWithVND(amount)} VND`;
 
                 document.getElementById('amount').value = amount;
-                //
-                // console.log("Shipping fee updated:", ship);
+                document.getElementById('ship_fee').value = ship;
+                document.getElementById('shippingFee').value = ship;
 
-                const tienShip = document.getElementById('shippingFee');
+                var tienShip = document.getElementById('shippingFee');
 
                 // Format the shipping fee with VND and set it as the input's value
                 tienShip.value = (ship);
 
                 console.log("Shipping fee updated:", ship);
-
-
             })
             .catch(error => console.error('Error:', error));
     });
@@ -916,37 +680,34 @@
             console.log('Parsed Start Date:', startDate);
             console.log('Parsed End Date:', endDate);
 
-// Check if the current date is within the range
+            // Check if the current date is within the range
             var currentDate = new Date();
+          
             console.log('Current Date:', currentDate);
-
-            // if (currentDate < startDate) {
-            //     console.log('Voucher is not yet valid.');
-            // } else if (currentDate > endDate) {
-            //     console.log('Voucher has expired.');
-            // } else {
-            //     console.log('Voucher is valid.');
-            // }
-
-
             console.log("val 1 " + extractMoney(formattedTotalPrice));
-
             console.log("value 2 " + extractNumericValue(voucherMaxDiscount));
-
-
             console.log("val 3 " + currentDate + "    " + endDate);
+
+            var amount = parseInt(document.getElementById('amount').value);
+
             // // check don toi thieu
-            // if(extractNumber(extractMoney(formattedTotalPrice)) < extractNumber(extractNumericValue(voucherMaxDiscount))) {
-            //
-            //     // Set the message content
-            //     console.log("chua dat don toi thieu ")
-            //     alertMessageElement.innerText = "Đơn tối thiểu chưa đạt yêu cầu!";
-            //     return ;
-            // }else if (currentDate > endDate) {
-            //     // Set the message content
-            //     console.log("het han");
-            //     alertMessageElement.innerText = "Voucher đã hết hạn!";
-            // }
+            if(amount < extractNumber(extractNumericValue(voucherMaxDiscount))) {
+                // Set the message content
+                console.log("chua dat don toi thieu ")
+                alertMessageElement.innerText = "Đơn tối thiểu chưa đạt yêu cầu!";
+                return ;
+            }else if (currentDate > endDate) {
+                // Set the message content
+                console.log("het han");
+                alertMessageElement.innerText = "Voucher đã hết hạn!";
+            }
+            var amount = parseInt(document.getElementById('amount').value);
+
+            var tienShip = document.getElementById('ship_fee').value;
+            if(tienShip > 0) {
+                amount -= tienShip;
+            }
+            document.getElementById('amount').value = amount;
 
             if(voucherCate == 'GiamTien') {
                 var amount = parseInt(document.getElementById('amount').value);
@@ -956,19 +717,31 @@
                     amount = amount + voucher_fee;
                 }
 
-                document.getElementById('voucher_fee').value = extractMoney(voucherGiatriTien);
+                if(extractMoney(voucherGiatriTien) > amount) {
+                    alert('Không đủ dể dùng voucher này!')
+                    document.getElementById('voucher_fee').value = 0;
+                }
+                else {
+                    document.getElementById('voucher_fee').value = extractMoney(voucherGiatriTien);
+                    amount = amount - extractMoney(voucherGiatriTien);
+                    console.log('Giảm được: ' + extractMoney(voucherGiatriTien))
+                    console.log('Số tiền: ' + amount)
 
-                amount = amount - extractMoney(voucherGiatriTien);
-                console.log('Giảm được: ' + extractMoney(voucherGiatriTien))
-                console.log('Số tiền: ' + amount)
+                    document.getElementById('voucher1').innerText = formatNumberWithVND(voucherGiatriTien);
 
-                const final_price = document.getElementById('final_price');
-                final_price.innerHTML = `${formatNumberWithVND(amount)} VND`;
+                    document.getElementById('voucherPercent').value = extractMoney(voucherGiatriTien);
 
-                document.getElementById('voucher1').innerText = formatNumberWithVND(voucherGiatriTien);
+                    var tienShip = parseInt(document.getElementById('ship_fee').value);
+                    if(tienShip > 0) {
+                        amount = parseInt(amount) + tienShip;
 
-                document.getElementById('voucherPercent').value = extractMoney(voucherGiatriTien);
-                document.getElementById('amount').value = amount;
+                    }
+                    console.log("SHIP 1: " + tienShip)
+
+                    document.getElementById('amount').value = amount;
+                    const final_price = document.getElementById('final_price');
+                    final_price.innerHTML = `${formatNumberWithVND(amount)} VND`;
+                }
 
             } else if(voucherCate == 'GiamPhanTram') {
                 var amount = parseInt(document.getElementById('amount').value);
@@ -991,66 +764,22 @@
                 console.log(discountAmount);
                 console.log('Số tiền sau giảm: ' + amount);
 
-                const final_price = document.getElementById('final_price');
-                final_price.innerHTML = `${formatNumberWithVND(amount)} VND`;
-
                 document.getElementById('voucher1').innerText = formatNumberWithVND(discountAmount);
 
                 document.getElementById('voucherPercent').value = discountAmount;
+                var tienShip = parseInt(document.getElementById('ship_fee').value);
+                if(tienShip > 0) {
+                    amount = parseInt(amount) + tienShip;
+                }
+                console.log("SHIP 2: " + tienShip)
+
                 document.getElementById('amount').value = amount;
 
-
+                const final_price = document.getElementById('final_price');
+                final_price.innerHTML = `${formatNumberWithVND(amount)} VND`;
             }
-
-
-            //
-            // let existingTotalAmount = parseInt($("#totalAmount").val());
-            // let ship = parseInt($("#shippingFee").val());
-            // let xuTichDiem = 0;
-            // const discount = 50000;
-            // let xuInput = document.getElementById("xuTichDiem");
-            // if (xuInput.checked) {
-            //     xuTichDiem = discount;
-            // }
-            // if (isNaN(ship)) {
-            //     ship = 0;
-            // }
-            // var duocApDung = Math.round(apDungPhanTram * existingTotalAmount);
-            // existingTotalAmount = existingTotalAmount + ship - xuTichDiem;
-            // if (duocApDung < duocApDungToiDa) {
-            //     console.log("Truoc voucher  : " + existingTotalAmount);
-            //     existingTotalAmount = existingTotalAmount - duocApDung;
-            //
-            //     document.getElementById('totalAmountShow').innerText = formatNumberWithVND(existingTotalAmount);
-            //     document.getElementById('voucher').innerText = '-' + formatNumberWithVND(duocApDung);
-            //     document.getElementById('voucherName').value = voucherName;
-            //     document.getElementById('voucherId').value = voucherId;
-            //     document.getElementById('giamGiaDuocApDung').value = duocApDung;
-            //     console.log("Giam giá được áp dung bth : " + duocApDung)
-            //     var tienGiamGia = parseInt($("#giamGiaDuocApDung").val());
-            //     console.log("Tien giảm giá bth : " + tienGiamGia)
-            // } else {
-                // console.log("Truoc voucher 1   : " + existingTotalAmount)
-                // existingTotalAmount = existingTotalAmount - duocApDungToiDa;
-                // document.getElementById('totalAmountShow').innerText = formatNumberWithVND(existingTotalAmount);
-                // document.getElementById('voucher').innerText = '-' + formatNumberWithVND(duocApDungToiDa);
-                // document.getElementById('voucher').value = duocApDungToiDa;
-                // document.getElementById('voucherName').value = voucherName;
-                // document.getElementById('voucherId').value = voucherId;
-                // document.getElementById('giamGiaDuocApDung').value = duocApDungToiDa;
-                // console.log("Giam giá được áp dung toi da : " + duocApDungToiDa)
-                // var tienGiamGia = parseInt($("#giamGiaDuocApDung").val());
-                // console.log("Tien giảm giá toi da : ")
-            // }
-
-        } else {
-            // document.getElementById('giamGiaDuocApDung').value = 0;
         }
     }
-
-
-
-
 </script>
 <script th:src="@{/js/customer/thanh-toan.js}"></script>
 <script th:src="@{/js/admin/index-form.js}"></script>
