@@ -450,6 +450,7 @@ public class KhachHangController {
             System.out.println("list not empty ");
         }
         // Lấy khách hàng hiện tại
+
         KhachHang khachHang = khachHangService.findByTaiKhoan(username)
                 .orElseThrow(() -> new RuntimeException("Khách hàng không tồn tại"));
 
@@ -472,7 +473,9 @@ public class KhachHangController {
                 .mapToObj(i -> jsonArray.getJSONObject(i).getInt("id"))
                 .collect(Collectors.toList());
 
+
         List<GioHangChiTiet> selectedItemsList = null;
+
         GioHang gioHang = null;
 
         if (!globalMuaNgay) {
@@ -512,7 +515,10 @@ public class KhachHangController {
         donHang.setKhachHang(khachHang);
         donHang.setTongGia(selectedItemsList.stream()
                 .mapToDouble(item -> item.getSoLuong() * item.getSanPhamChiTiet().getDonGia())
+
                 .sum() + globalShippingFee - globalVoucher);
+
+
         donHang.setTrangThai("Chờ xử lý");
         donHang.setNgayTao(new Date());
 
@@ -547,7 +553,6 @@ public class KhachHangController {
         // Lưu đơn hàng vào cơ sở dữ liệu
         donHangService.save(donHang);
 
-        // Xóa các sản phẩm đã chọn khỏi giỏ hàng
         if (!globalMuaNgay) {
             gioHang.setGioHangChiTietList(gioHang.getGioHangChiTietList().stream()
                     .filter(item -> !selectedProductIds.contains(item.getSanPhamChiTiet().getId()))
