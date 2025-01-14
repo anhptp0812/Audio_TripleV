@@ -324,27 +324,21 @@ public class HoaDonController {
                 (hang == null || hang == 0) &&
                 (minPrice == null || maxPrice == null) &&
                 (tenSanPham == null || tenSanPham.isEmpty())) {
-            // Nếu không chọn bộ lọc nào thì lấy tất cả sản phẩm
             list = sanPhamChiTietRepository.findAll();
-
             for (SanPhamChiTiet spct : list) {
-                // Sử dụng phương thức getFormattedDonGia() để lấy giá trị đã định dạng
                 spct.getFormattedDonGia();
             }
         } else {
-            // Lấy danh sách sản phẩm theo các bộ lọc
             list = sanPhamChiTietRepository.findByFilters(
                     idLoaiSP, idSanPham, mauSac, hang, minPrice, maxPrice, tenSanPham);
             for (SanPhamChiTiet spct : list) {
-                // Sử dụng phương thức getFormattedDonGia() để lấy giá trị đã định dạng
                 spct.getFormattedDonGia();
             }
         }
 
-        // Thêm danh sách sản phẩm vào model
+
         model.addAttribute("spct", list);
 
-        // Lấy tất cả loại sản phẩm, màu sắc, hãng để hiển thị trong form
         List<SanPham> sanPhams = sanPhamRepository.findAll();
         model.addAttribute("sanPhams", sanPhams);
         List<MauSac> mauSacs = mauSacRepository.findAll();
@@ -356,6 +350,7 @@ public class HoaDonController {
 
         return "nhanvien/productProvity"; // Trả về trang sản phẩm
     }
+
 
     @PostMapping("/ban-hang/create")
     public ResponseEntity<Map<String, Object>> createHoaDon(
@@ -896,6 +891,5 @@ public class HoaDonController {
             return ResponseEntity.status(500).body("Đã xảy ra lỗi trong quá trình hủy hóa đơn.");
         }
     }
-
 }
 

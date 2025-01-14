@@ -82,7 +82,6 @@ public class KhachHangController {
         return ResponseEntity.ok(response);
     }
 
-
     private GioHang muaNgayGioHang;
 
     private Boolean globalMuaNgay = false;
@@ -388,8 +387,6 @@ public class KhachHangController {
         } catch (NumberFormatException e) {
             globalVoucher = 0;
         }
-
-
 //        if (paymentMethod.equals("card")) {
 //            KhachHang khachHang = khachHangService.findByTaiKhoan(userDetails.getUsername()).get();
 //            GioHang gioHang = gioHangService.findByKhachHang(khachHang).get();
@@ -408,7 +405,10 @@ public class KhachHangController {
 
         System.out.println("global voucher " + globalVoucher);
 
-        processThanhToan(userDetails.getUsername(), fullName, email, phone, address, savedSelectedItems, paymentMethod);
+        System.out.println("global voucher " + globalVoucher);
+
+
+        processThanhToan(userDetails.getUsername(), fullName, email, phone, address, savedSelectedItems);
         return "redirect:/khach-hang/don-hang/danh-sach";
     }
 

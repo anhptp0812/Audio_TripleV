@@ -62,11 +62,11 @@
                     <td th:text="${hd.ngayTao}"></td>
                     <td>
                         <a th:switch="${hd.trangThai}">
-                            <!-- Nếu trạng thái là "Đã thanh toán" thì dẫn đến trang hoa-don-detail -->
+                            <!-- If status is "Đã thanh toán," link to hoa-don-detail -->
                             <a th:case="'Đã thanh toán'" th:href="@{/user/hoa-don-detail/{id}(id=${hd.id})}" class="btn btn-primary">
                                 <i class="bi bi-info-circle"></i>
                             </a>
-                            <!-- Nếu trạng thái là "Chưa thanh toán" thì dẫn đến trang ban-hang -->
+                            <!-- If status is "Chưa thanh toán," link to ban-hang -->
                             <a th:case="'Chưa thanh toán'" th:href="@{/user/ban-hang/{id}(id=${hd.id})}" class="btn btn-primary">
                                 <i class="bi bi-info-circle"></i>
                             </a>
@@ -79,6 +79,7 @@
                     </td>
                 </tr>
                 </tbody>
+
             </table>
             <div th:if="${message}" class="alert alert-info">
                 <span th:text="${message}"></span>
@@ -114,7 +115,6 @@
                 alert("Lỗi: " + error.message);
             });
     }
-
 </script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
