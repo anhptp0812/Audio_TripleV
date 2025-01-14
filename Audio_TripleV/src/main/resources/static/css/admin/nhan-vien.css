@@ -82,6 +82,8 @@ body {
 .staff-details {
     border: 1px solid gray;
     padding: 10px;
+    overflow: auto;
+    height: 692px;
     box-sizing: border-box;
 }
 

@@ -63,6 +63,10 @@ public class HoaDon {
     @OneToMany(mappedBy = "hoaDon", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<HoaDonChiTiet> hoaDonChiTietList;
 
+    private Double tienVoucher;
+    private Double phanTramVoucher;
 
+    private String formattedTienVoucher;
+    private String formattedPhanTramVoucher;
 
 }

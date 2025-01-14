@@ -80,24 +80,38 @@
                             <form th:action="@{/user/don-hang/update-status}" method="post">
                                 <input type="hidden" name="id" th:value="${donHang.id}"/>
                                 <button type="submit" name="status" value="Đã xác nhận"
-                                        th:if="${donHang.trangThai == 'Chờ xử lý'}" class="btn btn-primary">Đã Xác Nhận
+                                        th:if="${donHang.trangThai == 'Chờ xử lý'}"
+                                        class="btn btn-primary"
+                                        onclick="return confirm('Bạn có chắc chắn muốn xác nhận đơn hàng này?');">
+                                    Đã Xác Nhận
                                 </button>
                                 <button type="submit" name="status" value="Đã hủy"
-                                        th:if="${donHang.trangThai == 'Chờ xử lý'}" class="btn btn-danger">Đã Hủy
+                                        th:if="${donHang.trangThai == 'Chờ xử lý'}"
+                                        class="btn btn-danger"
+                                        onclick="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này?');">
+                                    Đã Hủy
                                 </button>
                                 <button type="submit" name="status" value="Đang giao hàng"
-                                        th:if="${donHang.trangThai == 'Đã xác nhận'}" class="btn btn-success">Đang Giao
-                                    Hàng
+                                        th:if="${donHang.trangThai == 'Đã xác nhận'}"
+                                        class="btn btn-success"
+                                        onclick="return confirm('Bạn có chắc chắn muốn chuyển đơn hàng này sang trạng thái Đang giao hàng?');">
+                                    Đang Giao Hàng
                                 </button>
                                 <button type="submit" name="status" value="Đã giao hàng"
-                                        th:if="${donHang.trangThai == 'Đang giao hàng'}" class="btn btn-success">Đã Giao
-                                    Hàng
+                                        th:if="${donHang.trangThai == 'Đang giao hàng'}"
+                                        class="btn btn-success"
+                                        onclick="return confirm('Bạn có chắc chắn muốn chuyển đơn hàng này sang trạng thái Đã giao hàng?');">
+                                    Đã Giao Hàng
                                 </button>
                                 <button type="submit" name="status" value="Chờ xử lý"
-                                        th:if="${donHang.trangThai == 'Đã hủy'}" class="btn btn-warning">Chờ Xử Lý
+                                        th:if="${donHang.trangThai == 'Đã hủy'}"
+                                        class="btn btn-warning"
+                                        onclick="return confirm('Bạn có chắc chắn muốn chuyển đơn hàng này sang trạng thái Chờ xử lý?');">
+                                    Chờ Xử Lý
                                 </button>
                             </form>
                         </div>
+
                     </div>
                 </div>
             </div>

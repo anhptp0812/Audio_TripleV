@@ -5,6 +5,7 @@ import com.example.demo.entity.GioHangChiTiet;
 import com.example.demo.entity.HoaDon;
 import com.example.demo.entity.HoaDonChiTiet;
 import com.example.demo.entity.SanPhamChiTiet;
+import com.example.demo.entity.Voucher;
 import com.example.demo.repository.HoaDonChiTietRepository;
 import com.example.demo.repository.HoaDonRepository;
 import com.example.demo.repository.SanPhamChiTietRepository;
@@ -39,21 +40,20 @@ public class HoaDonService {
     @Transactional
     public void updateTongGia(HoaDon hoaDon) {
         // Kiểm tra nếu giỏ hàng không trống
-        if (hoaDon.getHoaDonChiTietList() == null) {
+        if (hoaDon.getHoaDonChiTietList() == null || hoaDon.getHoaDonChiTietList().isEmpty()) {
             hoaDon.setTongGia(0.0); // Nếu giỏ hàng trống, set tổng giá là 0
         } else {
             // Tính tổng giá từ các sản phẩm còn lại trong giỏ hàng
-            Double tongGia = hoaDonChiTietRepository.calculateTotalPrice(hoaDon.getId());
+            double total = hoaDon.getHoaDonChiTietList().stream()
+                    .mapToDouble(item -> item.getSoLuong() * item.getDonGia())
+                    .sum();
 
-            // Nếu tổng giá tính ra là null, thì gán về 0.0
-            if (tongGia == null) {
-                tongGia = 0.0;
-            }
-
-            hoaDon.setTongGia(tongGia); // Cập nhật tổng giá
+            // Nếu tổng giá tính ra là null hoặc tổng giá âm, gán về 0.0
+            hoaDon.setTongGia(Math.max(total, 0)); // Đảm bảo không âm
+            hoaDon.setSoTienPhaiTra(hoaDon.getTongGia());
         }
 
-        hoaDonRepository.save(hoaDon);
+        hoaDonRepository.save(hoaDon); // Lưu lại hóa đơn với tổng giá đã cập nhật
     }
 
     public void themSanPhamVaoGio(HoaDon hoaDon, SanPhamChiTiet sanPhamChiTiet, Integer soLuong) {  if (soLuong > sanPhamChiTiet.getSoLuong()) {
@@ -86,43 +86,51 @@ public class HoaDonService {
         HoaDonChiTiet hoaDonChiTiet = hoaDonChiTietRepository.findBySanPhamChiTiet_Id(productId)
                 .orElseThrow(() -> new RuntimeException("Sản phẩm không tồn tại trong giỏ hàng"));
 
+        SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
+        int oldQuantity = hoaDonChiTiet.getSoLuong();
+        double unitPrice = hoaDonChiTiet.getDonGia();
+        double oldTotal = oldQuantity * unitPrice;
+
+        // Cập nhật số lượng trong kho
+        int deltaQuantity = quantity - oldQuantity;
+        sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - deltaQuantity);
+        sanPhamChiTietRepository.save(sanPhamChiTiet);
+
+        // Cập nhật số lượng trong giỏ hoặc xóa nếu số lượng bằng 0
         if (quantity <= 0) {
             hoaDonChiTietRepository.delete(hoaDonChiTiet);
         } else {
             hoaDonChiTiet.setSoLuong(quantity);
             hoaDonChiTietRepository.save(hoaDonChiTiet);
         }
+
+        // Cập nhật tổng giá
+        HoaDon hoaDon = hoaDonChiTiet.getHoaDon();
+        double newTotal = (hoaDon.getTongGia() != null ? hoaDon.getTongGia() : 0) - oldTotal + (quantity * unitPrice);
+        hoaDon.setTongGia(Math.max(newTotal, 0));
+        updateTongGiaWithVoucher(hoaDon);
     }
 
     public void removeProductFromCart(Integer productId) {
-        // Tìm HoaDonChiTiet theo productId
         HoaDonChiTiet hoaDonChiTiet = findHoaDonChiTietByProductId(productId);
 
-        // Hoàn lại số lượng vào kho
         SanPhamChiTiet sanPhamChiTiet = hoaDonChiTiet.getSanPhamChiTiet();
         sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() + hoaDonChiTiet.getSoLuong());
         sanPhamChiTietRepository.save(sanPhamChiTiet);
 
-        // Lấy hóa đơn liên quan
         HoaDon hoaDon = hoaDonChiTiet.getHoaDon();
 
-        // Cập nhật tổng giá trị hóa đơn
         double newTotal = (hoaDon.getTongGia() != null ? hoaDon.getTongGia() : 0)
                 - hoaDonChiTiet.getDonGia() * hoaDonChiTiet.getSoLuong();
         hoaDon.setTongGia(Math.max(newTotal, 0)); // Đảm bảo không âm
 
-        // Xóa HoaDonChiTiet khỏi danh sách
         hoaDon.getHoaDonChiTietList().remove(hoaDonChiTiet);
 
-        // Nếu giỏ hàng trống, cập nhật trạng thái hóa đơn
         if (hoaDon.getHoaDonChiTietList().isEmpty()) {
             hoaDon.setTrangThai("Chưa thanh toán");
         }
 
-        // Lưu hóa đơn cập nhật
         hoaDonRepository.save(hoaDon);
-
-        // Xóa HoaDonChiTiet khỏi cơ sở dữ liệu
         hoaDonChiTietRepository.delete(hoaDonChiTiet);
     }
 
@@ -135,4 +143,58 @@ public class HoaDonService {
     public HoaDon findById(Integer id) {
         return hoaDonRepository.findById(id).orElse(null);
     }
+
+    @Transactional
+    public void updateQuantityInHoaDon(Integer productId, int quantity) {
+        HoaDonChiTiet hoaDonChiTiet = hoaDonChiTietRepository.findBySanPhamChiTiet_Id(productId)
+                .orElseThrow(() -> new RuntimeException("Sản phẩm không tồn tại trong hóa đơn"));
+
+        if (quantity <= 0) {
+            hoaDonChiTietRepository.delete(hoaDonChiTiet);
+        } else {
+            hoaDonChiTiet.setSoLuong(quantity);
+            hoaDonChiTietRepository.save(hoaDonChiTiet);
+        }
+
+        // Cập nhật tổng giá trị hóa đơn (nếu cần thiết)
+        updateTongGia(hoaDonChiTiet.getHoaDon());
+    }
+
+    @Transactional
+    public void updateTongGiaWithVoucher(HoaDon hoaDon) {
+        // Kiểm tra nếu giỏ hàng không trống
+        if (hoaDon.getHoaDonChiTietList() == null || hoaDon.getHoaDonChiTietList().isEmpty()) {
+            hoaDon.setTongGia(0.0); // Nếu giỏ hàng trống, set tổng giá là 0
+            hoaDon.setSoTienPhaiTra(0.0); // Nếu giỏ hàng trống, số tiền phải trả là 0
+        } else {
+            // Tính tổng giá từ các sản phẩm còn lại trong giỏ hàng
+            double total = hoaDon.getHoaDonChiTietList().stream()
+                    .mapToDouble(item -> item.getSoLuong() * item.getDonGia())
+                    .sum();
+
+            // Áp dụng voucher nếu có
+            double discountedPrice = total;
+            if (hoaDon.getVouCher() != null) {
+                Voucher voucher = hoaDon.getVouCher();
+
+                if ("GiamTien".equalsIgnoreCase(voucher.getLoai()) && voucher.getGiaTriTien() > 0) {
+                    discountedPrice = Math.max(total - voucher.getGiaTriTien(), 0);
+                } else if ("GiamPhanTram".equalsIgnoreCase(voucher.getLoai()) && voucher.getGiaTriPhanTram() > 0) {
+                    discountedPrice = Math.max(total - (total * voucher.getGiaTriPhanTram() / 100), 0);
+                }
+
+                if(total < hoaDon.getVouCher().getGiaTriHoaDonToiThieu()){
+                    hoaDon.setVouCher(null);
+                    discountedPrice = total;
+                }
+            }
+
+            // Cập nhật tổng giá và số tiền phải trả
+            hoaDon.setTongGia(total);
+            hoaDon.setSoTienPhaiTra(discountedPrice);
+        }
+
+        hoaDonRepository.save(hoaDon); // Lưu lại hóa đơn với tổng giá đã cập nhật
+    }
+
 }

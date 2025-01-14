@@ -170,7 +170,7 @@ checkboxes.forEach(checkbox => {
 window.addEventListener('load', function() {
     // Tự động chọn checkbox "Chọn tất cả" khi vào trang Giỏ Hàng
     const selectAllCheckbox = document.getElementById('selectAll');
-    selectAllCheckbox.checked = false; // Đánh dấu "Chọn tất cả" là đã chọn
+    selectAllCheckbox.checked = true; // Đánh dấu "Chọn tất cả" là đã chọn
 
     // Cập nhật trạng thái của các checkbox con
     toggleSelectAll();

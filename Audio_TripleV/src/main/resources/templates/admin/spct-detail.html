@@ -75,6 +75,10 @@
                                     <span th:text="${spct.trangThai}"></span>
                                 </div>
                                 <div class="info-row">
+                                    <label>Thời Gian Bảo Hành:</label>
+                                    <span th:text="${spct.thoiGianBaoHanh} + ' tháng'"></span>
+                                </div>
+                                <div class="info-row">
                                     <label>Ngày Tạo:</label>
                                     <span th:text="${#dates.format(spct.ngayTao, 'yyyy-MM-dd')}"></span>
                                 </div>
@@ -100,8 +104,6 @@
                     </div>
                     <div class="card-footer text-center">
                         <a th:href="@{/admin/spct/hien-thi}" class="btn btn-secondary">Quay lại</a>
-                        <a th:href="@{/admin/spct/delete(id=${spct.id})}" class="btn btn-danger"
-                           onclick="return confirm('Bạn có muốn xóa không?');">Xóa sản phẩm</a>
                     </div>
                 </div>
             </form>

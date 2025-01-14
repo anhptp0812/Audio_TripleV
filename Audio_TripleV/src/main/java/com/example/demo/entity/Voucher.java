@@ -60,4 +60,20 @@ public class Voucher {
     private String formattedGiaTriTien;
     private String formattedGiaTriPhanTram;
     private String formattedGiaTriHoaDonToiThieu;
+
+    public String getValueForThymeleaf() {
+        if (giaTriTien != null) {
+            return String.format("%.0f", giaTriTien); // Định dạng số không có phần thập phân
+        } else if (giaTriPhanTram != null) {
+            return String.format("%.0f", giaTriPhanTram); // Định dạng số không có phần thập phân
+        }
+        return "";
+    }
+
+    public String getValueMinForThymeleaf() {
+        if (giaTriHoaDonToiThieu != null) {
+            return String.format("%.0f", giaTriHoaDonToiThieu); // Định dạng số không có phần thập phân
+        }
+        return "";
+    }
 }

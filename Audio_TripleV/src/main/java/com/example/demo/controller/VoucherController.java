@@ -135,11 +135,20 @@ public class VoucherController {
         // Tính toán giá trị giảm giá
         double totalPrice = hoaDon.getTongGia();
         double discountedPrice = totalPrice;
+        double tienVoucher;
+        double phanTramVoucher;
+
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
 
         if ("GiamTien".equalsIgnoreCase(voucher.getLoai()) && voucher.getGiaTriTien() > 0) {
-            discountedPrice -= voucher.getGiaTriTien();
+            tienVoucher = voucher.getGiaTriTien();
+            discountedPrice -= tienVoucher;
+            hoaDon.setTienVoucher(tienVoucher);
+            hoaDon.setFormattedPhanTramVoucher(currencyFormat.format(hoaDon.getTienVoucher()));
         } else if ("GiamPhanTram".equalsIgnoreCase(voucher.getLoai()) && voucher.getGiaTriPhanTram() > 0) {
+            phanTramVoucher = voucher.getGiaTriPhanTram();
             discountedPrice -= (totalPrice * voucher.getGiaTriPhanTram()) / 100;
+            hoaDon.setPhanTramVoucher(phanTramVoucher);
         }
 
         // Đảm bảo giá trị không âm
@@ -151,7 +160,6 @@ public class VoucherController {
         hoaDonRepository.save(hoaDon);
 
         // Định dạng số tiền đã giảm
-        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         String formattedPrice = currencyFormat.format(discountedPrice);
 
         return ResponseEntity.ok(Map.of(
@@ -159,5 +167,4 @@ public class VoucherController {
                 "message", "Voucher đã áp dụng thành công"
         ));
     }
-
 }

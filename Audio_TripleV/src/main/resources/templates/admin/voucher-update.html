@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cập Nhật Voucher</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.9.1/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.9.1/font/bootstrap-icons.min.css"
+          rel="stylesheet">
     <link th:href="@{/css/admin/voucher.css}" rel="stylesheet">
 </head>
 <body>
@@ -46,28 +47,34 @@
                 </div>
                 <div class="form-group mb-3">
                     <label for="loai">Loại Voucher:</label>
-                    <select class="form-control" id="loai" name="loai" th:value="${voucher.loai}" required onchange="toggleVoucherTypeFields()">
+                    <select class="form-control" id="loai" name="loai" th:value="${voucher.loai}" required
+                            onchange="toggleVoucherTypeFields()">
                         <option value="GiamTien" th:selected="${voucher.loai == 'GiamTien'}">Giảm Tiền</option>
-                        <option value="GiamPhanTram" th:selected="${voucher.loai == 'GiamPhanTram'}">Giảm Phần Trăm</option>
+                        <option value="GiamPhanTram" th:selected="${voucher.loai == 'GiamPhanTram'}">Giảm Phần Trăm
+                        </option>
                     </select>
                 </div>
                 <!-- Giá trị tiền -->
                 <div class="form-group mb-3" id="giaTriTienField" style="display: none;">
                     <label for="giaTriTien">Giá trị tiền:</label>
-                    <input type="number" class="form-control" id="giaTriTien" name="giaTriTien" th:value="${voucher.giaTriTien}">
+                    <input type="number" min="1" class="form-control" id="giaTriTien" name="giaTriTien"
+                           th:value="${voucher.giaTriTien}">
                 </div>
                 <!-- Giá trị phần trăm -->
                 <div class="form-group mb-3" id="giaTriPhanTramField" style="display: none;">
                     <label for="giaTriPhanTram">Giá trị phần trăm:</label>
-                    <input type="number" class="form-control" id="giaTriPhanTram" name="giaTriPhanTram" th:value="${voucher.giaTriPhanTram}">
+                    <input type="number" min="1" max="100" class="form-control" id="giaTriPhanTram"
+                           name="giaTriPhanTram" th:value="${voucher.giaTriPhanTram}">
                 </div>
                 <div class="form-group mb-3">
                     <label for="giaTriHoaDonToiThieu">Giá trị hóa đơn tối thiểu:</label>
-                    <input type="number" class="form-control" id="giaTriHoaDonToiThieu" name="giaTriHoaDonToiThieu" th:value="${voucher.giaTriHoaDonToiThieu}" required>
+                    <input type="number" class="form-control" id="giaTriHoaDonToiThieu" name="giaTriHoaDonToiThieu"
+                           th:value="${voucher.giaTriHoaDonToiThieu}" required>
                 </div>
                 <div class="form-group mb-3">
                     <label for="trangThai">Trạng thái:</label>
-                    <select class="form-control" id="trangThai" name="trangThai" th:value="${voucher.trangThai}" required>
+                    <select class="form-control" id="trangThai" name="trangThai" th:value="${voucher.trangThai}"
+                            required>
                         <option value="Active">Active</option>
                         <option value="InActive">InActive</option>
                     </select>
@@ -82,16 +89,10 @@
                     <input type="date" class="form-control" id="ngayKetThuc" name="ngayKetThuc"
                            th:value="${#dates.format(voucher.ngayKetThuc, 'yyyy-MM-dd')}" required>
                 </div>
-                <div class="form-group mb-3">
-                    <label for="ngayTao">Ngày tạo:</label>
-                    <input type="date" class="form-control" id="ngayTao" name="ngayTao"
-                           th:value="${#dates.format(voucher.ngayTao, 'yyyy-MM-dd')}" required>
-                </div>
-                <div class="form-group mb-3">
-                    <label for="ngayCapNhat">Ngày cập nhật:</label>
-                    <input type="date" class="form-control" id="ngayCapNhat" name="ngayCapNhat"
-                           th:value="${#dates.format(voucher.ngayCapNhat, 'yyyy-MM-dd')}" required>
-                </div>
+                <input type="hidden" class="form-control" id="ngayTao" name="ngayTao"
+                       th:value="${#dates.format(voucher.ngayTao, 'yyyy-MM-dd')}" readonly>
+                <input type="hidden" class="form-control" id="ngayCapNhat" name="ngayCapNhat"
+                       th:value="${#dates.format(voucher.ngayCapNhat, 'yyyy-MM-dd')}" readonly>
                 <div class="text-center mb-3">
                     <button type="button" class="btn btn-primary" onclick="updateVoucher()">Cập Nhật</button>
                     <a href="/admin/voucher/hien-thi" class="btn btn-secondary">Quay Lại</a>

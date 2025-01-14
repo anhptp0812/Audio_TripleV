@@ -209,13 +209,22 @@ function addProductToOrder(productId, quantity) {
                     updateProductQuantityInTable(productId, data.remainingQuantity);
                     addProductToOrderTable(data);
                     updateTotalAmount(data.totalAmount);
+                    if (!voucherId) {
+                        const voucherValue = parseCurrency(document.getElementById('voucherValue').textContent);
+                        const totalAmount = data.totalAmount;
 
-                    // Cập nhật finalAmount = totalAmount nếu chưa có voucher
-                    const voucherAmount = parseCurrency(document.getElementById('voucherAmount').textContent);
-                    if (voucherAmount === 0) {
-                        document.getElementById('finalAmount').textContent = formatCurrency(data.totalAmount);
-                        document.getElementById('soTienPhaiTra').value = formatCurrency(data.totalAmount);
+                        let finalAmount = totalAmount - voucherValue;
+
+                        if (finalAmount < 0) {
+                            finalAmount = 0;
+                        }
+
+                        document.getElementById('finalAmount').textContent = formatCurrency(finalAmount);
+                        document.getElementById('soTienPhaiTra').value = formatCurrency(finalAmount);
+                        document.getElementById('voucherValue').textContent = voucherValue;
                     }
+                    updateVoucherAndFinalAmount();
+                    // Cập nhật finalAmount = totalAmount nếu chưa có voucher
 
                     validatePaymentAmount();
                 }
@@ -296,16 +305,9 @@ function removeProductFromOrder(productId) {
 
             // Cập nhật tổng giá và voucher nếu cần
             updateTotalAmount(data.totalAmount);
-
-            if (!voucherId) {
-                document.getElementById("voucher").value = '';
-                document.getElementById("voucherId").value = '';
-                document.getElementById('voucherAmount').textContent = '0 ₫';
-                document.getElementById('finalAmount').textContent = formatCurrency(data.totalAmount);
-                document.getElementById('soTienPhaiTra').value = formatCurrency(data.totalAmount);
-            }
-
+            updateVoucherAndFinalAmount();
             validatePaymentAmount();
+            loadOrderDetails();
         })
         .catch(error => {
             console.error('Lỗi:', error);
@@ -348,6 +350,8 @@ function updateProductQuantity(inputElement) {
                 totalPriceCell.textContent = formatCurrency(totalPrice);
 
                 // Tải lại tổng giá
+                updateVoucherAndFinalAmount();
+                validatePaymentAmount();
                 loadOrderDetails();
             } else {
                 alert(data.message || 'Không thể cập nhật số lượng');
@@ -400,6 +404,7 @@ function loadOrderDetails() {
 
             // Cập nhật tổng giá
             updateTotalAmount(totalAmount);
+            updateVoucherAndFinalAmount();
             validatePaymentAmount();
         })
         .catch(error => {
@@ -473,23 +478,103 @@ function updateTotalAmount(amount) {
     updateAddVoucherButton();
 }
 
-// Hàm validatePaymentAmount để kiểm tra số tiền khách đưa và tính số tiền trả lại
+function updateVoucherAndFinalAmount() {
+    const totalAmountElement = document.getElementById('totalAmount');
+    const voucherAmountElement = document.getElementById('voucherAmount');
+    const voucherTypeElement = document.getElementById('voucherType');
+    const voucherValueElement = document.getElementById('voucherValue');
+    const voucherValueMinElement = document.getElementById('voucherValueMin');
+    const finalAmountElement = document.getElementById('finalAmount');
+    const soTienPhaiTraElement = document.getElementById('soTienPhaiTra');
+
+    // Lấy tổng tiền từ giao diện
+    const totalAmount = parseCurrency(totalAmountElement?.textContent) || 0;
+    const voucherValueMin = parseCurrency(voucherValueMinElement?.value) || 0; // lấy từ trường ẩn voucherValueMin
+    let voucherAmount = 0;
+
+    // Kiểm tra nếu tổng tiền nhỏ hơn giá trị voucher tối thiểu
+    if (totalAmount < voucherValueMin) {
+        // Reset voucher nếu không đủ điều kiện
+        document.getElementById("voucher").value = '';
+        document.getElementById("voucherId").value = '';
+        document.getElementById("voucherType").value = '';
+        document.getElementById("voucherValue").value = '';
+        document.getElementById("voucherValueMin").value = '';
+        document.getElementById('voucherAmount').textContent = '0 ₫';
+        document.getElementById('finalAmount').textContent = formatCurrency(totalAmount); // Cập nhật lại tổng tiền
+        document.getElementById('soTienPhaiTra').value = formatCurrency(totalAmount);
+    } else if (!voucherId || !voucherId.trim()) {
+
+        // Kiểm tra loại voucher và tính toán số tiền giảm giá
+        if (voucherTypeElement?.value === "GiamPhanTram") {
+            const voucherGiamPhanTram = parseFloat(voucherValueElement?.value) || 0;
+            voucherAmount = (totalAmount * voucherGiamPhanTram) / 100;
+        } else if (voucherTypeElement?.value === "GiamTien") {
+            voucherAmount = parseCurrency(voucherValueElement?.value) || 0;
+        }
+
+        // Hiển thị số tiền giảm không bị giới hạn bởi totalAmount
+        if (voucherAmountElement) {
+            voucherAmountElement.textContent = formatCurrency(voucherAmount);
+        }
+
+        // Tính toán số tiền phải trả cuối cùng
+        let finalAmount = totalAmount - voucherAmount;
+
+        // Nếu finalAmount < 0 thì gán bằng 0
+        if (finalAmount < 0) {
+            finalAmount = 0;
+        }
+
+        // Cập nhật giao diện với số tiền cuối cùng
+        if (finalAmountElement) {
+            finalAmountElement.textContent = formatCurrency(finalAmount);
+        }
+        if (soTienPhaiTraElement) {
+            soTienPhaiTraElement.value = formatCurrency(finalAmount);
+        }
+    } else {
+        // Nếu voucherId có giá trị, không áp dụng voucher
+        const totalAmount = parseCurrency(totalAmountElement?.textContent) || 0;
+
+        // Cập nhật giao diện khi không có voucher
+        if (finalAmountElement) {
+            finalAmountElement.textContent = formatCurrency(totalAmount);
+        }
+        if (soTienPhaiTraElement) {
+            soTienPhaiTraElement.value = formatCurrency(totalAmount);
+        }
+    }
+}
+
 function validatePaymentAmount() {
+    const totalAmountElement = document.getElementById("totalAmount");
     const customerPaymentInput = document.getElementById("customerPayment");
     const finalAmountElement = document.getElementById("finalAmount");
     const changeAmountElement = document.getElementById("changeAmount");
     const paymentErrorElement = document.getElementById("paymentError");
     const paymentButton = document.getElementById("paymentButton");
 
-    if (!customerPaymentInput || !finalAmountElement || !changeAmountElement || !paymentErrorElement || !paymentButton) {
+    if (!totalAmountElement || !customerPaymentInput || !finalAmountElement || !changeAmountElement || !paymentErrorElement || !paymentButton) {
         console.error("Missing required elements in DOM.");
         return;
     }
 
+    const totalAmount = parseCurrency(totalAmountElement.textContent) || 0;
     const finalAmount = parseCurrency(finalAmountElement.textContent) || 0;
     const customerPayment = parseCurrency(customerPaymentInput.value) || 0;
 
-    if (customerPayment < finalAmount) {
+    // Kiểm tra nếu ô nhập liệu trống
+    if (customerPaymentInput.value.trim() === "") {
+        paymentErrorElement.textContent = "Vui lòng nhập số tiền khách đưa!";
+        paymentErrorElement.style.display = "block";
+        paymentButton.disabled = true;
+        changeAmountElement.textContent = formatCurrency(0);
+        return;
+    }
+
+    // Kiểm tra nếu số tiền khách đưa không đủ hoặc giá trị không hợp lệ
+    if (customerPayment < finalAmount || finalAmount < 0 || totalAmount <= 0) {
         paymentErrorElement.textContent = "Số tiền khách đưa không đủ!";
         paymentErrorElement.style.display = "block";
         paymentButton.disabled = true;
@@ -531,18 +616,20 @@ function confirmPayment(event) {
                     // Cập nhật giao diện với số tiền thừa
                     document.getElementById("changeAmount").textContent = data.changeAmount;
 
-                    // Sau khi thanh toán thành công, yêu cầu in hóa đơn
-                    if (confirm("Bạn có muốn in hóa đơn không?")) {
-                        // Chuyển hướng đến in hóa đơn
-                        window.location.href = "/user/ban-hang/in-hoa-don/" + hoaDonId;
+                    // Chỉ hỏi in hóa đơn nếu thanh toán thành công
+                    if (data.message === "Thanh toán thành công!") {
+                        if (confirm("Bạn có muốn in hóa đơn không?")) {
+                            // Chuyển hướng đến in hóa đơn
+                            window.location.href = "/user/ban-hang/in-hoa-don/" + hoaDonId;
 
-                        // Sau khi tải xong file, quay lại trang bán hàng
-                        setTimeout(function () {
+                            // Sau khi tải xong file, quay lại trang bán hàng
+                            setTimeout(function () {
+                                window.location.href = "/user/ban-hang";
+                            }, 2000); // Sau 2 giây (hoặc tùy theo thời gian tải)
+                        } else {
+                            // Nếu không in hóa đơn, quay lại trang bán hàng
                             window.location.href = "/user/ban-hang";
-                        }, 2000); // Sau 2 giây (hoặc tùy theo thời gian tải)
-                    } else {
-                        // Nếu không in hóa đơn, quay lại trang bán hàng
-                        window.location.href = "/user/ban-hang";
+                        }
                     }
                 } else {
                     alert("Thanh toán không thành công.");
@@ -582,3 +669,4 @@ document.addEventListener('click', function (event) {
         dropdown.style.display = 'none';
     }
 });
+

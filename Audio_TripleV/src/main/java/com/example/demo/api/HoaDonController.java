@@ -11,6 +11,7 @@ import com.example.demo.entity.MauSac;
 import com.example.demo.entity.NhanVien;
 import com.example.demo.entity.SanPham;
 import com.example.demo.entity.SanPhamChiTiet;
+import com.example.demo.entity.Voucher;
 import com.example.demo.repository.HangRepository;
 import com.example.demo.repository.HoaDonChiTietRepository;
 
@@ -169,18 +170,11 @@ public class HoaDonController {
 
             // Tính toán số tiền phải trả với voucher
             if (hoaDon.getVouCher() != null) {
-                double voucherAmount = 0.0;
-                // Kiểm tra nếu voucher là giá trị tiền hoặc phần trăm
                 if (hoaDon.getVouCher().getLoai().equals("GiamTien") && hoaDon.getVouCher().getGiaTriTien() != null) {
-                    voucherAmount = hoaDon.getVouCher().getGiaTriTien(); // Giá trị tiền
-                    hoaDon.getVouCher().setFormattedGiaTriTien(currencyFormat.format(voucherAmount));
+                    hoaDon.setFormattedTienVoucher(currencyFormat.format(hoaDon.getTienVoucher()));
                 } else if (hoaDon.getVouCher().getLoai().equals("GiamPhanTram") && hoaDon.getVouCher().getGiaTriPhanTram() != null) {
-                    voucherAmount = hoaDon.getTongGia() * hoaDon.getVouCher().getGiaTriPhanTram() / 100; // Giá trị phần trăm
-                    hoaDon.getVouCher().setFormattedGiaTriPhanTram(String.format("%d%%", hoaDon.getVouCher().getGiaTriPhanTram().intValue()));
+                    hoaDon.setFormattedPhanTramVoucher(String.format("%d%%", hoaDon.getPhanTramVoucher().intValue()));
                 }
-                hoaDon.setSoTienPhaiTra(hoaDon.getTongGia() - voucherAmount);
-            } else {
-                hoaDon.setSoTienPhaiTra(hoaDon.getTongGia());
             }
 
             hoaDon.setFormattedSoTienPhaiTra(currencyFormat.format(hoaDon.getSoTienPhaiTra()));
@@ -191,11 +185,11 @@ public class HoaDonController {
 //                java.sql.Timestamp ngayTaoTimestamp = hoaDon.getNgayTao();  // Nếu là java.sql.Timestamp
 //                LocalDate ngayTao = ngayTaoTimestamp.toLocalDate();  // Chuyển từ Timestamp thành LocalDate (chỉ lấy ngày)
 
-              //   Nếu bạn sử dụng java.util.Date thay cho Timestamp:
-                 java.util.Date ngayTaoDate = hoaDon.getNgayTao();
-                 LocalDate ngayTao = ngayTaoDate.toInstant()
-                     .atZone(ZoneId.systemDefault())
-                     .toLocalDate();
+                //   Nếu bạn sử dụng java.util.Date thay cho Timestamp:
+                java.util.Date ngayTaoDate = hoaDon.getNgayTao();
+                LocalDate ngayTao = ngayTaoDate.toInstant()
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDate();
 
                 // Lấy thời gian bảo hành từ chi tiết sản phẩm
                 int thoiGianBaoHanh = hdct.getSanPhamChiTiet().getThoiGianBaoHanh();  // Thời gian bảo hành (số tháng)
@@ -505,19 +499,40 @@ public class HoaDonController {
                 newDetail.setSoLuong(soLuong);
                 newDetail.setDonGia(sanPhamChiTiet.getDonGia());
                 hoaDonChiTietRepository.save(newDetail);
-                if(hoaDon.getVouCher() != null){
-                    hoaDon.setVouCher(null);
+                // Kiểm tra voucher
+                double newTotal = (hoaDon.getTongGia() != null ? hoaDon.getTongGia() : 0)
+                        + sanPhamChiTiet.getDonGia() * soLuong;
+                double tienVoucher;
+                double phanTramVoucher;
+                double discountedPrice = newTotal;
+
+                if (hoaDon.getVouCher() != null) {
+                    Voucher voucher = hoaDon.getVouCher();
+
+                    // Nếu là giảm tiền
+                    if ("GiamTien".equalsIgnoreCase(voucher.getLoai()) && voucher.getGiaTriTien() > 0) {
+                        tienVoucher = voucher.getGiaTriTien();
+                        discountedPrice -= tienVoucher; // Giảm tiền
+                    }
+                    // Nếu là giảm phần trăm
+                    else if ("GiamPhanTram".equalsIgnoreCase(voucher.getLoai()) && voucher.getGiaTriPhanTram() > 0) {
+                        phanTramVoucher = voucher.getGiaTriPhanTram();
+                        discountedPrice -= (newTotal * phanTramVoucher) / 100; // Giảm phần trăm
+                        hoaDon.setPhanTramVoucher(phanTramVoucher);
+                    } else if (hoaDon.getSoTienPhaiTra() < 0) {
+                        discountedPrice = 0;
+                    }
                 }
+
+                discountedPrice = Math.max(discountedPrice, 0);
 
                 // Giảm số lượng trong kho
                 sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - soLuong);
                 sanPhamChiTietRepository.save(sanPhamChiTiet);
 
                 // Cập nhật tổng giá hóa đơn
-                double newTotal = (hoaDon.getTongGia() != null ? hoaDon.getTongGia() : 0)
-                        + sanPhamChiTiet.getDonGia() * soLuong;
                 hoaDon.setTongGia(newTotal);
-                hoaDon.setSoTienPhaiTra(newTotal);
+                hoaDon.setSoTienPhaiTra(discountedPrice);
                 hoaDonRepository.save(hoaDon);
 
                 return ResponseEntity.ok(Map.of(
@@ -611,7 +626,6 @@ public class HoaDonController {
 
             // Tìm sản phẩm trong hóa đơn
             List<HoaDonChiTiet> hoaDonChiTietList = hoaDon.getHoaDonChiTietList();
-
             HoaDonChiTiet chiTiet = hoaDonChiTietList.stream()
                     .filter(item -> item.getSanPhamChiTiet().getId().equals(sanPhamChiTietId))
                     .findFirst()
@@ -626,19 +640,41 @@ public class HoaDonController {
             hoaDonChiTietList.remove(chiTiet);
             hoaDon.setHoaDonChiTietList(hoaDonChiTietList);
 
-            // Cập nhật tổng giá trị hóa đơn
-            double newTotal = (hoaDon.getTongGia() != null ? hoaDon.getTongGia() : 0)
-                    - chiTiet.getDonGia() * chiTiet.getSoLuong();
-            hoaDon.setTongGia(Math.max(newTotal, 0)); // Đảm bảo tổng giá trị không âm
+            // Tính toán tổng giá mới
+            double newTotal = (hoaDon.getTongGia() != null ? hoaDon.getTongGia() : 0) - chiTiet.getDonGia() * chiTiet.getSoLuong();
 
-            // Nếu không còn sản phẩm nào, có thể cập nhật trạng thái hóa đơn và xóa voucher
-            if (hoaDonChiTietList.isEmpty()) {
-                hoaDon.setVouCher(null);  // Xóa voucher nếu không còn sản phẩm nào
+            // Kiểm tra voucher
+            double discountedPrice = newTotal;
+            if (hoaDon.getVouCher() != null) {
+                Voucher voucher = hoaDon.getVouCher();
+
+                // Nếu là giảm tiền
+                if ("GiamTien".equalsIgnoreCase(voucher.getLoai()) && voucher.getGiaTriTien() > 0) {
+                    discountedPrice -= voucher.getGiaTriTien(); // Giảm tiền
+                }
+                // Nếu là giảm phần trăm
+                else if ("GiamPhanTram".equalsIgnoreCase(voucher.getLoai()) && voucher.getGiaTriPhanTram() > 0) {
+                    discountedPrice -= (newTotal * voucher.getGiaTriPhanTram()) / 100; // Giảm phần trăm
+                    hoaDon.setPhanTramVoucher(voucher.getGiaTriPhanTram()); // Cập nhật phần trăm voucher
+                }
+                // Nếu số tiền phải trả < 0, set về 0
+                else if (hoaDon.getSoTienPhaiTra() < 0) {
+                    discountedPrice = 0;
+                }
+
+                // Kiểm tra giá trị tối thiểu của hóa đơn để áp dụng voucher
+                if (newTotal < voucher.getGiaTriHoaDonToiThieu()) {
+                    hoaDon.setVouCher(null); // Xóa voucher nếu tổng giá trị hóa đơn nhỏ hơn giá trị tối thiểu
+                    discountedPrice = newTotal;
+                }
             }
 
-            hoaDon.setVouCher(null);
+            // Đảm bảo không có giá trị âm
+            discountedPrice = Math.max(discountedPrice, 0);
 
-            // Lưu hóa đơn cập nhật
+            // Cập nhật tổng giá hóa đơn và số tiền phải trả
+            hoaDon.setTongGia(newTotal);
+            hoaDon.setSoTienPhaiTra(discountedPrice);
             hoaDonRepository.save(hoaDon);
 
             // Xóa sản phẩm khỏi cơ sở dữ liệu
@@ -651,7 +687,7 @@ public class HoaDonController {
             ));
         }
 
-        return null;
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Nhân viên không tồn tại."));
     }
 
     @GetMapping("/ban-hang/{hoaDonId}/products")
@@ -817,9 +853,9 @@ public class HoaDonController {
             if (hoaDon.getVouCher() != null) {
                 document.add(new Paragraph("Voucher: " + hoaDon.getVouCher().getTen()));
                 if ("GiamTien".equalsIgnoreCase(hoaDon.getVouCher().getLoai())) {
-                    document.add(new Paragraph("Giảm tiền: " + currencyFormat.format(hoaDon.getVouCher().getGiaTriTien())));
+                    document.add(new Paragraph("Giảm tiền: " + currencyFormat.format(hoaDon.getTienVoucher())));
                 } else if ("GiamPhanTram".equalsIgnoreCase(hoaDon.getVouCher().getLoai())) {
-                    document.add(new Paragraph("Giảm phần trăm: " + String.format("%d%%", hoaDon.getVouCher().getGiaTriPhanTram().intValue())));
+                    document.add(new Paragraph("Giảm phần trăm: " + String.format("%d%%", hoaDon.getPhanTramVoucher().intValue())));
                 }
             }
             document.add(new Paragraph("Tiền phải trả: " + currencyFormat.format(hoaDon.getSoTienPhaiTra())));
@@ -827,6 +863,37 @@ public class HoaDonController {
             document.add(new Paragraph("Tiền thừa: " + currencyFormat.format(hoaDon.getTienThua())));
 
             document.close();
+        }
+    }
+
+    @PostMapping("/hoa-don/{id}/huy")
+    @ResponseBody
+    public ResponseEntity<?> huyHoaDon(@PathVariable Integer id) {
+        try {
+            HoaDon hoaDon = hoaDonRepository.findById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("Hóa đơn không tồn tại"));
+
+            if ("Đã thanh toán".equals(hoaDon.getTrangThai())) {
+                return ResponseEntity.badRequest().body("Không thể hủy hóa đơn đã thanh toán.");
+            }
+
+            // Xóa các chi tiết hóa đơn và trả lại số lượng sản phẩm
+            for (HoaDonChiTiet hdct : hoaDon.getHoaDonChiTietList()) {
+                SanPhamChiTiet sanPhamChiTiet = hdct.getSanPhamChiTiet();
+                sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() + hdct.getSoLuong());
+                sanPhamChiTietRepository.save(sanPhamChiTiet);
+                hoaDonChiTietRepository.delete(hdct);
+            }
+
+            // Cập nhật trạng thái hóa đơn
+            hoaDon.setTrangThai("Hủy");
+            hoaDonRepository.save(hoaDon);
+
+            return ResponseEntity.ok("Hóa đơn đã được hủy thành công.");
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Đã xảy ra lỗi trong quá trình hủy hóa đơn.");
         }
     }
 

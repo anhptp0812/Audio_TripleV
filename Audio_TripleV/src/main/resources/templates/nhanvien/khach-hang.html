@@ -35,10 +35,17 @@
     <div class="customer-form">
         <div class="customer-details text-center">
             <h1 class="text-center">Danh Sách Khách Hàng</h1>
-            <a id="nutThem" href="/user/khach-hang/add" class="btn btn-success w-100">
+            <div class="search-container d-flex align-items-center">
+                <input type="text" id="searchName" class="form-control me-2 flex-grow-1" placeholder="Tìm kiếm theo tên">
+                <input type="text" id="searchPhone" class="form-control me-2 flex-grow-1" placeholder="Tìm kiếm theo số điện thoại">
+                <button class="btn btn-secondary" type="button" onclick="searchStaff()">
+                    <i class="bi bi-search"></i>
+                </button>
+            </div>
+            <a id="nutThem" href="/user/khach-hang/add" class="btn btn-success w-100 mt-3">
                 <i class="bi bi-plus-circle"></i>
             </a>
-            <table class="table table-striped table-bordered">
+            <table class="table table-striped table-bordered mt-3">
                 <thead>
                 <tr>
                     <th>ID</th>
@@ -75,7 +82,26 @@
     <!--Footer section-->
     <th:block th:replace="~{/nhanvien/fragments :: nhan-vien-footer}"/>
 </div>
+<script>
+    function searchStaff() {
+        var nameSearch = document.getElementById('searchName').value.toLowerCase();
+        var phoneSearch = document.getElementById('searchPhone').value.toLowerCase();
+        var rows = document.querySelectorAll('table tbody tr');
 
+        rows.forEach(function(row) {
+            var name = row.cells[1].textContent.toLowerCase();
+            var phone = row.cells[2].textContent.toLowerCase();
+
+            // Kiểm tra xem tên và số điện thoại có chứa từ khóa tìm kiếm không
+            if (name.includes(nameSearch) && phone.includes(phoneSearch)) {
+                row.style.display = ''; // Hiển thị dòng nếu có kết quả phù hợp
+            } else {
+                row.style.display = 'none'; // Ẩn dòng nếu không phù hợp
+            }
+        });
+    }
+
+</script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
