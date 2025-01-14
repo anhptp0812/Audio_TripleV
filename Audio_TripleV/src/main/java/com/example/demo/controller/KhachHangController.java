@@ -438,10 +438,6 @@ public class KhachHangController {
     void processThanhToan(String username, String fullName, String email, String phone, String address, String selectedItems, String paymentMethod) {
         if (selectedItems == null || selectedItems.isEmpty()) {
             throw new RuntimeException("Không có sản phẩm nào được chọn.");
-<<<<<<< Updated upstream
-        }
-
-=======
 <<<<<<< HEAD
 
         } else {
@@ -452,7 +448,6 @@ public class KhachHangController {
         }
 
 >>>>>>> 3db7b86facc2e99cf89c4a5ecf0e5f51b5466756
->>>>>>> Stashed changes
         KhachHang khachHang = khachHangService.findByTaiKhoan(username)
                 .orElseThrow(() -> new RuntimeException("Khách hàng không tồn tại"));
 
@@ -470,15 +465,11 @@ public class KhachHangController {
                 .mapToObj(i -> jsonArray.getJSONObject(i).getInt("id"))
                 .collect(Collectors.toList());
 
-<<<<<<< Updated upstream
-        List<GioHangChiTiet> selectedItemsList;
-=======
 <<<<<<< HEAD
         List<GioHangChiTiet> selectedItemsList = null;
 =======
         List<GioHangChiTiet> selectedItemsList;
 >>>>>>> 3db7b86facc2e99cf89c4a5ecf0e5f51b5466756
->>>>>>> Stashed changes
         GioHang gioHang = null;
 
         if (!globalMuaNgay) {
@@ -502,20 +493,14 @@ public class KhachHangController {
         donHang.setKhachHang(khachHang);
         donHang.setTongGia(selectedItemsList.stream()
                 .mapToDouble(item -> item.getSoLuong() * item.getSanPhamChiTiet().getDonGia())
-<<<<<<< Updated upstream
-=======
 <<<<<<< HEAD
                 .sum() + globalShippingFee - globalVoucher);
 =======
->>>>>>> Stashed changes
 
                 .sum() +  globalShippingFee - globalVoucher );
 
 
-<<<<<<< Updated upstream
-=======
 >>>>>>> 3db7b86facc2e99cf89c4a5ecf0e5f51b5466756
->>>>>>> Stashed changes
         donHang.setTrangThai("Chờ xử lý");
         donHang.setNgayTao(new Date());
 
@@ -553,13 +538,10 @@ public class KhachHangController {
 
         donHangService.save(donHang);
 
-<<<<<<< Updated upstream
-=======
 <<<<<<< HEAD
         // Xóa các sản phẩm đã chọn khỏi giỏ hàng
 =======
 >>>>>>> 3db7b86facc2e99cf89c4a5ecf0e5f51b5466756
->>>>>>> Stashed changes
         if (!globalMuaNgay) {
             gioHang.setGioHangChiTietList(gioHang.getGioHangChiTietList().stream()
                     .filter(item -> !selectedProductIds.contains(item.getSanPhamChiTiet().getId()))
