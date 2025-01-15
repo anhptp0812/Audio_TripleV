@@ -70,9 +70,6 @@
 
 
 <div class="container mt-4">
-    <p id="alertmessage" name="alertmessage" style="color: red; font-weight: bold;">
-
-    </p>
     <h2>Thông Tin Thanh Toán</h2>
     <form th:action="@{/khach-hang/thanh-toan/dat-hang}" method="post">
         <div class="row">
@@ -220,12 +217,12 @@
                             <label class="form-check-label" for="paymentCard">Thanh toán bằng ví VnPay</label>
                         </div>
                     </div>
-                    <div>
-                        <strong>Phiếu Giảm Giá</strong>
-                        <input id="voucherName" class="form-control" readonly type="text"/>
-                        <input id="voucherId" name="voucherId" readonly type="hidden"/>
-                        <input id="giamGiaDuocApDung" name="tienGiamGia" type="hidden"/>
-                    </div>
+<!--                    <div>-->
+<!--                        <strong>Phiếu Giảm Giá</strong>-->
+<!--                        <input id="voucherName" class="form-control" readonly type="text"/>-->
+<!--                        <input id="voucherId" name="voucherId" readonly type="hidden"/>-->
+<!--                        <input id="giamGiaDuocApDung" name="tienGiamGia" type="hidden"/>-->
+<!--                    </div>-->
                     <!--                    <button-->
                     <!--                            class="btn btn-dark ms-3"-->
                     <!--                            data-bs-toggle="modal"-->
@@ -239,19 +236,16 @@
                   
                     <!-- Button to open modal -->
 
-                    <p>Ap dung voucher : </p>
-                    <button
-                            class="btn btn-dark ms-3"
+<!--                    <p>Ap dung voucher : </p>-->
+                    <p id="alertmessage" name="alertmessage" style="color: red; font-weight: bold;"></p>
+                    <button class="btn btn-dark ms-3"
                             data-bs-toggle="modal"
                             data-bs-target="#voucher"
                             type="button"
-                            style="margin-top: 27px; color: white; border: none;"
-                            onchange=" selectVoucher(this);"
-                    >
+                            style="color: white; border: none;"
+                            onchange=" selectVoucher(this);">
                         Chọn voucher
                     </button>
-
-
 
                     <!-- Nút đặt hàng -->
                     <button type="submit" class="btn btn-danger w-100 mt-3"
@@ -273,7 +267,7 @@
      id="voucher">
     <div class="modal-dialog modal-lg" style="width: 1200px">
         <div class="modal-content">
-            <div class="modal-header" style="background: black">
+            <div class="modal-header" style="background: aqua">
                 <h1 class="modal-title fs-5" id="staticBackdropLabel2">
                     Chọn Mã Giảm Giá</h1>
                 <button
@@ -289,15 +283,14 @@
                     <tr>
                         <th>Tên Voucher</th>
                         <th>Loại Voucher</th>
-                        <th>Gía trị tiền</th>
-                        <th>Gía trị phần trăm</th>
-                        <th>Gía trị hóa đơn tối thiểu</th>
+                        <th>Giá trị tiền</th>
+                        <th>Giá trị phần trăm</th>
+                        <th>Giá trị hóa đơn tối thiểu</th>
                         <th>Trạng thái</th>
                         <th>Ngày bắt đầu</th>
                         <th>Ngày kết thúc</th>
                         <th>Action</th>
                     </tr>
-
                     </thead>
                     <tbody>
                     <tr th:each="voucher : ${vouchers}">
@@ -663,8 +656,6 @@
 
             var alertMessageElement = document.getElementById('alertmessage');
 
-
-
             var startDateText = voucherRow.querySelector('td:nth-child(8)').innerText;
             var endDateText = voucherRow.querySelector('td:nth-child(9)').innerText;
             console.log('Voucher Start Date:', startDateText);
@@ -700,6 +691,8 @@
                 // Set the message content
                 console.log("het han");
                 alertMessageElement.innerText = "Voucher đã hết hạn!";
+            }else{
+                alertMessageElement.innerText = "";
             }
             var amount = parseInt(document.getElementById('amount').value);
 

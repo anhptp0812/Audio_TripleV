@@ -405,10 +405,7 @@ public class KhachHangController {
 
         System.out.println("global voucher " + globalVoucher);
 
-        System.out.println("global voucher " + globalVoucher);
-
-
-        processThanhToan(userDetails.getUsername(), fullName, email, phone, address, savedSelectedItems);
+        processThanhToan(userDetails.getUsername(), fullName, email, phone, address, savedSelectedItems, paymentMethod);
         return "redirect:/khach-hang/don-hang/danh-sach";
     }
 

@@ -53,7 +53,7 @@
                     <th>Khách Hàng</th>
                     <th>Ngày Tạo</th>
                     <th>Nội Dung</th>
-                    <th>Hành Động</th>
+<!--                    <th>Hành Động</th>-->
                 </tr>
                 </thead>
                 <tbody>
@@ -61,14 +61,14 @@
                     <td th:text="${comment.khachHang.ten}"></td>
                     <td th:text="${#dates.format(comment.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
                     <td th:text="${comment.content}"></td>
-                    <td>
-                        <!-- Nút Xóa với xác nhận -->
-                        <a th:href="@{/user/bai-viet/{articleId}/binh-luan/delete/{commentId}(articleId=${article.id},commentId=${comment.id})}"
-                           class="btn btn-danger btn-sm"
-                           onclick="return confirm('Bạn có chắc chắn muốn xóa bình luận này?')">
-                            <i class="bi bi-trash"></i> Xóa
-                        </a>
-                    </td>
+<!--                    <td>-->
+<!--                        &lt;!&ndash; Nút Xóa với xác nhận &ndash;&gt;-->
+<!--                        <a th:href="@{/user/bai-viet/{articleId}/binh-luan/delete/{commentId}(articleId=${article.id},commentId=${comment.id})}"-->
+<!--                           class="btn btn-danger btn-sm"-->
+<!--                           onclick="return confirm('Bạn có chắc chắn muốn xóa bình luận này?')">-->
+<!--                            <i class="bi bi-trash"></i> Xóa-->
+<!--                        </a>-->
+<!--                    </td>-->
                 </tr>
                 </tbody>
             </table>

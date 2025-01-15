@@ -137,6 +137,9 @@ public class DonHangController {
         return "nhanvien/detail-donhang";
     }
 
+    @Autowired
+    private SanPhamChiTietRepository sanPhamChiTietRepository;
+
     @PostMapping("/don-hang/update-status")
     public String updateOrderStatus(@RequestParam Integer id, @RequestParam String status, RedirectAttributes redirectAttributes) {
         DonHang donHang = donHangService.findByid(id);
@@ -146,14 +149,33 @@ public class DonHangController {
 
             // Cập nhật ngày cập nhật trạng thái
             donHang.setNgayCapNhat(new Date());
+            if ("Đã hủy".equals(status)) {
+                for (DonHangChiTiet chiTiet : donHang.getDonHangChiTietList()) {
+                    SanPhamChiTiet sanPhamChiTiet = chiTiet.getSanPhamChiTiet();
+                    sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() + chiTiet.getSoLuong());
+                    sanPhamChiTietRepository.save(sanPhamChiTiet);
+                }
+            }
+
+            if ("Chờ xử lý".equals(status)) {
+                for (DonHangChiTiet chiTiet : donHang.getDonHangChiTietList()) {
+                    SanPhamChiTiet sanPhamChiTiet = chiTiet.getSanPhamChiTiet();
+
+                    // Kiểm tra số lượng trong kho có đủ để giảm không
+                    if (sanPhamChiTiet.getSoLuong() >= chiTiet.getSoLuong()) {
+                        sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - chiTiet.getSoLuong());
+                        sanPhamChiTietRepository.save(sanPhamChiTiet);
+                    } else {
+                        // Nếu không đủ số lượng trong kho, thêm thông báo lỗi
+                        redirectAttributes.addFlashAttribute("errorMessage", "Không đủ sản phẩm trong kho để chuyển về trạng thái 'Chờ xử lý'!");
+                        return "redirect:/user/don-hang/detail/" + id;
+                    }
+                }
+            }
 
             // Nếu trạng thái là 'Đã giao hàng', cập nhật thêm ngày giao
             if ("Đã giao hàng".equals(status)) {
                 donHang.setNgayGiao(new Date());
-            }
-
-            // Nếu trạng thái là 'Đã giao hàng', cập nhật trạng thái Payment
-            if ("Đã giao hàng".equals(status)) {
                 donHang.setTrangThaiPayment("Đã thanh toán");
             }
             // Lưu lại thông tin thay đổi
